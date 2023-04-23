@@ -4,28 +4,16 @@ import {
   SafeAreaView,
   StyleSheet,
   Image,
-  FlatList,
-  TextInput,
   TouchableOpacity,
 } from "react-native";
-import React, { useLayoutEffect, useState } from "react";
+import React from "react";
 
 const HomeScreen = ({ navigation }) => {
-  const [searchTerm, setSearchTerm] = useState("");
-
-  // similar to useEffect. We want to set navigate screen options (ex. no header title)
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerShown: false,
-    });
-  }, []);
-
   return (
     <SafeAreaView
       style={{
         flex: 1,
-        backgroundColor: "lightblue",
-        rowGap: 10,
+        backgroundColor: "#fff",
       }}
     >
       <View style={styles.titleContainer}>
@@ -36,48 +24,31 @@ const HomeScreen = ({ navigation }) => {
       {/* Default Image */}
       <View style={styles.defaultImageContainer}>
         <Image
-          source={require("../assets/rockwall.jpg")}
+          source={require("../assets/rockwall2.png")}
           resizeMode="contain"
           style={styles.defaultImage}
         />
       </View>
-      {/* Search, Filter, Add, and find Boulders */}
-      <View style={styles.findBouldersContainer}>
-        <View style={styles.searchFilterAddContainer}>
-          <View style={styles.searchContainer}>
-            <TextInput
-              style={styles.searchInput}
-              value={searchTerm}
-              // onChange doesn't exist in react native. use onChangeText
-              onChangeText={(text) => setSearchTerm(text)} // in react native, you don't have to do e.target.value
-              placeholder="Search Boulders"
-            />
-          </View>
-          <View style={styles.filter}>
-            <Text>Filter</Text>
-          </View>
-          <View style={styles.addBoulder}>
-            <Text>Add</Text>
-          </View>
-        </View>
-        <FlatList
-          contentContainerStyle={styles.bouldersList}
-          data={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              style={styles.boulder}
-              onPress={() =>
-                navigation.navigate("Boulder", {
-                  itemId: item,
-                  otherParam: "anything you want here",
-                })
-              }
-            >
-              <Text>Boulder {item}</Text>
-            </TouchableOpacity>
-          )}
-          // keyExtractor={(item) => item.job_id}
-        />
+      {/* Buttons */}
+      <View style={styles.buttonsContainer}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate("List")}
+        >
+          <Text>Find Boulders</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate("List")}
+        >
+          <Text>Find Routes</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate("List")}
+        >
+          <Text>Add Boulder/Route</Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
@@ -87,10 +58,10 @@ export default HomeScreen;
 
 const styles = StyleSheet.create({
   titleContainer: {
-    backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
     rowGap: 10,
+    marginBottom: 20,
   },
   titleText: {
     fontSize: 30,
@@ -102,55 +73,25 @@ const styles = StyleSheet.create({
     backgroundColor: "#000",
     alignItems: "center",
     justifyContent: "center",
-    flex: 1,
+    height: "50%",
     paddingHorizontal: 10,
   },
   defaultImage: {
     width: "100%",
     height: "100%",
   },
-  findBouldersContainer: {
+  buttonsContainer: {
     flex: 1,
-    backgroundColor: "yellow",
-    paddingHorizontal: 10,
-    rowGap: 10,
-  },
-  searchFilterAddContainer: {
-    width: "100%",
-    height: 40,
-    backgroundColor: "green",
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  searchContainer: {
-    flex: 1,
-    backgroundColor: "white",
+    rowGap: 20,
     justifyContent: "center",
-    marginRight: 10,
+    alignItems: "center",
+  },
+  button: {
+    backgroundColor: "#03df6c",
+    width: 200,
+    height: 50,
     borderRadius: 10,
-  },
-  searchInput: {
-    width: "100%",
-    height: "100%",
-    paddingHorizontal: 10,
-  },
-  filter: {
-    width: 40,
-    backgroundColor: "red",
-    marginRight: 10,
-    borderRadius: 10,
-  },
-  addBoulder: {
-    width: 40,
-    backgroundColor: "orange",
-    borderRadius: 10,
-  },
-  bouldersList: {
-    rowGap: 10,
-  },
-  boulder: {
-    width: "100%",
-    height: 60,
-    backgroundColor: "lightgreen",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
