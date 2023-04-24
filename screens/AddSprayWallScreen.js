@@ -17,30 +17,12 @@ const AddNewSprayWallScreen = () => {
   const navigation = useNavigation();
 
   const handleImagePicker = async () => {
-    // const options = {
-    //   mediaType: "photo",
-    //   quality: 1,
-    // };
-
-    // ImagePicker.launchCamera(options, (response) => {
-    //   if (response.didCancel) {
-    //     console.log("User cancelled image picker");
-    //   } else if (response.error) {
-    //     console.log("ImagePicker Error: ", response.error);
-    //   } else {
-    //     const source = { uri: response.uri };
-    //     setImage(source);
-    //   }
-    // });
-    // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
     });
-
-    console.log(result);
 
     if (!result.canceled) {
       setImage(result.assets[0].uri);
@@ -52,12 +34,11 @@ const AddNewSprayWallScreen = () => {
       "Add Spray Wall",
       `Are you sure you want to add "${sprayWallName}" as a new spray wall?`,
       [
-        { text: "Cancel", onPress: () => console.log("Cancel Pressed") },
+        { text: "Cancel" },
         {
           text: "OK",
           onPress: () => {
-            console.log("OK Pressed");
-            navigation.navigate("SprayWallList");
+            navigation.navigate("Home");
           },
         },
       ],

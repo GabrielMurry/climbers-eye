@@ -85,6 +85,8 @@ const styles = StyleSheet.create({
   },
   addGym: {
     backgroundColor: "#ffd0d2",
+    borderColor: "black",
+    borderWidth: 1,
     width: "95%",
     height: 50,
     justifyContent: "space-evenly",

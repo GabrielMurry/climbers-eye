@@ -44,7 +44,8 @@ const AddGymScreen = () => {
             }
             onPress={() => setGymType("Personal Spray Wall")}
           >
-            <Text style={styles.buttonText}>Personal Spray Wall</Text>
+            <Text style={styles.buttonText}>Non-Commercial Gym</Text>
+            <Text style={styles.buttonText}>(Home)</Text>
           </TouchableOpacity>
         </View>
       </View>

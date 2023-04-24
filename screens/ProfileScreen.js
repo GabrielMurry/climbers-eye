@@ -8,6 +8,7 @@ import {
 import React from "react";
 import {
   ArrowLeftCircleIcon,
+  ChartPieIcon,
   UserCircleIcon,
 } from "react-native-heroicons/outline";
 
@@ -42,12 +43,23 @@ const ProfileScreen = ({ navigation }) => {
       <View style={styles.buttonsContainer}>
         <TouchableOpacity style={styles.button}>
           <Text>Logbook</Text>
+          <Text>1234</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.button}>
           <Text>Your Boulders</Text>
+          <Text>23</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button}>
+          <Text>Liked Boulders</Text>
+          <Text>34</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button}>
+          <Text>Bookmarked Boulders</Text>
+          <Text>14</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.button}>
           <Text>Statistics</Text>
+          <ChartPieIcon size={25} color="black" />
         </TouchableOpacity>
       </View>
     </View>
@@ -113,5 +125,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 10,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: 25,
   },
 });
