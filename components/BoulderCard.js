@@ -30,9 +30,13 @@ export default BoulderCard;
 const styles = StyleSheet.create({
   boulder: {
     height: 65,
-    borderBottomColor: "black",
-    borderBottomWidth: StyleSheet.hairlineWidth,
+    // borderBottomColor: "black",
+    // borderBottomWidth: StyleSheet.hairlineWidth,
     flexDirection: "row",
+    backgroundColor: "#fffdd0",
+    borderColor: "#fff50c",
+    borderWidth: StyleSheet.hairlineWidth,
+    borderRadius: 10,
   },
   boulderLeftWrapper: {
     flex: 1,

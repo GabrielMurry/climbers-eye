@@ -229,7 +229,7 @@ const styles = StyleSheet.create({
   },
   filter: {
     width: 40,
-    backgroundColor: "red",
+    backgroundColor: "lightblue",
     marginRight: 10,
     borderRadius: 10,
     justifyContent: "center",
@@ -237,7 +237,7 @@ const styles = StyleSheet.create({
   },
   addBoulder: {
     width: 40,
-    backgroundColor: "orange",
+    backgroundColor: "lightgreen",
     borderRadius: 10,
     justifyContent: "center",
     alignItems: "center",

@@ -24,7 +24,7 @@ const HomeScreen = ({ navigation }) => {
       {/* Default Image */}
       <View style={styles.defaultImageContainer}>
         <Image
-          source={require("../assets/rockwall2.png")}
+          source={require("../assets/rockwall.jpg")}
           resizeMode="contain"
           style={styles.defaultImage}
         />
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
   },
   defaultImageContainer: {
-    backgroundColor: "#000",
+    backgroundColor: "lightblue",
     alignItems: "center",
     justifyContent: "center",
     height: "50%",
