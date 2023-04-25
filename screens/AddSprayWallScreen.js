@@ -7,32 +7,22 @@ import {
   Alert,
   TextInput,
   StyleSheet,
+  SafeAreaView,
 } from "react-native";
-import * as ImagePicker from "expo-image-picker";
-import { useNavigation } from "@react-navigation/native";
+import { CameraIcon } from "react-native-heroicons/outline";
+import PhoneCamera from "../components/PhoneCamera";
 
-const AddNewSprayWallScreen = () => {
+const imageScaleDownFactor = 10;
+
+const AddNewSprayWallScreen = ({ navigation }) => {
   const [image, setImage] = useState(null);
+  const [cameraMode, setCameraMode] = useState(false);
   const [sprayWallName, setSprayWallName] = useState("");
-  const navigation = useNavigation();
-
-  const handleImagePicker = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
-    }
-  };
 
   const handleAddSprayWall = () => {
     Alert.alert(
       "Add Spray Wall",
-      `Are you sure you want to add "${sprayWallName}" as a new spray wall?`,
+      `Are you sure you want to add "${sprayWallName}" to [Gym Name]?`,
       [
         { text: "Cancel" },
         {
@@ -47,75 +37,122 @@ const AddNewSprayWallScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Add New Spray Wall</Text>
-      <TouchableOpacity onPress={handleImagePicker}>
-        <View style={styles.imageWrapper}>
-          {image ? (
-            <Image
-              source={{ uri: image }}
-              style={{ width: 200, height: 200 }}
+    <SafeAreaView style={styles.container(cameraMode)}>
+      {cameraMode ? (
+        <PhoneCamera
+          image={image}
+          setImage={setImage}
+          setCameraMode={setCameraMode}
+        />
+      ) : (
+        <View>
+          <View style={styles.titleContainer}>
+            <Text style={styles.titleText}>Add New Spray Wall</Text>
+            <Text style={styles.subTitleText}>in [Gym Name]</Text>
+          </View>
+          <View style={styles.imageContainer}>
+            <TouchableOpacity
+              style={styles.imageButton(image, imageScaleDownFactor)}
+              onPress={() => setCameraMode(true)}
+            >
+              {image ? (
+                <Image
+                  source={{ uri: image.uri }}
+                  style={styles.image(image, imageScaleDownFactor)}
+                />
+              ) : (
+                <View style={styles.imagePlaceholderContainer}>
+                  <CameraIcon size={30} color="black" />
+                  <Text style={styles.imagePlaceholderText}>
+                    Take a Picture
+                  </Text>
+                </View>
+              )}
+            </TouchableOpacity>
+          </View>
+          <View style={styles.inputAndAddContainer}>
+            <TextInput
+              value={sprayWallName}
+              onChangeText={(text) => setSprayWallName(text)}
+              placeholder="Enter spray wall name"
+              style={styles.input}
             />
-          ) : (
-            <Text style={styles.imagePlaceholder}>Take a picture</Text>
-          )}
+            <TouchableOpacity
+              style={styles.button}
+              onPress={handleAddSprayWall}
+            >
+              <Text style={styles.buttonText}>Add Spray Wall</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </TouchableOpacity>
-      <TextInput
-        value={sprayWallName}
-        onChangeText={(text) => setSprayWallName(text)}
-        placeholder="Enter spray wall name"
-        style={styles.input}
-      />
-      <TouchableOpacity style={styles.button} onPress={handleAddSprayWall}>
-        <Text style={styles.buttonText}>Add Spray Wall</Text>
-      </TouchableOpacity>
-    </View>
+      )}
+    </SafeAreaView>
   );
 };
 
+export default AddNewSprayWallScreen;
+
 const styles = StyleSheet.create({
-  container: {
+  container: (cameraMode) => ({
     flex: 1,
-    padding: 20,
-    backgroundColor: "#fff",
+    backgroundColor: cameraMode ? "black" : "white",
+  }),
+  titleContainer: {
+    height: 100,
+    justifyContent: "center",
+    alignItems: "center",
   },
-  title: {
+  titleText: {
+    fontSize: 30,
+    fontWeight: "bold",
+  },
+  subTitleText: {
     fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 20,
   },
-  imageWrapper: {
-    width: "100%",
-    height: 200,
+  imageContainer: {
+    alignItems: "center",
+  },
+  imageButton: (image, imageScaleDownFactor) => ({
+    width: image ? image.width / imageScaleDownFactor : "95%",
+    height: image ? image.height / imageScaleDownFactor : 300,
     borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 5,
+    borderColor: "black",
+    borderRadius: 10,
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 20,
+  }),
+  image: (image, imageScaleDownFactor) => ({
+    width: image.width / imageScaleDownFactor,
+    height: image.height / imageScaleDownFactor,
+  }),
+  imagePlaceholderContainer: {
+    alignItems: "center",
   },
-  image: {
-    width: "100%",
-    height: "100%",
-    borderRadius: 5,
+  imagePlaceholderText: {
+    fontSize: 16,
   },
-  imagePlaceholder: {
-    fontSize: 18,
-    color: "#666",
+  inputAndAddContainer: {
+    alignItems: "center",
+    paddingTop: 10,
+    rowGap: 10,
   },
   input: {
     borderWidth: 1,
     borderColor: "#ccc",
-    borderRadius: 5,
+    borderRadius: 10,
     padding: 10,
     marginBottom: 20,
+    width: "80%",
+    height: 45,
   },
   button: {
     backgroundColor: "#007bff",
-    borderRadius: 5,
+    borderRadius: 10,
     paddingVertical: 15,
     alignItems: "center",
+    width: "80%",
   },
   buttonText: {
     color: "#fff",
@@ -123,5 +160,3 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 });
-
-export default AddNewSprayWallScreen;
