@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -10,14 +10,19 @@ import {
   SafeAreaView,
 } from "react-native";
 import { CameraIcon } from "react-native-heroicons/outline";
-import PhoneCamera from "../components/PhoneCamera";
 
 const imageScaleDownFactor = 10;
 
-const AddNewSprayWallScreen = ({ navigation }) => {
+const AddNewSprayWallScreen = ({ route, navigation }) => {
   const [image, setImage] = useState(null);
-  const [cameraMode, setCameraMode] = useState(false);
   const [sprayWallName, setSprayWallName] = useState("");
+
+  useEffect(() => {
+    if (route?.params?.image) {
+      const { image } = route.params;
+      setImage(image);
+    }
+  }, [route]);
 
   const handleAddSprayWall = () => {
     Alert.alert(
@@ -37,55 +42,42 @@ const AddNewSprayWallScreen = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={styles.container(cameraMode)}>
-      {cameraMode ? (
-        <PhoneCamera
-          image={image}
-          setImage={setImage}
-          setCameraMode={setCameraMode}
-        />
-      ) : (
-        <View>
-          <View style={styles.titleContainer}>
-            <Text style={styles.titleText}>Add New Spray Wall</Text>
-            <Text style={styles.subTitleText}>in [Gym Name]</Text>
-          </View>
-          <View style={styles.imageContainer}>
-            <TouchableOpacity
-              style={styles.imageButton(image, imageScaleDownFactor)}
-              onPress={() => setCameraMode(true)}
-            >
-              {image ? (
-                <Image
-                  source={{ uri: image.uri }}
-                  style={styles.image(image, imageScaleDownFactor)}
-                />
-              ) : (
-                <View style={styles.imagePlaceholderContainer}>
-                  <CameraIcon size={30} color="black" />
-                  <Text style={styles.imagePlaceholderText}>
-                    Take a Picture
-                  </Text>
-                </View>
-              )}
-            </TouchableOpacity>
-          </View>
-          <View style={styles.inputAndAddContainer}>
-            <TextInput
-              value={sprayWallName}
-              onChangeText={(text) => setSprayWallName(text)}
-              placeholder="Enter spray wall name"
-              style={styles.input}
+    <SafeAreaView style={styles.container}>
+      <View style={styles.titleContainer}>
+        <Text style={styles.titleText}>Add New Spray Wall</Text>
+        <Text style={styles.subTitleText}>in [Gym Name]</Text>
+      </View>
+      <View style={styles.imageContainer}>
+        <TouchableOpacity
+          style={styles.imageButton(image, imageScaleDownFactor)}
+          onPress={() =>
+            navigation.navigate("Camera", { screen: "AddSprayWall" })
+          }
+        >
+          {image ? (
+            <Image
+              source={{ uri: image.uri }}
+              style={styles.image(image, imageScaleDownFactor)}
             />
-            <TouchableOpacity
-              style={styles.button}
-              onPress={handleAddSprayWall}
-            >
-              <Text style={styles.buttonText}>Add Spray Wall</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      )}
+          ) : (
+            <View style={styles.imagePlaceholderContainer}>
+              <CameraIcon size={30} color="black" />
+              <Text style={styles.imagePlaceholderText}>Take a Picture</Text>
+            </View>
+          )}
+        </TouchableOpacity>
+      </View>
+      <View style={styles.inputAndAddContainer}>
+        <TextInput
+          value={sprayWallName}
+          onChangeText={(text) => setSprayWallName(text)}
+          placeholder="Enter spray wall name"
+          style={styles.input}
+        />
+        <TouchableOpacity style={styles.button} onPress={handleAddSprayWall}>
+          <Text style={styles.buttonText}>Add Spray Wall</Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 };
@@ -93,10 +85,10 @@ const AddNewSprayWallScreen = ({ navigation }) => {
 export default AddNewSprayWallScreen;
 
 const styles = StyleSheet.create({
-  container: (cameraMode) => ({
+  container: {
     flex: 1,
-    backgroundColor: cameraMode ? "black" : "white",
-  }),
+    backgroundColor: "white",
+  },
   titleContainer: {
     height: 100,
     justifyContent: "center",

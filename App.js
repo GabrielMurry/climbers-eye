@@ -16,6 +16,10 @@ import MapScreen from "./screens/MapScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import AddGymScreen from "./screens/AddGymScreen";
 import AddSprayWallScreen from "./screens/AddSprayWallScreen";
+import AddBoulderScreen from "./screens/AddBoulderScreen";
+import EditBoulderScreen from "./screens/EditBoulderScreen";
+import CameraScreen from "./screens/CameraScreen";
+import TestDrawScreen from "./screens/TestDrawScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -46,7 +50,7 @@ function customHeader(navigation, name) {
   );
 
   let animation = "true";
-  if (name === "Map") {
+  if (name === "Map" || name === "Camera") {
     animation = "none";
   }
 
@@ -64,6 +68,7 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator>
         {/* Screens */}
+        <Stack.Screen name="TestDraw" component={TestDrawScreen} />
         <Stack.Screen
           name="Login"
           component={LoginScreen}
@@ -96,9 +101,24 @@ export default function App() {
           options={({ navigation }) => customHeader(navigation, "AddSprayWall")}
         />
         <Stack.Screen
+          name="Camera"
+          component={CameraScreen}
+          options={({ navigation }) => customHeader(navigation, "Camera")}
+        />
+        <Stack.Screen
           name="Home"
           component={HomeScreen}
           options={({ navigation }) => customHeader(navigation, "Home")}
+        />
+        <Stack.Screen
+          name="AddBoulder"
+          component={AddBoulderScreen}
+          options={({ navigation }) => customHeader(navigation, "AddBoulder")}
+        />
+        <Stack.Screen
+          name="EditBoulder"
+          component={EditBoulderScreen}
+          options={({ navigation }) => customHeader(navigation, "EditBoulder")}
         />
         <Stack.Screen
           name="Profile"

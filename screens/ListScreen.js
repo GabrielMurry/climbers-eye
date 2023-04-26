@@ -173,7 +173,10 @@ const ListScreen = ({ navigation }) => {
             <TouchableOpacity style={styles.filter}>
               <AdjustmentsHorizontalIcon size={25} color="black" />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.addBoulder}>
+            <TouchableOpacity
+              style={styles.addBoulder}
+              onPress={() => navigation.navigate("AddBoulder")}
+            >
               <PlusIcon size={25} color="black" />
             </TouchableOpacity>
           </View>
