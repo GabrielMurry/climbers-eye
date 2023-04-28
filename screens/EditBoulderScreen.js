@@ -6,107 +6,88 @@ import {
   SafeAreaView,
   TouchableOpacity,
 } from "react-native";
-import React, { useState } from "react";
-import Slider from "@react-native-community/slider";
-import { FontAwesome } from "@expo/vector-icons";
+import React, { useRef, useState } from "react";
+import { SketchCanvas } from "rn-perfect-sketch-canvas";
+import ReactNativeZoomableView from "@openspacelabs/react-native-zoomable-view/src/ReactNativeZoomableView";
+import ItemEditBar from "../components/ItemEditBar";
+import BrushSize from "../components/BrushSize";
+import ModalEditPreview from "../components/ModalEditPreview";
 
 const imageScaleDownFactor = 7;
 
 const EditBoulderScreen = ({ route, navigation }) => {
   const { image } = route.params;
 
-  const [currentColor, setCurrentColor] = useState("green");
+  const canvasRef = useRef();
+  const zoomRef = useRef();
+
+  const [selectedItem, setSelectedItem] = useState("green");
+  const [brushSize, setBrushSize] = useState(20);
+  const [currentZoomLevel, setCurrentZoomLevel] = useState(1.0);
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const handleItemPress = (item) => {
+    setSelectedItem(item);
+    setCurrentZoomLevel(zoomRef.current.zoomLevel);
+  };
 
   return (
     <SafeAreaView style={styles.container}>
-      <Image
-        source={{ uri: image.uri }}
-        style={styles.image(image, imageScaleDownFactor)}
-      />
-      {/* Edit Bar */}
-      <View style={styles.editBarContainer}>
-        {/* Undo Button */}
-        <TouchableOpacity style={styles.undoButton}>
-          <FontAwesome name="undo" size={25} color="black" />
-        </TouchableOpacity>
-        {/* Eraser Button */}
-        <TouchableOpacity
-          style={
-            currentColor === "eraser"
-              ? styles.eraserButtonSelected
-              : styles.eraserButtonUnselected
-          }
-          onPress={() => setCurrentColor("eraser")}
-        >
-          <FontAwesome name="eraser" size={25} color="black" />
-        </TouchableOpacity>
-        {/* Green Button */}
-        <TouchableOpacity
-          style={
-            currentColor === "green"
-              ? styles.colorButtonSelected
-              : styles.colorButtonUnselected
-          }
-          onPress={() => setCurrentColor("green")}
-        >
-          <View style={styles.colorButton("green")}></View>
-        </TouchableOpacity>
-        {/* Blue Button */}
-        <TouchableOpacity
-          style={
-            currentColor === "blue"
-              ? styles.colorButtonSelected
-              : styles.colorButtonUnselected
-          }
-          onPress={() => setCurrentColor("blue")}
-        >
-          <View style={styles.colorButton("blue")}></View>
-        </TouchableOpacity>
-        {/* Purple Button */}
-        <TouchableOpacity
-          style={
-            currentColor === "purple"
-              ? styles.colorButtonSelected
-              : styles.colorButtonUnselected
-          }
-          onPress={() => setCurrentColor("purple")}
-        >
-          <View style={styles.colorButton("purple")}></View>
-        </TouchableOpacity>
-        {/* Red Button */}
-        <TouchableOpacity
-          style={
-            currentColor === "red"
-              ? styles.colorButtonSelected
-              : styles.colorButtonUnselected
-          }
-          onPress={() => setCurrentColor("red")}
-        >
-          <View style={styles.colorButton("red")}></View>
-        </TouchableOpacity>
-      </View>
-      {/* Brush Size */}
-      <View style={styles.brushSizeContainer}>
-        <View style={styles.brushSizePreview}></View>
-        <View style={styles.brushSizeSliderContainer}>
-          <Slider
-            // style={{ width: 200, height: 40 }}
-            minimumValue={0}
-            maximumValue={1}
-            minimumTrackTintColor="#FFFFFF"
-            maximumTrackTintColor="#000000"
+      {/* Sketch Canvas on top of Image */}
+      <ReactNativeZoomableView
+        // only zoom in and out when hand selected. If color selected, have max and min zoom equal eachother as to prevent zooming
+        maxZoom={selectedItem === "hand" ? 5 : currentZoomLevel}
+        minZoom={selectedItem === "hand" ? 0.5 : currentZoomLevel}
+        // disable pan on initial zoom. Update initial zoom every time an item is selected for redundancy (if hand is selected, ENABLE pan on initial zoom)
+        initialZoom={currentZoomLevel}
+        disablePanOnInitialZoom={selectedItem === "hand" ? false : true}
+        ref={zoomRef}
+      >
+        <View>
+          <SketchCanvas
+            ref={canvasRef}
+            strokeColor={selectedItem === "hand" ? "transparent" : selectedItem}
+            strokeWidth={selectedItem === "hand" ? 0 : brushSize}
+            containerStyle={styles.canvas(image, imageScaleDownFactor)}
+          />
+          <Image
+            source={{ uri: image.uri }}
+            style={styles.image(image, imageScaleDownFactor)}
           />
         </View>
-      </View>
+      </ReactNativeZoomableView>
+
+      {/* Item Edit Bar */}
+      <ItemEditBar
+        selectedItem={selectedItem}
+        handleItemPress={handleItemPress}
+        canvasRef={canvasRef}
+      />
+
+      {/* Brush Size preview and slider */}
+      <BrushSize brushSize={brushSize} setBrushSize={setBrushSize} />
+
       {/* Footer */}
       <View style={styles.footerContainer}>
         <TouchableOpacity style={styles.footerButton}>
-          <Text style={styles.footerButtonText}>Cancel</Text>
+          <Text style={styles.footerButtonText}>Reset</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.footerButton}>
+        <TouchableOpacity
+          style={styles.footerButton}
+          onPress={() => setModalVisible(true)}
+        >
           <Text style={styles.footerButtonText}>Done</Text>
         </TouchableOpacity>
       </View>
+
+      {/* Modal Preview */}
+      <ModalEditPreview
+        image={image}
+        imageScaleDownFactor={imageScaleDownFactor}
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+        navigation={navigation}
+      />
     </SafeAreaView>
   );
 };
@@ -120,75 +101,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
   },
-  image: (image, imageScaleDownFactor) => ({
+  canvas: (image, imageScaleDownFactor) => ({
     width: image.width / imageScaleDownFactor,
     height: image.height / imageScaleDownFactor,
   }),
-  editBarContainer: {
-    backgroundColor: "lightblue",
-    height: 50,
-    width: "90%",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-evenly",
-    columnGap: 10,
-  },
-  undoButton: {
-    width: 40,
-    height: 40,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  eraserButtonSelected: {
-    borderColor: "black",
-    borderWidth: 2,
-    width: 40,
-    height: 40,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  eraserButtonUnselected: {
-    width: 40,
-    height: 40,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  colorButtonSelected: {
-    borderColor: "black",
-    borderWidth: 2,
-    width: 40,
-    height: 40,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  colorButtonUnselected: {
-    width: 40,
-    height: 40,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  colorButton: (col) => ({
-    backgroundColor: col,
-    width: 30,
-    height: 30,
+  image: (image, imageScaleDownFactor) => ({
+    width: image.width / imageScaleDownFactor,
+    height: image.height / imageScaleDownFactor,
+    position: "absolute",
+    zIndex: -1,
   }),
-  brushSizeContainer: {
-    width: "90%",
-    flexDirection: "row",
-    alignItems: "center",
-    columnGap: 10,
-  },
-  brushSizePreview: {
-    backgroundColor: "green",
-    width: 50,
-    height: 50,
-  },
-  brushSizeSliderContainer: {
-    backgroundColor: "pink",
-    height: 50,
-    flex: 1,
-    justifyContent: "center",
-  },
   footerContainer: {
     backgroundColor: "lightgreen",
     height: 50,

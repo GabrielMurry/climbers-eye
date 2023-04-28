@@ -20,6 +20,7 @@ import AddBoulderScreen from "./screens/AddBoulderScreen";
 import EditBoulderScreen from "./screens/EditBoulderScreen";
 import CameraScreen from "./screens/CameraScreen";
 import TestDrawScreen from "./screens/TestDrawScreen";
+import BoulderQuestionnaireScreen from "./screens/BoulderQuestionnaireScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -68,7 +69,7 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator>
         {/* Screens */}
-        <Stack.Screen name="TestDraw" component={TestDrawScreen} />
+        {/* <Stack.Screen name="TestDraw" component={TestDrawScreen} /> */}
         <Stack.Screen
           name="Login"
           component={LoginScreen}
@@ -119,6 +120,13 @@ export default function App() {
           name="EditBoulder"
           component={EditBoulderScreen}
           options={({ navigation }) => customHeader(navigation, "EditBoulder")}
+        />
+        <Stack.Screen
+          name="BoulderQuestionnaire"
+          component={BoulderQuestionnaireScreen}
+          options={({ navigation }) =>
+            customHeader(navigation, "BoulderQuestionnaire")
+          }
         />
         <Stack.Screen
           name="Profile"
