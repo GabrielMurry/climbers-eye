@@ -11,6 +11,7 @@
   "dependencies": {
     "@openspacelabs/react-native-zoomable-view": "^2.1.1",
     "@react-native-community/slider": "4.4.2",
+    "@react-navigation/drawer": "^6.6.2",
     "@react-navigation/elements": "^1.3.17",
     "@react-navigation/native": "^6.1.6",
     "@react-navigation/native-stack": "^6.9.12",
@@ -23,7 +24,6 @@
     "expo-status-bar": "~1.4.4",
     "react": "18.2.0",
     "react-native": "0.71.7",
-    "react-native-canvas": "^0.1.38",
     "react-native-gesture-handler": "~2.9.0",
     "react-native-heroicons": "^3.2.0",
     "react-native-maps": "1.3.2",
@@ -31,7 +31,8 @@
     "react-native-screens": "~3.20.0",
     "react-native-svg": "^13.9.0",
     "react-native-webview": "^12.0.2",
-    "rn-perfect-sketch-canvas": "^0.3.0"
+    "rn-perfect-sketch-canvas": "^0.3.0",
+    "react-native-reanimated": "~2.14.4"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

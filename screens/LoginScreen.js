@@ -1,14 +1,18 @@
 import React, { useState } from "react";
 import {
+  SafeAreaView,
   StyleSheet,
   Text,
-  TextInput,
-  TouchableOpacity,
-  View,
+  useWindowDimensions,
 } from "react-native";
+import CustomInput from "../components/CustomInput";
+import CustomButton from "../components/CustomButton";
+import SocialSignInButtons from "../components/SocialSignInButtons";
 
 const LoginScreen = ({ navigation }) => {
-  const [email, setEmail] = useState("");
+  const { height } = useWindowDimensions();
+
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const handleLogin = () => {
@@ -16,67 +20,55 @@ const LoginScreen = ({ navigation }) => {
     navigation.navigate("Home");
   };
 
+  const handleForgotPassword = () => {
+    navigation.navigate("ForgotPassword");
+  };
+
+  const handleCreateAccount = () => {
+    navigation.navigate("Signup");
+  };
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Login</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
+    <SafeAreaView style={styles.container}>
+      <Text style={[styles.logo, { height: height * 0.3 }]}>SPRAY</Text>
+      <CustomInput
+        value={username}
+        setValue={setUsername}
+        placeholder="Username"
+        secureTextEntry={false}
       />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
+      <CustomInput
         value={password}
+        setValue={setPassword}
+        placeholder="Password"
         secureTextEntry={true}
-        onChangeText={setPassword}
       />
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Login</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate("Signup")}>
-        <Text style={styles.signupLink}>Don't have an account? Sign up</Text>
-      </TouchableOpacity>
-    </View>
+      <CustomButton onPress={handleLogin} text="Login" />
+      <CustomButton
+        onPress={handleForgotPassword}
+        text="Forgot password?"
+        type="TERTIARY"
+      />
+      <SocialSignInButtons />
+      <CustomButton
+        onPress={handleCreateAccount}
+        text="Don't have an account? Create one"
+        type="TERTIARY"
+      />
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#fff",
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 30,
-    color: "#007bff",
-  },
-  input: {
-    width: "80%",
-    padding: 10,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 5,
-    marginBottom: 20,
-  },
-  button: {
-    backgroundColor: "#007bff",
-    borderRadius: 5,
-    padding: 10,
-    width: "80%",
     alignItems: "center",
   },
-  buttonText: {
-    color: "#fff",
-    fontSize: 18,
-  },
-  signupLink: {
-    color: "#007bff",
-    marginTop: 20,
+  logo: {
+    // width: "70%",
+    maxWidth: 300,
+    maxHeight: 200,
+    fontSize: 100,
   },
 });
 

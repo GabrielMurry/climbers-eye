@@ -1,88 +1,97 @@
 import React, { useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { SafeAreaView, StyleSheet, Text } from "react-native";
+import CustomInput from "../components/CustomInput";
+import CustomButton from "../components/CustomButton";
+import SocialSignInButtons from "../components/SocialSignInButtons";
 
 const SignupScreen = ({ navigation }) => {
-  const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordRepeat, setPasswordRepeat] = useState("");
 
-  const handleSignup = () => {
-    // Your account creation code here
-    navigation.navigate("Home");
+  const handleCreateAccount = () => {
+    // Your authentication code here
+    navigation.navigate("ConfirmEmail");
+  };
+
+  const handleTermsOfUse = () => {};
+
+  const handlePrivacyPolicy = () => {};
+
+  const handleLogin = () => {
+    navigation.navigate("Login");
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Create Account</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Name"
-        value={name}
-        onChangeText={setName}
+      <CustomInput
+        value={username}
+        setValue={setUsername}
+        placeholder="Username"
+        secureTextEntry={false}
       />
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
+      <CustomInput
         value={email}
-        onChangeText={setEmail}
+        setValue={setEmail}
+        placeholder="Email"
+        secureTextEntry={false}
       />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
+      <CustomInput
         value={password}
+        setValue={setPassword}
+        placeholder="Password"
         secureTextEntry={true}
-        onChangeText={setPassword}
       />
-      <TouchableOpacity style={styles.button} onPress={handleSignup}>
-        <Text style={styles.buttonText}>Sign up</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-        <Text style={styles.signupLink}>Already have an account? Login</Text>
-      </TouchableOpacity>
-    </View>
+      <CustomInput
+        value={passwordRepeat}
+        setValue={setPasswordRepeat}
+        placeholder="Re-Enter Password"
+        secureTextEntry={true}
+      />
+      <CustomButton onPress={handleCreateAccount} text="Create Account" />
+
+      <Text style={styles.text}>
+        By registering, you confirm that you accept our{" "}
+        <Text style={styles.link} onPress={handleTermsOfUse}>
+          Terms of Use
+        </Text>{" "}
+        and{" "}
+        <Text style={styles.link} onPress={handlePrivacyPolicy}>
+          Privacy Policy
+        </Text>
+      </Text>
+
+      <SocialSignInButtons />
+
+      <CustomButton
+        onPress={handleLogin}
+        text="Already have an account? Login"
+        type="TERTIARY"
+      />
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#fff",
+    alignItems: "center",
   },
   title: {
     fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 30,
+    color: "#051c60",
+    margin: 10,
   },
-  input: {
-    width: "80%",
-    padding: 10,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 5,
-    marginBottom: 20,
+  text: {
+    color: "gray",
+    marginVertical: 10,
+    width: "90%",
   },
-  button: {
-    backgroundColor: "#007bff",
-    borderRadius: 5,
-    padding: 10,
-    width: "80%",
-    alignItems: "center",
-  },
-  buttonText: {
-    color: "#fff",
-    fontSize: 18,
-  },
-  signupLink: {
-    color: "#007bff",
-    marginTop: 20,
+  link: {
+    color: "#fd8075",
   },
 });
 

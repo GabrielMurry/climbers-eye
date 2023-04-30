@@ -20,7 +20,10 @@ import AddBoulderScreen from "./screens/AddBoulderScreen";
 import EditBoulderScreen from "./screens/EditBoulderScreen";
 import CameraScreen from "./screens/CameraScreen";
 import TestDrawScreen from "./screens/TestDrawScreen";
-import BoulderQuestionnaireScreen from "./screens/BoulderQuestionnaireScreen";
+import ConfirmEmailScreen from "./screens/ConfirmEmailScreen";
+import ForgotPasswordScreen from "./screens/ForgotPasswordScreen";
+import ResetPasswordScreen from "./screens/ResetPasswordScreen";
+import SubmitCodeScreen from "./screens/SubmitCodeScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -79,8 +82,40 @@ export default function App() {
           }}
         />
         <Stack.Screen
+          name="ForgotPassword"
+          component={ForgotPasswordScreen}
+          options={{
+            headerShown: false,
+            animation: "none",
+          }}
+        />
+        <Stack.Screen
+          name="SubmitCode"
+          component={SubmitCodeScreen}
+          options={{
+            headerShown: false,
+            animation: "none",
+          }}
+        />
+        <Stack.Screen
+          name="ResetPassword"
+          component={ResetPasswordScreen}
+          options={{
+            headerShown: false,
+            animation: "none",
+          }}
+        />
+        <Stack.Screen
           name="Signup"
           component={SignupScreen}
+          options={{
+            headerShown: false,
+            animation: "none",
+          }}
+        />
+        <Stack.Screen
+          name="ConfirmEmail"
+          component={ConfirmEmailScreen}
           options={{
             headerShown: false,
             animation: "none",
@@ -120,13 +155,6 @@ export default function App() {
           name="EditBoulder"
           component={EditBoulderScreen}
           options={({ navigation }) => customHeader(navigation, "EditBoulder")}
-        />
-        <Stack.Screen
-          name="BoulderQuestionnaire"
-          component={BoulderQuestionnaireScreen}
-          options={({ navigation }) =>
-            customHeader(navigation, "BoulderQuestionnaire")
-          }
         />
         <Stack.Screen
           name="Profile"

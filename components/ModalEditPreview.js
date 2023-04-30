@@ -6,8 +6,12 @@ import {
   TouchableOpacity,
   StyleSheet,
   Alert,
+  TextInput,
+  KeyboardAvoidingView,
+  Platform,
+  Switch,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 
 const ModalEditPreview = ({
   image,
@@ -16,8 +20,13 @@ const ModalEditPreview = ({
   setModalVisible,
   navigation,
 }) => {
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [switch1, setSwitch1] = useState(true);
+  const [switch2, setSwitch2] = useState(true);
+
   const handleNext = () => {
-    navigation.navigate("BoulderQuestionnaire");
+    navigation.navigate("Home");
     setModalVisible(!modalVisible);
   };
 
@@ -31,30 +40,66 @@ const ModalEditPreview = ({
         setModalVisible(!modalVisible);
       }}
     >
-      <View style={styles.centeredView}>
-        <View style={styles.modalView(image, imageScaleDownFactor)}>
-          <Text style={styles.modalTitleText}>Preview</Text>
-          <Image
-            source={{ uri: image.uri }}
-            style={styles.modalImage(image, imageScaleDownFactor)}
-            resizeMode="contain"
-          />
-          <View style={styles.modalButtonsContainer}>
-            <TouchableOpacity
-              style={styles.modalButton("rgba(15, 10, 222, 0.2)")}
-              onPress={() => setModalVisible(!modalVisible)}
-            >
-              <Text style={styles.buttonText}>Cancel</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.modalButton("rgba(15, 10, 222, 1)")}
-              onPress={handleNext}
-            >
-              <Text style={styles.buttonText}>Next</Text>
-            </TouchableOpacity>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView(image, imageScaleDownFactor)}>
+            <Image
+              source={{ uri: image.uri }}
+              style={styles.modalImage(image, imageScaleDownFactor)}
+              resizeMode="contain"
+            />
+            <View style={styles.labelAndInputContainer}>
+              <View>
+                <TextInput
+                  style={styles.input}
+                  value={name}
+                  onChangeText={setName}
+                  placeholder="Boulder Name"
+                />
+              </View>
+              <View>
+                <TextInput
+                  style={styles.input}
+                  value={description}
+                  onChangeText={setDescription}
+                  placeholder="Description"
+                />
+              </View>
+            </View>
+            <View style={styles.labelAndToggleContainer}>
+              <View style={styles.labelAndToggle}>
+                <Text style={styles.toggleLabel}>Matching Allowed</Text>
+                <Switch value={switch1} onValueChange={setSwitch1} />
+              </View>
+              <View style={styles.labelAndToggle}>
+                <Text style={styles.toggleLabel}>Publish</Text>
+                <Switch value={switch2} onValueChange={setSwitch2} />
+              </View>
+            </View>
+            <View style={styles.modalButtonsContainer}>
+              <TouchableOpacity
+                style={styles.modalButton("rgba(15, 10, 222, 0.2)")}
+                onPress={() => setModalVisible(!modalVisible)}
+              >
+                <Text style={styles.buttonText}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.modalButton("rgba(15, 10, 222, 1)")}
+                onPress={handleNext}
+              >
+                <Text style={styles.buttonText}>Next</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
-      </View>
+      </KeyboardAvoidingView>
     </Modal>
   );
 };
@@ -73,10 +118,11 @@ const styles = StyleSheet.create({
     backgroundColor: "lightblue",
     borderRadius: 20,
     width: image.width / imageScaleDownFactor,
-    height: image.height / (imageScaleDownFactor - 0.5),
+    paddingVertical: 20,
     alignItems: "center",
     justifyContent: "space-evenly",
     shadowColor: "#000",
+    position: "absolute",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -85,21 +131,31 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   }),
-  modalTitleText: {
-    fontSize: 28,
-  },
   modalImage: (image, imageScaleDownFactor) => ({
     width: image.width / (imageScaleDownFactor - 1),
     height: image.width / (imageScaleDownFactor - 1),
   }),
+  labelAndInputContainer: {
+    marginTop: 20,
+    width: "75%",
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "gray",
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    marginBottom: 20,
+  },
   modalButtonsContainer: {
+    marginTop: 20,
     flexDirection: "row",
     justifyContent: "space-evenly",
     width: "100%",
   },
   modalButton: (col) => ({
-    width: 90,
-    height: 45,
+    width: 85,
+    height: 40,
     backgroundColor: col,
     justifyContent: "center",
     alignItems: "center",
@@ -109,5 +165,17 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "bold",
     textAlign: "center",
+  },
+  labelAndToggleContainer: {
+    width: "60%",
+    rowGap: 10,
+  },
+  labelAndToggle: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  toggleLabel: {
+    fontSize: 16,
   },
 });
