@@ -53,7 +53,7 @@ function customHeader(navigation, name) {
     />
   );
 
-  let animation = "true";
+  let animation = "default";
   if (name === "Map" || name === "Camera") {
     animation = "none";
   }

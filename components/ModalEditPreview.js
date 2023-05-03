@@ -19,6 +19,7 @@ const ModalEditPreview = ({
   modalVisible,
   setModalVisible,
   navigation,
+  newUrl,
 }) => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -51,7 +52,7 @@ const ModalEditPreview = ({
         <View style={styles.centeredView}>
           <View style={styles.modalView(image, imageScaleDownFactor)}>
             <Image
-              source={{ uri: image.uri }}
+              source={{ uri: newUrl }}
               style={styles.modalImage(image, imageScaleDownFactor)}
               resizeMode="contain"
             />

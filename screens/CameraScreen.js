@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet, Image, SafeAreaView } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { Camera, CameraType } from "expo-camera";
+import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
 import CameraButton from "../components/CameraButton";
 
 const CameraScreen = ({ route, navigation }) => {
@@ -25,8 +26,14 @@ const CameraScreen = ({ route, navigation }) => {
   const takePicture = async () => {
     if (cameraRef) {
       try {
+        // const options = { base64: true, ImageType: "png", quality: 0 }; // cameraPictureOptions for expo camera types (uri, width, and height are default)
         const data = await cameraRef.current.takePictureAsync();
-        setImage(data); // data also contains height and width
+        const compressedData = await manipulateAsync(data.uri, [], {
+          compress: 0.5,
+          format: SaveFormat.PNG,
+          base64: true,
+        });
+        setImage(compressedData); // data also contains height and width
       } catch (error) {
         console.log(error);
       }

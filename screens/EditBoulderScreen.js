@@ -12,6 +12,8 @@ import ReactNativeZoomableView from "@openspacelabs/react-native-zoomable-view/s
 import ItemEditBar from "../components/ItemEditBar";
 import BrushSize from "../components/BrushSize";
 import ModalEditPreview from "../components/ModalEditPreview";
+import imageTest from "../assets/rockwall.jpg";
+import axios from "../api/axios";
 
 const imageScaleDownFactor = 7;
 
@@ -20,15 +22,32 @@ const EditBoulderScreen = ({ route, navigation }) => {
 
   const canvasRef = useRef();
   const zoomRef = useRef();
+  const snapshotRef = useRef();
 
   const [selectedItem, setSelectedItem] = useState("green");
   const [brushSize, setBrushSize] = useState(20);
   const [currentZoomLevel, setCurrentZoomLevel] = useState(1.0);
   const [modalVisible, setModalVisible] = useState(false);
+  const [newUrl, setNewUrl] = useState(null);
 
   const handleItemPress = (item) => {
     setSelectedItem(item);
     setCurrentZoomLevel(zoomRef.current.zoomLevel);
+  };
+
+  const handleDonePress = async () => {
+    const drawing = canvasRef.current.toImage();
+    const dataDrawing = drawing.encodeToBase64();
+    const base64Drawing = `data:image/png;base64,${dataDrawing}`;
+    axios
+      .post("/image", { drawing: base64Drawing, photo: image.base64 })
+      .then((response) => {
+        setNewUrl(response.data.drawing);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    setModalVisible(true);
   };
 
   return (
@@ -43,7 +62,13 @@ const EditBoulderScreen = ({ route, navigation }) => {
         disablePanOnInitialZoom={selectedItem === "hand" ? false : true}
         ref={zoomRef}
       >
-        <View>
+        <View
+          style={{
+            width: image.width / imageScaleDownFactor,
+            height: image.height / imageScaleDownFactor,
+          }}
+          ref={snapshotRef}
+        >
           <SketchCanvas
             ref={canvasRef}
             strokeColor={selectedItem === "hand" ? "transparent" : selectedItem}
@@ -72,10 +97,7 @@ const EditBoulderScreen = ({ route, navigation }) => {
         <TouchableOpacity style={styles.footerButton}>
           <Text style={styles.footerButtonText}>Reset</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.footerButton}
-          onPress={() => setModalVisible(true)}
-        >
+        <TouchableOpacity style={styles.footerButton} onPress={handleDonePress}>
           <Text style={styles.footerButtonText}>Done</Text>
         </TouchableOpacity>
       </View>
@@ -87,6 +109,7 @@ const EditBoulderScreen = ({ route, navigation }) => {
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
         navigation={navigation}
+        newUrl={newUrl}
       />
     </SafeAreaView>
   );
