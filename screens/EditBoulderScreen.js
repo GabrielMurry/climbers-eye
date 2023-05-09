@@ -14,6 +14,8 @@ import BrushSize from "../components/BrushSize";
 import ModalEditPreview from "../components/ModalEditPreview";
 import imageTest from "../assets/rockwall.jpg";
 import axios from "../api/axios";
+import { captureRef } from "react-native-view-shot";
+import MaskedView from "@react-native-masked-view/masked-view";
 
 const imageScaleDownFactor = 7;
 
@@ -22,7 +24,8 @@ const EditBoulderScreen = ({ route, navigation }) => {
 
   const canvasRef = useRef();
   const zoomRef = useRef();
-  const snapshotRef = useRef();
+  const snapshotDrawingRef = useRef();
+  const snapshotPhotoRef = useRef();
 
   const [selectedItem, setSelectedItem] = useState("green");
   const [brushSize, setBrushSize] = useState(20);
@@ -36,17 +39,51 @@ const EditBoulderScreen = ({ route, navigation }) => {
   };
 
   const handleDonePress = async () => {
-    const drawing = canvasRef.current.toImage();
-    const dataDrawing = drawing.encodeToBase64();
-    const base64Drawing = `data:image/png;base64,${dataDrawing}`;
+    // WORKS! but I want the non drawn parts of image to be gray-scaled
+    const snapshotDrawing = await captureRef(snapshotDrawingRef, {
+      format: "jpg",
+      quality: 1,
+      result: "base64",
+    }).then(
+      (base64) => {
+        return base64;
+      },
+      (error) => console.error("Oops, snapshot failed", error)
+    );
+    const snapshotPhoto = await captureRef(snapshotPhotoRef, {
+      format: "jpg",
+      quality: 1,
+      result: "base64",
+    }).then(
+      (base64) => {
+        return base64;
+      },
+      (error) => console.error("Oops, snapshot failed", error)
+    );
+
+    // console.log("drawing---", snapshotDrawing);
+    // console.log("photo---", snapshotPhoto);
+
     axios
-      .post("/image", { drawing: base64Drawing, photo: image.base64 })
+      .post("/image", { drawing: snapshotDrawing, photo: snapshotPhoto })
       .then((response) => {
-        setNewUrl(response.data.drawing);
+        setNewUrl(response.data.newImage);
       })
       .catch((err) => {
         console.log(err);
       });
+
+    // const drawing = canvasRef.current.toImage();
+    // const dataDrawing = drawing.encodeToBase64();
+    // const base64Drawing = `data:image/png;base64,${dataDrawing}`;
+    // axios
+    //   .post("/image", { drawing: base64Drawing, photo: image.base64 })
+    //   .then((response) => {
+    //     setNewUrl(response.data.newImage);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
     setModalVisible(true);
   };
 
@@ -67,7 +104,7 @@ const EditBoulderScreen = ({ route, navigation }) => {
             width: image.width / imageScaleDownFactor,
             height: image.height / imageScaleDownFactor,
           }}
-          ref={snapshotRef}
+          ref={snapshotDrawingRef}
         >
           <SketchCanvas
             ref={canvasRef}
@@ -75,11 +112,12 @@ const EditBoulderScreen = ({ route, navigation }) => {
             strokeWidth={selectedItem === "hand" ? 0 : brushSize}
             containerStyle={styles.canvas(image, imageScaleDownFactor)}
           />
-          <Image
-            source={{ uri: image.uri }}
-            style={styles.image(image, imageScaleDownFactor)}
-          />
         </View>
+        <Image
+          ref={snapshotPhotoRef}
+          source={{ uri: image.uri }}
+          style={styles.image(image, imageScaleDownFactor)}
+        />
       </ReactNativeZoomableView>
 
       {/* Item Edit Bar */}
@@ -127,6 +165,7 @@ const styles = StyleSheet.create({
   canvas: (image, imageScaleDownFactor) => ({
     width: image.width / imageScaleDownFactor,
     height: image.height / imageScaleDownFactor,
+    opacity: 0.4,
   }),
   image: (image, imageScaleDownFactor) => ({
     width: image.width / imageScaleDownFactor,
