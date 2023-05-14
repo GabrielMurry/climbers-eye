@@ -10,8 +10,11 @@ import {
   KeyboardAvoidingView,
   Platform,
   Switch,
+  Dimensions,
+  Pressable,
 } from "react-native";
 import React, { useState } from "react";
+import FullScreenImage from "./FullScreenImage";
 
 const ModalEditPreview = ({
   image,
@@ -25,6 +28,7 @@ const ModalEditPreview = ({
   const [description, setDescription] = useState("");
   const [switch1, setSwitch1] = useState(true);
   const [switch2, setSwitch2] = useState(true);
+  const [imageFullScreen, setImageFullScreen] = useState(false);
 
   const handleNext = () => {
     navigation.navigate("Home");
@@ -51,11 +55,13 @@ const ModalEditPreview = ({
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView(image, imageScaleDownFactor)}>
-            <Image
-              source={{ uri: newUrl }}
-              style={styles.modalImage(image, imageScaleDownFactor)}
-              resizeMode="contain"
-            />
+            <Pressable onPress={() => setImageFullScreen(true)}>
+              <Image
+                source={{ uri: newUrl }}
+                style={styles.modalImage(image, imageScaleDownFactor)}
+                resizeMode="contain"
+              />
+            </Pressable>
             <View style={styles.labelAndInputContainer}>
               <View>
                 <TextInput
@@ -101,6 +107,12 @@ const ModalEditPreview = ({
           </View>
         </View>
       </KeyboardAvoidingView>
+      <FullScreenImage
+        imageFullScreen={imageFullScreen}
+        newUrl={newUrl}
+        image={image}
+        onRequestClose={() => setImageFullScreen(false)}
+      />
     </Modal>
   );
 };
@@ -112,10 +124,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    // marginTop: 22,
   },
   modalView: (image, imageScaleDownFactor) => ({
-    // margin: 20,
     backgroundColor: "lightblue",
     borderRadius: 20,
     width: image.width / imageScaleDownFactor,

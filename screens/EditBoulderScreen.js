@@ -12,10 +12,8 @@ import ReactNativeZoomableView from "@openspacelabs/react-native-zoomable-view/s
 import ItemEditBar from "../components/ItemEditBar";
 import BrushSize from "../components/BrushSize";
 import ModalEditPreview from "../components/ModalEditPreview";
-import imageTest from "../assets/rockwall.jpg";
 import axios from "../api/axios";
 import { captureRef } from "react-native-view-shot";
-import MaskedView from "@react-native-masked-view/masked-view";
 
 const imageScaleDownFactor = 7;
 
@@ -41,7 +39,7 @@ const EditBoulderScreen = ({ route, navigation }) => {
   const handleDonePress = async () => {
     // WORKS! but I want the non drawn parts of image to be gray-scaled
     const snapshotDrawing = await captureRef(snapshotDrawingRef, {
-      format: "jpg",
+      format: "png",
       quality: 1,
       result: "base64",
     }).then(
@@ -51,7 +49,7 @@ const EditBoulderScreen = ({ route, navigation }) => {
       (error) => console.error("Oops, snapshot failed", error)
     );
     const snapshotPhoto = await captureRef(snapshotPhotoRef, {
-      format: "jpg",
+      format: "png",
       quality: 1,
       result: "base64",
     }).then(
@@ -61,29 +59,14 @@ const EditBoulderScreen = ({ route, navigation }) => {
       (error) => console.error("Oops, snapshot failed", error)
     );
 
-    // console.log("drawing---", snapshotDrawing);
-    // console.log("photo---", snapshotPhoto);
-
     axios
-      .post("/image", { drawing: snapshotDrawing, photo: snapshotPhoto })
+      .post("/composite/", { drawing: snapshotDrawing, photo: snapshotPhoto })
       .then((response) => {
-        setNewUrl(response.data.newImage);
+        setNewUrl(response.data);
       })
       .catch((err) => {
         console.log(err);
       });
-
-    // const drawing = canvasRef.current.toImage();
-    // const dataDrawing = drawing.encodeToBase64();
-    // const base64Drawing = `data:image/png;base64,${dataDrawing}`;
-    // axios
-    //   .post("/image", { drawing: base64Drawing, photo: image.base64 })
-    //   .then((response) => {
-    //     setNewUrl(response.data.newImage);
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
     setModalVisible(true);
   };
 

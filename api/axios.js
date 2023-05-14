@@ -1,5 +1,5 @@
 import axios from "axios";
-const BASE_URL = "http://192.168.50.29:3000/";
+const BASE_URL = "http://192.168.50.29:8000/";
 // For development on web, localhost works
 // However for react native expo development (on ios emulator), localhost does not work
 // Could be ios blocking localhost or non-https
