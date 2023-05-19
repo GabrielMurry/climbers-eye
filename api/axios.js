@@ -10,8 +10,12 @@ const BASE_URL = "http://192.168.50.29:8000/";
 
 export default axios.create({
   baseURL: BASE_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
+// unnecessary?
 export const axiosPrivate = axios.create({
   baseURL: BASE_URL,
   headers: { "Content-Type": "application/json" },

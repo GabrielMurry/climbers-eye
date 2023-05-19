@@ -12,12 +12,7 @@ import { Ionicons } from "@expo/vector-icons";
 
 const window = Dimensions.get("window");
 
-const FullScreenImage = ({
-  imageFullScreen,
-  newUrl,
-  image,
-  onRequestClose,
-}) => {
+const FullScreenImage = ({ imageFullScreen, uri, image, onRequestClose }) => {
   return (
     <Modal
       visible={imageFullScreen}
@@ -42,7 +37,7 @@ const FullScreenImage = ({
         </TouchableOpacity>
         <ReactNativeZoomableView maxZoom={5} minZoom={1} initialZoom={1}>
           <Image
-            source={{ uri: newUrl }}
+            source={{ uri: uri }}
             style={styles.image(
               window.width,
               image.height * (window.width / image.width)

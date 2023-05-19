@@ -29,7 +29,7 @@ const EditBoulderScreen = ({ route, navigation }) => {
   const [brushSize, setBrushSize] = useState(20);
   const [currentZoomLevel, setCurrentZoomLevel] = useState(1.0);
   const [modalVisible, setModalVisible] = useState(false);
-  const [newUrl, setNewUrl] = useState(null);
+  const [resultImageUri, setResultImageUri] = useState(null);
 
   const handleItemPress = (item) => {
     setSelectedItem(item);
@@ -37,7 +37,7 @@ const EditBoulderScreen = ({ route, navigation }) => {
   };
 
   const handleDonePress = async () => {
-    // WORKS! but I want the non drawn parts of image to be gray-scaled
+    // snapshot of drawing in base64 png
     const snapshotDrawing = await captureRef(snapshotDrawingRef, {
       format: "png",
       quality: 1,
@@ -48,6 +48,7 @@ const EditBoulderScreen = ({ route, navigation }) => {
       },
       (error) => console.error("Oops, snapshot failed", error)
     );
+    // snapshot of photo in base64 png
     const snapshotPhoto = await captureRef(snapshotPhotoRef, {
       format: "png",
       quality: 1,
@@ -62,7 +63,7 @@ const EditBoulderScreen = ({ route, navigation }) => {
     axios
       .post("/composite/", { drawing: snapshotDrawing, photo: snapshotPhoto })
       .then((response) => {
-        setNewUrl(response.data);
+        setResultImageUri(response.data);
       })
       .catch((err) => {
         console.log(err);
@@ -130,7 +131,7 @@ const EditBoulderScreen = ({ route, navigation }) => {
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
         navigation={navigation}
-        newUrl={newUrl}
+        resultImageUri={resultImageUri}
       />
     </SafeAreaView>
   );

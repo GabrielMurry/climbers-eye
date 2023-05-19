@@ -3,6 +3,8 @@ import { SafeAreaView, StyleSheet, Text } from "react-native";
 import CustomInput from "../components/CustomInput";
 import CustomButton from "../components/CustomButton";
 import SocialSignInButtons from "../components/SocialSignInButtons";
+import axios from "../api/axios";
+import configToken from "../api/configToken";
 
 const SignupScreen = ({ navigation }) => {
   const [username, setUsername] = useState("");
@@ -10,8 +12,25 @@ const SignupScreen = ({ navigation }) => {
   const [password, setPassword] = useState("");
   const [passwordRepeat, setPasswordRepeat] = useState("");
 
-  const handleCreateAccount = () => {
+  const handleCreateAccount = async () => {
     // Your authentication code here
+    axios
+      .post(
+        "/signup/",
+        {
+          username,
+          email,
+          password1: password,
+          password2: passwordRepeat,
+        },
+        await configToken
+      )
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     navigation.navigate("ConfirmEmail");
   };
 

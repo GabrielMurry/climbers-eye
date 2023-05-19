@@ -10,7 +10,6 @@ import {
   KeyboardAvoidingView,
   Platform,
   Switch,
-  Dimensions,
   Pressable,
 } from "react-native";
 import React, { useState } from "react";
@@ -22,7 +21,7 @@ const ModalEditPreview = ({
   modalVisible,
   setModalVisible,
   navigation,
-  newUrl,
+  resultImageUri,
 }) => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -57,7 +56,7 @@ const ModalEditPreview = ({
           <View style={styles.modalView(image, imageScaleDownFactor)}>
             <Pressable onPress={() => setImageFullScreen(true)}>
               <Image
-                source={{ uri: newUrl }}
+                source={{ uri: resultImageUri }}
                 style={styles.modalImage(image, imageScaleDownFactor)}
                 resizeMode="contain"
               />
@@ -109,7 +108,7 @@ const ModalEditPreview = ({
       </KeyboardAvoidingView>
       <FullScreenImage
         imageFullScreen={imageFullScreen}
-        newUrl={newUrl}
+        uri={resultImageUri}
         image={image}
         onRequestClose={() => setImageFullScreen(false)}
       />

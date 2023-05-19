@@ -10,6 +10,7 @@ import {
   SafeAreaView,
 } from "react-native";
 import { CameraIcon } from "react-native-heroicons/outline";
+import axios from "../api/axios";
 
 const imageScaleDownFactor = 10;
 
@@ -33,12 +34,45 @@ const AddNewSprayWallScreen = ({ route, navigation }) => {
         {
           text: "OK",
           onPress: () => {
+            axios
+              .post("/spraywall/", {
+                name: sprayWallName,
+                spraywall_image_data: image.base64,
+                spraywall_image_width: image.width,
+                spraywall_image_height: image.height,
+                gym: 1,
+              })
+              .then((response) => {
+                console.log(response);
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+            navigation.navigate("AddSprayWall");
             navigation.navigate("Home");
           },
         },
       ],
       { cancelable: false }
     );
+  };
+
+  const handleTest = () => {
+    axios
+      .get("/spraywall/")
+      .then((response) => {
+        const image = {
+          uri: "data:image/png;base64," + response.data[0].spraywall_image_data,
+          base64: response.data[0].spraywall_image_data,
+          width: response.data[0].spraywall_image_width,
+          height: response.data[0].spraywall_image_height,
+        };
+        setImage(image);
+        // console.log(response.data[0].spraywall_image_width);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
@@ -76,6 +110,9 @@ const AddNewSprayWallScreen = ({ route, navigation }) => {
         />
         <TouchableOpacity style={styles.button} onPress={handleAddSprayWall}>
           <Text style={styles.buttonText}>Add Spray Wall</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={handleTest}>
+          <Text style={styles.buttonText}>Test</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

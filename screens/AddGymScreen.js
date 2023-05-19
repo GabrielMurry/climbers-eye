@@ -7,6 +7,7 @@ import {
   StyleSheet,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import axios from "../api/axios";
 
 const AddGymScreen = () => {
   const [gymType, setGymType] = useState("");
@@ -17,6 +18,18 @@ const AddGymScreen = () => {
   const handleAddGym = () => {
     // code to add new gym to database or API
     // after validation and checking for missing fields
+    axios
+      .post("/gym/", {
+        name: gymName,
+        type: gymType,
+        location: gymLocation,
+      })
+      .then((response) => {
+        console.log(response.data.id); // store in user's gym_id? or just do that directly in django - so we pass our person id? idk
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     navigation.navigate("AddSprayWall");
   };
 
@@ -32,7 +45,7 @@ const AddGymScreen = () => {
                 ? styles.selectedButton
                 : styles.button
             }
-            onPress={() => setGymType("Commercial Gym")}
+            onPress={() => setGymType("Commercial")}
           >
             <Text style={styles.buttonText}>Commercial Gym</Text>
           </TouchableOpacity>
@@ -42,7 +55,7 @@ const AddGymScreen = () => {
                 ? styles.selectedButton
                 : styles.button
             }
-            onPress={() => setGymType("Personal Spray Wall")}
+            onPress={() => setGymType("Personal")}
           >
             <Text style={styles.buttonText}>Non-Commercial Gym</Text>
             <Text style={styles.buttonText}>(Home)</Text>
