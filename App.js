@@ -1,5 +1,3 @@
-import { StatusBar } from "expo-status-bar";
-import { Button, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeScreen from "./screens/HomeScreen";
@@ -19,11 +17,13 @@ import AddSprayWallScreen from "./screens/AddSprayWallScreen";
 import AddBoulderScreen from "./screens/AddBoulderScreen";
 import EditBoulderScreen from "./screens/EditBoulderScreen";
 import CameraScreen from "./screens/CameraScreen";
-import TestDrawScreen from "./screens/TestDrawScreen";
 import ConfirmEmailScreen from "./screens/ConfirmEmailScreen";
 import ForgotPasswordScreen from "./screens/ForgotPasswordScreen";
 import ResetPasswordScreen from "./screens/ResetPasswordScreen";
 import SubmitCodeScreen from "./screens/SubmitCodeScreen";
+import { useEffect } from "react";
+import fetchCsrfToken from "./api/configToken";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Stack = createNativeStackNavigator();
 
@@ -68,6 +68,19 @@ function customHeader(navigation, name) {
 }
 
 export default function App() {
+  // Retrieve csrf token from django on app mount and store token
+  useEffect(() => {
+    const fetchAndStoreCsrfToken = async () => {
+      const csrfToken = await fetchCsrfToken();
+      if (csrfToken) {
+        await AsyncStorage.setItem("csrfToken", csrfToken);
+        console.log("CSRF token stored:", csrfToken);
+      }
+    };
+
+    fetchAndStoreCsrfToken();
+  }, []);
+
   return (
     <NavigationContainer>
       <Stack.Navigator>

@@ -8,8 +8,7 @@ import {
 import CustomInput from "../components/CustomInput";
 import CustomButton from "../components/CustomButton";
 import SocialSignInButtons from "../components/SocialSignInButtons";
-import axios from "../api/axios";
-import configToken from "../api/configToken";
+import { request } from "../api/requestMethods";
 
 const LoginScreen = ({ navigation }) => {
   const { height } = useWindowDimensions();
@@ -18,15 +17,12 @@ const LoginScreen = ({ navigation }) => {
   const [password, setPassword] = useState("");
 
   const handleLogin = async () => {
-    // Your authentication code here
-    axios
-      .post("/login/", { username, password }, await configToken)
-      .then((response) => {
-        console.log(response.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    const data = { username, password };
+    const status = await request("post", "login", data);
+    if (status !== 200) {
+      console.log(status);
+      return;
+    }
     navigation.navigate("Home");
   };
 

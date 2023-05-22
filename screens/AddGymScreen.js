@@ -1,152 +1,212 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  Switch,
+  SafeAreaView,
+  Alert,
+  Image,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import axios from "../api/axios";
+import { CameraIcon } from "react-native-heroicons/outline";
+import { request } from "../api/requestMethods";
 
-const AddGymScreen = () => {
-  const [gymType, setGymType] = useState("");
+const imageScaleDownFactor = 16;
+
+const AddGymScreen = ({ route, navigation }) => {
+  const [isCommercialGym, setIsCommercialGym] = useState(true);
   const [gymName, setGymName] = useState("");
   const [gymLocation, setGymLocation] = useState("");
-  const navigation = useNavigation();
+  const [image, setImage] = useState(null);
+  const [sprayWallName, setSprayWallName] = useState("");
+
+  useEffect(() => {
+    if (route?.params?.image) {
+      const { image } = route.params;
+      setImage(image);
+    }
+  }, [route]);
 
   const handleAddGym = () => {
-    // code to add new gym to database or API
-    // after validation and checking for missing fields
-    axios
-      .post("/gym/", {
-        name: gymName,
-        type: gymType,
-        location: gymLocation,
-      })
-      .then((response) => {
-        console.log(response.data.id); // store in user's gym_id? or just do that directly in django - so we pass our person id? idk
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    navigation.navigate("AddSprayWall");
+    Alert.alert(
+      "Add Gym",
+      `Are you sure you want to add "${gymName}" containing "${sprayWallName}"?`,
+      [
+        { text: "Cancel" },
+        {
+          text: "OK",
+          onPress: async () => {
+            const data = {
+              gym: {
+                name: gymName,
+                type: isCommercialGym ? "commercial" : "home",
+                location: gymLocation,
+              },
+              spraywall: {
+                name: sprayWallName,
+                spraywall_image_data: image.base64,
+                spraywall_image_width: image.width,
+                spraywall_image_height: image.height,
+                gym: null,
+              },
+            };
+            const status = await request("post", "gym", data);
+            if (status !== 200) {
+              console.log(status);
+              return;
+            }
+            navigation.navigate("Home");
+          },
+        },
+      ],
+      { cancelable: false }
+    );
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Add New Gym</Text>
-      <View style={styles.typeContainer}>
-        <Text style={styles.label}>Select Gym Type:</Text>
-        <View style={styles.buttonsContainer}>
-          <TouchableOpacity
-            style={
-              gymType === "Commercial Gym"
-                ? styles.selectedButton
-                : styles.button
-            }
-            onPress={() => setGymType("Commercial")}
-          >
-            <Text style={styles.buttonText}>Commercial Gym</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={
-              gymType === "Personal Spray Wall"
-                ? styles.selectedButton
-                : styles.button
-            }
-            onPress={() => setGymType("Personal")}
-          >
-            <Text style={styles.buttonText}>Non-Commercial Gym</Text>
-            <Text style={styles.buttonText}>(Home)</Text>
-          </TouchableOpacity>
+    <SafeAreaView
+      style={{
+        flex: 1,
+        backgroundColor: "white",
+      }}
+    >
+      <View style={{ flex: 1, paddingHorizontal: 20 }}>
+        <View style={styles.addNewGymContainer}>
+          <Text style={styles.title}>Add New Gym</Text>
+          <View style={styles.typeContainer}>
+            <Text style={styles.label}>Select Gym Type:</Text>
+            <View style={styles.switchesContainer}>
+              <View style={styles.switch}>
+                <Text style={styles.subLabel}>Commercial Gym</Text>
+                <Switch
+                  value={isCommercialGym}
+                  onValueChange={() => setIsCommercialGym(!isCommercialGym)}
+                />
+              </View>
+              <View style={styles.switch}>
+                <Text style={styles.subLabel}>Non-Commercial Gym (Home)</Text>
+                <Switch
+                  value={!isCommercialGym}
+                  onValueChange={() => setIsCommercialGym(!isCommercialGym)}
+                />
+              </View>
+            </View>
+          </View>
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>
+              {isCommercialGym ? "Gym" : "Home"} Name:
+            </Text>
+            <TextInput
+              style={styles.input}
+              placeholder={
+                isCommercialGym ? "Enter gym name" : "Enter home name"
+              }
+              value={gymName}
+              onChangeText={(text) => setGymName(text)}
+            />
+          </View>
+          <View style={styles.locationContainer(isCommercialGym)}>
+            <Text style={styles.label}>Gym Location:</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Enter gym address"
+              value={gymLocation}
+              onChangeText={(text) => setGymLocation(text)}
+              editable={isCommercialGym}
+            />
+          </View>
         </View>
-      </View>
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>Gym Name:</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Enter Gym Name"
-          value={gymName}
-          onChangeText={(text) => setGymName(text)}
-        />
-      </View>
-      <View style={styles.locationContainer}>
-        <Text style={styles.label}>Gym Location:</Text>
-        <View style={styles.buttonsContainer}>
-          <TouchableOpacity
-            style={
-              gymLocation === "Current Location"
-                ? styles.selectedButton
-                : styles.button
-            }
-            onPress={() => setGymLocation("Current Location")}
-          >
-            <Text style={styles.buttonText}>Use Current Location</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={
-              gymLocation === "Enter Address"
-                ? styles.selectedButton
-                : styles.button
-            }
-            onPress={() => setGymLocation("Enter Address")}
-          >
-            <Text style={styles.buttonText}>Enter Address</Text>
-          </TouchableOpacity>
+        <View style={styles.addNewSprayWallContainer}>
+          <View style={styles.inputAndAddContainer}>
+            <Text style={styles.label}>Spray Wall Name:</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Enter spray wall name"
+              value={sprayWallName}
+              onChangeText={(text) => setSprayWallName(text)}
+              editable={isCommercialGym}
+            />
+          </View>
+          <View style={styles.imageContainer}>
+            <TouchableOpacity
+              style={styles.imageButton(image, imageScaleDownFactor)}
+              onPress={() =>
+                navigation.navigate("Camera", { screen: "AddGym" })
+              }
+            >
+              {image ? (
+                <Image
+                  source={{ uri: image.uri }}
+                  style={styles.image(image, imageScaleDownFactor)}
+                />
+              ) : (
+                <View style={styles.imagePlaceholderContainer}>
+                  <CameraIcon size={30} color="black" />
+                  <Text style={styles.imagePlaceholderText}>
+                    Take Picture of
+                  </Text>
+                  <Text style={styles.imagePlaceholderText}>Spray Wall</Text>
+                </View>
+              )}
+            </TouchableOpacity>
+          </View>
         </View>
-        {gymLocation === "Enter Address" && (
-          <TextInput
-            style={styles.input}
-            placeholder="Enter Gym Address"
-            value={gymLocation}
-            onChangeText={(text) => setGymLocation(text)}
-          />
-        )}
+        <TouchableOpacity style={styles.addButton} onPress={handleAddGym}>
+          <Text style={styles.addButtonText}>Add Gym</Text>
+        </TouchableOpacity>
       </View>
-      <TouchableOpacity style={styles.addButton} onPress={handleAddGym}>
-        <Text style={styles.addButtonText}>Next</Text>
-      </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 };
 
 export default AddGymScreen;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#f2f2f2",
+  addNewGymContainer: {
+    alignSelf: "stretch",
     alignItems: "center",
-    justifyContent: "center",
-    paddingHorizontal: 20,
+    flex: 1,
+    gap: 15,
+  },
+  addNewSprayWallContainer: {
+    alignSelf: "stretch",
+    alignItems: "center",
+    flex: 1,
+    gap: 15,
   },
   title: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: "bold",
-    marginBottom: 30,
   },
   typeContainer: {
-    marginBottom: 30,
     alignSelf: "stretch",
   },
-  locationContainer: {
-    marginBottom: 30,
+  locationContainer: (isCommercialGym) => ({
+    opacity: isCommercialGym ? 1 : 0.25,
     alignSelf: "stretch",
-  },
+  }),
   inputContainer: {
-    marginBottom: 30,
     alignSelf: "stretch",
   },
   label: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: "bold",
     marginBottom: 10,
   },
-  buttonsContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+  subLabel: {
+    fontSize: 16,
+  },
+  switchesContainer: {
     alignItems: "center",
+    gap: 5,
+  },
+  switch: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    width: "95%",
   },
   button: {
     backgroundColor: "#fff",
@@ -156,17 +216,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#ccc",
   },
-  selectedButton: {
-    backgroundColor: "#e6e6e6",
-    borderRadius: 5,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderWidth: 1,
-    borderColor: "#ccc",
-  },
-  buttonText: {
-    fontSize: 16,
-  },
   input: {
     borderWidth: 1,
     borderColor: "#ccc",
@@ -174,6 +223,32 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
     fontSize: 16,
+  },
+  imageContainer: {
+    width: "100%",
+    alignItems: "center",
+  },
+  imageButton: (image, imageScaleDownFactor) => ({
+    width: image ? image.width / imageScaleDownFactor : 225,
+    height: image ? image.height / imageScaleDownFactor : 225,
+    borderWidth: 1,
+    borderColor: "black",
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+  }),
+  image: (image, imageScaleDownFactor) => ({
+    width: image.width / imageScaleDownFactor,
+    height: image.height / imageScaleDownFactor,
+  }),
+  imagePlaceholderContainer: {
+    alignItems: "center",
+  },
+  imagePlaceholderText: {
+    fontSize: 16,
+  },
+  inputAndAddContainer: {
+    alignSelf: "stretch",
   },
   addButton: {
     backgroundColor: "#007aff",

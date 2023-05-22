@@ -8,27 +8,39 @@ import {
   TextInput,
   StyleSheet,
   SafeAreaView,
+  KeyboardAvoidingView,
 } from "react-native";
 import { CameraIcon } from "react-native-heroicons/outline";
+import { useHeaderHeight } from "@react-navigation/elements";
 import axios from "../api/axios";
 
 const imageScaleDownFactor = 10;
 
 const AddNewSprayWallScreen = ({ route, navigation }) => {
   const [image, setImage] = useState(null);
+  const [gymName, setGymName] = useState("");
   const [sprayWallName, setSprayWallName] = useState("");
+  // grabbing height of header
+  const height = useHeaderHeight();
 
   useEffect(() => {
     if (route?.params?.image) {
       const { image } = route.params;
       setImage(image);
     }
+    // Want to add gymName from addgymscreen. But when we get to this screen from CameraScreen, we are not passing gymName in params. We want to keep the obtained gymName from addGymScreen
+    if (route?.params?.gymName) {
+      const { gymName } = route.params;
+      if (gymName) {
+        setGymName(gymName);
+      }
+    }
   }, [route]);
 
   const handleAddSprayWall = () => {
     Alert.alert(
       "Add Spray Wall",
-      `Are you sure you want to add "${sprayWallName}" to [Gym Name]?`,
+      `Are you sure you want to add \n "${sprayWallName}" \n to \n "${gymName}"?`,
       [
         { text: "Cancel" },
         {
@@ -48,7 +60,6 @@ const AddNewSprayWallScreen = ({ route, navigation }) => {
               .catch((err) => {
                 console.log(err);
               });
-            navigation.navigate("AddSprayWall");
             navigation.navigate("Home");
           },
         },
@@ -77,44 +88,47 @@ const AddNewSprayWallScreen = ({ route, navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.titleContainer}>
-        <Text style={styles.titleText}>Add New Spray Wall</Text>
-        <Text style={styles.subTitleText}>in [Gym Name]</Text>
-      </View>
-      <View style={styles.imageContainer}>
-        <TouchableOpacity
-          style={styles.imageButton(image, imageScaleDownFactor)}
-          onPress={() =>
-            navigation.navigate("Camera", { screen: "AddSprayWall" })
-          }
-        >
-          {image ? (
-            <Image
-              source={{ uri: image.uri }}
-              style={styles.image(image, imageScaleDownFactor)}
-            />
-          ) : (
-            <View style={styles.imagePlaceholderContainer}>
-              <CameraIcon size={30} color="black" />
-              <Text style={styles.imagePlaceholderText}>Take a Picture</Text>
-            </View>
-          )}
-        </TouchableOpacity>
-      </View>
-      <View style={styles.inputAndAddContainer}>
-        <TextInput
-          value={sprayWallName}
-          onChangeText={(text) => setSprayWallName(text)}
-          placeholder="Enter spray wall name"
-          style={styles.input}
-        />
-        <TouchableOpacity style={styles.button} onPress={handleAddSprayWall}>
-          <Text style={styles.buttonText}>Add Spray Wall</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={handleTest}>
-          <Text style={styles.buttonText}>Test</Text>
-        </TouchableOpacity>
-      </View>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={height}
+        style={styles.textInputContainer}
+      >
+        <View style={styles.titleContainer}>
+          <Text style={styles.titleText}>Add New Spray Wall</Text>
+          <Text style={styles.subTitleText}>in {gymName}</Text>
+        </View>
+        <View style={styles.imageContainer}>
+          <TouchableOpacity
+            style={styles.imageButton(image, imageScaleDownFactor)}
+            onPress={() =>
+              navigation.navigate("Camera", { screen: "AddSprayWall" })
+            }
+          >
+            {image ? (
+              <Image
+                source={{ uri: image.uri }}
+                style={styles.image(image, imageScaleDownFactor)}
+              />
+            ) : (
+              <View style={styles.imagePlaceholderContainer}>
+                <CameraIcon size={30} color="black" />
+                <Text style={styles.imagePlaceholderText}>Take a Picture</Text>
+              </View>
+            )}
+          </TouchableOpacity>
+        </View>
+        <View style={styles.inputAndAddContainer}>
+          <TextInput
+            value={sprayWallName}
+            onChangeText={(text) => setSprayWallName(text)}
+            placeholder="Enter spray wall name"
+            style={styles.input}
+          />
+          <TouchableOpacity style={styles.button} onPress={handleAddSprayWall}>
+            <Text style={styles.buttonText}>Add Spray Wall</Text>
+          </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
@@ -162,10 +176,18 @@ const styles = StyleSheet.create({
   imagePlaceholderText: {
     fontSize: 16,
   },
+  textInputContainer: {
+    width: "100%",
+    marginBottom: 100,
+    position: "absolute",
+    bottom: 0,
+    rowGap: 10,
+  },
   inputAndAddContainer: {
     alignItems: "center",
     paddingTop: 10,
     rowGap: 10,
+    backgroundColor: "white",
   },
   input: {
     borderWidth: 1,

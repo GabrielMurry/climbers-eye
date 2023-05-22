@@ -10,8 +10,18 @@ const BASE_URL = "http://192.168.50.29:8000/";
 
 export default axios.create({
   baseURL: BASE_URL,
+  withCredentials: true,
   headers: {
     "Content-Type": "application/json",
+    patch: {
+      "Content-Type": "application/json",
+    },
+    post: {
+      "Content-Type": "application/json",
+    },
+    put: {
+      "Content-Type": "application/json",
+    },
   },
 });
 
