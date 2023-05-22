@@ -15,10 +15,10 @@ import ModalEditPreview from "../components/ModalEditPreview";
 import axios from "../api/axios";
 import { captureRef } from "react-native-view-shot";
 
-const imageScaleDownFactor = 7;
-
 const EditBoulderScreen = ({ route, navigation }) => {
   const { image } = route.params;
+
+  const imageScaleDownFactor = image.width > image.height ? 10 : 7;
 
   const canvasRef = useRef();
   const zoomRef = useRef();

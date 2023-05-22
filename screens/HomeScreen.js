@@ -72,7 +72,9 @@ const HomeScreen = ({ navigation }) => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate("AddBoulder")}
+          onPress={() =>
+            navigation.navigate("AddBoulder", { image, spraywallName })
+          }
         >
           <Text>Add Boulder/Route</Text>
         </TouchableOpacity>

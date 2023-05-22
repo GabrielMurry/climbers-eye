@@ -126,7 +126,6 @@ const AddGymScreen = ({ route, navigation }) => {
               placeholder="Enter spray wall name"
               value={sprayWallName}
               onChangeText={(text) => setSprayWallName(text)}
-              editable={isCommercialGym}
             />
           </View>
           <View style={styles.imageContainer}>

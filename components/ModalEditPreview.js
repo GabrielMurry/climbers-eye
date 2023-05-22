@@ -68,6 +68,7 @@ const ModalEditPreview = ({
                   value={name}
                   onChangeText={setName}
                   placeholder="Boulder Name"
+                  placeholderTextColor="lightgray"
                 />
               </View>
               <View>
@@ -76,6 +77,7 @@ const ModalEditPreview = ({
                   value={description}
                   onChangeText={setDescription}
                   placeholder="Description"
+                  placeholderTextColor="lightgray"
                 />
               </View>
             </View>
@@ -142,8 +144,14 @@ const styles = StyleSheet.create({
     elevation: 5,
   }),
   modalImage: (image, imageScaleDownFactor) => ({
-    width: image.width / (imageScaleDownFactor - 1),
-    height: image.width / (imageScaleDownFactor - 1),
+    width:
+      imageScaleDownFactor === 10
+        ? image.width / (imageScaleDownFactor + 1)
+        : image.width / (imageScaleDownFactor - 1),
+    height:
+      imageScaleDownFactor === 10
+        ? image.width / (imageScaleDownFactor + 1)
+        : image.width / (imageScaleDownFactor - 1),
   }),
   labelAndInputContainer: {
     marginTop: 20,
@@ -152,6 +160,7 @@ const styles = StyleSheet.create({
   input: {
     borderWidth: 1,
     borderColor: "gray",
+    backgroundColor: "white",
     borderRadius: 5,
     paddingHorizontal: 10,
     paddingVertical: 10,

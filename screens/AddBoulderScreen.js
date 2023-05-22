@@ -6,22 +6,30 @@ import {
   Image,
   SafeAreaView,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { CameraIcon } from "react-native-heroicons/outline";
-import PhoneCamera from "../components/PhoneCamera";
 
-const imageScaleDownFactor = 10;
+const imageScaleDownFactor = 12;
 
-const AddBoulderScreen = ({ navigation }) => {
+const AddBoulderScreen = ({ route, navigation }) => {
+  const { image, spraywallName } = route.params;
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.titleContainer}>
         <Text style={styles.titleText}>Add New Boulder</Text>
-        <Text style={styles.subTitleText}>to [Spray Wall]</Text>
+        <Text style={styles.subTitleText}>to {spraywallName}</Text>
       </View>
       <View style={styles.buttonsContainer}>
-        <TouchableOpacity style={styles.defaultPhoto}>
-          <Text>Default Photo</Text>
+        <TouchableOpacity
+          style={styles.defaultPhoto(image, imageScaleDownFactor)}
+          onPress={() => navigation.navigate("EditBoulder", { image })}
+        >
+          <Image
+            source={{ uri: image.uri }}
+            resizeMode="contain"
+            style={styles.defaultImage}
+          />
         </TouchableOpacity>
         <Text>Or</Text>
         <TouchableOpacity
@@ -66,12 +74,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     rowGap: 25,
   },
-  defaultPhoto: {
-    width: 200,
-    height: 200,
-    borderWidth: 1,
-    borderColor: "black",
-    borderRadius: 10,
+  defaultPhoto: (image, imageScaleDownFactor) => ({
+    width: image.width / imageScaleDownFactor,
+    height: image.height / imageScaleDownFactor,
+  }),
+  defaultImage: {
+    width: "100%",
+    height: "100%",
   },
   imageButton: {
     width: 200,
