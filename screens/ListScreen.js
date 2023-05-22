@@ -110,7 +110,9 @@ DATA = [
   },
 ];
 
-const ListScreen = ({ navigation }) => {
+const ListScreen = ({ route, navigation }) => {
+  const { gymName, spraywallName } = route.params;
+
   const [searchTerm, setSearchTerm] = useState("");
   // grabbing height of header
   const height = useHeaderHeight();
@@ -124,8 +126,8 @@ const ListScreen = ({ navigation }) => {
     >
       {/* Titles */}
       <View style={styles.titleContainer}>
-        <Text style={styles.titleText}>The Boulder Field</Text>
-        <Text style={styles.subTitleText}>Spray Wall 1</Text>
+        <Text style={styles.titleText}>{gymName}</Text>
+        <Text style={styles.subTitleText}>{spraywallName}</Text>
       </View>
       {/* Boulders */}
       <View style={styles.listContainer}>

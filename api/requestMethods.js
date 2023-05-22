@@ -9,12 +9,12 @@ const request = async (method, endpoint, data = null) => {
       axios.defaults.headers.common["X-CSRFToken"] = csrfToken;
       const response = await axios[method](`/${endpoint}/`, data);
       await AsyncStorage.setItem("csrfToken", response.data.csrfToken);
-      return response.status;
+      return { status: response.status, data: response.data.data ?? null };
     } else {
-      return "CSRF token not found";
+      return { status: "CSRF token not found", data: null };
     }
   } catch (error) {
-    return `${method} error at ${endpoint}: ${error}`;
+    return { status: `${method} error at ${endpoint}: ${error}`, data: null };
   }
 };
 

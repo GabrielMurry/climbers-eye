@@ -18,12 +18,12 @@ const SignupScreen = ({ navigation }) => {
       password1: password,
       password2: passwordRepeat,
     };
-    const status = await request("post", "signup", data);
-    if (status !== 200) {
-      console.log(status);
+    const response = await request("post", "signup", data);
+    if (response.status !== 200) {
+      console.log(response.status);
       return;
     }
-    navigation.navigate("ConfirmEmail");
+    navigation.navigate("Map");
   };
 
   const handleTermsOfUse = () => {};

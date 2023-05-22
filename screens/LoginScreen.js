@@ -18,9 +18,9 @@ const LoginScreen = ({ navigation }) => {
 
   const handleLogin = async () => {
     const data = { username, password };
-    const status = await request("post", "login", data);
-    if (status !== 200) {
-      console.log(status);
+    const response = await request("post", "login", data);
+    if (response.status !== 200) {
+      console.log(response.status);
       return;
     }
     navigation.navigate("Home");

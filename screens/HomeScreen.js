@@ -6,9 +6,34 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { request } from "../api/requestMethods";
 
 const HomeScreen = ({ navigation }) => {
+  const [gymName, setGymName] = useState("");
+  const [spraywallName, setSpraywallName] = useState("");
+  const [image, setImage] = useState({ uri: null, width: null, height: null });
+
+  useEffect(() => {
+    const getData = async () => {
+      const response = await request("get", "home");
+      if (response.status !== 200) {
+        console.log(response.status);
+      }
+      if (response.data) {
+        setGymName(response.data.gymName);
+        setSpraywallName(response.data.spraywallName);
+        setImage({
+          uri: response.data.imageUri,
+          width: response.data.imageWidth,
+          height: response.data.imageHeight,
+        });
+      }
+    };
+
+    getData();
+  }, []);
+
   return (
     <SafeAreaView
       style={{
@@ -18,13 +43,13 @@ const HomeScreen = ({ navigation }) => {
     >
       <View style={styles.titleContainer}>
         {/* Titles */}
-        <Text style={styles.titleText}>The Boulder Field</Text>
-        <Text style={styles.subTitleText}>Spray Wall 1</Text>
+        <Text style={styles.titleText}>{gymName}</Text>
+        <Text style={styles.subTitleText}>{spraywallName}</Text>
       </View>
       {/* Default Image */}
       <View style={styles.defaultImageContainer}>
         <Image
-          source={require("../assets/rockwall.jpg")}
+          source={{ uri: image.uri }}
           resizeMode="contain"
           style={styles.defaultImage}
         />
@@ -33,7 +58,9 @@ const HomeScreen = ({ navigation }) => {
       <View style={styles.buttonsContainer}>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate("List")}
+          onPress={() =>
+            navigation.navigate("List", { gymName, spraywallName })
+          }
         >
           <Text>Find Boulders</Text>
         </TouchableOpacity>
