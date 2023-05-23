@@ -18,7 +18,7 @@ const LoginScreen = ({ navigation }) => {
 
   const handleLogin = async () => {
     const data = { username, password };
-    const response = await request("post", "login", data);
+    const response = await request("post", "login/", data);
     if (response.status !== 200) {
       console.log(response.status);
       return;

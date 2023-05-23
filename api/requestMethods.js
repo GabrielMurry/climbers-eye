@@ -10,7 +10,7 @@ const request = async (method, endpoint, data = null) => {
       // attach csrf token to request header
       axios.defaults.headers.common["X-CSRFToken"] = csrfToken;
       // request method to backend endpoint with or without data
-      const response = await axios[method](`/${endpoint}/`, data);
+      const response = await axios[method](`/${endpoint}`, data);
       // receive new csrf token - put in storage
       await AsyncStorage.setItem("csrfToken", response.data.csrfToken);
       // return status and data. If no data, null as data

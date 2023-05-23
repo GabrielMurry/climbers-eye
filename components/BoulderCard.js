@@ -14,7 +14,7 @@ const BoulderCard = ({ title, setter, FA, sends, grade, stars }) => {
         <Text>{sends} sends</Text>
       </View>
       <View style={styles.boulderRightWrapper}>
-        <Text>{grade}</Text>
+        <Text>{grade ?? "Project"}</Text>
         <View style={styles.starsContainer}>
           <StarIcon size={15} fill={stars >= 1 ? "gold" : ""} color="gold" />
           <StarIcon size={15} fill={stars >= 2 ? "gold" : ""} color="gold" />

@@ -14,6 +14,7 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import FullScreenImage from "./FullScreenImage";
+import { request } from "../api/requestMethods";
 
 const ModalEditPreview = ({
   image,
@@ -25,11 +26,27 @@ const ModalEditPreview = ({
 }) => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [switch1, setSwitch1] = useState(true);
-  const [switch2, setSwitch2] = useState(true);
+  const [isMatching, setIsMatching] = useState(true);
+  const [isPublish, setIsPublish] = useState(true);
   const [imageFullScreen, setImageFullScreen] = useState(false);
 
-  const handleNext = () => {
+  const handleNext = async () => {
+    data = {
+      name,
+      description,
+      matching: isMatching,
+      publish: isPublish,
+      boulder_image_data: resultImageUri.split(",")[1], // using the default image has complete base64 as image.uri --> remove the 'data:image/png;base64' in the beginning of string
+      boulder_image_width: image.width,
+      boulder_image_height: image.height,
+      spraywall: null,
+      setter_person: null,
+    };
+    const response = await request("post", "add_boulder/", data);
+    if (response.status !== 200) {
+      console.log(response.status);
+      return;
+    }
     navigation.navigate("Home");
     setModalVisible(!modalVisible);
   };
@@ -84,11 +101,11 @@ const ModalEditPreview = ({
             <View style={styles.labelAndToggleContainer}>
               <View style={styles.labelAndToggle}>
                 <Text style={styles.toggleLabel}>Matching Allowed</Text>
-                <Switch value={switch1} onValueChange={setSwitch1} />
+                <Switch value={isMatching} onValueChange={setIsMatching} />
               </View>
               <View style={styles.labelAndToggle}>
                 <Text style={styles.toggleLabel}>Publish</Text>
-                <Switch value={switch2} onValueChange={setSwitch2} />
+                <Switch value={isPublish} onValueChange={setIsPublish} />
               </View>
             </View>
             <View style={styles.modalButtonsContainer}>

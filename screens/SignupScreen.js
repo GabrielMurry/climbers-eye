@@ -18,7 +18,7 @@ const SignupScreen = ({ navigation }) => {
       password1: password,
       password2: passwordRepeat,
     };
-    const response = await request("post", "signup", data);
+    const response = await request("post", "signup/", data);
     if (response.status !== 200) {
       console.log(response.status);
       return;

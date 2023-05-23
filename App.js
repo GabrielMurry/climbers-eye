@@ -181,17 +181,12 @@ export default function App() {
           component={ListScreen}
           options={({ navigation }) => customHeader(navigation, "List")}
         />
-        <Stack.Screen name="Boulder" component={BoulderScreen} />
+        <Stack.Screen
+          name="Boulder"
+          component={BoulderScreen}
+          options={({ navigation }) => customHeader(navigation, "Boulder")}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: "#fff",
-//     alignItems: "center",
-//     justifyContent: "center",
-//   },
-// });

@@ -9,13 +9,14 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   AdjustmentsHorizontalIcon,
   PlusIcon,
 } from "react-native-heroicons/outline";
 import BoulderCard from "../components/BoulderCard";
 import { useHeaderHeight } from "@react-navigation/elements"; // grabbing height of header (varies on diff mobile screens)
+import { request } from "../api/requestMethods";
 
 DATA = [
   {
@@ -114,8 +115,24 @@ const ListScreen = ({ route, navigation }) => {
   const { gymName, spraywallName } = route.params;
 
   const [searchTerm, setSearchTerm] = useState("");
+  const [boulders, setBoulders] = useState([]);
   // grabbing height of header
   const height = useHeaderHeight();
+
+  useEffect(() => {
+    const getData = async () => {
+      const response = await request("get", "list/");
+      if (response.status !== 200) {
+        console.log(response.status);
+      }
+      if (response.data) {
+        setBoulders(response.data);
+        console.log(boulders);
+      }
+    };
+
+    getData();
+  }, []);
 
   return (
     <SafeAreaView
@@ -134,23 +151,18 @@ const ListScreen = ({ route, navigation }) => {
         {/* List of Boulders */}
         <FlatList
           contentContainerStyle={styles.bouldersList}
-          data={DATA}
+          data={boulders}
           renderItem={({ item }) => (
             <TouchableOpacity
-              onPress={() =>
-                navigation.navigate("Boulder", {
-                  itemTitle: item.title,
-                  otherParam: "anything you want here",
-                })
-              }
+              onPress={() => navigation.navigate("Boulder", { boulder: item })}
             >
               <BoulderCard
-                title={item.title}
-                setter={item.setter}
-                FA={item.FA}
+                title={item.name}
+                setter={item.setter_person__username}
+                FA={item.first_ascent_person__username}
                 sends={item.sends}
                 grade={item.grade}
-                stars={item.stars}
+                stars={item.rating}
               />
             </TouchableOpacity>
           )}

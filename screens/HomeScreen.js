@@ -16,7 +16,7 @@ const HomeScreen = ({ navigation }) => {
 
   useEffect(() => {
     const getData = async () => {
-      const response = await request("get", "home");
+      const response = await request("get", "home/");
       if (response.status !== 200) {
         console.log(response.status);
       }

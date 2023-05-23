@@ -52,7 +52,7 @@ const AddGymScreen = ({ route, navigation }) => {
                 gym: null,
               },
             };
-            const response = await request("post", "gym", data);
+            const response = await request("post", "add_gym/", data);
             if (response.status !== 200) {
               console.log(response.status);
               return;
