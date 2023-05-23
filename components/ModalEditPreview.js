@@ -15,6 +15,7 @@ import {
 import React, { useState } from "react";
 import FullScreenImage from "./FullScreenImage";
 import { request } from "../api/requestMethods";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ModalEditPreview = ({
   image,
@@ -42,12 +43,15 @@ const ModalEditPreview = ({
       spraywall: null,
       setter_person: null,
     };
-    const response = await request("post", "add_boulder/", data);
+    const username = await AsyncStorage.getItem("username");
+    const response = await request("post", `add_boulder/${username}`, data);
     if (response.status !== 200) {
       console.log(response.status);
       return;
     }
-    navigation.navigate("Home");
+    if (response.data) {
+      navigation.navigate("Boulder", { boulder: response.data });
+    }
     setModalVisible(!modalVisible);
   };
 

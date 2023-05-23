@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import { CameraIcon } from "react-native-heroicons/outline";
 import { request } from "../api/requestMethods";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const imageScaleDownFactor = 16;
 
@@ -52,7 +53,8 @@ const AddGymScreen = ({ route, navigation }) => {
                 gym: null,
               },
             };
-            const response = await request("post", "add_gym/", data);
+            const username = await AsyncStorage.getItem("username");
+            const response = await request("post", `add_gym/${username}`, data);
             if (response.status !== 200) {
               console.log(response.status);
               return;

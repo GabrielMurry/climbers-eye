@@ -8,22 +8,31 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { request } from "../api/requestMethods";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const HomeScreen = ({ navigation }) => {
   const [gymName, setGymName] = useState("");
-  const [spraywallName, setSpraywallName] = useState("");
-  const [image, setImage] = useState({ uri: null, width: null, height: null });
+  const [spraywall, setSpraywall] = useState({ name: null, id: null });
+  const [defaultImage, setDefaultImage] = useState({
+    uri: null,
+    width: null,
+    height: null,
+  });
 
   useEffect(() => {
     const getData = async () => {
-      const response = await request("get", "home/");
+      const username = await AsyncStorage.getItem("username");
+      const response = await request("get", `home/${username}`);
       if (response.status !== 200) {
         console.log(response.status);
       }
       if (response.data) {
         setGymName(response.data.gymName);
-        setSpraywallName(response.data.spraywallName);
-        setImage({
+        setSpraywall({
+          name: response.data.spraywallName,
+          id: response.data.spraywallId,
+        });
+        setDefaultImage({
           uri: response.data.imageUri,
           width: response.data.imageWidth,
           height: response.data.imageHeight,
@@ -44,12 +53,12 @@ const HomeScreen = ({ navigation }) => {
       <View style={styles.titleContainer}>
         {/* Titles */}
         <Text style={styles.titleText}>{gymName}</Text>
-        <Text style={styles.subTitleText}>{spraywallName}</Text>
+        <Text style={styles.subTitleText}>{spraywall.name}</Text>
       </View>
       {/* Default Image */}
       <View style={styles.defaultImageContainer}>
         <Image
-          source={{ uri: image.uri }}
+          source={{ uri: defaultImage.uri }}
           resizeMode="contain"
           style={styles.defaultImage}
         />
@@ -59,7 +68,11 @@ const HomeScreen = ({ navigation }) => {
         <TouchableOpacity
           style={styles.button}
           onPress={() =>
-            navigation.navigate("List", { gymName, spraywallName })
+            navigation.navigate("List", {
+              gymName,
+              spraywall,
+              defaultImage,
+            })
           }
         >
           <Text>Find Boulders</Text>
@@ -73,7 +86,7 @@ const HomeScreen = ({ navigation }) => {
         <TouchableOpacity
           style={styles.button}
           onPress={() =>
-            navigation.navigate("AddBoulder", { image, spraywallName })
+            navigation.navigate("AddBoulder", { defaultImage, spraywallName })
           }
         >
           <Text>Add Boulder/Route</Text>

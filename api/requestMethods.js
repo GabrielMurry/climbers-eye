@@ -13,6 +13,10 @@ const request = async (method, endpoint, data = null) => {
       const response = await axios[method](`/${endpoint}`, data);
       // receive new csrf token - put in storage
       await AsyncStorage.setItem("csrfToken", response.data.csrfToken);
+      // if we are logging in or signing up, put unique username in storage
+      if (response.data.username) {
+        await AsyncStorage.setItem("username", response.data.username);
+      }
       // return status and data. If no data, null as data
       return { status: response.status, data: response.data.data ?? null };
     } else {

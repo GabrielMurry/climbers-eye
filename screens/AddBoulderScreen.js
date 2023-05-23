@@ -12,21 +12,23 @@ import { CameraIcon } from "react-native-heroicons/outline";
 const imageScaleDownFactor = 12;
 
 const AddBoulderScreen = ({ route, navigation }) => {
-  const { image, spraywallName } = route.params;
+  const { spraywall, defaultImage } = route.params;
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.titleContainer}>
         <Text style={styles.titleText}>Add New Boulder</Text>
-        <Text style={styles.subTitleText}>to {spraywallName}</Text>
+        <Text style={styles.subTitleText}>to {spraywall.name}</Text>
       </View>
       <View style={styles.buttonsContainer}>
         <TouchableOpacity
-          style={styles.defaultPhoto(image, imageScaleDownFactor)}
-          onPress={() => navigation.navigate("EditBoulder", { image })}
+          style={styles.defaultPhoto(defaultImage, imageScaleDownFactor)}
+          onPress={() =>
+            navigation.navigate("EditBoulder", { image: defaultImage })
+          }
         >
           <Image
-            source={{ uri: image.uri }}
+            source={{ uri: defaultImage.uri }}
             resizeMode="contain"
             style={styles.defaultImage}
           />
@@ -74,9 +76,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     rowGap: 25,
   },
-  defaultPhoto: (image, imageScaleDownFactor) => ({
-    width: image.width / imageScaleDownFactor,
-    height: image.height / imageScaleDownFactor,
+  defaultPhoto: (defaultImage, imageScaleDownFactor) => ({
+    width: defaultImage.width / imageScaleDownFactor,
+    height: defaultImage.height / imageScaleDownFactor,
   }),
   defaultImage: {
     width: "100%",

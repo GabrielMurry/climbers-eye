@@ -18,101 +18,8 @@ import BoulderCard from "../components/BoulderCard";
 import { useHeaderHeight } from "@react-navigation/elements"; // grabbing height of header (varies on diff mobile screens)
 import { request } from "../api/requestMethods";
 
-DATA = [
-  {
-    title: "My First Rodeo",
-    setter: "Gabriel",
-    FA: "Gabriel",
-    sends: 1234,
-    grade: "7a/V6",
-    stars: 3,
-    id: 1,
-  },
-  {
-    title: "Foxey lady",
-    setter: "Gabriel",
-    FA: "Gabriel",
-    sends: 1234,
-    grade: "7a/V6",
-    stars: 3,
-    id: 2,
-  },
-  {
-    title: "The Chair",
-    setter: "Gabriel",
-    FA: "Gabriel",
-    sends: 1234,
-    grade: "7a/V6",
-    stars: 3,
-    id: 3,
-  },
-  {
-    title: "Protector of the Skinny Dog",
-    setter: "Gabriel",
-    FA: "Gabriel",
-    sends: 1234,
-    grade: "7a/V6",
-    stars: 3,
-    id: 4,
-  },
-  {
-    title: "Purple People Eater",
-    setter: "Gabriel",
-    FA: "Gabriel",
-    sends: 1234,
-    grade: "7a/V6",
-    stars: 3,
-    id: 5,
-  },
-  {
-    title: "drizzle frizzle",
-    setter: "Gabriel",
-    FA: "Gabriel",
-    sends: 1234,
-    grade: "7a/V6",
-    stars: 3,
-    id: 6,
-  },
-  {
-    title: "Lovin' Touchin' Squeezin'",
-    setter: "Gabriel",
-    FA: "Gabriel",
-    sends: 1234,
-    grade: "7a/V6",
-    stars: 3,
-    id: 7,
-  },
-  {
-    title: "Goo Lagoon",
-    setter: "Gabriel",
-    FA: "Gabriel",
-    sends: 1234,
-    grade: "7a/V6",
-    stars: 3,
-    id: 8,
-  },
-  {
-    title: "nails in my candy",
-    setter: "Gabriel",
-    FA: "Gabriel",
-    sends: 1234,
-    grade: "7a/V6",
-    stars: 3,
-    id: 9,
-  },
-  {
-    title: "Pillars of Creation",
-    setter: "Gabriel",
-    FA: "Gabriel",
-    sends: 1234,
-    grade: "7a/V6",
-    stars: 3,
-    id: 10,
-  },
-];
-
 const ListScreen = ({ route, navigation }) => {
-  const { gymName, spraywallName } = route.params;
+  const { gymName, spraywall, defaultImage } = route.params;
 
   const [searchTerm, setSearchTerm] = useState("");
   const [boulders, setBoulders] = useState([]);
@@ -121,13 +28,12 @@ const ListScreen = ({ route, navigation }) => {
 
   useEffect(() => {
     const getData = async () => {
-      const response = await request("get", "list/");
+      const response = await request("get", `list/${spraywall.id}`);
       if (response.status !== 200) {
         console.log(response.status);
       }
       if (response.data) {
         setBoulders(response.data);
-        console.log(boulders);
       }
     };
 
@@ -144,7 +50,7 @@ const ListScreen = ({ route, navigation }) => {
       {/* Titles */}
       <View style={styles.titleContainer}>
         <Text style={styles.titleText}>{gymName}</Text>
-        <Text style={styles.subTitleText}>{spraywallName}</Text>
+        <Text style={styles.subTitleText}>{spraywall.name}</Text>
       </View>
       {/* Boulders */}
       <View style={styles.listContainer}>
@@ -158,8 +64,8 @@ const ListScreen = ({ route, navigation }) => {
             >
               <BoulderCard
                 title={item.name}
-                setter={item.setter_person__username}
-                FA={item.first_ascent_person__username}
+                setter={item.setter}
+                FA={item.firstAscent}
                 sends={item.sends}
                 grade={item.grade}
                 stars={item.rating}
@@ -189,7 +95,12 @@ const ListScreen = ({ route, navigation }) => {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.addBoulder}
-              onPress={() => navigation.navigate("AddBoulder")}
+              onPress={() =>
+                navigation.navigate("AddBoulder", {
+                  spraywall,
+                  defaultImage,
+                })
+              }
             >
               <PlusIcon size={25} color="black" />
             </TouchableOpacity>

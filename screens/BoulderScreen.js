@@ -49,8 +49,7 @@ const BoulderScreen = ({ route, navigation }) => {
           {boulder.grade ?? "Project"} {boulder.rating ?? "Unrated"}
         </Text>
         <Text style={styles.titleThird}>
-          Setter: {boulder.setter_person__username} FA:{" "}
-          {boulder.first_ascent_person__username ?? "-"}
+          Setter: {boulder.setter} FA: {boulder.firstAscent ?? "-"}
         </Text>
       </View>
       {/* Default Image */}
