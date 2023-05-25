@@ -43,8 +43,8 @@ const ModalEditPreview = ({
       spraywall: null,
       setter_person: null,
     };
-    const username = await AsyncStorage.getItem("username");
-    const response = await request("post", `add_boulder/${username}`, data);
+    const userId = await AsyncStorage.getItem("userId");
+    const response = await request("post", `add_boulder/${userId}`, data);
     if (response.status !== 200) {
       console.log(response.status);
       return;

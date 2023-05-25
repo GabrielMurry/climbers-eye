@@ -21,8 +21,8 @@ const HomeScreen = ({ navigation }) => {
 
   useEffect(() => {
     const getData = async () => {
-      const username = await AsyncStorage.getItem("username");
-      const response = await request("get", `home/${username}`);
+      const userId = await AsyncStorage.getItem("userId");
+      const response = await request("get", `home/${userId}`);
       if (response.status !== 200) {
         console.log(response.status);
       }
@@ -86,7 +86,7 @@ const HomeScreen = ({ navigation }) => {
         <TouchableOpacity
           style={styles.button}
           onPress={() =>
-            navigation.navigate("AddBoulder", { defaultImage, spraywallName })
+            navigation.navigate("AddBoulder", { defaultImage, spraywall })
           }
         >
           <Text>Add Boulder/Route</Text>

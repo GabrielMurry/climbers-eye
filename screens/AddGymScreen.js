@@ -53,8 +53,8 @@ const AddGymScreen = ({ route, navigation }) => {
                 gym: null,
               },
             };
-            const username = await AsyncStorage.getItem("username");
-            const response = await request("post", `add_gym/${username}`, data);
+            const userId = await AsyncStorage.getItem("userId");
+            const response = await request("post", `add_gym/${userId}`, data);
             if (response.status !== 200) {
               console.log(response.status);
               return;

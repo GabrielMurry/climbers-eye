@@ -17,6 +17,7 @@ import {
 import BoulderCard from "../components/BoulderCard";
 import { useHeaderHeight } from "@react-navigation/elements"; // grabbing height of header (varies on diff mobile screens)
 import { request } from "../api/requestMethods";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ListScreen = ({ route, navigation }) => {
   const { gymName, spraywall, defaultImage } = route.params;
@@ -28,7 +29,8 @@ const ListScreen = ({ route, navigation }) => {
 
   useEffect(() => {
     const getData = async () => {
-      const response = await request("get", `list/${spraywall.id}`);
+      const userId = await AsyncStorage.getItem("userId");
+      const response = await request("get", `list/${spraywall.id}/${userId}`);
       if (response.status !== 200) {
         console.log(response.status);
       }

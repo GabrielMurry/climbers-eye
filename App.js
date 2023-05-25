@@ -24,6 +24,7 @@ import SubmitCodeScreen from "./screens/SubmitCodeScreen";
 import { useEffect } from "react";
 import fetchCsrfToken from "./api/configToken";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import SendScreen from "./screens/SendScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -185,6 +186,11 @@ export default function App() {
           name="Boulder"
           component={BoulderScreen}
           options={({ navigation }) => customHeader(navigation, "Boulder")}
+        />
+        <Stack.Screen
+          name="Send"
+          component={SendScreen}
+          options={({ navigation }) => customHeader(navigation, "Send")}
         />
       </Stack.Navigator>
     </NavigationContainer>
