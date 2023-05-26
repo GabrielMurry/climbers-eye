@@ -9,7 +9,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   AdjustmentsHorizontalIcon,
   PlusIcon,
@@ -18,6 +18,7 @@ import BoulderCard from "../components/BoulderCard";
 import { useHeaderHeight } from "@react-navigation/elements"; // grabbing height of header (varies on diff mobile screens)
 import { request } from "../api/requestMethods";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useFocusEffect } from "@react-navigation/native";
 
 const ListScreen = ({ route, navigation }) => {
   const { gymName, spraywall, defaultImage } = route.params;
@@ -27,20 +28,23 @@ const ListScreen = ({ route, navigation }) => {
   // grabbing height of header
   const height = useHeaderHeight();
 
-  useEffect(() => {
-    const getData = async () => {
-      const userId = await AsyncStorage.getItem("userId");
-      const response = await request("get", `list/${spraywall.id}/${userId}`);
-      if (response.status !== 200) {
-        console.log(response.status);
-      }
-      if (response.data) {
-        setBoulders(response.data);
-      }
-    };
+  // This event will be triggered when the screen gains focus (i.e., when you navigate back to it).
+  useFocusEffect(
+    useCallback(() => {
+      fetchData();
+    }, [])
+  );
 
-    getData();
-  }, []);
+  const fetchData = async () => {
+    const userId = await AsyncStorage.getItem("userId");
+    const response = await request("get", `list/${spraywall.id}/${userId}`);
+    if (response.status !== 200) {
+      console.log(response.status);
+    }
+    if (response.data) {
+      setBoulders(response.data);
+    }
+  };
 
   return (
     <SafeAreaView
@@ -64,14 +68,7 @@ const ListScreen = ({ route, navigation }) => {
             <TouchableOpacity
               onPress={() => navigation.navigate("Boulder", { boulder: item })}
             >
-              <BoulderCard
-                title={item.name}
-                setter={item.setter}
-                FA={item.firstAscent}
-                sends={item.sends}
-                grade={item.grade}
-                stars={item.rating}
-              />
+              <BoulderCard boulder={item} />
             </TouchableOpacity>
           )}
           keyExtractor={(item) => item.id}

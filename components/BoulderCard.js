@@ -2,23 +2,35 @@ import { View, Text, StyleSheet } from "react-native";
 import React from "react";
 import { StarIcon } from "react-native-heroicons/outline";
 
-const BoulderCard = ({ title, setter, FA, sends, grade, stars }) => {
+const BoulderCard = ({ boulder }) => {
   return (
     <View style={styles.boulder}>
       <View style={styles.boulderLeftWrapper}>
-        <Text>{title}</Text>
+        <Text>{boulder.name}</Text>
         <View style={styles.setterAndFA}>
-          <Text>Setter: {setter}</Text>
-          <Text> FA: {FA}</Text>
+          <Text>Setter: {boulder.setter}</Text>
+          <Text> FA: {boulder.firstAscent}</Text>
         </View>
-        <Text>{sends} sends</Text>
+        <Text>{boulder.sends} sends</Text>
       </View>
       <View style={styles.boulderRightWrapper}>
-        <Text>{grade ?? "Project"}</Text>
+        <Text>{boulder.grade ?? "Project"}</Text>
         <View style={styles.starsContainer}>
-          <StarIcon size={15} fill={stars >= 1 ? "gold" : ""} color="gold" />
-          <StarIcon size={15} fill={stars >= 2 ? "gold" : ""} color="gold" />
-          <StarIcon size={15} fill={stars === 3 ? "gold" : ""} color="gold" />
+          <StarIcon
+            size={15}
+            fill={boulder.quality >= 1 ? "gold" : "black"}
+            color={boulder.quality >= 1 ? "gold" : "black"}
+          />
+          <StarIcon
+            size={15}
+            fill={boulder.quality >= 2 ? "gold" : "black"}
+            color={boulder.quality >= 2 ? "gold" : "black"}
+          />
+          <StarIcon
+            size={15}
+            fill={boulder.quality === 3 ? "gold" : "black"}
+            color={boulder.quality === 3 ? "gold" : "black"}
+          />
         </View>
       </View>
     </View>

@@ -12,6 +12,7 @@ import {
 import { Picker } from "@react-native-picker/picker";
 import { StarIcon } from "react-native-heroicons/outline";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { request } from "../api/requestMethods";
 
 const options = {
   attempts: [],
@@ -95,12 +96,26 @@ const SendScreen = ({ route, navigation }) => {
     getUsername();
   }, []);
 
-  handleSubmit = () => {
+  handleSubmit = async () => {
     if (selectedDifficulty === "?") {
       console.log("MUST SELECT A DIFFICULTY");
       return;
     }
-    console.log(selectedAttempts, selectedDifficulty, qualityCount, notes);
+    const userId = await AsyncStorage.getItem("userId");
+    const data = {
+      attempts: selectedAttempts,
+      grade: selectedDifficulty,
+      quality: qualityCount,
+      notes: notes,
+      person: userId,
+      boulder: boulder.id,
+    };
+    const response = await request("post", `sent_boulder/${boulder.id}`, data);
+    if (response.status !== 200) {
+      console.log(response.status);
+      return;
+    }
+    navigation.goBack();
   };
 
   const dismissKeyboard = () => {
