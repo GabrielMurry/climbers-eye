@@ -9,7 +9,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
   AdjustmentsHorizontalIcon,
   PlusIcon,
@@ -23,7 +23,7 @@ import { useFocusEffect } from "@react-navigation/native";
 const ListScreen = ({ route, navigation }) => {
   const { gymName, spraywall, defaultImage } = route.params;
 
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const [boulders, setBoulders] = useState([]);
   // grabbing height of header
   const height = useHeaderHeight();
@@ -83,9 +83,9 @@ const ListScreen = ({ route, navigation }) => {
             <View style={styles.searchContainer}>
               <TextInput
                 style={styles.searchInput}
-                value={searchTerm}
+                value={searchQuery}
                 // onChange doesn't exist in react native. use onChangeText
-                onChangeText={(text) => setSearchTerm(text)} // in react native, you don't have to do e.target.value
+                onChangeText={(text) => setSearchQuery(text)} // in react native, you don't have to do e.target.value
                 placeholder="Search Boulders"
               />
             </View>

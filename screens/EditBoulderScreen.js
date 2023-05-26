@@ -6,7 +6,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
 } from "react-native";
-import React, { useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { SketchCanvas } from "rn-perfect-sketch-canvas";
 import ReactNativeZoomableView from "@openspacelabs/react-native-zoomable-view/src/ReactNativeZoomableView";
 import ItemEditBar from "../components/ItemEditBar";
@@ -14,6 +14,7 @@ import BrushSize from "../components/BrushSize";
 import ModalEditPreview from "../components/ModalEditPreview";
 import axios from "../api/axios";
 import { captureRef } from "react-native-view-shot";
+import { useFocusEffect } from "@react-navigation/native";
 
 const EditBoulderScreen = ({ route, navigation }) => {
   const { image } = route.params;
@@ -30,6 +31,13 @@ const EditBoulderScreen = ({ route, navigation }) => {
   const [currentZoomLevel, setCurrentZoomLevel] = useState(1.0);
   const [modalVisible, setModalVisible] = useState(false);
   const [resultImageUri, setResultImageUri] = useState(null);
+
+  // resetting the canvas every time we focus on edit screen (prevent previous drawn points from showing up)
+  useFocusEffect(
+    useCallback(() => {
+      canvasRef.current?.reset();
+    }, [])
+  );
 
   const handleItemPress = (item) => {
     setSelectedItem(item);

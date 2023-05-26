@@ -47,6 +47,15 @@ function customHeader(navigation, name) {
       />
     );
   }
+  if (name === "Boulder") {
+    headerLeft = () => (
+      <ArrowLeftCircleIcon
+        size={30}
+        color="black"
+        onPress={() => navigation.navigate("Home")}
+      />
+    );
+  }
   let headerRight = () => (
     <UserIcon
       size={30}

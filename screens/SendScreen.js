@@ -110,7 +110,11 @@ const SendScreen = ({ route, navigation }) => {
       person: userId,
       boulder: boulder.id,
     };
-    const response = await request("post", `sent_boulder/${boulder.id}`, data);
+    const response = await request(
+      "post",
+      `sent_boulder/${boulder.id}/${userId}`,
+      data
+    );
     if (response.status !== 200) {
       console.log(response.status);
       return;
