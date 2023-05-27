@@ -9,7 +9,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   AdjustmentsHorizontalIcon,
   PlusIcon,
@@ -35,12 +35,34 @@ const ListScreen = ({ navigation }) => {
   // This event will be triggered when the screen gains focus (i.e., when you navigate back to it).
   useFocusEffect(
     useCallback(() => {
-      fetchData();
+      // reset search query and fetch all data upon every new focus on screen - a boulder may have been updated
+      setSearchQuery("");
+      fetchAllData();
     }, [])
   );
 
-  const fetchData = async () => {
+  useEffect(() => {
+    // When we mount component, nothing is in our searchQuery so we do nothing
+    if (searchQuery !== "") {
+      fetchSearchQueryData();
+    }
+  }, [searchQuery]);
+
+  const fetchAllData = async () => {
     const response = await request("get", `list/${spraywallID}/${userID}`);
+    if (response.status !== 200) {
+      console.log(response.status);
+    }
+    if (response.data) {
+      setBoulders(response.data);
+    }
+  };
+
+  const fetchSearchQueryData = async () => {
+    const response = await request(
+      "get",
+      `query_list/${spraywallID}/${userID}?search=${searchQuery}`
+    );
     if (response.status !== 200) {
       console.log(response.status);
     }
@@ -88,8 +110,8 @@ const ListScreen = ({ navigation }) => {
                 style={styles.searchInput}
                 value={searchQuery}
                 // onChange doesn't exist in react native. use onChangeText
-                onChangeText={(text) => setSearchQuery(text)} // in react native, you don't have to do e.target.value
-                placeholder="Search Boulders"
+                onChangeText={(value) => setSearchQuery(value)} // in react native, you don't have to do e.target.value
+                placeholder="Search (name, setter, or grade)"
               />
             </View>
             <TouchableOpacity style={styles.filter}>
