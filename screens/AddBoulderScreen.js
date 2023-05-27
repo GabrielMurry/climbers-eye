@@ -8,27 +8,43 @@ import {
 } from "react-native";
 import React from "react";
 import { CameraIcon } from "react-native-heroicons/outline";
+import { useSelector } from "react-redux";
 
 const imageScaleDownFactor = 12;
 
-const AddBoulderScreen = ({ route, navigation }) => {
-  const { spraywall, defaultImage } = route.params;
+const AddBoulderScreen = ({ navigation }) => {
+  const {
+    spraywallName,
+    defaultImageUri,
+    defaultImageWidth,
+    defaultImageHeight,
+  } = useSelector((state) => state.spraywallReducer);
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.titleContainer}>
         <Text style={styles.titleText}>Add New Boulder</Text>
-        <Text style={styles.subTitleText}>to {spraywall.name}</Text>
+        <Text style={styles.subTitleText}>to {spraywallName}</Text>
       </View>
       <View style={styles.buttonsContainer}>
         <TouchableOpacity
-          style={styles.defaultPhoto(defaultImage, imageScaleDownFactor)}
+          style={styles.defaultPhoto(
+            defaultImageWidth,
+            defaultImageHeight,
+            imageScaleDownFactor
+          )}
           onPress={() =>
-            navigation.navigate("EditBoulder", { image: defaultImage })
+            navigation.navigate("EditBoulder", {
+              image: {
+                uri: defaultImageUri,
+                width: defaultImageWidth,
+                height: defaultImageHeight,
+              },
+            })
           }
         >
           <Image
-            source={{ uri: defaultImage.uri }}
+            source={{ uri: defaultImageUri }}
             resizeMode="contain"
             style={styles.defaultImage}
           />
@@ -76,9 +92,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     rowGap: 25,
   },
-  defaultPhoto: (defaultImage, imageScaleDownFactor) => ({
-    width: defaultImage.width / imageScaleDownFactor,
-    height: defaultImage.height / imageScaleDownFactor,
+  defaultPhoto: (
+    defaultImageWidth,
+    defaultImageHeight,
+    imageScaleDownFactor
+  ) => ({
+    width: defaultImageWidth / imageScaleDownFactor,
+    height: defaultImageHeight / imageScaleDownFactor,
   }),
   defaultImage: {
     width: "100%",

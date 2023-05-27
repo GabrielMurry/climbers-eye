@@ -20,7 +20,7 @@ import { request } from "../api/requestMethods";
 import { FontAwesome } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
-import { StarIcon, BookmarkIcon } from "react-native-heroicons/outline";
+import { StarIcon } from "react-native-heroicons/outline";
 import { AntDesign } from "@expo/vector-icons";
 import { SimpleLineIcons } from "@expo/vector-icons";
 import { useActionSheet } from "@expo/react-native-action-sheet";

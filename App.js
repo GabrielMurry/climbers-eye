@@ -26,6 +26,8 @@ import fetchCsrfToken from "./api/configToken";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import SendScreen from "./screens/SendScreen";
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
+import { Provider } from "react-redux";
+import { store } from "./redux/store";
 
 const Stack = createNativeStackNavigator();
 
@@ -52,7 +54,7 @@ function customHeader(navigation, name) {
       <ArrowLeftCircleIcon
         size={30}
         color="black"
-        onPress={() => navigation.navigate("Home")}
+        onPress={() => navigation.navigate("List")}
       />
     );
   }
@@ -95,121 +97,125 @@ export default function App() {
   return (
     // ReactNativeActionSheet uses React context to allow your components to invoke the menu
     <ActionSheetProvider>
-      <NavigationContainer>
-        <Stack.Navigator>
-          {/* Screens */}
-          {/* <Stack.Screen name="TestDraw" component={TestDrawScreen} /> */}
-          <Stack.Screen
-            name="Login"
-            component={LoginScreen}
-            options={{
-              headerShown: false,
-              animation: "none",
-            }}
-          />
-          <Stack.Screen
-            name="ForgotPassword"
-            component={ForgotPasswordScreen}
-            options={{
-              headerShown: false,
-              animation: "none",
-            }}
-          />
-          <Stack.Screen
-            name="SubmitCode"
-            component={SubmitCodeScreen}
-            options={{
-              headerShown: false,
-              animation: "none",
-            }}
-          />
-          <Stack.Screen
-            name="ResetPassword"
-            component={ResetPasswordScreen}
-            options={{
-              headerShown: false,
-              animation: "none",
-            }}
-          />
-          <Stack.Screen
-            name="Signup"
-            component={SignupScreen}
-            options={{
-              headerShown: false,
-              animation: "none",
-            }}
-          />
-          <Stack.Screen
-            name="ConfirmEmail"
-            component={ConfirmEmailScreen}
-            options={{
-              headerShown: false,
-              animation: "none",
-            }}
-          />
-          <Stack.Screen
-            name="Map"
-            component={MapScreen}
-            options={({ navigation }) => customHeader(navigation, "Map")}
-          />
-          <Stack.Screen
-            name="AddGym"
-            component={AddGymScreen}
-            options={({ navigation }) => customHeader(navigation, "AddGym")}
-          />
-          <Stack.Screen
-            name="AddSprayWall"
-            component={AddSprayWallScreen}
-            options={({ navigation }) =>
-              customHeader(navigation, "AddSprayWall")
-            }
-          />
-          <Stack.Screen
-            name="Camera"
-            component={CameraScreen}
-            options={({ navigation }) => customHeader(navigation, "Camera")}
-          />
-          <Stack.Screen
-            name="Home"
-            component={HomeScreen}
-            options={({ navigation }) => customHeader(navigation, "Home")}
-          />
-          <Stack.Screen
-            name="AddBoulder"
-            component={AddBoulderScreen}
-            options={({ navigation }) => customHeader(navigation, "AddBoulder")}
-          />
-          <Stack.Screen
-            name="EditBoulder"
-            component={EditBoulderScreen}
-            options={({ navigation }) =>
-              customHeader(navigation, "EditBoulder")
-            }
-          />
-          <Stack.Screen
-            name="Profile"
-            component={ProfileScreen}
-            options={{
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen
-            name="List"
-            component={ListScreen}
-            options={({ navigation }) => customHeader(navigation, "List")}
-          />
-          <Stack.Screen
-            name="Boulder"
-            component={BoulderScreen}
-            options={({ navigation }) => customHeader(navigation, "Boulder")}
-          />
-          <Stack.Screen
-            name="Send"
-            component={SendScreen}
-            options={({ navigation }) => customHeader(navigation, "Send")}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
+      <Provider store={store}>
+        <NavigationContainer>
+          <Stack.Navigator>
+            {/* Screens */}
+            {/* <Stack.Screen name="TestDraw" component={TestDrawScreen} /> */}
+            <Stack.Screen
+              name="Login"
+              component={LoginScreen}
+              options={{
+                headerShown: false,
+                animation: "none",
+              }}
+            />
+            <Stack.Screen
+              name="ForgotPassword"
+              component={ForgotPasswordScreen}
+              options={{
+                headerShown: false,
+                animation: "none",
+              }}
+            />
+            <Stack.Screen
+              name="SubmitCode"
+              component={SubmitCodeScreen}
+              options={{
+                headerShown: false,
+                animation: "none",
+              }}
+            />
+            <Stack.Screen
+              name="ResetPassword"
+              component={ResetPasswordScreen}
+              options={{
+                headerShown: false,
+                animation: "none",
+              }}
+            />
+            <Stack.Screen
+              name="Signup"
+              component={SignupScreen}
+              options={{
+                headerShown: false,
+                animation: "none",
+              }}
+            />
+            <Stack.Screen
+              name="ConfirmEmail"
+              component={ConfirmEmailScreen}
+              options={{
+                headerShown: false,
+                animation: "none",
+              }}
+            />
+            <Stack.Screen
+              name="Map"
+              component={MapScreen}
+              options={({ navigation }) => customHeader(navigation, "Map")}
+            />
+            <Stack.Screen
+              name="AddGym"
+              component={AddGymScreen}
+              options={({ navigation }) => customHeader(navigation, "AddGym")}
+            />
+            <Stack.Screen
+              name="AddSprayWall"
+              component={AddSprayWallScreen}
+              options={({ navigation }) =>
+                customHeader(navigation, "AddSprayWall")
+              }
+            />
+            <Stack.Screen
+              name="Camera"
+              component={CameraScreen}
+              options={({ navigation }) => customHeader(navigation, "Camera")}
+            />
+            <Stack.Screen
+              name="Home"
+              component={HomeScreen}
+              options={({ navigation }) => customHeader(navigation, "Home")}
+            />
+            <Stack.Screen
+              name="AddBoulder"
+              component={AddBoulderScreen}
+              options={({ navigation }) =>
+                customHeader(navigation, "AddBoulder")
+              }
+            />
+            <Stack.Screen
+              name="EditBoulder"
+              component={EditBoulderScreen}
+              options={({ navigation }) =>
+                customHeader(navigation, "EditBoulder")
+              }
+            />
+            <Stack.Screen
+              name="Profile"
+              component={ProfileScreen}
+              options={{
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen
+              name="List"
+              component={ListScreen}
+              options={({ navigation }) => customHeader(navigation, "List")}
+            />
+            <Stack.Screen
+              name="Boulder"
+              component={BoulderScreen}
+              options={({ navigation }) => customHeader(navigation, "Boulder")}
+            />
+            <Stack.Screen
+              name="Send"
+              component={SendScreen}
+              options={({ navigation }) => customHeader(navigation, "Send")}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </Provider>
     </ActionSheetProvider>
   );
 }

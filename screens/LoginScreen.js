@@ -9,11 +9,14 @@ import CustomInput from "../components/CustomInput";
 import CustomButton from "../components/CustomButton";
 import SocialSignInButtons from "../components/SocialSignInButtons";
 import { request } from "../api/requestMethods";
+import { useSelector, useDispatch } from "react-redux";
+import { setUsername, setUserID } from "../redux/actions";
 
 const LoginScreen = ({ navigation }) => {
   const { height } = useWindowDimensions();
+  const dispatch = useDispatch();
+  const { username } = useSelector((state) => state.userReducer);
 
-  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const handleLogin = async () => {
@@ -22,6 +25,10 @@ const LoginScreen = ({ navigation }) => {
     if (response.status !== 200) {
       console.log(response.status);
       return;
+    }
+    if (response.data) {
+      // in dispatch, we enter the action "setUserID" along with the "userID" value (doing this for username also)
+      dispatch(setUserID(response.data.userID));
     }
     navigation.navigate("Home");
   };
@@ -39,7 +46,7 @@ const LoginScreen = ({ navigation }) => {
       <Text style={[styles.logo, { height: height * 0.3 }]}>SPRAY</Text>
       <CustomInput
         value={username}
-        setValue={setUsername}
+        setValue={(value) => dispatch(setUsername(value))}
         placeholder="Username"
         secureTextEntry={false}
       />

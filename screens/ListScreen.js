@@ -17,11 +17,15 @@ import {
 import BoulderCard from "../components/BoulderCard";
 import { useHeaderHeight } from "@react-navigation/elements"; // grabbing height of header (varies on diff mobile screens)
 import { request } from "../api/requestMethods";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
+import { useSelector } from "react-redux";
 
-const ListScreen = ({ route, navigation }) => {
-  const { gymName, spraywall, defaultImage } = route.params;
+const ListScreen = ({ navigation }) => {
+  const { userID } = useSelector((state) => state.userReducer);
+  const { gymName } = useSelector((state) => state.gymReducer);
+  const { spraywallName, spraywallID } = useSelector(
+    (state) => state.spraywallReducer
+  );
 
   const [searchQuery, setSearchQuery] = useState("");
   const [boulders, setBoulders] = useState([]);
@@ -36,8 +40,7 @@ const ListScreen = ({ route, navigation }) => {
   );
 
   const fetchData = async () => {
-    const userId = await AsyncStorage.getItem("userId");
-    const response = await request("get", `list/${spraywall.id}/${userId}`);
+    const response = await request("get", `list/${spraywallID}/${userID}`);
     if (response.status !== 200) {
       console.log(response.status);
     }
@@ -56,7 +59,7 @@ const ListScreen = ({ route, navigation }) => {
       {/* Titles */}
       <View style={styles.titleContainer}>
         <Text style={styles.titleText}>{gymName}</Text>
-        <Text style={styles.subTitleText}>{spraywall.name}</Text>
+        <Text style={styles.subTitleText}>{spraywallName}</Text>
       </View>
       {/* Boulders */}
       <View style={styles.listContainer}>
@@ -94,12 +97,7 @@ const ListScreen = ({ route, navigation }) => {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.addBoulder}
-              onPress={() =>
-                navigation.navigate("AddBoulder", {
-                  spraywall,
-                  defaultImage,
-                })
-              }
+              onPress={() => navigation.navigate("AddBoulder")}
             >
               <PlusIcon size={25} color="black" />
             </TouchableOpacity>

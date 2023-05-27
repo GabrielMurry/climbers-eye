@@ -5,38 +5,43 @@ import {
   StyleSheet,
   Image,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { request } from "../api/requestMethods";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  setGymName,
+  setSpraywallName,
+  setSpraywallID,
+  setDefaultImageUri,
+  setDefaultImageWidth,
+  setDefaultImageHeight,
+} from "../redux/actions";
 
 const HomeScreen = ({ navigation }) => {
-  const [gymName, setGymName] = useState("");
-  const [spraywall, setSpraywall] = useState({ name: null, id: null });
-  const [defaultImage, setDefaultImage] = useState({
-    uri: null,
-    width: null,
-    height: null,
-  });
+  const dispatch = useDispatch();
+  const { userID } = useSelector((state) => state.userReducer);
+  const { gymName } = useSelector((state) => state.gymReducer);
+  const { spraywallName, defaultImageUri } = useSelector(
+    (state) => state.spraywallReducer
+  );
+
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const getData = async () => {
-      const userId = await AsyncStorage.getItem("userId");
-      const response = await request("get", `home/${userId}`);
+      const response = await request("get", `home/${userID}`);
       if (response.status !== 200) {
         console.log(response.status);
       }
       if (response.data) {
-        setGymName(response.data.gymName);
-        setSpraywall({
-          name: response.data.spraywallName,
-          id: response.data.spraywallId,
-        });
-        setDefaultImage({
-          uri: response.data.imageUri,
-          width: response.data.imageWidth,
-          height: response.data.imageHeight,
-        });
+        dispatch(setGymName(response.data.gymName));
+        dispatch(setSpraywallName(response.data.spraywallName));
+        dispatch(setSpraywallID(response.data.spraywallID));
+        dispatch(setDefaultImageUri(response.data.imageUri));
+        dispatch(setDefaultImageWidth(response.data.imageWidth));
+        dispatch(setDefaultImageHeight(response.data.imageHeight));
       }
     };
 
@@ -53,27 +58,26 @@ const HomeScreen = ({ navigation }) => {
       <View style={styles.titleContainer}>
         {/* Titles */}
         <Text style={styles.titleText}>{gymName}</Text>
-        <Text style={styles.subTitleText}>{spraywall.name}</Text>
+        <Text style={styles.subTitleText}>{spraywallName}</Text>
       </View>
       {/* Default Image */}
       <View style={styles.defaultImageContainer}>
         <Image
-          source={{ uri: defaultImage.uri }}
+          source={{ uri: defaultImageUri }}
           resizeMode="contain"
           style={styles.defaultImage}
+          onLoadStart={() => setIsLoading(true)}
+          onLoadEnd={() => setIsLoading(false)}
         />
+        {isLoading && (
+          <ActivityIndicator size="large" style={styles.defaultImage} />
+        )}
       </View>
       {/* Buttons */}
       <View style={styles.buttonsContainer}>
         <TouchableOpacity
           style={styles.button}
-          onPress={() =>
-            navigation.navigate("List", {
-              gymName,
-              spraywall,
-              defaultImage,
-            })
-          }
+          onPress={() => navigation.navigate("List")}
         >
           <Text>Find Boulders</Text>
         </TouchableOpacity>
@@ -85,9 +89,7 @@ const HomeScreen = ({ navigation }) => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
-          onPress={() =>
-            navigation.navigate("AddBoulder", { defaultImage, spraywall })
-          }
+          onPress={() => navigation.navigate("AddBoulder")}
         >
           <Text>Add Boulder/Route</Text>
         </TouchableOpacity>

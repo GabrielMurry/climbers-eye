@@ -4,9 +4,12 @@ import CustomInput from "../components/CustomInput";
 import CustomButton from "../components/CustomButton";
 import SocialSignInButtons from "../components/SocialSignInButtons";
 import { request } from "../api/requestMethods";
+import { useSelector, useDispatch } from "react-redux";
+import { setUsername, setUserID } from "../redux/actions";
 
 const SignupScreen = ({ navigation }) => {
-  const [username, setUsername] = useState("");
+  const dispatch = useDispatch();
+  const { username } = useSelector((state) => state.userReducer);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordRepeat, setPasswordRepeat] = useState("");
@@ -22,6 +25,10 @@ const SignupScreen = ({ navigation }) => {
     if (response.status !== 200) {
       console.log(response.status);
       return;
+    }
+    if (response.data) {
+      // in dispatch, we enter the action "setUserID" along with the "userID" value (doing this for username also)
+      dispatch(setUserID(response.data.userID));
     }
     navigation.navigate("Map");
   };
@@ -39,7 +46,7 @@ const SignupScreen = ({ navigation }) => {
       <Text style={styles.title}>Create Account</Text>
       <CustomInput
         value={username}
-        setValue={setUsername}
+        setValue={(value) => dispatch(setUsername(value))}
         placeholder="Username"
         secureTextEntry={false}
       />
