@@ -28,6 +28,8 @@ import SendScreen from "./screens/SendScreen";
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
+import TestDrawScreen from "./screens/TestDrawScreen";
+import FilterScreen from "./screens/FilterScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -69,6 +71,9 @@ function customHeader(navigation, name) {
   let animation = "default";
   if (name === "Map" || name === "Camera") {
     animation = "none";
+  }
+  if (name === "Filter") {
+    animation = "";
   }
 
   return {
@@ -202,6 +207,11 @@ export default function App() {
               name="List"
               component={ListScreen}
               options={({ navigation }) => customHeader(navigation, "List")}
+            />
+            <Stack.Screen
+              name="Filter"
+              component={FilterScreen}
+              options={({ navigation }) => customHeader(navigation, "Filter")}
             />
             <Stack.Screen
               name="Boulder"

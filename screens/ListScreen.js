@@ -29,6 +29,7 @@ const ListScreen = ({ navigation }) => {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [boulders, setBoulders] = useState([]);
+  const [showModalFilter, setShowModalFilter] = useState(false);
   // grabbing height of header
   const height = useHeaderHeight();
 
@@ -45,6 +46,8 @@ const ListScreen = ({ navigation }) => {
     // When we mount component, nothing is in our searchQuery so we do nothing
     if (searchQuery !== "") {
       fetchSearchQueryData();
+    } else {
+      fetchAllData(); // when we first render screen, fetchAllData is called twice. Here and on useFocusEffect. Fix?
     }
   }, [searchQuery]);
 
@@ -71,6 +74,15 @@ const ListScreen = ({ navigation }) => {
     }
   };
 
+  // Optimization --> use the React.useCallback hook to memoize the navigation function and prevent unnecessary re-creation of the function on every render.
+  // Providing navigation as a dependency, the navigateToBoulder function will only be re-created when the navigation prop changes, ensuring better performance.
+  const navigateToBoulderScreen = useCallback(
+    (item) => {
+      navigation.navigate("Boulder", { boulder: item });
+    },
+    [navigation]
+  );
+
   return (
     <SafeAreaView
       style={{
@@ -90,13 +102,13 @@ const ListScreen = ({ navigation }) => {
           contentContainerStyle={styles.bouldersList}
           data={boulders}
           renderItem={({ item }) => (
-            <TouchableOpacity
-              onPress={() => navigation.navigate("Boulder", { boulder: item })}
-            >
+            <TouchableOpacity onPress={() => navigateToBoulderScreen(item)}>
               <BoulderCard boulder={item} />
             </TouchableOpacity>
           )}
           keyExtractor={(item) => item.id}
+          initialNumToRender={7} // Render the number of items that are initially visible on the screen
+          windowSize={5} // Render an additional number of items to improve scrolling performance
         />
         {/* Search, filter, add */}
         {/* KeyboardAvoidingView - search bar on bottom disappears when clicked. We want to follow the keyboard up so it remains visible */}
@@ -112,9 +124,13 @@ const ListScreen = ({ navigation }) => {
                 // onChange doesn't exist in react native. use onChangeText
                 onChangeText={(value) => setSearchQuery(value)} // in react native, you don't have to do e.target.value
                 placeholder="Search (name, setter, or grade)"
+                autoComplete="off"
               />
             </View>
-            <TouchableOpacity style={styles.filter}>
+            <TouchableOpacity
+              style={styles.filter}
+              onPress={() => navigation.navigate("Filter")}
+            >
               <AdjustmentsHorizontalIcon size={25} color="black" />
             </TouchableOpacity>
             <TouchableOpacity
@@ -147,13 +163,12 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     flex: 1,
-    backgroundColor: "#fffeea",
-    paddingHorizontal: 10,
-    paddingVertical: 10,
     rowGap: 10,
   },
   bouldersList: {
     rowGap: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 10,
   },
   searchFilterAddContainer: {
     width: "100%",

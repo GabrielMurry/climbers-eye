@@ -79,19 +79,19 @@ const HomeScreen = ({ navigation }) => {
           style={styles.button}
           onPress={() => navigation.navigate("List")}
         >
-          <Text>Find Boulders</Text>
+          <Text style={styles.buttonText}>Find Boulders</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
           onPress={() => navigation.navigate("List")}
         >
-          <Text>Find Routes</Text>
+          <Text style={styles.buttonText}>Find Routes</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
           onPress={() => navigation.navigate("AddBoulder")}
         >
-          <Text>Add Boulder/Route</Text>
+          <Text style={styles.buttonText}>Add Boulder/Route</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -131,11 +131,22 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   button: {
-    backgroundColor: "#03df6c",
+    backgroundColor: "#FFFBF1",
+    borderWidth: 1,
+    borderColor: "black",
     width: 200,
     height: 50,
     borderRadius: 10,
     justifyContent: "center",
     alignItems: "center",
+    // adding shadow to button
+    shadowColor: "black",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5, // Required for Android
+  },
+  buttonText: {
+    fontWeight: "bold",
   },
 });
