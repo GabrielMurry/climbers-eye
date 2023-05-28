@@ -2,68 +2,62 @@ import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import { CheckIcon } from "react-native-heroicons/outline";
 import Slider from "@react-native-community/slider";
-
-const gradeRanges = [
-  "4a/V0",
-  "4b/V0",
-  "4c/V0",
-  "5a/V1",
-  "5b/V1",
-  "5c/V2",
-  "6a/V3",
-  "6a+/V3",
-  "6b/V4",
-  "6b+/V4",
-  "6c/V5",
-  "6c+/V5",
-  "7a/V6",
-  "7a+/V7",
-  "7b/V8",
-  "7b+/V8",
-  "7c/V9",
-  "7c+/V10",
-  "8a/V11",
-  "8a+/V12",
-  "8b/V13",
-  "8b+/V14",
-  "8c/V15",
-  "8c+/V16",
-];
+import { useSelector, useDispatch } from "react-redux";
+import {
+  setFilterSortBy,
+  setFilterMinGradeIndex,
+  setFilterMaxGradeIndex,
+  setFilterClimbType,
+  setFilterStatus,
+} from "../redux/actions";
+import { boulderGrades } from "../constants/boulderConstants";
 
 const FilterScreen = () => {
-  const [sortBy, setSortBy] = useState("popular");
-  const [minGradeIndex, setMinGradeIndex] = useState(0);
-  const [maxGradeIndex, setMaxGradeIndex] = useState(gradeRanges.length - 1);
+  const dispatch = useDispatch();
+  const {
+    filterSortBy,
+    filterMinGradeIndex,
+    filterMaxGradeIndex,
+    filterClimbType,
+    filterStatus,
+  } = useSelector((state) => state.spraywallReducer);
+
   const [showGradeRange, setShowGradeRange] = useState(false);
-  const [climbType, setClimbType] = useState("boulders");
-  const [status, setStatus] = useState("established");
 
   const handleGradeRangePress = () => {
     setShowGradeRange(!showGradeRange);
   };
 
   const handleMinGradeChange = (value) => {
-    if (value <= maxGradeIndex) {
-      setMinGradeIndex(value);
+    if (value <= filterMaxGradeIndex) {
+      dispatch(setFilterMinGradeIndex(value));
     } else {
-      setMinGradeIndex(maxGradeIndex);
+      dispatch(setFilterMinGradeIndex(filterMaxGradeIndex));
     }
   };
 
   const handleMaxGradeChange = (value) => {
-    if (value >= minGradeIndex) {
-      setMaxGradeIndex(value);
+    if (value >= filterMinGradeIndex) {
+      dispatch(setFilterMaxGradeIndex(value));
     } else {
-      setMaxGradeIndex(minGradeIndex);
+      dispatch(setFilterMaxGradeIndex(filterMinGradeIndex));
     }
   };
 
-  const minGrade = gradeRanges[minGradeIndex];
-  const maxGrade = gradeRanges[maxGradeIndex];
+  const minGrade = boulderGrades[filterMinGradeIndex];
+  const maxGrade = boulderGrades[filterMaxGradeIndex];
+
+  const handleResetFilters = () => {
+    dispatch(setFilterSortBy("popular"));
+    dispatch(setFilterMinGradeIndex(0));
+    dispatch(setFilterMaxGradeIndex(boulderGrades.length - 1));
+    dispatch(setFilterClimbType("boulder"));
+    dispatch(setFilterStatus("all"));
+  };
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.resetButton}>
+      <TouchableOpacity style={styles.resetButton} onPress={handleResetFilters}>
         <Text>Reset Filters</Text>
       </TouchableOpacity>
       <View style={styles.sortBox}>
@@ -72,31 +66,38 @@ const FilterScreen = () => {
         </View>
         <TouchableOpacity
           style={styles.row}
-          onPress={() => setSortBy("popular")}
+          onPress={() => dispatch(setFilterSortBy("popular"))}
         >
           <Text style={styles.rowTitle}>Most Popular</Text>
-          {sortBy === "popular" && <CheckIcon size={20} color={"black"} />}
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.row} onPress={() => setSortBy("liked")}>
-          <Text style={styles.rowTitle}>Liked</Text>
-          {sortBy === "liked" && <CheckIcon size={20} color={"black"} />}
+          {filterSortBy === "popular" && (
+            <CheckIcon size={20} color={"black"} />
+          )}
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.row}
-          onPress={() => setSortBy("bookmarked")}
+          onPress={() => dispatch(setFilterSortBy("liked"))}
+        >
+          <Text style={styles.rowTitle}>Liked</Text>
+          {filterSortBy === "liked" && <CheckIcon size={20} color={"black"} />}
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.row}
+          onPress={() => dispatch(setFilterSortBy("bookmarked"))}
         >
           <Text style={styles.rowTitle}>Bookmarked</Text>
-          {sortBy === "bookmarked" && <CheckIcon size={20} color={"black"} />}
+          {filterSortBy === "bookmarked" && (
+            <CheckIcon size={20} color={"black"} />
+          )}
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.row}
-          onPress={() => setSortBy("recent")}
+          onPress={() => dispatch(setFilterSortBy("recent"))}
         >
           <Text style={styles.rowTitle}>Most Recent</Text>
-          {sortBy === "recent" && <CheckIcon size={20} color={"black"} />}
+          {filterSortBy === "recent" && <CheckIcon size={20} color={"black"} />}
         </TouchableOpacity>
       </View>
-      <View style={styles.sortBox}>
+      <View style={styles.sortBoxGradeRange(showGradeRange)}>
         <View style={styles.rowHeader}>
           <Text style={styles.rowHeaderTitle}>Grade Range</Text>
         </View>
@@ -109,14 +110,14 @@ const FilterScreen = () => {
         <View style={styles.sliderContainer}>
           <View style={styles.sliderWrapper}>
             <Text style={styles.sliderLabel}>
-              Min Grade: {gradeRanges[minGradeIndex]}
+              Min Grade: {boulderGrades[filterMinGradeIndex]}
             </Text>
             <Slider
               style={styles.slider}
               minimumValue={0}
-              maximumValue={gradeRanges.length - 1}
-              upperLimit={maxGradeIndex}
-              value={minGradeIndex}
+              maximumValue={boulderGrades.length - 1}
+              upperLimit={filterMaxGradeIndex}
+              value={filterMinGradeIndex}
               onValueChange={handleMinGradeChange}
               step={1}
               maximumTrackTintColor={"#4E9152"}
@@ -125,14 +126,14 @@ const FilterScreen = () => {
           </View>
           <View style={styles.sliderWrapper}>
             <Text style={styles.sliderLabel}>
-              Max Grade: {gradeRanges[maxGradeIndex]}
+              Max Grade: {boulderGrades[filterMaxGradeIndex]}
             </Text>
             <Slider
               style={styles.slider}
               minimumValue={0}
-              maximumValue={gradeRanges.length - 1}
-              lowerLimit={minGradeIndex}
-              value={maxGradeIndex}
+              maximumValue={boulderGrades.length - 1}
+              lowerLimit={filterMinGradeIndex}
+              value={filterMaxGradeIndex}
               onValueChange={handleMaxGradeChange}
               step={1}
               maximumTrackTintColor={"lightgray"}
@@ -147,17 +148,21 @@ const FilterScreen = () => {
         </View>
         <TouchableOpacity
           style={styles.row}
-          onPress={() => setClimbType("boulders")}
+          onPress={() => dispatch(setFilterClimbType("boulder"))}
         >
-          <Text style={styles.rowTitle}>Boulders</Text>
-          {climbType === "boulders" && <CheckIcon size={20} color={"black"} />}
+          <Text style={styles.rowTitle}>Boulder</Text>
+          {filterClimbType === "boulder" && (
+            <CheckIcon size={20} color={"black"} />
+          )}
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.row}
-          onPress={() => setClimbType("routes")}
+          onPress={() => dispatch(setFilterClimbType("route"))}
         >
-          <Text style={styles.rowTitle}>Routes</Text>
-          {climbType === "routes" && <CheckIcon size={20} color={"black"} />}
+          <Text style={styles.rowTitle}>Route</Text>
+          {filterClimbType === "route" && (
+            <CheckIcon size={20} color={"black"} />
+          )}
         </TouchableOpacity>
       </View>
       <View style={styles.sortBox}>
@@ -166,24 +171,37 @@ const FilterScreen = () => {
         </View>
         <TouchableOpacity
           style={styles.row}
-          onPress={() => setStatus("established")}
+          onPress={() => dispatch(setFilterStatus("all"))}
+        >
+          <Text style={styles.rowTitle}>All</Text>
+          {filterStatus === "all" && <CheckIcon size={20} color={"black"} />}
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.row}
+          onPress={() => dispatch(setFilterStatus("established"))}
         >
           <Text style={styles.rowTitle}>Established</Text>
-          {status === "established" && <CheckIcon size={20} color={"black"} />}
+          {(filterStatus === "established" || filterStatus === "all") && (
+            <CheckIcon size={20} color={"black"} />
+          )}
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.row}
-          onPress={() => setStatus("projects")}
+          onPress={() => dispatch(setFilterStatus("projects"))}
         >
           <Text style={styles.rowTitle}>Open Projects</Text>
-          {status === "projects" && <CheckIcon size={20} color={"black"} />}
+          {(filterStatus === "projects" || filterStatus === "all") && (
+            <CheckIcon size={20} color={"black"} />
+          )}
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.row}
-          onPress={() => setStatus("drafts")}
+          onPress={() => dispatch(setFilterStatus("drafts"))}
         >
           <Text style={styles.rowTitle}>My Drafts</Text>
-          {status === "drafts" && <CheckIcon size={20} color={"black"} />}
+          {(filterStatus === "drafts" || filterStatus === "all") && (
+            <CheckIcon size={20} color={"black"} />
+          )}
         </TouchableOpacity>
       </View>
     </View>
@@ -221,6 +239,24 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5, // Required for Android
   },
+  sortBoxGradeRange: (showGradeRange) => ({
+    width: "100%",
+    backgroundColor: "#FFFBF1",
+    borderWidth: showGradeRange ? 0 : 1,
+    borderTopWidth: 1,
+    borderLeftWidth: 1,
+    borderRightWidth: 1,
+    borderColor: "black",
+    borderRadius: showGradeRange ? 0 : 10,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    // adding shadow to sorting boxes
+    shadowColor: "black",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5, // Required for Android
+  }),
   rowHeaderTitle: {
     fontWeight: "bold",
   },
@@ -245,7 +281,12 @@ const styles = StyleSheet.create({
   },
   sliderContainer: {
     backgroundColor: "#FFFBF1",
-    borderRadius: 10,
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10,
+    borderLeftWidth: 1,
+    borderRightWidth: 1,
+    borderBottomWidth: 1,
+    borderColor: "black",
     padding: 10,
     // adding shadow to slider box
     shadowColor: "black",

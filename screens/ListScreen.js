@@ -29,7 +29,6 @@ const ListScreen = ({ navigation }) => {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [boulders, setBoulders] = useState([]);
-  const [showModalFilter, setShowModalFilter] = useState(false);
   // grabbing height of header
   const height = useHeaderHeight();
 
