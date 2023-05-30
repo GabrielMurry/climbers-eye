@@ -33,7 +33,7 @@ import FilterScreen from "./screens/FilterScreen";
 
 const Stack = createNativeStackNavigator();
 
-function customHeader(navigation, name) {
+function customHeader(navigation, screenName) {
   let headerLeft = () => (
     <ArrowLeftCircleIcon
       size={30}
@@ -41,8 +41,8 @@ function customHeader(navigation, name) {
       onPress={() => navigation.goBack()}
     />
   );
-  if (name === "Map") headerLeft = () => "";
-  if (name === "Home") {
+  if (screenName === "Map") headerLeft = () => "";
+  if (screenName === "Home") {
     headerLeft = () => (
       <MapPinIcon
         size={30}
@@ -51,7 +51,7 @@ function customHeader(navigation, name) {
       />
     );
   }
-  if (name === "Boulder") {
+  if (screenName === "Boulder") {
     headerLeft = () => (
       <ArrowLeftCircleIcon
         size={30}
@@ -69,10 +69,10 @@ function customHeader(navigation, name) {
   );
 
   let animation = "default";
-  if (name === "Map" || name === "Camera") {
+  if (screenName === "Map" || screenName === "Camera") {
     animation = "none";
   }
-  if (name === "Filter") {
+  if (screenName === "Filter") {
     animation = "";
   }
 

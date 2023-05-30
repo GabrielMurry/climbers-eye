@@ -18,14 +18,17 @@ import React, {
 import FullScreenImage from "../components/FullScreenImage";
 import { request } from "../api/requestMethods";
 import { FontAwesome } from "@expo/vector-icons";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
 import { StarIcon } from "react-native-heroicons/outline";
 import { AntDesign } from "@expo/vector-icons";
 import { SimpleLineIcons } from "@expo/vector-icons";
 import { useActionSheet } from "@expo/react-native-action-sheet";
+import { useSelector } from "react-redux";
 
 const BoulderScreen = ({ route, navigation }) => {
+  const { userID } = useSelector((state) => state.userReducer);
+  const { username } = useSelector((state) => state.userReducer);
+
   const [boulder, setBoulder] = useState(route.params.boulder);
   const [image, setImage] = useState({ uri: null, width: null, height: null });
   const [imageFullScreen, setImageFullScreen] = useState(false);
@@ -90,10 +93,9 @@ const BoulderScreen = ({ route, navigation }) => {
 
   // re-fetching certain data (grade, quality, first ascent user) --> in the event of someone successfully sending (climbing) the boulder for the first time
   const fetchCertainData = async () => {
-    const userId = await AsyncStorage.getItem("userId");
     const response = await request(
       "get",
-      `sent_boulder/${boulder.id}/${userId}`
+      `sent_boulder/${boulder.id}/${userID}`
     );
     if (response.status !== 200) {
       console.log(response.status);
@@ -111,10 +113,9 @@ const BoulderScreen = ({ route, navigation }) => {
 
   const handleLiked = async () => {
     const method = boulder.personLiked ? "delete" : "post";
-    const userId = await AsyncStorage.getItem("userId");
     const response = await request(
       method,
-      `like_boulder/${boulder.id}/${userId}`
+      `like_boulder/${boulder.id}/${userID}`
     );
     if (response.status !== 200) {
       console.log(response.status);
@@ -152,7 +153,6 @@ const BoulderScreen = ({ route, navigation }) => {
   };
 
   const showOptions = async () => {
-    const username = await AsyncStorage.getItem("username");
     let options = ["Share", "Report", "Cancel"];
     let destructiveButtonIndex = -1;
     const cancelButtonIndex = 3;

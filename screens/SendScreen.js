@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -11,8 +11,8 @@ import {
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { StarIcon } from "react-native-heroicons/outline";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { request } from "../api/requestMethods";
+import { useSelector } from "react-redux";
 
 const options = {
   attempts: [],
@@ -49,9 +49,10 @@ for (let i = 1; i <= 100; i++) {
 }
 
 const SendScreen = ({ route, navigation }) => {
+  const { userID } = useSelector((state) => state.userReducer);
+  const { username } = useSelector((state) => state.userReducer);
   const { boulder } = route.params;
 
-  const [username, setUsername] = useState("");
   const [selectedAttempts, setSelectedAttempts] = useState(1);
   const [selectedDifficulty, setSelectedDifficulty] = useState(
     boulder.grade ?? "?"
@@ -87,32 +88,22 @@ const SendScreen = ({ route, navigation }) => {
     }).start();
   };
 
-  //  just use react redux at this point
-  useEffect(() => {
-    const getUsername = async () => {
-      setUsername(await AsyncStorage.getItem("username"));
-    };
-
-    getUsername();
-  }, []);
-
   handleSubmit = async () => {
     if (selectedDifficulty === "?") {
       console.log("MUST SELECT A DIFFICULTY");
       return;
     }
-    const userId = await AsyncStorage.getItem("userId");
     const data = {
       attempts: selectedAttempts,
       grade: selectedDifficulty,
       quality: qualityCount,
       notes: notes,
-      person: userId,
+      person: userID,
       boulder: boulder.id,
     };
     const response = await request(
       "post",
-      `sent_boulder/${boulder.id}/${userId}`,
+      `sent_boulder/${boulder.id}/${userID}`,
       data
     );
     if (response.status !== 200) {

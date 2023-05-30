@@ -29,8 +29,13 @@ const LoginScreen = ({ navigation }) => {
     if (response.data) {
       // in dispatch, we enter the action "setUserID" along with the "userID" value (doing this for username also)
       dispatch(setUserID(response.data.userID));
+      // for redundancy. If user signs up, but restarts the app, then logs in, they still don't belong to a gym or spraywall, so redirect to Map screen
+      if (response.data.gymID) {
+        navigation.navigate("Home");
+      } else {
+        navigation.navigate("Map");
+      }
     }
-    navigation.navigate("Home");
   };
 
   const handleForgotPassword = () => {

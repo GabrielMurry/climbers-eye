@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { request } from "../api/requestMethods";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -30,23 +30,23 @@ const HomeScreen = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const getData = async () => {
-      const response = await request("get", `home/${userID}`);
-      if (response.status !== 200) {
-        console.log(response.status);
-      }
-      if (response.data) {
-        dispatch(setGymName(response.data.gymName));
-        dispatch(setSpraywallName(response.data.spraywallName));
-        dispatch(setSpraywallID(response.data.spraywallID));
-        dispatch(setDefaultImageUri(response.data.imageUri));
-        dispatch(setDefaultImageWidth(response.data.imageWidth));
-        dispatch(setDefaultImageHeight(response.data.imageHeight));
-      }
-    };
-
-    getData();
+    getDefaultData();
   }, []);
+
+  const getDefaultData = async () => {
+    const response = await request("get", `home/${userID}`);
+    if (response.status !== 200) {
+      console.log(response.status);
+    }
+    if (response.data) {
+      dispatch(setGymName(response.data.gymName));
+      dispatch(setSpraywallName(response.data.spraywallName));
+      dispatch(setSpraywallID(response.data.spraywallID));
+      dispatch(setDefaultImageUri(response.data.imageUri));
+      dispatch(setDefaultImageWidth(response.data.imageWidth));
+      dispatch(setDefaultImageHeight(response.data.imageHeight));
+    }
+  };
 
   return (
     <SafeAreaView

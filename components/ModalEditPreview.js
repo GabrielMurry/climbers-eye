@@ -16,6 +16,7 @@ import React, { useState } from "react";
 import FullScreenImage from "./FullScreenImage";
 import { request } from "../api/requestMethods";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useSelector } from "react-redux";
 
 const ModalEditPreview = ({
   image,
@@ -25,6 +26,7 @@ const ModalEditPreview = ({
   navigation,
   resultImageUri,
 }) => {
+  const { userID } = useSelector((state) => state.userReducer);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [isMatching, setIsMatching] = useState(true);
@@ -43,8 +45,7 @@ const ModalEditPreview = ({
       spraywall: null,
       setter_person: null,
     };
-    const userId = await AsyncStorage.getItem("userId");
-    const response = await request("post", `add_boulder/${userId}`, data);
+    const response = await request("post", `add_boulder/${userID}`, data);
     if (response.status !== 200) {
       console.log(response.status);
       return;
