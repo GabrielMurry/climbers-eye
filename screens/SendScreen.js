@@ -13,35 +13,11 @@ import { Picker } from "@react-native-picker/picker";
 import { StarIcon } from "react-native-heroicons/outline";
 import { request } from "../api/requestMethods";
 import { useSelector } from "react-redux";
+import { boulderGrades } from "../constants/boulderConstants";
 
 const options = {
   attempts: [],
-  difficulty: [
-    "4a/V0",
-    "4b/V0",
-    "4c/V0",
-    "5a/V1",
-    "5b/V1",
-    "5c/V2",
-    "6a/V3",
-    "6a+/V3",
-    "6b/V4",
-    "6b+/V4",
-    "6c/V5",
-    "6c+/V5",
-    "7a/V6",
-    "7a+/V7",
-    "7b/V8",
-    "7b+/V8",
-    "7c/V9",
-    "7c+/V10",
-    "8a/V11",
-    "8a+/V12",
-    "8b/V13",
-    "8b+/V14",
-    "8c/V15",
-    "8c+/V16",
-  ],
+  difficulty: boulderGrades,
 };
 
 for (let i = 1; i <= 100; i++) {

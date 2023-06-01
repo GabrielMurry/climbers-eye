@@ -76,12 +76,22 @@ const ModalEditPreview = ({
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView(image, imageScaleDownFactor)}>
-            <Pressable onPress={() => setImageFullScreen(true)}>
-              <Image
-                source={{ uri: resultImageUri }}
-                style={styles.modalImage(image, imageScaleDownFactor)}
-                resizeMode="contain"
-              />
+            <Pressable
+              style={styles.modalImageContainer(image, imageScaleDownFactor)}
+              onPress={() => setImageFullScreen(true)}
+            >
+              <View
+                style={{
+                  width: image.width / (imageScaleDownFactor + 2.5),
+                  height: image.height / (imageScaleDownFactor + 2.5),
+                }}
+              >
+                <Image
+                  source={{ uri: resultImageUri }}
+                  style={styles.modalImage}
+                  resizeMode="contain"
+                />
+              </View>
             </Pressable>
             <View style={styles.labelAndInputContainer}>
               <View>
@@ -150,7 +160,7 @@ const styles = StyleSheet.create({
   },
   modalView: (image, imageScaleDownFactor) => ({
     backgroundColor: "lightblue",
-    borderRadius: 20,
+    borderRadius: 10,
     width: image.width / imageScaleDownFactor,
     paddingVertical: 20,
     alignItems: "center",
@@ -165,7 +175,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   }),
-  modalImage: (image, imageScaleDownFactor) => ({
+  modalImageContainer: (image, imageScaleDownFactor) => ({
     width:
       imageScaleDownFactor === 10
         ? image.width / (imageScaleDownFactor + 1)
@@ -174,7 +184,14 @@ const styles = StyleSheet.create({
       imageScaleDownFactor === 10
         ? image.width / (imageScaleDownFactor + 1)
         : image.width / (imageScaleDownFactor - 1),
+    justifyContent: "center",
+    alignItems: "center",
   }),
+  modalImage: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 10,
+  },
   labelAndInputContainer: {
     marginTop: 20,
     width: "75%",
@@ -195,12 +212,12 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   modalButton: (col) => ({
-    width: 85,
+    width: 100,
     height: 40,
     backgroundColor: col,
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: 20,
+    borderRadius: 10,
   }),
   buttonText: {
     color: "white",

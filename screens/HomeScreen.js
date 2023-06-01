@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { request } from "../api/requestMethods";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -23,20 +23,24 @@ const HomeScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const { userID } = useSelector((state) => state.userReducer);
   const { gymName } = useSelector((state) => state.gymReducer);
-  const { spraywallName, defaultImageUri } = useSelector(
-    (state) => state.spraywallReducer
-  );
+  const {
+    spraywallName,
+    defaultImageUri,
+    defaultImageWidth,
+    defaultImageHeight,
+  } = useSelector((state) => state.spraywallReducer);
 
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    getDefaultData();
+    fetchDefaultData();
   }, []);
 
-  const getDefaultData = async () => {
+  const fetchDefaultData = async () => {
     const response = await request("get", `home/${userID}`);
     if (response.status !== 200) {
       console.log(response.status);
+      return;
     }
     if (response.data) {
       dispatch(setGymName(response.data.gymName));
@@ -61,17 +65,24 @@ const HomeScreen = ({ navigation }) => {
         <Text style={styles.subTitleText}>{spraywallName}</Text>
       </View>
       {/* Default Image */}
-      <View style={styles.defaultImageContainer}>
-        <Image
-          source={{ uri: defaultImageUri }}
-          resizeMode="contain"
-          style={styles.defaultImage}
-          onLoadStart={() => setIsLoading(true)}
-          onLoadEnd={() => setIsLoading(false)}
-        />
-        {isLoading && (
-          <ActivityIndicator size="large" style={styles.defaultImage} />
-        )}
+      <View style={{ alignItems: "center" }}>
+        <View
+          style={styles.defaultImageContainer(
+            defaultImageWidth,
+            defaultImageHeight
+          )}
+        >
+          <Image
+            source={{ uri: defaultImageUri }}
+            resizeMode="contain"
+            style={styles.defaultImage}
+            onLoadStart={() => setIsLoading(true)}
+            onLoadEnd={() => setIsLoading(false)}
+          />
+          {isLoading && (
+            <ActivityIndicator size="large" style={styles.defaultImage} />
+          )}
+        </View>
       </View>
       {/* Buttons */}
       <View style={styles.buttonsContainer}>
@@ -113,16 +124,16 @@ const styles = StyleSheet.create({
   subTitleText: {
     fontSize: 24,
   },
-  defaultImageContainer: {
-    backgroundColor: "lightblue",
+  defaultImageContainer: (defaultImageWidth, defaultImageHeight) => ({
     alignItems: "center",
     justifyContent: "center",
-    height: "50%",
-    paddingHorizontal: 10,
-  },
+    width: defaultImageWidth ? defaultImageWidth / 10 : "",
+    height: defaultImageHeight ? defaultImageHeight / 10 : "",
+  }),
   defaultImage: {
     width: "100%",
     height: "100%",
+    borderRadius: 10,
   },
   buttonsContainer: {
     flex: 1,

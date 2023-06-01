@@ -5,14 +5,41 @@ import {
   SafeAreaView,
   TouchableOpacity,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   ArrowLeftCircleIcon,
   ChartPieIcon,
   UserCircleIcon,
 } from "react-native-heroicons/outline";
+import { useSelector } from "react-redux";
+import { request } from "../api/requestMethods";
 
 const ProfileScreen = ({ navigation }) => {
+  const { gymName } = useSelector((state) => state.gymReducer);
+  const { username } = useSelector((state) => state.userReducer);
+  const { userID } = useSelector((state) => state.userReducer);
+
+  const [sends, setSends] = useState(null);
+  const [createdBoulders, setCreatedBoulders] = useState(null);
+  const [likes, setLikes] = useState(null);
+
+  useEffect(() => {
+    fetchProfileData();
+  }, []);
+
+  const fetchProfileData = async () => {
+    const response = await request("get", `profile/${userID}`);
+    if (response.status !== 200) {
+      console.log(response.status);
+      return;
+    }
+    if (response.data) {
+      setSends(response.data.sends);
+      setCreatedBoulders(response.data.userCreatedBoulders);
+      setLikes(response.data.likes);
+    }
+  };
+
   return (
     <View style={styles.profileContainer}>
       <View style={styles.headerContainer}>
@@ -32,8 +59,8 @@ const ProfileScreen = ({ navigation }) => {
           <UserCircleIcon size={100} color="black" />
         </View>
         <View style={styles.username}>
-          <Text style={styles.usernameText}>Username</Text>
-          <Text>1234 Sends</Text>
+          <Text style={styles.usernameText}>{username}</Text>
+          <Text>{sends} Sends</Text>
           <View style={styles.followingFollowers}>
             <Text>0 Following</Text>
             <Text>0 Followers</Text>
@@ -43,15 +70,15 @@ const ProfileScreen = ({ navigation }) => {
       <View style={styles.buttonsContainer}>
         <TouchableOpacity style={styles.button}>
           <Text>Logbook</Text>
-          <Text>1234</Text>
+          <Text>{sends}</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.button}>
           <Text>Your Boulders</Text>
-          <Text>23</Text>
+          <Text>{createdBoulders}</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.button}>
           <Text>Liked Boulders</Text>
-          <Text>34</Text>
+          <Text>{likes}</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.button}>
           <Text>Bookmarked Boulders</Text>

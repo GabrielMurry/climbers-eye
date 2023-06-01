@@ -103,6 +103,7 @@ const styles = StyleSheet.create({
   defaultImage: {
     width: "100%",
     height: "100%",
+    borderRadius: 10,
   },
   imageButton: {
     width: 200,

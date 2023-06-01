@@ -11,7 +11,6 @@ import {
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import MapView, { Callout, Marker } from "react-native-maps";
 import { ArrowLeftCircleIcon, PlusIcon } from "react-native-heroicons/outline";
-import { useHeaderHeight } from "@react-navigation/elements";
 import { useDispatch, useSelector } from "react-redux";
 import Geocoder from "react-native-geocoding";
 import { GOOGLE_MAPS_GEOCODER_API_KEY } from "@env";
@@ -45,9 +44,6 @@ const MapScreen = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const mapRef = useRef(null);
-
-  // grabbing height of header
-  const height = useHeaderHeight();
 
   useLayoutEffect(() => {
     // If a user already has gym (and by default then spraywall) add 'goback' to header.
@@ -107,15 +103,19 @@ const MapScreen = ({ navigation }) => {
       longitude: geoLocation.lng,
     };
     setGymMarker(gymData);
+    animateToRegion(geoLocation);
+    setSearchQuery("");
+    Keyboard.dismiss();
+  };
+
+  const animateToRegion = (geoLocation) => {
     const region = {
       latitude: geoLocation.lat,
       longitude: geoLocation.lng,
       latitudeDelta: 0.012,
       longitudeDelta: 0.012,
     };
-    mapRef.current.animateToRegion(region, 1000); // adjust the duration as per your preference
-    setSearchQuery("");
-    Keyboard.dismiss();
+    mapRef.current.animateToRegion(region, 1000);
   };
 
   const handleConfirmMyGymPress = async (gymID) => {
@@ -230,32 +230,6 @@ const MapScreen = ({ navigation }) => {
           </TouchableOpacity>
         </View>
       </View>
-      {/* <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={height}
-        style={styles.searchContainer}
-      >
-        <View style={styles.currentLocationContainer}>
-          <TouchableOpacity style={styles.currentLocation}>
-            <MapPinIcon size={25} color="black" />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.searchInputAndButton}>
-          <TextInput
-            style={styles.searchInput}
-            value={searchQuery}
-            // onChange doesn't exist in react native. use onChangeText
-            onChangeText={(value) => setSearchQuery(value)} // in react native, you don't have to do e.target.value
-            placeholder="Search Gyms or Home Walls"
-          />
-          <TouchableOpacity
-            style={styles.submitButton}
-            onPress={handleSearchSubmit}
-          >
-            <Text style={styles.submitText}>Submit</Text>
-          </TouchableOpacity>
-        </View>
-      </KeyboardAvoidingView> */}
     </View>
   );
 };
@@ -265,26 +239,6 @@ export default MapScreen;
 const styles = StyleSheet.create({
   mapContainer: {
     flex: 1,
-  },
-  currentLocationContainer: {
-    width: "100%",
-    alignItems: "flex-end",
-  },
-  currentLocation: {
-    width: 50,
-    height: 50,
-    backgroundColor: "lightgreen",
-    borderRadius: 10,
-    justifyContent: "center",
-    alignItems: "center",
-    borderColor: "black",
-    borderWidth: 1,
-    // adding shadow to current location button
-    shadowColor: "black",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 5, // Required for Android
   },
   searchContainer: {
     justifyContent: "center",
@@ -365,7 +319,7 @@ const styles = StyleSheet.create({
     height: "100%",
     position: "absolute",
     zIndex: 1,
-    paddingTop: 70,
+    paddingTop: 75,
   },
   gymList: {
     width: "90%",
@@ -390,6 +344,12 @@ const styles = StyleSheet.create({
     paddingBottom: 70,
     position: "absolute",
     zIndex: 2,
+    // adding shadow to add gym container
+    shadowColor: "black",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5, // Required for Android
   },
   addGymTextAndButtonContainer: {
     width: 300,
@@ -406,7 +366,7 @@ const styles = StyleSheet.create({
   addGymButton: {
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "lightblue",
+    backgroundColor: "blue",
     height: 30,
     width: 30,
     borderRadius: 5,

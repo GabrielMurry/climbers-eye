@@ -9,18 +9,23 @@ import {
   SafeAreaView,
   Alert,
   Image,
+  Button,
 } from "react-native";
 import { CameraIcon } from "react-native-heroicons/outline";
 import { request } from "../api/requestMethods";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useSelector } from "react-redux";
+import * as ImagePicker from "expo-image-picker";
 
 const imageScaleDownFactor = 16;
 
 const AddGymScreen = ({ route, navigation }) => {
+  const { userID } = useSelector((state) => state.userReducer);
+
   const [isCommercialGym, setIsCommercialGym] = useState(true);
   const [gymName, setGymName] = useState("");
   const [gymLocation, setGymLocation] = useState("");
   const [image, setImage] = useState(null);
+  const [imageURI, setImageURI] = useState(null);
   const [sprayWallName, setSprayWallName] = useState("");
 
   useEffect(() => {
@@ -53,8 +58,7 @@ const AddGymScreen = ({ route, navigation }) => {
                 gym: null,
               },
             };
-            const userId = await AsyncStorage.getItem("userId");
-            const response = await request("post", `add_gym/${userId}`, data);
+            const response = await request("post", `add_gym/${userID}`, data);
             if (response.status !== 200) {
               console.log(response.status);
               return;
@@ -65,6 +69,22 @@ const AddGymScreen = ({ route, navigation }) => {
       ],
       { cancelable: false }
     );
+  };
+
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [16, 9],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.canceled) {
+      setImageURI(result.assets[0].uri);
+    }
   };
 
   return (
@@ -143,12 +163,21 @@ const AddGymScreen = ({ route, navigation }) => {
                   style={styles.image(image, imageScaleDownFactor)}
                 />
               ) : (
-                <View style={styles.imagePlaceholderContainer}>
-                  <CameraIcon size={30} color="black" />
-                  <Text style={styles.imagePlaceholderText}>
-                    Take Picture of
-                  </Text>
-                  <Text style={styles.imagePlaceholderText}>Spray Wall</Text>
+                <View>
+                  {imageURI && (
+                    <Image
+                      source={{ uri: imageURI }}
+                      style={{ width: "100%", height: "100%" }}
+                    />
+                  )}
+                  <Button title="Select Photo" onPress={pickImage} />
+                  <View style={styles.imagePlaceholderContainer}>
+                    <CameraIcon size={30} color="black" />
+                    <Text style={styles.imagePlaceholderText}>
+                      Take Picture of
+                    </Text>
+                    <Text style={styles.imagePlaceholderText}>Spray Wall</Text>
+                  </View>
                 </View>
               )}
             </TouchableOpacity>

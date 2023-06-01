@@ -123,6 +123,10 @@ const BoulderScreen = ({ route, navigation }) => {
     setBoulder({ ...boulder, personLiked: response.data.personLiked });
   };
 
+  const handleBookmarked = async () => {
+    console.log("bookmarked");
+  };
+
   const handleSentBoulder = () => {
     navigation.navigate("Send", { boulder: boulder });
   };
@@ -230,21 +234,28 @@ const BoulderScreen = ({ route, navigation }) => {
           style={styles.image(image, imageScaleDownFactor)}
           onPress={() => setImageFullScreen(true)}
         >
-          <Image
-            source={{
-              uri: image.uri,
+          <View
+            style={{
+              width: image.width / (imageScaleDownFactor + 0.5),
+              height: image.height / (imageScaleDownFactor + 0.5),
             }}
-            resizeMode="contain"
-            onLoadStart={() => setIsLoading(true)}
-            onLoadEnd={() => setIsLoading(false)}
-            style={{ width: "100%", height: "100%" }}
-          />
-          {isLoading && (
-            <ActivityIndicator
-              size="large"
-              style={{ width: "100%", height: "100%" }}
+          >
+            <Image
+              source={{
+                uri: image.uri,
+              }}
+              resizeMode="contain"
+              onLoadStart={() => setIsLoading(true)}
+              onLoadEnd={() => setIsLoading(false)}
+              style={{ width: "100%", height: "100%", borderRadius: 10 }}
             />
-          )}
+            {isLoading && (
+              <ActivityIndicator
+                size="large"
+                style={{ width: "100%", height: "100%" }}
+              />
+            )}
+          </View>
         </Pressable>
       </View>
       {/* Buttons */}
@@ -257,7 +268,7 @@ const BoulderScreen = ({ route, navigation }) => {
             <FontAwesome name="book" size={24} color="black" />
           </TouchableOpacity>
         </View>
-        <View style={styles.buttonsRow}>
+        <View style={styles.buttonsRow} onPress={handleBookmarked}>
           <TouchableOpacity style={styles.button}>
             {boulder.personLiked ? (
               <FontAwesome name="bookmark" size={24} color="gold" />
@@ -333,6 +344,8 @@ const styles = StyleSheet.create({
     borderRightWidth: 2,
     borderRadius: 10,
     backgroundColor: "#FFFBF1",
+    justifyContent: "center",
+    alignItems: "center",
     width: image.width / imageScaleDownFactor,
     height: image.height / imageScaleDownFactor,
     // adding shadow to image
