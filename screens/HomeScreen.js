@@ -65,7 +65,13 @@ const HomeScreen = ({ navigation }) => {
         <Text style={styles.subTitleText}>{spraywallName}</Text>
       </View>
       {/* Default Image */}
-      <View style={{ alignItems: "center" }}>
+      <View
+        style={{
+          alignItems: "center",
+          justifyContent: "center",
+          height: 375,
+        }}
+      >
         <View
           style={styles.defaultImageContainer(
             defaultImageWidth,
@@ -116,7 +122,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     rowGap: 10,
-    marginBottom: 20,
+    padding: 10,
   },
   titleText: {
     fontSize: 30,
@@ -127,8 +133,8 @@ const styles = StyleSheet.create({
   defaultImageContainer: (defaultImageWidth, defaultImageHeight) => ({
     alignItems: "center",
     justifyContent: "center",
-    width: defaultImageWidth ? defaultImageWidth / 10 : "",
-    height: defaultImageHeight ? defaultImageHeight / 10 : "",
+    width: defaultImageWidth ? defaultImageWidth / 11 : "",
+    height: defaultImageHeight ? defaultImageHeight / 11 : "",
   }),
   defaultImage: {
     width: "100%",

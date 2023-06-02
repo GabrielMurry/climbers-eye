@@ -8,8 +8,15 @@ import {
   SafeAreaView,
   KeyboardAvoidingView,
   Platform,
+  Keyboard,
 } from "react-native";
-import React, { useCallback, useEffect, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   AdjustmentsHorizontalIcon,
   PlusIcon,
@@ -19,6 +26,7 @@ import { useHeaderHeight } from "@react-navigation/elements"; // grabbing height
 import { request } from "../api/requestMethods";
 import { useFocusEffect } from "@react-navigation/native";
 import { useSelector } from "react-redux";
+import BottomSheet from "@gorhom/bottom-sheet";
 
 const ListScreen = ({ navigation }) => {
   const { userID } = useSelector((state) => state.userReducer);
@@ -29,8 +37,22 @@ const ListScreen = ({ navigation }) => {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [boulders, setBoulders] = useState([]);
+  const [enableBottomSheet, setEnableBottomSheet] = useState(false);
   // grabbing height of header
   const height = useHeaderHeight();
+
+  // ref
+  const bottomSheetRef = useRef(null);
+
+  // variables
+  const snapPoints = useMemo(() => ["40%"], []);
+
+  // callbacks
+  const handleSheetChanges = useCallback((index) => {
+    if (index === -1) {
+      setEnableBottomSheet(false);
+    }
+  }, []);
 
   // This event will be triggered when the screen gains focus (i.e., when you navigate back to it).
   useFocusEffect(
@@ -82,6 +104,16 @@ const ListScreen = ({ navigation }) => {
     [navigation]
   );
 
+  const handleFilterPress = () => {
+    Keyboard.dismiss();
+    navigation.navigate("Filter");
+  };
+
+  const handleAddBoulderPress = () => {
+    Keyboard.dismiss();
+    setEnableBottomSheet(true);
+  };
+
   return (
     <SafeAreaView
       style={{
@@ -126,20 +158,52 @@ const ListScreen = ({ navigation }) => {
                 autoComplete="off"
               />
             </View>
-            <TouchableOpacity
-              style={styles.filter}
-              onPress={() => navigation.navigate("Filter")}
-            >
+            <TouchableOpacity style={styles.filter} onPress={handleFilterPress}>
               <AdjustmentsHorizontalIcon size={25} color="black" />
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.addBoulder}
-              onPress={() => navigation.navigate("AddBoulder")}
+              // onPress={() => navigation.navigate("AddBoulder")}
+              onPress={handleAddBoulderPress}
             >
               <PlusIcon size={25} color="black" />
             </TouchableOpacity>
           </View>
         </KeyboardAvoidingView>
+        {enableBottomSheet && (
+          <BottomSheet
+            ref={bottomSheetRef}
+            index={0}
+            snapPoints={snapPoints}
+            enablePanDownToClose={true}
+            onChange={handleSheetChanges}
+            style={{
+              shadowColor: "#000",
+              shadowOffset: {
+                width: 0,
+                height: 12,
+              },
+              shadowOpacity: 0.58,
+              shadowRadius: 16.0,
+
+              elevation: 24,
+            }}
+            backgroundStyle={styles.bottomSheetContainer}
+            handleIndicatorStyle={{ backgroundColor: "gray" }}
+          >
+            <View style={styles.bottomSheet}>
+              <TouchableOpacity style={styles.bottomSheetButton}>
+                <Text>Default Image</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.bottomSheetButton}>
+                <Text>Camera</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.bottomSheetButton}>
+                <Text>Upload</Text>
+              </TouchableOpacity>
+            </View>
+          </BottomSheet>
+        )}
       </View>
     </SafeAreaView>
   );
@@ -152,7 +216,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     rowGap: 10,
-    marginBottom: 20,
+    padding: 10,
   },
   titleText: {
     fontSize: 30,
@@ -202,5 +266,21 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     justifyContent: "center",
     alignItems: "center",
+  },
+  bottomSheetContainer: {
+    backgroundColor: "white",
+  },
+  bottomSheet: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "space-evenly",
+  },
+  bottomSheetButton: {
+    width: "90%",
+    backgroundColor: "lightblue",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 10,
+    padding: 20,
   },
 });

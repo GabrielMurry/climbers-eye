@@ -10,20 +10,32 @@ import CustomButton from "../components/CustomButton";
 import SocialSignInButtons from "../components/SocialSignInButtons";
 import { request } from "../api/requestMethods";
 import { useSelector, useDispatch } from "react-redux";
-import { setUsername, setUserID } from "../redux/actions";
+import {
+  setUsername,
+  setUserID,
+  setGymName,
+  setSpraywallName,
+  setSpraywallID,
+  setDefaultImageUri,
+  setDefaultImageWidth,
+  setDefaultImageHeight,
+} from "../redux/actions";
 
 const LoginScreen = ({ navigation }) => {
-  const { height } = useWindowDimensions();
   const dispatch = useDispatch();
+  const { height } = useWindowDimensions();
   const { username } = useSelector((state) => state.userReducer);
 
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = async () => {
+    setIsLoading(true);
     const data = { username, password };
     const response = await request("post", "login/", data);
     if (response.status !== 200) {
       console.log(response.status);
+      setIsLoading(false);
       return;
     }
     if (response.data) {
@@ -31,6 +43,12 @@ const LoginScreen = ({ navigation }) => {
       dispatch(setUserID(response.data.userID));
       // for redundancy. If user signs up, but restarts the app, then logs in, they still don't belong to a gym or spraywall, so redirect to Map screen
       if (response.data.gymID) {
+        dispatch(setGymName(response.data.gymName));
+        dispatch(setSpraywallName(response.data.spraywallName));
+        dispatch(setSpraywallID(response.data.spraywallID));
+        dispatch(setDefaultImageUri(response.data.imageUri));
+        dispatch(setDefaultImageWidth(response.data.imageWidth));
+        dispatch(setDefaultImageHeight(response.data.imageHeight));
         navigation.navigate("Home");
       } else {
         navigation.navigate("Map");
@@ -61,7 +79,7 @@ const LoginScreen = ({ navigation }) => {
         placeholder="Password"
         secureTextEntry={true}
       />
-      <CustomButton onPress={handleLogin} text="Login" />
+      <CustomButton onPress={handleLogin} text="Login" isLoading={isLoading} />
       <CustomButton
         onPress={handleForgotPassword}
         text="Forgot password?"

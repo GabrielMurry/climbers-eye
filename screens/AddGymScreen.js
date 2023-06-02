@@ -11,10 +11,10 @@ import {
   Image,
   Button,
 } from "react-native";
-import { CameraIcon } from "react-native-heroicons/outline";
+import { CameraIcon, PhotoIcon } from "react-native-heroicons/outline";
 import { request } from "../api/requestMethods";
-import { useSelector } from "react-redux";
 import * as ImagePicker from "expo-image-picker";
+import { useSelector } from "react-redux";
 
 const imageScaleDownFactor = 16;
 
@@ -24,8 +24,11 @@ const AddGymScreen = ({ route, navigation }) => {
   const [isCommercialGym, setIsCommercialGym] = useState(true);
   const [gymName, setGymName] = useState("");
   const [gymLocation, setGymLocation] = useState("");
-  const [image, setImage] = useState(null);
-  const [imageURI, setImageURI] = useState(null);
+  const [image, setImage] = useState({
+    base64: null,
+    width: null,
+    height: null,
+  });
   const [sprayWallName, setSprayWallName] = useState("");
 
   useEffect(() => {
@@ -63,7 +66,9 @@ const AddGymScreen = ({ route, navigation }) => {
               console.log(response.status);
               return;
             }
-            navigation.navigate("Home");
+            if (response.data) {
+              navigation.navigate("Home");
+            }
           },
         },
       ],
@@ -75,15 +80,19 @@ const AddGymScreen = ({ route, navigation }) => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [16, 9],
+      allowsEditing: false,
+      aspect: [4, 3],
       quality: 1,
+      base64: true,
     });
-
-    console.log(result);
-
-    if (!result.canceled) {
-      setImageURI(result.assets[0].uri);
+    if (result) {
+      Image.getSize(result.assets[0].uri, (width, height) => {
+        setImage({
+          base64: result.assets[0].base64,
+          width: width,
+          height: height,
+        });
+      });
     }
   };
 
@@ -130,7 +139,7 @@ const AddGymScreen = ({ route, navigation }) => {
             />
           </View>
           <View style={styles.locationContainer(isCommercialGym)}>
-            <Text style={styles.label}>Gym Location:</Text>
+            <Text style={styles.label}>Gym Address:</Text>
             <TextInput
               style={styles.input}
               placeholder="Enter gym address"
@@ -151,36 +160,77 @@ const AddGymScreen = ({ route, navigation }) => {
             />
           </View>
           <View style={styles.imageContainer}>
-            <TouchableOpacity
-              style={styles.imageButton(image, imageScaleDownFactor)}
-              onPress={() =>
-                navigation.navigate("Camera", { screen: "AddGym" })
-              }
-            >
-              {image ? (
+            {image.base64 ? (
+              <View
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  flexDirection: "row",
+                  justifyContent: "center",
+                }}
+              >
                 <Image
-                  source={{ uri: image.uri }}
-                  style={styles.image(image, imageScaleDownFactor)}
+                  source={{ uri: "data:image/png;base64," + image.base64 }}
+                  style={{
+                    flex: 1,
+                  }}
+                  resizeMode="contain"
                 />
-              ) : (
-                <View>
-                  {imageURI && (
-                    <Image
-                      source={{ uri: imageURI }}
-                      style={{ width: "100%", height: "100%" }}
-                    />
-                  )}
-                  <Button title="Select Photo" onPress={pickImage} />
-                  <View style={styles.imagePlaceholderContainer}>
-                    <CameraIcon size={30} color="black" />
-                    <Text style={styles.imagePlaceholderText}>
-                      Take Picture of
-                    </Text>
-                    <Text style={styles.imagePlaceholderText}>Spray Wall</Text>
-                  </View>
+                <View style={{ justifyContent: "space-evenly", padding: 10 }}>
+                  <TouchableOpacity
+                    style={{
+                      width: 60,
+                      height: 60,
+                      borderWidth: 1,
+                      borderColor: "black",
+                      borderRadius: 10,
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                    onPress={() =>
+                      navigation.navigate("Camera", { screen: "AddGym" })
+                    }
+                  >
+                    <CameraIcon size={25} color="black" />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={{
+                      width: 60,
+                      height: 60,
+                      borderWidth: 1,
+                      borderColor: "black",
+                      borderRadius: 10,
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                    onPress={pickImage}
+                  >
+                    <PhotoIcon size={25} color="black" />
+                  </TouchableOpacity>
                 </View>
-              )}
-            </TouchableOpacity>
+              </View>
+            ) : (
+              <>
+                <TouchableOpacity
+                  style={styles.imageButton}
+                  onPress={() =>
+                    navigation.navigate("Camera", { screen: "AddGym" })
+                  }
+                >
+                  <CameraIcon size={30} color="black" />
+                  <Text style={styles.imageButtonText}>Take Picture of</Text>
+                  <Text style={styles.imageButtonText}>Spray Wall</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.imageButton}
+                  onPress={pickImage}
+                >
+                  <PhotoIcon size={30} color="black" />
+                  <Text style={styles.imageButtonText}>Select Photo</Text>
+                  <Text style={styles.imageButtonText}>From Album</Text>
+                </TouchableOpacity>
+              </>
+            )}
           </View>
         </View>
         <TouchableOpacity style={styles.addButton} onPress={handleAddGym}>
@@ -204,7 +254,6 @@ const styles = StyleSheet.create({
     alignSelf: "stretch",
     alignItems: "center",
     flex: 1,
-    gap: 15,
   },
   title: {
     fontSize: 28,
@@ -256,25 +305,26 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     width: "100%",
+    flex: 1,
+    padding: 10,
     alignItems: "center",
+    justifyContent: "space-evenly",
+    flexDirection: "row",
   },
-  imageButton: (image, imageScaleDownFactor) => ({
-    width: image ? image.width / imageScaleDownFactor : 225,
-    height: image ? image.height / imageScaleDownFactor : 225,
+  imageButton: {
+    width: 150,
+    height: 150,
     borderWidth: 1,
     borderColor: "black",
     borderRadius: 10,
     alignItems: "center",
     justifyContent: "center",
-  }),
+  },
   image: (image, imageScaleDownFactor) => ({
     width: image.width / imageScaleDownFactor,
     height: image.height / imageScaleDownFactor,
   }),
-  imagePlaceholderContainer: {
-    alignItems: "center",
-  },
-  imagePlaceholderText: {
+  imageButtonText: {
     fontSize: 16,
   },
   inputAndAddContainer: {

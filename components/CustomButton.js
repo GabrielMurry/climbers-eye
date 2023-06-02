@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Pressable } from "react-native";
+import { Text, StyleSheet, Pressable, ActivityIndicator } from "react-native";
 import React from "react";
 
 // if no type specified, default to PRIMARY
@@ -8,6 +8,7 @@ const CustomButton = ({
   type = "PRIMARY",
   bgColor,
   fgColor,
+  isLoading,
 }) => {
   return (
     <Pressable
@@ -18,15 +19,25 @@ const CustomButton = ({
       ]}
       onPress={onPress}
     >
-      <Text
-        style={[
-          styles.text,
-          styles[`text_${type}`],
-          fgColor ? { color: fgColor } : {},
-        ]}
-      >
-        {text}
-      </Text>
+      {isLoading ? (
+        <ActivityIndicator
+          style={[
+            styles.text,
+            styles[`text_${type}`],
+            fgColor ? { color: fgColor } : {},
+          ]}
+        />
+      ) : (
+        <Text
+          style={[
+            styles.text,
+            styles[`text_${type}`],
+            fgColor ? { color: fgColor } : {},
+          ]}
+        >
+          {text}
+        </Text>
+      )}
     </Pressable>
   );
 };

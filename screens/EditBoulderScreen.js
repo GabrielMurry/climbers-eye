@@ -84,8 +84,8 @@ const EditBoulderScreen = ({ route, navigation }) => {
       {/* Sketch Canvas on top of Image */}
       <ReactNativeZoomableView
         // only zoom in and out when hand selected. If color selected, have max and min zoom equal eachother as to prevent zooming
-        maxZoom={selectedItem === "hand" ? 5 : currentZoomLevel}
-        minZoom={selectedItem === "hand" ? 0.5 : currentZoomLevel}
+        maxZoom={selectedItem === "hand" ? 10 : currentZoomLevel}
+        minZoom={selectedItem === "hand" ? 1 : currentZoomLevel}
         // disable pan on initial zoom. Update initial zoom every time an item is selected for redundancy (if hand is selected, ENABLE pan on initial zoom)
         initialZoom={currentZoomLevel}
         disablePanOnInitialZoom={selectedItem === "hand" ? false : true}
