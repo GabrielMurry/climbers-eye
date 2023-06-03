@@ -13,7 +13,7 @@ import { Picker } from "@react-native-picker/picker";
 import { StarIcon } from "react-native-heroicons/outline";
 import { request } from "../api/requestMethods";
 import { useSelector } from "react-redux";
-import { boulderGrades } from "../constants/boulderConstants";
+import { boulderGrades } from "../utils/constants/boulderConstants";
 
 const options = {
   attempts: [],

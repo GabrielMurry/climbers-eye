@@ -1,12 +1,14 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import React from "react";
 
-const GymCard = ({ gym }) => {
+const GymCard = ({ gym, onPress }) => {
   return (
-    <View style={styles.container}>
-      <Text style={styles.textName}>{gym.name}</Text>
-      <Text>{gym.location}</Text>
-    </View>
+    <TouchableOpacity onPress={onPress}>
+      <View style={styles.container}>
+        <Text style={styles.textName}>{gym.name}</Text>
+        <Text>{gym.location}</Text>
+      </View>
+    </TouchableOpacity>
   );
 };
 
@@ -20,12 +22,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: 10,
     borderRadius: 10,
-    // adding shadow to gym card
-    shadowColor: "black",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 5, // Required for Android
   },
   textName: {
     fontWeight: "bold",

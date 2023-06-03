@@ -3,19 +3,31 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  TextInput,
-  FlatList,
   Keyboard,
   ActivityIndicator,
 } from "react-native";
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import MapView, { Callout, Marker } from "react-native-maps";
-import { ArrowLeftCircleIcon, PlusIcon } from "react-native-heroicons/outline";
+import {
+  ArrowLeftCircleIcon,
+  MagnifyingGlassIcon,
+} from "react-native-heroicons/outline";
 import { useDispatch, useSelector } from "react-redux";
 import Geocoder from "react-native-geocoding";
 import { GOOGLE_MAPS_GEOCODER_API_KEY } from "@env";
 import { request } from "../api/requestMethods";
 import GymCard from "../components/GymCard";
+import BottomSheet, {
+  BottomSheetFlatList,
+  BottomSheetTextInput,
+} from "@gorhom/bottom-sheet";
 import {
   setGymName,
   setSpraywallName,
@@ -42,8 +54,23 @@ const MapScreen = ({ navigation }) => {
     longitude: null,
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [isTextInputFocused, setIsTextInputFocused] = useState(false);
 
   const mapRef = useRef(null);
+
+  // ref
+  const bottomSheetRef = useRef(null);
+
+  // variables
+  const snapPoints = useMemo(() => ["15%", "40%", "90%"], []);
+
+  // callbacks
+  const handleSheetChanges = useCallback((index) => {
+    console.log("handleSheetChanges", index);
+    if (index === 1) {
+      setSearchQuery("");
+    }
+  }, []);
 
   useLayoutEffect(() => {
     // If a user already has gym (and by default then spraywall) add 'goback' to header.
@@ -102,6 +129,7 @@ const MapScreen = ({ navigation }) => {
       latitude: geoLocation.lat,
       longitude: geoLocation.lng,
     };
+    bottomSheetRef.current?.snapToIndex(1);
     setGymMarker(gymData);
     animateToRegion(geoLocation);
     setSearchQuery("");
@@ -138,49 +166,30 @@ const MapScreen = ({ navigation }) => {
     }
   };
 
-  const handleCancelPress = () => {
+  const renderItem = useCallback(
+    ({ item }) => (
+      <GymCard gym={item} onPress={() => handleGymCardPress(item)} />
+    ),
+    []
+  );
+
+  const handleTextInputFocus = () => {
+    console.log("test");
+    setIsTextInputFocused(true);
+  };
+
+  const handleTextInputBlur = () => {
+    setIsTextInputFocused(false);
+  };
+
+  const handleCancelSearchPress = useCallback(() => {
     setSearchQuery("");
     Keyboard.dismiss();
-  };
+    bottomSheetRef.current?.snapToIndex(1);
+  }, []);
 
   return (
     <View style={styles.mapContainer}>
-      <View style={styles.searchContainer}>
-        <View style={styles.searchInputAndButton}>
-          <TextInput
-            style={styles.searchInput(searchQuery)}
-            value={searchQuery}
-            // onChange doesn't exist in react native. use onChangeText
-            onChangeText={(value) => setSearchQuery(value)} // in react native, you don't have to do e.target.value
-            placeholder="Search Gyms or Home Walls"
-          />
-          {searchQuery !== "" ? (
-            <TouchableOpacity onPress={handleCancelPress}>
-              <Text style={{ fontWeight: "bold" }}>Cancel</Text>
-            </TouchableOpacity>
-          ) : (
-            ""
-          )}
-        </View>
-      </View>
-      {searchQuery !== "" ? (
-        <View style={styles.gymListContainer}>
-          <View style={styles.gymList}>
-            <FlatList
-              contentContainerStyle={{ gap: 10 }}
-              data={gyms}
-              renderItem={({ item }) => (
-                <TouchableOpacity onPress={() => handleGymCardPress(item)}>
-                  <GymCard gym={item} />
-                </TouchableOpacity>
-              )}
-              keyExtractor={(item) => item.id}
-            />
-          </View>
-        </View>
-      ) : (
-        ""
-      )}
       <MapView
         ref={mapRef}
         initialRegion={{
@@ -219,17 +228,48 @@ const MapScreen = ({ navigation }) => {
           </Marker>
         )}
       </MapView>
-      <View style={styles.addGymContainer}>
-        <View style={styles.addGymTextAndButtonContainer}>
-          <Text>Don't see your gym or home wall?</Text>
-          <TouchableOpacity
-            style={styles.addGymButton}
-            onPress={() => navigation.navigate("AddGym")}
-          >
-            <PlusIcon size={25} color="white" />
-          </TouchableOpacity>
+      <BottomSheet
+        ref={bottomSheetRef}
+        index={1}
+        snapPoints={snapPoints}
+        onChange={handleSheetChanges}
+        backgroundStyle={styles.bottomSheetContainer}
+        keyboardBehavior="extend"
+        keyboardBlurBehavior="restore"
+      >
+        <View style={styles.bottomSheet}>
+          <View style={styles.bottomSheetSearchInputAndCancelContainer}>
+            <View style={styles.bottomSheetSearchInputContainer}>
+              <MagnifyingGlassIcon size={20} color="gray" />
+              <BottomSheetTextInput
+                style={styles.bottomSheetSearchInput}
+                value={searchQuery}
+                // onChange doesn't exist in react native. use onChangeText
+                onChangeText={(value) => setSearchQuery(value)} // in react native, you don't have to do e.target.value
+                placeholder="Search Gyms or Home Walls"
+                onFocus={handleTextInputFocus}
+                onBlur={handleTextInputBlur}
+              />
+            </View>
+            {(isTextInputFocused || searchQuery) && (
+              <TouchableOpacity
+                style={styles.cancelButton}
+                onPress={handleCancelSearchPress}
+              >
+                <Text style={{ color: "rgb(0, 122, 255)" }}>Cancel</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+          {searchQuery && (
+            <BottomSheetFlatList
+              contentContainerStyle={{ gap: 5 }}
+              data={gyms}
+              renderItem={renderItem}
+              keyExtractor={(item) => item.id}
+            />
+          )}
         </View>
-      </View>
+      </BottomSheet>
     </View>
   );
 };
@@ -240,44 +280,6 @@ const styles = StyleSheet.create({
   mapContainer: {
     flex: 1,
   },
-  searchContainer: {
-    justifyContent: "center",
-    alignItems: "center",
-    width: "100%",
-    paddingTop: 10,
-    position: "absolute",
-    zIndex: 2,
-  },
-  searchInputAndButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 5,
-    width: "90%",
-    backgroundColor: "#FFFBF1",
-    padding: 10,
-    borderRadius: 10,
-    // adding shadow to search input
-    shadowColor: "black",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 5, // Required for Android
-  },
-  searchInput: (searchQuery) => ({
-    width: searchQuery === "" ? "100%" : "85%",
-    height: 40,
-    paddingHorizontal: 10,
-    backgroundColor: "white",
-    borderColor: "black",
-    borderWidth: 1,
-    borderRadius: 10,
-    // adding shadow to search input
-    shadowColor: "black",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 5, // Required for Android
-  }),
   calloutContainer: {
     width: 200,
   },
@@ -313,29 +315,6 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "bold",
   },
-  gymListContainer: {
-    alignItems: "center",
-    width: "100%",
-    height: "100%",
-    position: "absolute",
-    zIndex: 1,
-    paddingTop: 75,
-  },
-  gymList: {
-    width: "90%",
-    height: "80%",
-    padding: 10,
-    backgroundColor: "white",
-    borderColor: "black",
-    borderWidth: 1,
-    borderRadius: 10,
-    // adding shadow to search input
-    shadowColor: "black",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 5, // Required for Android
-  },
   addGymContainer: {
     justifyContent: "center",
     alignItems: "center",
@@ -370,5 +349,37 @@ const styles = StyleSheet.create({
     height: 30,
     width: 30,
     borderRadius: 5,
+  },
+  bottomSheetContainer: {
+    backgroundColor: "rgb(250, 249, 246)", // off white
+  },
+  bottomSheet: {
+    flex: 1,
+    alignItems: "center",
+    paddingHorizontal: 20,
+    gap: 10,
+  },
+  bottomSheetSearchInputAndCancelContainer: {
+    flexDirection: "row",
+  },
+  bottomSheetSearchInputContainer: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "rgb(229, 228, 226)",
+    paddingHorizontal: 10,
+    borderRadius: 5,
+  },
+  bottomSheetSearchInput: {
+    flex: 1,
+    height: 35,
+    paddingHorizontal: 5,
+    backgroundColor: "rgb(229, 228, 226)",
+    borderRadius: 10,
+  },
+  cancelButton: {
+    justifyContent: "center",
+    alignItems: "center",
+    marginLeft: 10,
   },
 });

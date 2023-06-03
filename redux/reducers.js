@@ -1,4 +1,4 @@
-import { boulderGrades } from "../constants/boulderConstants";
+import { boulderGrades } from "../utils/constants/boulderConstants";
 import {
   SET_USER_NAME,
   SET_USER_ID,

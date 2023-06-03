@@ -10,7 +10,7 @@ import {
   setFilterClimbType,
   setFilterStatus,
 } from "../redux/actions";
-import { boulderGrades } from "../constants/boulderConstants";
+import { boulderGrades } from "../utils/constants/boulderConstants";
 
 const FilterScreen = () => {
   const dispatch = useDispatch();

@@ -31,9 +31,13 @@ import BottomSheet from "@gorhom/bottom-sheet";
 const ListScreen = ({ navigation }) => {
   const { userID } = useSelector((state) => state.userReducer);
   const { gymName } = useSelector((state) => state.gymReducer);
-  const { spraywallName, spraywallID } = useSelector(
-    (state) => state.spraywallReducer
-  );
+  const {
+    spraywallName,
+    spraywallID,
+    defaultImageUri,
+    defaultImageWidth,
+    defaultImageHeight,
+  } = useSelector((state) => state.spraywallReducer);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [boulders, setBoulders] = useState([]);
@@ -192,10 +196,26 @@ const ListScreen = ({ navigation }) => {
             handleIndicatorStyle={{ backgroundColor: "gray" }}
           >
             <View style={styles.bottomSheet}>
-              <TouchableOpacity style={styles.bottomSheetButton}>
+              <TouchableOpacity
+                style={styles.bottomSheetButton}
+                onPress={() =>
+                  navigation.navigate("EditBoulder", {
+                    image: {
+                      uri: defaultImageUri,
+                      width: defaultImageWidth,
+                      height: defaultImageHeight,
+                    },
+                  })
+                }
+              >
                 <Text>Default Image</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.bottomSheetButton}>
+              <TouchableOpacity
+                style={styles.bottomSheetButton}
+                onPress={() =>
+                  navigation.navigate("Camera", { screen: "EditBoulder" })
+                }
+              >
                 <Text>Camera</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.bottomSheetButton}>
