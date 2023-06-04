@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Keyboard,
   ActivityIndicator,
+  Image,
 } from "react-native";
 import React, {
   useCallback,
@@ -18,6 +19,8 @@ import MapView, { Callout, Marker } from "react-native-maps";
 import {
   ArrowLeftCircleIcon,
   MagnifyingGlassIcon,
+  XMarkIcon,
+  PlusIcon,
 } from "react-native-heroicons/outline";
 import { useDispatch, useSelector } from "react-redux";
 import Geocoder from "react-native-geocoding";
@@ -36,6 +39,7 @@ import {
   setDefaultImageWidth,
   setDefaultImageHeight,
 } from "../redux/actions";
+import FullScreenImage from "../components/FullScreenImage";
 
 // Initialize the module (needs to be done only once)
 Geocoder.init(GOOGLE_MAPS_GEOCODER_API_KEY); // use a valid API key
@@ -46,15 +50,10 @@ const MapScreen = ({ navigation }) => {
   const { userID } = useSelector((state) => state.userReducer);
   const [searchQuery, setSearchQuery] = useState("");
   const [gyms, setGyms] = useState(null);
-  const [gymMarker, setGymMarker] = useState({
-    id: null,
-    name: null,
-    address: null,
-    latitude: null,
-    longitude: null,
-  });
+  const [gymMarker, setGymMarker] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isTextInputFocused, setIsTextInputFocused] = useState(false);
+  const [imageFullScreen, setImageFullScreen] = useState(false);
 
   const mapRef = useRef(null);
 
@@ -129,11 +128,22 @@ const MapScreen = ({ navigation }) => {
       latitude: geoLocation.lat,
       longitude: geoLocation.lng,
     };
-    bottomSheetRef.current?.snapToIndex(1);
-    setGymMarker(gymData);
     animateToRegion(geoLocation);
+    bottomSheetRef.current?.snapToIndex(1);
     setSearchQuery("");
     Keyboard.dismiss();
+    // when user clicks on gym card, we want to quickly display spraywall default image in bottom sheet
+    const response = await request("get", `queried_gym_spraywall/${gym.id}`);
+    if (response.status !== 200) {
+      console.log(response.status);
+      return;
+    }
+    if (response.data) {
+      gymData.spraywallImageUri = response.data.imageUri;
+      gymData.spraywallImageWidth = response.data.imageWidth;
+      gymData.spraywallImageHeight = response.data.imageHeight;
+    }
+    setGymMarker(gymData);
   };
 
   const animateToRegion = (geoLocation) => {
@@ -168,13 +178,14 @@ const MapScreen = ({ navigation }) => {
 
   const renderItem = useCallback(
     ({ item }) => (
-      <GymCard gym={item} onPress={() => handleGymCardPress(item)} />
+      <TouchableOpacity onPress={() => handleGymCardPress(item)}>
+        <GymCard gym={item} />
+      </TouchableOpacity>
     ),
     []
   );
 
   const handleTextInputFocus = () => {
-    console.log("test");
     setIsTextInputFocused(true);
   };
 
@@ -182,11 +193,20 @@ const MapScreen = ({ navigation }) => {
     setIsTextInputFocused(false);
   };
 
-  const handleCancelSearchPress = useCallback(() => {
-    setSearchQuery("");
+  const handleCancelSearchPress = () => {
+    // bug in bottom-sheet pkg - can't dismiss keyboard and snap to index at same time
+    setTimeout(() => {
+      setSearchQuery("");
+      bottomSheetRef.current?.snapToIndex(1);
+    }, 35);
     Keyboard.dismiss();
+  };
+
+  const handleCancelGymPress = () => {
+    setGymMarker(null);
+    setSearchQuery("");
     bottomSheetRef.current?.snapToIndex(1);
-  }, []);
+  };
 
   return (
     <View style={styles.mapContainer}>
@@ -200,7 +220,7 @@ const MapScreen = ({ navigation }) => {
         }}
         style={{ flex: 1 }}
       >
-        {gymMarker.id && (
+        {gymMarker && (
           <Marker
             coordinate={{
               latitude: gymMarker.latitude,
@@ -238,38 +258,122 @@ const MapScreen = ({ navigation }) => {
         keyboardBlurBehavior="restore"
       >
         <View style={styles.bottomSheet}>
-          <View style={styles.bottomSheetSearchInputAndCancelContainer}>
-            <View style={styles.bottomSheetSearchInputContainer}>
-              <MagnifyingGlassIcon size={20} color="gray" />
-              <BottomSheetTextInput
-                style={styles.bottomSheetSearchInput}
-                value={searchQuery}
-                // onChange doesn't exist in react native. use onChangeText
-                onChangeText={(value) => setSearchQuery(value)} // in react native, you don't have to do e.target.value
-                placeholder="Search Gyms or Home Walls"
-                onFocus={handleTextInputFocus}
-                onBlur={handleTextInputBlur}
-              />
-            </View>
-            {(isTextInputFocused || searchQuery) && (
-              <TouchableOpacity
-                style={styles.cancelButton}
-                onPress={handleCancelSearchPress}
+          {gymMarker ? (
+            <View style={styles.bottomSheetGymContainer}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
               >
-                <Text style={{ color: "rgb(0, 122, 255)" }}>Cancel</Text>
-              </TouchableOpacity>
-            )}
-          </View>
-          {searchQuery && (
-            <BottomSheetFlatList
-              contentContainerStyle={{ gap: 5 }}
-              data={gyms}
-              renderItem={renderItem}
-              keyExtractor={(item) => item.id}
-            />
+                <View style={styles.bottomSheetGym}>
+                  <Text style={{ fontSize: 26 }}>{gymMarker.name}</Text>
+                  <Text style={{ fontSize: 16 }}>{gymMarker.address}</Text>
+                </View>
+                <View style={styles.bottomSheetCancelGymContainer}>
+                  <TouchableOpacity
+                    style={styles.bottomSheetCancelGymButton}
+                    onPress={handleCancelGymPress}
+                  >
+                    <XMarkIcon size={20} color="gray" />
+                  </TouchableOpacity>
+                </View>
+              </View>
+              <View style={styles.bottomSheetImageAndButtonContainer}>
+                <View style={styles.bottomSheetImageContainer}>
+                  <TouchableOpacity
+                    style={styles.bottomSheetImage(gymMarker)}
+                    onPress={() => setImageFullScreen(true)}
+                  >
+                    <Image
+                      source={{ uri: gymMarker.spraywallImageUri }}
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                      }}
+                      resizeMode="contain"
+                    />
+                  </TouchableOpacity>
+                </View>
+                <View style={styles.bottomSheetConfirmGymContainer}>
+                  <TouchableOpacity
+                    style={styles.bottomSheetConfirmGymButton}
+                    onPress={() => handleConfirmMyGymPress(gymMarker.id)}
+                  >
+                    {isLoading ? (
+                      <ActivityIndicator color="white" />
+                    ) : (
+                      <Text style={styles.okButtonText}>OK</Text>
+                    )}
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          ) : (
+            <>
+              <View style={styles.bottomSheetSearchInputAndCancelContainer}>
+                <View style={styles.bottomSheetSearchInputContainer}>
+                  <MagnifyingGlassIcon size={20} color="gray" />
+                  <BottomSheetTextInput
+                    style={styles.bottomSheetSearchInput}
+                    value={searchQuery}
+                    // onChange doesn't exist in react native. use onChangeText
+                    onChangeText={(value) => setSearchQuery(value)} // in react native, you don't have to do e.target.value
+                    placeholder="Search Gyms or Home Walls"
+                    onFocus={handleTextInputFocus}
+                    onBlur={handleTextInputBlur}
+                  />
+                </View>
+                {(isTextInputFocused || searchQuery) && (
+                  <TouchableOpacity
+                    style={styles.cancelButton}
+                    onPress={handleCancelSearchPress}
+                  >
+                    <Text style={{ color: "rgb(0, 122, 255)" }}>Cancel</Text>
+                  </TouchableOpacity>
+                )}
+              </View>
+              {searchQuery ? (
+                <>
+                  <View style={styles.bottomSheetAddGymContainer}>
+                    <Text>Don't see your gym or home wall?</Text>
+                    <TouchableOpacity
+                      style={styles.bottomSheetAddGymButton}
+                      onPress={() => navigation.navigate("AddGym")}
+                    >
+                      <PlusIcon size={20} color="white" />
+                    </TouchableOpacity>
+                  </View>
+                  <BottomSheetFlatList
+                    contentContainerStyle={{
+                      gap: 5,
+                      width: 350,
+                    }}
+                    data={gyms}
+                    renderItem={renderItem}
+                    keyExtractor={(item) => item.id}
+                  />
+                </>
+              ) : (
+                <View style={styles.bottomSheetBlank}>
+                  <Text style={{ color: "gray" }}>
+                    Search Gyms or Home Walls
+                  </Text>
+                </View>
+              )}
+            </>
           )}
         </View>
       </BottomSheet>
+      <FullScreenImage
+        imageFullScreen={imageFullScreen}
+        uri={gymMarker?.spraywallImageUri}
+        image={{
+          width: gymMarker?.spraywallImageWidth,
+          height: gymMarker?.spraywallImageHeight,
+        }}
+        onRequestClose={() => setImageFullScreen(false)}
+      />
     </View>
   );
 };
@@ -368,7 +472,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "rgb(229, 228, 226)",
     paddingHorizontal: 10,
-    borderRadius: 5,
+    borderRadius: 10,
   },
   bottomSheetSearchInput: {
     flex: 1,
@@ -381,5 +485,72 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginLeft: 10,
+  },
+  bottomSheetGymContainer: {
+    width: "100%",
+    gap: 10,
+  },
+  bottomSheetGym: {
+    width: "80%",
+    gap: 5,
+  },
+  bottomSheetCancelGymContainer: {
+    width: "20%",
+  },
+  bottomSheetCancelGymButton: {
+    backgroundColor: "lightgray",
+    padding: 5,
+    borderRadius: "100%",
+    position: "absolute",
+    right: 0,
+  },
+  bottomSheetImageAndButtonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  bottomSheetImageContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    height: 150,
+    width: "50%",
+    marginLeft: 10,
+  },
+  bottomSheetImage: (gymMarker) => ({
+    width:
+      gymMarker.spraywallImageWidth * (150 / gymMarker.spraywallImageHeight),
+    height: "100%",
+  }),
+  bottomSheetConfirmGymContainer: {
+    width: "50%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  bottomSheetConfirmGymButton: {
+    backgroundColor: "blue",
+    width: 75,
+    height: 75,
+    borderRadius: 10,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  bottomSheetBlank: {
+    width: "100%",
+    height: "30%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  bottomSheetAddGymContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 10,
+  },
+  bottomSheetAddGymButton: {
+    backgroundColor: "blue",
+    width: 25,
+    height: 25,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 5,
   },
 });

@@ -1,14 +1,12 @@
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import React from "react";
 
-const GymCard = ({ gym, onPress }) => {
+const GymCard = ({ gym }) => {
   return (
-    <TouchableOpacity onPress={onPress}>
-      <View style={styles.container}>
-        <Text style={styles.textName}>{gym.name}</Text>
-        <Text>{gym.location}</Text>
-      </View>
-    </TouchableOpacity>
+    <View style={styles.container}>
+      <Text style={styles.textName}>{gym.name}</Text>
+      <Text>{gym.location}</Text>
+    </View>
   );
 };
 

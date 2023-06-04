@@ -20,6 +20,7 @@ import React, {
 import {
   AdjustmentsHorizontalIcon,
   PlusIcon,
+  MagnifyingGlassIcon,
 } from "react-native-heroicons/outline";
 import BoulderCard from "../components/BoulderCard";
 import { useHeaderHeight } from "@react-navigation/elements"; // grabbing height of header (varies on diff mobile screens)
@@ -153,6 +154,7 @@ const ListScreen = ({ navigation }) => {
         >
           <View style={styles.searchFilterAddContainer}>
             <View style={styles.searchContainer}>
+              <MagnifyingGlassIcon size={20} color="gray" />
               <TextInput
                 style={styles.searchInput}
                 value={searchQuery}
@@ -262,15 +264,18 @@ const styles = StyleSheet.create({
   },
   searchContainer: {
     flex: 1,
+    flexDirection: "row",
     backgroundColor: "#f1f1f1",
     justifyContent: "center",
+    alignItems: "center",
     marginRight: 10,
+    paddingHorizontal: 20,
     borderRadius: 10,
   },
   searchInput: {
     width: "100%",
     height: "100%",
-    paddingHorizontal: 10,
+    paddingHorizontal: 5,
   },
   filter: {
     width: 40,
