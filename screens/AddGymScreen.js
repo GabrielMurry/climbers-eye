@@ -10,15 +10,17 @@ import {
   Alert,
   Image,
   Button,
+  ActivityIndicator,
 } from "react-native";
 import { CameraIcon, PhotoIcon } from "react-native-heroicons/outline";
 import { request } from "../api/requestMethods";
 import * as ImagePicker from "expo-image-picker";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 const imageScaleDownFactor = 16;
 
 const AddGymScreen = ({ route, navigation }) => {
+  const dispatch = useDispatch();
   const { userID } = useSelector((state) => state.userReducer);
 
   const [isCommercialGym, setIsCommercialGym] = useState(true);
@@ -30,6 +32,7 @@ const AddGymScreen = ({ route, navigation }) => {
     height: null,
   });
   const [sprayWallName, setSprayWallName] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (route?.params?.image) {
@@ -47,6 +50,7 @@ const AddGymScreen = ({ route, navigation }) => {
         {
           text: "OK",
           onPress: async () => {
+            setIsLoading(true);
             const data = {
               gym: {
                 name: gymName,
@@ -64,11 +68,11 @@ const AddGymScreen = ({ route, navigation }) => {
             const response = await request("post", `add_gym/${userID}`, data);
             if (response.status !== 200) {
               console.log(response.status);
+              setIsLoading(false);
               return;
             }
-            if (response.data) {
-              navigation.navigate("Home");
-            }
+            navigation.navigate("Home");
+            setIsLoading(false);
           },
         },
       ],
@@ -234,7 +238,13 @@ const AddGymScreen = ({ route, navigation }) => {
           </View>
         </View>
         <TouchableOpacity style={styles.addButton} onPress={handleAddGym}>
-          <Text style={styles.addButtonText}>Add Gym</Text>
+          {isLoading ? (
+            <ActivityIndicator color="white" />
+          ) : (
+            <Text style={styles.addButtonText}>
+              Add {isCommercialGym ? "Gym" : "Home"}
+            </Text>
+          )}
         </TouchableOpacity>
       </View>
     </SafeAreaView>

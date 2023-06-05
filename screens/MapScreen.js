@@ -1,12 +1,4 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Keyboard,
-  ActivityIndicator,
-  Image,
-} from "react-native";
+import { View, StyleSheet, TouchableOpacity, Keyboard } from "react-native";
 import React, {
   useCallback,
   useEffect,
@@ -15,22 +7,17 @@ import React, {
   useRef,
   useState,
 } from "react";
-import MapView, { Callout, Marker } from "react-native-maps";
+import MapView from "react-native-maps";
 import {
   ArrowLeftCircleIcon,
   MagnifyingGlassIcon,
-  XMarkIcon,
-  PlusIcon,
 } from "react-native-heroicons/outline";
 import { useDispatch, useSelector } from "react-redux";
 import Geocoder from "react-native-geocoding";
 import { GOOGLE_MAPS_GEOCODER_API_KEY } from "@env";
 import { request } from "../api/requestMethods";
 import GymCard from "../components/GymCard";
-import BottomSheet, {
-  BottomSheetFlatList,
-  BottomSheetTextInput,
-} from "@gorhom/bottom-sheet";
+import BottomSheet, { BottomSheetTextInput } from "@gorhom/bottom-sheet";
 import {
   setGymName,
   setSpraywallName,
@@ -40,6 +27,11 @@ import {
   setDefaultImageHeight,
 } from "../redux/actions";
 import FullScreenImage from "../components/FullScreenImage";
+import GymMapMarker from "../components/mapComponents/GymMapMarker";
+import GymInfoBottomSheet from "../components/mapComponents/GymInfoBottomSheet";
+import { Text } from "react-native";
+import GymBottomSheetSearchResult from "../components/mapComponents/GymBottomSheetSearchResult";
+import GymBottomSheetSearchEmpty from "../components/mapComponents/GymBottomSheetSearchEmpty";
 
 // Initialize the module (needs to be done only once)
 Geocoder.init(GOOGLE_MAPS_GEOCODER_API_KEY); // use a valid API key
@@ -51,7 +43,8 @@ const MapScreen = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [gyms, setGyms] = useState(null);
   const [gymMarker, setGymMarker] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingConfirmGym, setIsLoadingConfirmGym] = useState(false);
+  const [isLoadingGymInfo, setIsLoadingGymInfo] = useState(false);
   const [isTextInputFocused, setIsTextInputFocused] = useState(false);
   const [imageFullScreen, setImageFullScreen] = useState(false);
 
@@ -112,23 +105,29 @@ const MapScreen = ({ navigation }) => {
           const location = json.results[0].geometry.location;
           resolve(location);
         })
-        .catch((error) => {
-          console.warn(error);
-          reject(error);
+        .catch(() => {
+          // invalid location address
+          resolve(false);
         });
     });
   };
 
   const handleGymCardPress = async (gym) => {
-    const geoLocation = await getGeoLocation(gym);
-    const gymData = {
+    setIsLoadingGymInfo(true);
+    let gymData = {
       id: gym.id,
       name: gym.name,
       address: gym.location,
-      latitude: geoLocation.lat,
-      longitude: geoLocation.lng,
     };
-    animateToRegion(geoLocation);
+    if (gym.location !== "") {
+      const geoLocation = await getGeoLocation(gym);
+      // if received a valid geoLocation (valid location address)
+      if (geoLocation) {
+        gymData.latitude = geoLocation.lat;
+        gymData.longitude = geoLocation.lng;
+        animateToRegion(geoLocation);
+      }
+    }
     bottomSheetRef.current?.snapToIndex(1);
     setSearchQuery("");
     Keyboard.dismiss();
@@ -143,6 +142,7 @@ const MapScreen = ({ navigation }) => {
       gymData.spraywallImageWidth = response.data.imageWidth;
       gymData.spraywallImageHeight = response.data.imageHeight;
     }
+    setIsLoadingGymInfo(false);
     setGymMarker(gymData);
   };
 
@@ -157,11 +157,11 @@ const MapScreen = ({ navigation }) => {
   };
 
   const handleConfirmMyGymPress = async (gymID) => {
-    setIsLoading(true);
+    setIsLoadingConfirmGym(true);
     const response = await request("put", `choose_gym/${userID}/${gymID}`);
     if (response.status !== 200) {
       console.log(response.status);
-      setIsLoading(false);
+      setIsLoadingConfirmGym(false);
       return;
     }
     if (response.data) {
@@ -171,7 +171,7 @@ const MapScreen = ({ navigation }) => {
       dispatch(setDefaultImageUri(response.data.imageUri));
       dispatch(setDefaultImageWidth(response.data.imageWidth));
       dispatch(setDefaultImageHeight(response.data.imageHeight));
-      setIsLoading(false);
+      setIsLoadingConfirmGym(false);
       navigation.navigate("Home");
     }
   };
@@ -210,6 +210,7 @@ const MapScreen = ({ navigation }) => {
 
   return (
     <View style={styles.mapContainer}>
+      {/* map view */}
       <MapView
         ref={mapRef}
         initialRegion={{
@@ -221,33 +222,14 @@ const MapScreen = ({ navigation }) => {
         style={{ flex: 1 }}
       >
         {gymMarker && (
-          <Marker
-            coordinate={{
-              latitude: gymMarker.latitude,
-              longitude: gymMarker.longitude,
-            }}
-          >
-            <Callout style={styles.calloutContainer}>
-              <View style={styles.calloutContent}>
-                <View style={styles.gymInfo}>
-                  <Text style={styles.gymName}>{gymMarker.name}</Text>
-                  <Text style={styles.gymAddress}>{gymMarker.address}</Text>
-                </View>
-                <TouchableOpacity
-                  style={styles.okButton}
-                  onPress={() => handleConfirmMyGymPress(gymMarker.id)}
-                >
-                  {isLoading ? (
-                    <ActivityIndicator color="white" />
-                  ) : (
-                    <Text style={styles.okButtonText}>OK</Text>
-                  )}
-                </TouchableOpacity>
-              </View>
-            </Callout>
-          </Marker>
+          <GymMapMarker
+            gymMarker={gymMarker}
+            handleConfirmMyGymPress={handleConfirmMyGymPress}
+            isLoadingConfirmGym={isLoadingConfirmGym}
+          />
         )}
       </MapView>
+      {/* bottom sheet */}
       <BottomSheet
         ref={bottomSheetRef}
         index={1}
@@ -259,57 +241,17 @@ const MapScreen = ({ navigation }) => {
       >
         <View style={styles.bottomSheet}>
           {gymMarker ? (
-            <View style={styles.bottomSheetGymContainer}>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                }}
-              >
-                <View style={styles.bottomSheetGym}>
-                  <Text style={{ fontSize: 26 }}>{gymMarker.name}</Text>
-                  <Text style={{ fontSize: 16 }}>{gymMarker.address}</Text>
-                </View>
-                <View style={styles.bottomSheetCancelGymContainer}>
-                  <TouchableOpacity
-                    style={styles.bottomSheetCancelGymButton}
-                    onPress={handleCancelGymPress}
-                  >
-                    <XMarkIcon size={20} color="gray" />
-                  </TouchableOpacity>
-                </View>
-              </View>
-              <View style={styles.bottomSheetImageAndButtonContainer}>
-                <View style={styles.bottomSheetImageContainer}>
-                  <TouchableOpacity
-                    style={styles.bottomSheetImage(gymMarker)}
-                    onPress={() => setImageFullScreen(true)}
-                  >
-                    <Image
-                      source={{ uri: gymMarker.spraywallImageUri }}
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                      }}
-                      resizeMode="contain"
-                    />
-                  </TouchableOpacity>
-                </View>
-                <View style={styles.bottomSheetConfirmGymContainer}>
-                  <TouchableOpacity
-                    style={styles.bottomSheetConfirmGymButton}
-                    onPress={() => handleConfirmMyGymPress(gymMarker.id)}
-                  >
-                    {isLoading ? (
-                      <ActivityIndicator color="white" />
-                    ) : (
-                      <Text style={styles.okButtonText}>OK</Text>
-                    )}
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </View>
+            // bottom sheet of selected gym - gym's info shown
+            <GymInfoBottomSheet
+              gymMarker={gymMarker}
+              isLoadingGymInfo={isLoadingGymInfo}
+              handleCancelGymPress={handleCancelGymPress}
+              handleConfirmMyGymPress={handleConfirmMyGymPress}
+              setImageFullScreen={setImageFullScreen}
+              isLoadingConfirmGym={isLoadingConfirmGym}
+            />
           ) : (
+            // bottom sheet search query
             <>
               <View style={styles.bottomSheetSearchInputAndCancelContainer}>
                 <View style={styles.bottomSheetSearchInputContainer}>
@@ -334,32 +276,12 @@ const MapScreen = ({ navigation }) => {
                 )}
               </View>
               {searchQuery ? (
-                <>
-                  <View style={styles.bottomSheetAddGymContainer}>
-                    <Text>Don't see your gym or home wall?</Text>
-                    <TouchableOpacity
-                      style={styles.bottomSheetAddGymButton}
-                      onPress={() => navigation.navigate("AddGym")}
-                    >
-                      <PlusIcon size={20} color="white" />
-                    </TouchableOpacity>
-                  </View>
-                  <BottomSheetFlatList
-                    contentContainerStyle={{
-                      gap: 5,
-                      width: 350,
-                    }}
-                    data={gyms}
-                    renderItem={renderItem}
-                    keyExtractor={(item) => item.id}
-                  />
-                </>
+                <GymBottomSheetSearchResult
+                  gyms={gyms}
+                  renderItem={renderItem}
+                />
               ) : (
-                <View style={styles.bottomSheetBlank}>
-                  <Text style={{ color: "gray" }}>
-                    Search Gyms or Home Walls
-                  </Text>
-                </View>
+                <GymBottomSheetSearchEmpty />
               )}
             </>
           )}
@@ -383,76 +305,6 @@ export default MapScreen;
 const styles = StyleSheet.create({
   mapContainer: {
     flex: 1,
-  },
-  calloutContainer: {
-    width: 200,
-  },
-  calloutContent: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    backgroundColor: "white",
-    borderRadius: 8,
-  },
-  gymInfo: {
-    flex: 1,
-    marginRight: 10,
-  },
-  gymName: {
-    fontSize: 16,
-    fontWeight: "bold",
-    marginBottom: 2,
-  },
-  gymAddress: {
-    fontSize: 14,
-    color: "gray",
-  },
-  okButton: {
-    backgroundColor: "blue",
-    paddingVertical: 15,
-    paddingHorizontal: 15,
-    borderRadius: 5,
-  },
-  okButtonText: {
-    color: "white",
-    fontWeight: "bold",
-  },
-  addGymContainer: {
-    justifyContent: "center",
-    alignItems: "center",
-    width: "100%",
-    bottom: 0,
-    paddingBottom: 70,
-    position: "absolute",
-    zIndex: 2,
-    // adding shadow to add gym container
-    shadowColor: "black",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 5, // Required for Android
-  },
-  addGymTextAndButtonContainer: {
-    width: 300,
-    justifyContent: "space-between",
-    alignItems: "center",
-    backgroundColor: "white",
-    borderWidth: 1,
-    borderColor: "black",
-    height: 40,
-    paddingHorizontal: 20,
-    borderRadius: 10,
-    flexDirection: "row",
-  },
-  addGymButton: {
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "blue",
-    height: 30,
-    width: 30,
-    borderRadius: 5,
   },
   bottomSheetContainer: {
     backgroundColor: "rgb(250, 249, 246)", // off white
@@ -485,72 +337,5 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginLeft: 10,
-  },
-  bottomSheetGymContainer: {
-    width: "100%",
-    gap: 10,
-  },
-  bottomSheetGym: {
-    width: "80%",
-    gap: 5,
-  },
-  bottomSheetCancelGymContainer: {
-    width: "20%",
-  },
-  bottomSheetCancelGymButton: {
-    backgroundColor: "lightgray",
-    padding: 5,
-    borderRadius: "100%",
-    position: "absolute",
-    right: 0,
-  },
-  bottomSheetImageAndButtonContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  bottomSheetImageContainer: {
-    justifyContent: "center",
-    alignItems: "center",
-    height: 150,
-    width: "50%",
-    marginLeft: 10,
-  },
-  bottomSheetImage: (gymMarker) => ({
-    width:
-      gymMarker.spraywallImageWidth * (150 / gymMarker.spraywallImageHeight),
-    height: "100%",
-  }),
-  bottomSheetConfirmGymContainer: {
-    width: "50%",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  bottomSheetConfirmGymButton: {
-    backgroundColor: "blue",
-    width: 75,
-    height: 75,
-    borderRadius: 10,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  bottomSheetBlank: {
-    width: "100%",
-    height: "30%",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  bottomSheetAddGymContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    gap: 10,
-  },
-  bottomSheetAddGymButton: {
-    backgroundColor: "blue",
-    width: 25,
-    height: 25,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 5,
   },
 });

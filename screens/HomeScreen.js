@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { request } from "../api/requestMethods";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -18,6 +18,7 @@ import {
   setDefaultImageWidth,
   setDefaultImageHeight,
 } from "../redux/actions";
+import { useFocusEffect } from "@react-navigation/native";
 
 const HomeScreen = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -32,9 +33,11 @@ const HomeScreen = ({ navigation }) => {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    fetchDefaultData();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      fetchDefaultData();
+    }, [])
+  );
 
   const fetchDefaultData = async () => {
     const response = await request("get", `home/${userID}`);

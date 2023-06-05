@@ -5,7 +5,7 @@ const GymCard = ({ gym }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.textName}>{gym.name}</Text>
-      <Text>{gym.location}</Text>
+      <Text>{gym.location ? gym.location : "Home Gym"}</Text>
     </View>
   );
 };
