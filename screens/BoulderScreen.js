@@ -19,7 +19,7 @@ import FullScreenImage from "../components/FullScreenImage";
 import { request } from "../api/requestMethods";
 import { FontAwesome } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
-import { StarIcon } from "react-native-heroicons/outline";
+import { LinkIcon, StarIcon } from "react-native-heroicons/outline";
 import { AntDesign } from "@expo/vector-icons";
 import { SimpleLineIcons } from "@expo/vector-icons";
 import { useActionSheet } from "@expo/react-native-action-sheet";
@@ -194,6 +194,10 @@ const BoulderScreen = ({ route, navigation }) => {
     );
   };
 
+  const handleCircuitPressed = () => {
+    navigation.navigate('Circuit')
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       {/* Titles */}
@@ -268,8 +272,18 @@ const BoulderScreen = ({ route, navigation }) => {
             <FontAwesome name="book" size={24} color="black" />
           </TouchableOpacity>
         </View>
-        <View style={styles.buttonsRow} onPress={handleBookmarked}>
-          <TouchableOpacity style={styles.button}>
+        <View style={styles.buttonsRow}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={handleCircuitPressed}
+          >
+            {boulder.personLiked ? (
+              <LinkIcon size={24} />
+            ) : (
+              <LinkIcon size={24} />
+            )}
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={handleBookmarked}>
             {boulder.personLiked ? (
               <FontAwesome name="bookmark" size={24} color="gold" />
             ) : (

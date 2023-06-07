@@ -30,6 +30,7 @@ import { Provider } from "react-redux";
 import { store } from "./redux/store";
 import TestDrawScreen from "./screens/TestDrawScreen";
 import FilterScreen from "./screens/FilterScreen";
+import CircuitScreen from "./screens/CircuitScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -222,6 +223,11 @@ export default function App() {
               name="Send"
               component={SendScreen}
               options={({ navigation }) => customHeader(navigation, "Send")}
+            />
+            <Stack.Screen
+              name="Circuit"
+              component={CircuitScreen}
+              options={({ navigation }) => customHeader(navigation, "Circuit")}
             />
           </Stack.Navigator>
         </NavigationContainer>
