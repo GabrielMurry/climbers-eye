@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet } from "react-native";
 import React from "react";
-import { StarIcon } from "react-native-heroicons/outline";
+import { LinkIcon, StarIcon } from "react-native-heroicons/outline";
 import { FontAwesome } from "@expo/vector-icons";
 import isEqual from "lodash.isequal";
 
@@ -17,31 +17,40 @@ const BoulderCard = React.memo(
           </Text>
           <View style={styles.setterAndFA}>
             <Text>Setter: {boulder.setter}</Text>
-            <Text> FA: {boulder.firstAscent}</Text>
+            <Text> FA: {boulder.firstAscent ? boulder.firstAscent : "-"}</Text>
           </View>
           <Text>
             {boulder.sends} {boulder.sends === 1 ? "send" : "sends"}
           </Text>
         </View>
-        <View style={styles.boulderIconsWrapper}>
-          <FontAwesome
-            name="bookmark"
-            size={16}
-            color="gold"
-            style={{ opacity: 0 }}
-          />
-          <FontAwesome
-            name="trophy"
-            size={16}
-            color="green"
-            style={boulder.sentBoulder ? { opacity: 1 } : { opacity: 0 }}
-          />
-          <FontAwesome
-            name="heart"
-            size={16}
-            color="red"
-            style={boulder.personLiked ? { opacity: 1 } : { opacity: 0 }}
-          />
+        <View style={styles.boulderIconsContainer}>
+          <View style={styles.boulderIconsRow}>
+            <FontAwesome
+              name="trophy"
+              size={16}
+              color={boulder.isSent ? "green" : "gray"}
+              style={boulder.isSent ? { opacity: 1 } : { opacity: 0.25 }}
+            />
+            <FontAwesome
+              name="heart"
+              size={16}
+              color={boulder.isLiked ? "red" : "gray"}
+              style={boulder.isLiked ? { opacity: 1 } : { opacity: 0.25 }}
+            />
+          </View>
+          <View style={styles.boulderIconsRow}>
+            <FontAwesome
+              name="bookmark"
+              size={16}
+              color={boulder.isBookmarked ? "gold" : "gray"}
+              style={boulder.isBookmarked ? { opacity: 1 } : { opacity: 0.25 }}
+            />
+            <LinkIcon
+              size={16}
+              color={boulder.inCircuit ? "blue" : "gray"}
+              style={boulder.inCircuit ? { opacity: 1 } : { opacity: 0.5 }}
+            />
+          </View>
         </View>
         <View style={styles.boulderRightWrapper}>
           <Text>{boulder.grade ?? "Project"}</Text>
@@ -102,15 +111,15 @@ const styles = StyleSheet.create({
   setterAndFA: {
     flexDirection: "row",
   },
-  boulderIconsWrapper: {
-    flexDirection: "row",
-    // justifyContent: "space-evenly",
+  boulderIconsContainer: {
+    width: 80,
+    justifyContent: "center",
     alignItems: "center",
-    width: "40%",
-    position: "absolute",
-    right: 0,
-    height: "100%",
-    gap: 10,
+    gap: 5,
+  },
+  boulderIconsRow: {
+    flexDirection: "row",
+    gap: 5,
   },
   boulderRightWrapper: {
     justifyContent: "center",

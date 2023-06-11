@@ -5,14 +5,12 @@ import {
   TextInput,
   TouchableOpacity,
   FlatList,
-  SafeAreaView,
-  KeyboardAvoidingView,
-  Platform,
-  Keyboard,
+  Modal,
 } from "react-native";
 import React, {
   useCallback,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -21,13 +19,13 @@ import {
   AdjustmentsHorizontalIcon,
   PlusIcon,
   MagnifyingGlassIcon,
+  CameraIcon,
+  ArrowUpOnSquareIcon,
 } from "react-native-heroicons/outline";
-import BoulderCard from "../components/BoulderCard";
-import { useHeaderHeight } from "@react-navigation/elements"; // grabbing height of header (varies on diff mobile screens)
+import BoulderCard from "../components/listComponents/BoulderCard";
 import { request } from "../api/requestMethods";
 import { useFocusEffect } from "@react-navigation/native";
 import { useSelector } from "react-redux";
-import BottomSheet from "@gorhom/bottom-sheet";
 
 const ListScreen = ({ navigation }) => {
   const { userID } = useSelector((state) => state.userReducer);
@@ -43,21 +41,17 @@ const ListScreen = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [boulders, setBoulders] = useState([]);
   const [enableBottomSheet, setEnableBottomSheet] = useState(false);
-  // grabbing height of header
-  const height = useHeaderHeight();
+  const [isHeaderTitleVisible, setIsHeaderTitleVisible] = useState(false);
 
-  // ref
-  const bottomSheetRef = useRef(null);
-
-  // variables
-  const snapPoints = useMemo(() => ["40%"], []);
-
-  // callbacks
-  const handleSheetChanges = useCallback((index) => {
-    if (index === -1) {
-      setEnableBottomSheet(false);
-    }
-  }, []);
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerTitle: () => (
+        <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+          {isHeaderTitleVisible ? spraywallName : null}
+        </Text>
+      ),
+    });
+  }, [isHeaderTitleVisible]);
 
   // This event will be triggered when the screen gains focus (i.e., when you navigate back to it).
   useFocusEffect(
@@ -110,135 +104,176 @@ const ListScreen = ({ navigation }) => {
   );
 
   const handleFilterPress = () => {
-    Keyboard.dismiss();
     navigation.navigate("Filter");
   };
 
-  const handleAddBoulderPress = () => {
-    Keyboard.dismiss();
+  const handleAddNewBoulderPress = () => {
     setEnableBottomSheet(true);
   };
 
+  const renderBoulderCards = ({ item }) => {
+    return (
+      <TouchableOpacity onPress={() => navigateToBoulderScreen(item)}>
+        <BoulderCard boulder={item} />
+      </TouchableOpacity>
+    );
+  };
+
+  const handleScroll = (event) => {
+    const scrollY = event.nativeEvent.contentOffset.y;
+    if (scrollY > 70 && !isHeaderTitleVisible) {
+      setIsHeaderTitleVisible(true);
+    } else if (scrollY <= 70 && isHeaderTitleVisible) {
+      setIsHeaderTitleVisible(false);
+    }
+  };
+
+  const headerComponent = (
+    <>
+      <View
+        style={{
+          height: 80,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Text style={styles.titleText}>{gymName}</Text>
+        <Text style={styles.subTitleText}>{spraywallName}</Text>
+      </View>
+      <View style={styles.searchContainer}>
+        <MagnifyingGlassIcon size={20} color="gray" />
+        <TextInput
+          style={styles.searchInput}
+          value={searchQuery}
+          // onChange doesn't exist in react native. use onChangeText
+          onChangeText={(value) => setSearchQuery(value)} // in react native, you don't have to do e.target.value
+          placeholder="Search (name, setter, or grade)"
+          autoComplete="off"
+        />
+      </View>
+    </>
+  );
+
+  const handleCameraPressed = () => {
+    setEnableBottomSheet(false);
+    navigation.navigate("Camera", { screen: "EditBoulder" });
+  };
+
+  const handleDefaultImagePressed = () => {
+    setEnableBottomSheet(false);
+    navigation.navigate("EditBoulder", {
+      image: {
+        uri: defaultImageUri,
+        width: defaultImageWidth,
+        height: defaultImageHeight,
+      },
+    });
+  };
+
   return (
-    <SafeAreaView
+    <View
       style={{
         flex: 1,
         backgroundColor: "#fff",
       }}
     >
-      {/* Titles */}
-      <View style={styles.titleContainer}>
-        <Text style={styles.titleText}>{gymName}</Text>
-        <Text style={styles.subTitleText}>{spraywallName}</Text>
-      </View>
-      {/* Boulders */}
       <View style={styles.listContainer}>
         {/* List of Boulders */}
         <FlatList
           contentContainerStyle={styles.bouldersList}
           data={boulders}
-          renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => navigateToBoulderScreen(item)}>
-              <BoulderCard boulder={item} />
-            </TouchableOpacity>
-          )}
+          renderItem={renderBoulderCards}
           keyExtractor={(item) => item.id}
           initialNumToRender={7} // Render the number of items that are initially visible on the screen
-          windowSize={5} // Render an additional number of items to improve scrolling performance
+          windowSize={3} // Render an additional number of items to improve scrolling performance
+          onScroll={handleScroll}
+          ListHeaderComponent={headerComponent}
+          ListFooterComponent={<View style={{ height: 90 }} />}
         />
-        {/* Search, filter, add */}
-        {/* KeyboardAvoidingView - search bar on bottom disappears when clicked. We want to follow the keyboard up so it remains visible */}
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          keyboardVerticalOffset={height * 2}
+        <TouchableOpacity
+          style={styles.filterButton}
+          onPress={handleFilterPress}
         >
-          <View style={styles.searchFilterAddContainer}>
-            <View style={styles.searchContainer}>
-              <MagnifyingGlassIcon size={20} color="gray" />
-              <TextInput
-                style={styles.searchInput}
-                value={searchQuery}
-                // onChange doesn't exist in react native. use onChangeText
-                onChangeText={(value) => setSearchQuery(value)} // in react native, you don't have to do e.target.value
-                placeholder="Search (name, setter, or grade)"
-                autoComplete="off"
-              />
-            </View>
-            <TouchableOpacity style={styles.filter} onPress={handleFilterPress}>
-              <AdjustmentsHorizontalIcon size={25} color="black" />
+          <AdjustmentsHorizontalIcon size={30} color={"blue"} />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.addNewBoulderButton}
+          onPress={handleAddNewBoulderPress}
+        >
+          <PlusIcon size={30} color={"green"} />
+        </TouchableOpacity>
+      </View>
+      <Modal
+        visible={enableBottomSheet}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setEnableBottomSheet(false)}
+      >
+        <TouchableOpacity
+          style={styles.modalContainer}
+          activeOpacity={1}
+          onPress={() => setEnableBottomSheet(false)}
+        >
+          <View style={styles.modalContent}>
+            {/* Add your modal content here */}
+            <TouchableOpacity
+              onPress={() => setEnableBottomSheet(false)}
+              style={styles.uploadButton}
+            >
+              <ArrowUpOnSquareIcon size={30} color={"green"} />
             </TouchableOpacity>
             <TouchableOpacity
-              style={styles.addBoulder}
-              // onPress={() => navigation.navigate("AddBoulder")}
-              onPress={handleAddBoulderPress}
+              style={styles.cameraButton}
+              onPress={handleCameraPressed}
             >
-              <PlusIcon size={25} color="black" />
+              <CameraIcon size={30} color={"green"} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.defaultImageButton}
+              onPress={handleDefaultImagePressed}
+            >
+              <PlusIcon size={30} color={"green"} />
             </TouchableOpacity>
           </View>
-        </KeyboardAvoidingView>
-        {enableBottomSheet && (
-          <BottomSheet
-            ref={bottomSheetRef}
-            index={0}
-            snapPoints={snapPoints}
-            enablePanDownToClose={true}
-            onChange={handleSheetChanges}
-            style={{
-              shadowColor: "#000",
-              shadowOffset: {
-                width: 0,
-                height: 12,
-              },
-              shadowOpacity: 0.58,
-              shadowRadius: 16.0,
-
-              elevation: 24,
-            }}
-            backgroundStyle={styles.bottomSheetContainer}
-            handleIndicatorStyle={{ backgroundColor: "gray" }}
-          >
-            <View style={styles.bottomSheet}>
-              <TouchableOpacity
-                style={styles.bottomSheetButton}
-                onPress={() =>
-                  navigation.navigate("EditBoulder", {
-                    image: {
-                      uri: defaultImageUri,
-                      width: defaultImageWidth,
-                      height: defaultImageHeight,
-                    },
-                  })
-                }
-              >
-                <Text>Default Image</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.bottomSheetButton}
-                onPress={() =>
-                  navigation.navigate("Camera", { screen: "EditBoulder" })
-                }
-              >
-                <Text>Camera</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.bottomSheetButton}>
-                <Text>Upload</Text>
-              </TouchableOpacity>
-            </View>
-          </BottomSheet>
-        )}
-      </View>
-    </SafeAreaView>
+        </TouchableOpacity>
+      </Modal>
+    </View>
   );
 };
 
 export default ListScreen;
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-    rowGap: 10,
-    padding: 10,
+  modalContainer: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContent: {
+    flex: 1,
+  },
+  uploadButton: {
+    padding: 15,
+    backgroundColor: "white",
+    position: "absolute",
+    borderRadius: "100%",
+    bottom: 170,
+    right: 25,
+  },
+  cameraButton: {
+    padding: 15,
+    backgroundColor: "white",
+    position: "absolute",
+    borderRadius: "100%",
+    bottom: 100,
+    right: 25,
+  },
+  defaultImageButton: {
+    padding: 15,
+    backgroundColor: "white",
+    position: "absolute",
+    borderRadius: "100%",
+    bottom: 30,
+    right: 25,
   },
   titleText: {
     fontSize: 30,
@@ -249,18 +284,10 @@ const styles = StyleSheet.create({
   listContainer: {
     flex: 1,
     rowGap: 10,
+    paddingHorizontal: 10,
   },
   bouldersList: {
     rowGap: 10,
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-  },
-  searchFilterAddContainer: {
-    width: "100%",
-    height: 60,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    padding: 10,
   },
   searchContainer: {
     flex: 1,
@@ -268,44 +295,41 @@ const styles = StyleSheet.create({
     backgroundColor: "#f1f1f1",
     justifyContent: "center",
     alignItems: "center",
-    marginRight: 10,
     paddingHorizontal: 20,
     borderRadius: 10,
+    height: 35,
   },
   searchInput: {
     width: "100%",
     height: "100%",
     paddingHorizontal: 5,
   },
-  filter: {
-    width: 40,
-    backgroundColor: "lightblue",
-    marginRight: 10,
-    borderRadius: 10,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  addBoulder: {
-    width: 40,
-    backgroundColor: "lightgreen",
-    borderRadius: 10,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  bottomSheetContainer: {
+  filterButton: {
+    padding: 15,
     backgroundColor: "white",
+    borderRadius: "100%",
+    position: "absolute",
+    bottom: 30,
+    left: 25,
+    // adding shadow to add new circuit button
+    shadowColor: "black",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5, // Required for Android
   },
-  bottomSheet: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "space-evenly",
-  },
-  bottomSheetButton: {
-    width: "90%",
-    backgroundColor: "lightblue",
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 10,
-    padding: 20,
+  addNewBoulderButton: {
+    padding: 15,
+    backgroundColor: "white",
+    borderRadius: "100%",
+    position: "absolute",
+    bottom: 30,
+    right: 25,
+    // adding shadow to add new circuit button
+    shadowColor: "black",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5, // Required for Android
   },
 });

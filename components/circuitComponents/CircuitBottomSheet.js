@@ -211,7 +211,7 @@ const styles = StyleSheet.create({
     color: "rgb(0, 122, 255)",
   },
   newCircuitTitle: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: "bold",
   },
   newCircuitTextInputContainer: {

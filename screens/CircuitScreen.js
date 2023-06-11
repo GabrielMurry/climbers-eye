@@ -18,9 +18,12 @@ import CircuitCard from "../components/circuitComponents/CircuitCard";
 import Swipeable from "react-native-gesture-handler/Swipeable";
 import { PlusIcon } from "react-native-heroicons/outline";
 
-const CircuitScreen = () => {
+const CircuitScreen = ({ route }) => {
+  const { boulder } = route.params;
   const { userID } = useSelector((state) => state.userReducer);
-  const { spraywallID } = useSelector((state) => state.spraywallReducer);
+  const { spraywallID, spraywallName } = useSelector(
+    (state) => state.spraywallReducer
+  );
 
   const CIRCUIT_ITEM_HEIGHT = 45;
 
@@ -37,7 +40,10 @@ const CircuitScreen = () => {
   }, []);
 
   fetchCircuitData = async () => {
-    const response = await request("get", `circuit/${userID}/${spraywallID}`);
+    const response = await request(
+      "get",
+      `circuits/${userID}/${spraywallID}/${boulder.id}`
+    );
     if (response.status !== 200) {
       console.log(response.status);
       return;
@@ -59,13 +65,32 @@ const CircuitScreen = () => {
   };
 
   const renderCircuitCards = ({ item, index }) => {
-    const handleCircuitPressed = () => {
+    const optimisticUpdate = () => {
       setCircuits((prevCircuits) => {
         const newCircuits = [...prevCircuits];
         const index = newCircuits.findIndex((i) => i.id === item.id);
         newCircuits[index].isSelected = !newCircuits[index].isSelected;
         return newCircuits;
       });
+    };
+
+    const handleCircuitPressed = async () => {
+      // temp isSelected because we optimistically update item (circuit).isSelected before api call
+      const tempIsSelected = item.isSelected;
+      optimisticUpdate();
+      const response = await request(
+        tempIsSelected ? "delete" : "post",
+        `add_or_remove_boulder_in_circuit/${item.id}/${boulder.id}`
+      );
+      //   const response = await request(
+      //     "get",
+      //     `get_boulders_from_circuit/${userID}/${item.id}`
+      //   );
+      if (response.status !== 200) {
+        console.log(response.status);
+        optimisticUpdate();
+        return;
+      }
     };
 
     const renderRightView = (onDeleteHandler) => {
@@ -100,7 +125,6 @@ const CircuitScreen = () => {
           {
             text: "Delete",
             onPress: async () => {
-              console.log("delete", item.id);
               const response = await request(
                 "delete",
                 `delete_circuit/${userID}/${spraywallID}/${item.id}`
@@ -137,15 +161,19 @@ const CircuitScreen = () => {
     return <View style={{ height: CIRCUIT_ITEM_HEIGHT }} />;
   };
 
+  const renderEmptyList = () => {
+    return (
+      <View>
+        <Text>Create a Circuit</Text>
+      </View>
+    );
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      <TextInput
-        style={styles.textInput}
-        value={searchQuery}
-        onChangeText={(value) => setSearchQuery(value)}
-        placeholder="Search your circuits"
-        autoComplete="off"
-      />
+      <View style={styles.titleContainer}>
+        <Text style={styles.titleText}>Add to Circuit</Text>
+      </View>
       <View style={styles.flatListContainer}>
         <FlatList
           contentContainerStyle={styles.flatList}
@@ -153,6 +181,7 @@ const CircuitScreen = () => {
           renderItem={renderCircuitCards}
           keyExtractor={(item) => item.id}
           ListFooterComponent={renderFooter}
+          ListEmptyComponent={renderEmptyList}
         />
       </View>
       <TouchableOpacity
@@ -182,11 +211,14 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     alignItems: "center",
   },
-  textInput: {
-    backgroundColor: "rgb(229, 228, 226)",
+  titleContainer: {
     padding: 10,
-    borderRadius: 5,
-    width: "90%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  titleText: {
+    fontSize: 30,
+    fontWeight: "bold",
   },
   flatListContainer: {
     marginTop: 15,
