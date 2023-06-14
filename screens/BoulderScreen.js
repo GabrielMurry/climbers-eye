@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, SafeAreaView } from "react-native";
+import { View, Text, StyleSheet, SafeAreaView, Dimensions } from "react-native";
 import React, {
   useCallback,
   useEffect,
@@ -14,6 +14,7 @@ import { useSelector } from "react-redux";
 import Buttons from "../components/boulderComponents/Buttons";
 import ImageDisplay from "../components/boulderComponents/ImageDisplay";
 import Titles from "../components/boulderComponents/Titles";
+import BoulderBarChart from "../components/BoulderBarChart";
 
 const BoulderScreen = ({ route, navigation }) => {
   const { userID } = useSelector((state) => state.userReducer);
@@ -23,6 +24,7 @@ const BoulderScreen = ({ route, navigation }) => {
   const [image, setImage] = useState({ uri: null, width: null, height: null });
   const [imageFullScreen, setImageFullScreen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isStatsVisible, setIsStatsVisible] = useState(false);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -107,18 +109,24 @@ const BoulderScreen = ({ route, navigation }) => {
       {/* Titles */}
       <Titles boulder={boulder} />
       {/* Image */}
-      <ImageDisplay
-        image={image}
-        setImageFullScreen={setImageFullScreen}
-        isLoading={isLoading}
-        setIsLoading={setIsLoading}
-      />
+      {isStatsVisible ? (
+        <BoulderBarChart boulder={boulder} />
+      ) : (
+        <ImageDisplay
+          image={image}
+          setImageFullScreen={setImageFullScreen}
+          isLoading={isLoading}
+          setIsLoading={setIsLoading}
+          isStatsVisible={isStatsVisible}
+        />
+      )}
       {/* Buttons */}
       <Buttons
         boulder={boulder}
         setBoulder={setBoulder}
         userID={userID}
         username={username}
+        setIsStatsVisible={setIsStatsVisible}
         navigation={navigation}
       />
       <FullScreenImage

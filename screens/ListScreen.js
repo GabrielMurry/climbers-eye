@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   FlatList,
   Modal,
+  Pressable,
 } from "react-native";
 import React, {
   useCallback,
@@ -190,18 +191,15 @@ const ListScreen = ({ navigation }) => {
           ListHeaderComponent={headerComponent}
           ListFooterComponent={<View style={{ height: 90 }} />}
         />
-        <TouchableOpacity
-          style={styles.filterButton}
-          onPress={handleFilterPress}
-        >
+        <Pressable style={styles.filterButton} onPress={handleFilterPress}>
           <AdjustmentsHorizontalIcon size={30} color={"blue"} />
-        </TouchableOpacity>
-        <TouchableOpacity
+        </Pressable>
+        <Pressable
           style={styles.addNewBoulderButton}
           onPress={handleAddNewBoulderPress}
         >
           <PlusIcon size={30} color={"green"} />
-        </TouchableOpacity>
+        </Pressable>
       </View>
       <Modal
         visible={enableBottomSheet}
@@ -220,13 +218,13 @@ const ListScreen = ({ navigation }) => {
               onPress={() => setEnableBottomSheet(false)}
               style={styles.uploadButton}
             >
-              <ArrowUpOnSquareIcon size={30} color={"green"} />
+              <ArrowUpOnSquareIcon size={20} color={"green"} />
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.cameraButton}
               onPress={handleCameraPressed}
             >
-              <CameraIcon size={30} color={"green"} />
+              <CameraIcon size={20} color={"green"} />
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.defaultImageButton}
@@ -252,20 +250,20 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   uploadButton: {
-    padding: 15,
+    padding: 13,
     backgroundColor: "white",
     position: "absolute",
     borderRadius: "100%",
-    bottom: 170,
-    right: 25,
+    bottom: 155,
+    right: 32,
   },
   cameraButton: {
-    padding: 15,
+    padding: 13,
     backgroundColor: "white",
     position: "absolute",
     borderRadius: "100%",
     bottom: 100,
-    right: 25,
+    right: 32,
   },
   defaultImageButton: {
     padding: 15,

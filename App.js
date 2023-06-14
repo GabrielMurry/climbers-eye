@@ -31,6 +31,7 @@ import { store } from "./redux/store";
 import TestDrawScreen from "./screens/TestDrawScreen";
 import FilterScreen from "./screens/FilterScreen";
 import CircuitScreen from "./screens/CircuitScreen";
+import BoulderStatsScreen from "./screens/BoulderStatsScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -228,6 +229,13 @@ export default function App() {
               name="Circuit"
               component={CircuitScreen}
               options={({ navigation }) => customHeader(navigation, "Circuit")}
+            />
+            <Stack.Screen
+              name="BoulderStats"
+              component={BoulderStatsScreen}
+              options={({ navigation }) =>
+                customHeader(navigation, "BoulderStats")
+              }
             />
           </Stack.Navigator>
         </NavigationContainer>

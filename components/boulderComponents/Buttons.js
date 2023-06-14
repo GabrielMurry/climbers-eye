@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
+import { View, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import React from "react";
 import { LinkIcon } from "react-native-heroicons/outline";
 import { AntDesign } from "@expo/vector-icons";
@@ -7,7 +7,14 @@ import { FontAwesome } from "@expo/vector-icons";
 import { request } from "../../api/requestMethods";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 
-const Buttons = ({ boulder, setBoulder, userID, username, navigation }) => {
+const Buttons = ({
+  boulder,
+  setBoulder,
+  userID,
+  username,
+  setIsStatsVisible,
+  navigation,
+}) => {
   const { showActionSheetWithOptions } = useActionSheet();
 
   const handleLikePressed = async () => {
@@ -120,6 +127,11 @@ const Buttons = ({ boulder, setBoulder, userID, username, navigation }) => {
     navigation.navigate("Circuit", { boulder: boulder });
   };
 
+  const handleBoulderStatsPressed = () => {
+    // setIsStatsVisible((prev) => !prev);
+    navigation.navigate("BoulderStats", { boulder: boulder });
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.buttonsRow}>
@@ -129,7 +141,10 @@ const Buttons = ({ boulder, setBoulder, userID, username, navigation }) => {
         >
           <SimpleLineIcons name="options" size={24} color="black" />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={handleBoulderStatsPressed}
+        >
           <FontAwesome name="book" size={24} color="black" />
         </TouchableOpacity>
       </View>

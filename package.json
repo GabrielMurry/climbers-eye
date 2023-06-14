@@ -24,6 +24,7 @@
     "@shopify/react-native-skia": "^0.1.185",
     "axios": "^1.4.0",
     "expo": "~48.0.11",
+    "expo-blur": "~12.2.2",
     "expo-camera": "~13.2.1",
     "expo-image-manipulator": "~11.1.1",
     "expo-image-picker": "~14.1.1",
@@ -33,8 +34,10 @@
     "lodash.isequal": "^4.5.0",
     "react": "18.2.0",
     "react-native": "0.71.7",
+    "react-native-chart-kit": "^6.12.0",
     "react-native-geocoding": "^0.5.0",
     "react-native-gesture-handler": "~2.9.0",
+    "react-native-gifted-charts": "^1.2.42",
     "react-native-heroicons": "^3.2.0",
     "react-native-image-crop-picker": "^0.40.0",
     "react-native-image-picker": "^5.4.0",
@@ -49,7 +52,7 @@
     "redux": "^4.2.1",
     "redux-thunk": "^2.4.2",
     "rn-perfect-sketch-canvas": "^0.3.0",
-    "expo-blur": "~12.2.2"
+    "victory-native": "^36.6.11"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

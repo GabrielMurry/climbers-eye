@@ -85,6 +85,10 @@ const ProfileScreen = ({ navigation }) => {
           <Text>14</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.button}>
+          <Text>Your Circuits</Text>
+          <Text>14</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button}>
           <Text>Statistics</Text>
           <ChartPieIcon size={25} color="black" />
         </TouchableOpacity>
