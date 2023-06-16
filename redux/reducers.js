@@ -13,6 +13,8 @@ import {
   SET_FILTER_MAX_GRADE_INDEX,
   SET_FILTER_CLIMB_TYPE,
   SET_FILTER_STATUS,
+  SET_FILTER_CIRCUITS,
+  REMOVE_FILTER_CIRCUITS,
 } from "./actions";
 
 const initialState = {
@@ -29,6 +31,7 @@ const initialState = {
   filterMaxGradeIndex: boulderGrades.length - 1,
   filterClimbType: "boulder",
   filterStatus: "all",
+  filterCircuits: [],
 };
 
 export function userReducer(state = initialState, action) {
@@ -73,6 +76,16 @@ export function spraywallReducer(state = initialState, action) {
       return { ...state, filterClimbType: action.payload };
     case SET_FILTER_STATUS:
       return { ...state, filterStatus: action.payload };
+    case SET_FILTER_CIRCUITS:
+      return {
+        ...state,
+        filterCircuits: [...state.filterCircuits, action.payload],
+      };
+    case REMOVE_FILTER_CIRCUITS:
+      const updatedCircuits = state.filterCircuits.filter(
+        (circuit) => circuit.id !== action.payload.id
+      );
+      return { ...state, filterCircuits: updatedCircuits };
     default:
       return state;
   }

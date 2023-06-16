@@ -150,11 +150,7 @@ const Buttons = ({
       </View>
       <View style={styles.buttonsRow}>
         <TouchableOpacity style={styles.button} onPress={handleCircuitPressed}>
-          {boulder.isBookmarked ? (
-            <LinkIcon size={24} />
-          ) : (
-            <LinkIcon size={24} />
-          )}
+          <LinkIcon size={24} />
         </TouchableOpacity>
         <TouchableOpacity style={styles.button} onPress={handleBookmarkPressed}>
           {boulder.isBookmarked ? (

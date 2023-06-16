@@ -11,6 +11,8 @@ export const SET_FILTER_MIN_GRADE_INDEX = "SET_FILTER_MIN_GRADE_INDEX";
 export const SET_FILTER_MAX_GRADE_INDEX = "SET_FILTER_MAX_GRADE_INDEX";
 export const SET_FILTER_CLIMB_TYPE = "SET_FILTER_CLIMB_TYPE";
 export const SET_FILTER_STATUS = "SET_FILTER_STATUS";
+export const SET_FILTER_CIRCUITS = "SET_FILTER_CIRCUITS";
+export const REMOVE_FILTER_CIRCUITS = "REMOVE_FILTER_CIRCUITS";
 
 export const setUsername = (username) => (dispatch) => {
   dispatch({
@@ -100,5 +102,19 @@ export const setFilterStatus = (filterStatus) => (dispatch) => {
   dispatch({
     type: SET_FILTER_STATUS,
     payload: filterStatus,
+  });
+};
+
+export const setFilterCircuits = (filterCircuits) => (dispatch) => {
+  dispatch({
+    type: SET_FILTER_CIRCUITS,
+    payload: filterCircuits,
+  });
+};
+
+export const removeFilterCircuits = (filterCircuits) => (dispatch) => {
+  dispatch({
+    type: REMOVE_FILTER_CIRCUITS,
+    payload: filterCircuits,
   });
 };

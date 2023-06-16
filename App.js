@@ -32,6 +32,7 @@ import TestDrawScreen from "./screens/TestDrawScreen";
 import FilterScreen from "./screens/FilterScreen";
 import CircuitScreen from "./screens/CircuitScreen";
 import BoulderStatsScreen from "./screens/BoulderStatsScreen";
+import FilterCircuitScreen from "./screens/FilterCircuitScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -214,6 +215,13 @@ export default function App() {
               name="Filter"
               component={FilterScreen}
               options={({ navigation }) => customHeader(navigation, "Filter")}
+            />
+            <Stack.Screen
+              name="FilterCircuit"
+              component={FilterCircuitScreen}
+              options={({ navigation }) =>
+                customHeader(navigation, "FilterCircuit")
+              }
             />
             <Stack.Screen
               name="Boulder"

@@ -1,4 +1,12 @@
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+  FlatList,
+  Pressable,
+} from "react-native";
 import React, { useState } from "react";
 import { CheckIcon } from "react-native-heroicons/outline";
 import Slider from "@react-native-community/slider";
@@ -11,8 +19,10 @@ import {
   setFilterStatus,
 } from "../redux/actions";
 import { boulderGrades } from "../utils/constants/boulderConstants";
+import FilterButton from "../components/filterComponents/FilterButton";
+import GradeRange from "../components/filterComponents/GradeRange";
 
-const FilterScreen = () => {
+const FilterScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const {
     filterSortBy,
@@ -20,6 +30,7 @@ const FilterScreen = () => {
     filterMaxGradeIndex,
     filterClimbType,
     filterStatus,
+    filterCircuits,
   } = useSelector((state) => state.spraywallReducer);
 
   const [showGradeRange, setShowGradeRange] = useState(false);
@@ -55,155 +66,167 @@ const FilterScreen = () => {
     dispatch(setFilterStatus("all"));
   };
 
+  const sortByList = [
+    {
+      id: 1,
+      title: "Most Popular",
+      filter: "popular",
+      onPress: () => dispatch(setFilterSortBy("popular")),
+    },
+    {
+      id: 2,
+      title: "Liked",
+      filter: "liked",
+      onPress: () => dispatch(setFilterSortBy("liked")),
+    },
+    {
+      id: 3,
+      title: "Bookmarked",
+      filter: "bookmarked",
+      onPress: () => dispatch(setFilterSortBy("bookmarked")),
+    },
+    // { id: 4, title: 'Circuits', filter: "circuits", onPress: () => dispatch(setFilterSortBy("circuits")) },
+    {
+      id: 5,
+      title: "Most Recent",
+      filter: "recent",
+      onPress: () => dispatch(setFilterSortBy("recent")),
+    },
+  ];
+
+  const climbTypeList = [
+    {
+      id: 1,
+      title: "Boulder",
+      filter: "boulder",
+      onPress: () => dispatch(setFilterClimbType("boulder")),
+    },
+    {
+      id: 2,
+      title: "Route",
+      filter: "route",
+      onPress: () => dispatch(setFilterClimbType("route")),
+    },
+  ];
+
+  const statusList = [
+    {
+      id: 1,
+      title: "All",
+      filter: "all",
+      onPress: () => dispatch(setFilterStatus("all")),
+    },
+    {
+      id: 2,
+      title: "Established",
+      filter: "established",
+      onPress: () => dispatch(setFilterStatus("established")),
+    },
+    {
+      id: 3,
+      title: "Open Projects",
+      filter: "projects",
+      onPress: () => dispatch(setFilterStatus("projects")),
+    },
+    {
+      id: 4,
+      title: "My Drafts",
+      filter: "drafts",
+      onPress: () => dispatch(setFilterStatus("drafts")),
+    },
+  ];
+
+  const handleCircuitsPress = () => {
+    navigation.navigate("FilterCircuit");
+  };
+
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.resetButton} onPress={handleResetFilters}>
-        <Text>Reset Filters</Text>
-      </TouchableOpacity>
-      <View style={styles.sortBox}>
-        <View style={styles.rowHeader}>
-          <Text style={styles.rowHeaderTitle}>Sort By</Text>
-        </View>
+      <ScrollView contentContainerStyle={{ gap: 10, paddingBottom: 30 }}>
         <TouchableOpacity
-          style={styles.row}
-          onPress={() => dispatch(setFilterSortBy("popular"))}
+          style={styles.resetButton}
+          onPress={handleResetFilters}
         >
-          <Text style={styles.rowTitle}>Most Popular</Text>
-          {filterSortBy === "popular" && (
-            <CheckIcon size={20} color={"black"} />
-          )}
+          <Text>Reset Filters</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.row}
-          onPress={() => dispatch(setFilterSortBy("liked"))}
-        >
-          <Text style={styles.rowTitle}>Liked</Text>
-          {filterSortBy === "liked" && <CheckIcon size={20} color={"black"} />}
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.row}
-          onPress={() => dispatch(setFilterSortBy("bookmarked"))}
-        >
-          <Text style={styles.rowTitle}>Bookmarked</Text>
-          {filterSortBy === "bookmarked" && (
-            <CheckIcon size={20} color={"black"} />
-          )}
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.row}
-          onPress={() => dispatch(setFilterSortBy("recent"))}
-        >
-          <Text style={styles.rowTitle}>Most Recent</Text>
-          {filterSortBy === "recent" && <CheckIcon size={20} color={"black"} />}
-        </TouchableOpacity>
-      </View>
-      <View style={styles.sortBoxGradeRange(showGradeRange)}>
-        <View style={styles.rowHeader}>
-          <Text style={styles.rowHeaderTitle}>Grade Range</Text>
-        </View>
-        <TouchableOpacity style={styles.row} onPress={handleGradeRangePress}>
-          <Text style={styles.rowTitle}>{`${minGrade} - ${maxGrade}`}</Text>
-          <CheckIcon size={20} color={"black"} />
-        </TouchableOpacity>
-      </View>
-      {showGradeRange && (
-        <View style={styles.sliderContainer}>
-          <View style={styles.sliderWrapper}>
-            <Text style={styles.sliderLabel}>
-              Min Grade: {boulderGrades[filterMinGradeIndex]}
-            </Text>
-            <Slider
-              style={styles.slider}
-              minimumValue={0}
-              maximumValue={boulderGrades.length - 1}
-              upperLimit={filterMaxGradeIndex}
-              value={filterMinGradeIndex}
-              onValueChange={handleMinGradeChange}
-              step={1}
-              maximumTrackTintColor={"#4E9152"}
-              minimumTrackTintColor={"lightgray"}
-            />
+        <View style={styles.sortBox}>
+          <View style={styles.rowHeader}>
+            <Text style={styles.rowHeaderTitle}>Sort By</Text>
           </View>
-          <View style={styles.sliderWrapper}>
-            <Text style={styles.sliderLabel}>
-              Max Grade: {boulderGrades[filterMaxGradeIndex]}
-            </Text>
-            <Slider
-              style={styles.slider}
-              minimumValue={0}
-              maximumValue={boulderGrades.length - 1}
-              lowerLimit={filterMinGradeIndex}
-              value={filterMaxGradeIndex}
-              onValueChange={handleMaxGradeChange}
-              step={1}
-              maximumTrackTintColor={"lightgray"}
-              minimumTrackTintColor={"#4E9152"}
+          {sortByList.map((item) => (
+            <FilterButton
+              key={item.id}
+              title={item.title}
+              filterType={filterSortBy}
+              filter={item.filter}
+              onPress={item.onPress}
             />
+          ))}
+        </View>
+        <View style={styles.sortBoxGradeRange(showGradeRange)}>
+          <View style={styles.rowHeader}>
+            <Text style={styles.rowHeaderTitle}>Grade Range</Text>
           </View>
+          <TouchableOpacity style={styles.row} onPress={handleGradeRangePress}>
+            <Text style={styles.rowTitle}>{`${minGrade} - ${maxGrade}`}</Text>
+            <CheckIcon size={20} color={"black"} />
+          </TouchableOpacity>
         </View>
-      )}
-      <View style={styles.sortBox}>
-        <View style={styles.rowHeader}>
-          <Text style={styles.rowHeaderTitle}>Climb Type</Text>
+        {showGradeRange && (
+          <GradeRange
+            boulderGrades={boulderGrades}
+            filterMinGradeIndex={filterMinGradeIndex}
+            handleMinGradeChange={handleMinGradeChange}
+            filterMaxGradeIndex={filterMaxGradeIndex}
+            handleMaxGradeChange={handleMaxGradeChange}
+          />
+        )}
+        <View style={styles.sortBox}>
+          <View style={styles.rowHeader}>
+            <Text style={styles.rowHeaderTitle}>Circuits</Text>
+          </View>
+          {filterCircuits.length > 0 ? (
+            filterCircuits.map((item) => (
+              <FilterButton
+                key={item.id}
+                title={item.name}
+                circuitColor={item.color}
+                onPress={handleCircuitsPress}
+              />
+            ))
+          ) : (
+            <FilterButton title={""} onPress={handleCircuitsPress} />
+          )}
         </View>
-        <TouchableOpacity
-          style={styles.row}
-          onPress={() => dispatch(setFilterClimbType("boulder"))}
-        >
-          <Text style={styles.rowTitle}>Boulder</Text>
-          {filterClimbType === "boulder" && (
-            <CheckIcon size={20} color={"black"} />
-          )}
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.row}
-          onPress={() => dispatch(setFilterClimbType("route"))}
-        >
-          <Text style={styles.rowTitle}>Route</Text>
-          {filterClimbType === "route" && (
-            <CheckIcon size={20} color={"black"} />
-          )}
-        </TouchableOpacity>
-      </View>
-      <View style={styles.sortBox}>
-        <View style={styles.rowHeader}>
-          <Text style={styles.rowHeaderTitle}>Status</Text>
+        <View style={styles.sortBox}>
+          <View style={styles.rowHeader}>
+            <Text style={styles.rowHeaderTitle}>Climb Type</Text>
+          </View>
+          {climbTypeList.map((item) => (
+            <FilterButton
+              key={item.id}
+              title={item.title}
+              filterType={filterClimbType}
+              filter={item.filter}
+              onPress={item.onPress}
+            />
+          ))}
         </View>
-        <TouchableOpacity
-          style={styles.row}
-          onPress={() => dispatch(setFilterStatus("all"))}
-        >
-          <Text style={styles.rowTitle}>All</Text>
-          {filterStatus === "all" && <CheckIcon size={20} color={"black"} />}
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.row}
-          onPress={() => dispatch(setFilterStatus("established"))}
-        >
-          <Text style={styles.rowTitle}>Established</Text>
-          {(filterStatus === "established" || filterStatus === "all") && (
-            <CheckIcon size={20} color={"black"} />
-          )}
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.row}
-          onPress={() => dispatch(setFilterStatus("projects"))}
-        >
-          <Text style={styles.rowTitle}>Open Projects</Text>
-          {(filterStatus === "projects" || filterStatus === "all") && (
-            <CheckIcon size={20} color={"black"} />
-          )}
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.row}
-          onPress={() => dispatch(setFilterStatus("drafts"))}
-        >
-          <Text style={styles.rowTitle}>My Drafts</Text>
-          {(filterStatus === "drafts" || filterStatus === "all") && (
-            <CheckIcon size={20} color={"black"} />
-          )}
-        </TouchableOpacity>
-      </View>
+        <View style={styles.sortBox}>
+          <View style={styles.rowHeader}>
+            <Text style={styles.rowHeaderTitle}>Status</Text>
+          </View>
+          {statusList.map((item) => (
+            <FilterButton
+              key={item.id}
+              title={item.title}
+              filterType={filterStatus}
+              filter={item.filter}
+              onPress={item.onPress}
+            />
+          ))}
+        </View>
+      </ScrollView>
     </View>
   );
 };
@@ -217,11 +240,10 @@ const styles = StyleSheet.create({
     padding: 10,
     width: "100%",
     height: "100%",
-    gap: 10,
+    // gap: 10,
   },
   resetButton: {
     width: "100%",
-    height: 40,
     justifyContent: "center",
     alignItems: "flex-end",
     padding: 10,
