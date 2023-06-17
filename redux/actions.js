@@ -13,6 +13,7 @@ export const SET_FILTER_CLIMB_TYPE = "SET_FILTER_CLIMB_TYPE";
 export const SET_FILTER_STATUS = "SET_FILTER_STATUS";
 export const SET_FILTER_CIRCUITS = "SET_FILTER_CIRCUITS";
 export const REMOVE_FILTER_CIRCUITS = "REMOVE_FILTER_CIRCUITS";
+export const RESET_FILTER_CIRCUITS = "RESET_FILTER_CIRCUITS";
 
 export const setUsername = (username) => (dispatch) => {
   dispatch({
@@ -116,5 +117,11 @@ export const removeFilterCircuits = (filterCircuits) => (dispatch) => {
   dispatch({
     type: REMOVE_FILTER_CIRCUITS,
     payload: filterCircuits,
+  });
+};
+
+export const resetFilterCircuits = () => (dispatch) => {
+  dispatch({
+    type: RESET_FILTER_CIRCUITS,
   });
 };

@@ -4,12 +4,9 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-  FlatList,
-  Pressable,
 } from "react-native";
 import React, { useState } from "react";
 import { CheckIcon } from "react-native-heroicons/outline";
-import Slider from "@react-native-community/slider";
 import { useSelector, useDispatch } from "react-redux";
 import {
   setFilterSortBy,
@@ -17,13 +14,18 @@ import {
   setFilterMaxGradeIndex,
   setFilterClimbType,
   setFilterStatus,
+  resetFilterCircuits,
 } from "../redux/actions";
 import { boulderGrades } from "../utils/constants/boulderConstants";
 import FilterButton from "../components/filterComponents/FilterButton";
 import GradeRange from "../components/filterComponents/GradeRange";
+import filterLists from "../utils/constants/filterListConstants";
 
 const FilterScreen = ({ navigation }) => {
   const dispatch = useDispatch();
+
+  const { sortBy, climbType, status } = filterLists(); // destructure the returned object
+
   const {
     filterSortBy,
     filterMinGradeIndex,
@@ -34,6 +36,9 @@ const FilterScreen = ({ navigation }) => {
   } = useSelector((state) => state.spraywallReducer);
 
   const [showGradeRange, setShowGradeRange] = useState(false);
+
+  const minGrade = boulderGrades[filterMinGradeIndex];
+  const maxGrade = boulderGrades[filterMaxGradeIndex];
 
   const handleGradeRangePress = () => {
     setShowGradeRange(!showGradeRange);
@@ -55,86 +60,14 @@ const FilterScreen = ({ navigation }) => {
     }
   };
 
-  const minGrade = boulderGrades[filterMinGradeIndex];
-  const maxGrade = boulderGrades[filterMaxGradeIndex];
-
   const handleResetFilters = () => {
     dispatch(setFilterSortBy("popular"));
     dispatch(setFilterMinGradeIndex(0));
     dispatch(setFilterMaxGradeIndex(boulderGrades.length - 1));
     dispatch(setFilterClimbType("boulder"));
     dispatch(setFilterStatus("all"));
+    dispatch(resetFilterCircuits());
   };
-
-  const sortByList = [
-    {
-      id: 1,
-      title: "Most Popular",
-      filter: "popular",
-      onPress: () => dispatch(setFilterSortBy("popular")),
-    },
-    {
-      id: 2,
-      title: "Liked",
-      filter: "liked",
-      onPress: () => dispatch(setFilterSortBy("liked")),
-    },
-    {
-      id: 3,
-      title: "Bookmarked",
-      filter: "bookmarked",
-      onPress: () => dispatch(setFilterSortBy("bookmarked")),
-    },
-    // { id: 4, title: 'Circuits', filter: "circuits", onPress: () => dispatch(setFilterSortBy("circuits")) },
-    {
-      id: 5,
-      title: "Most Recent",
-      filter: "recent",
-      onPress: () => dispatch(setFilterSortBy("recent")),
-    },
-  ];
-
-  const climbTypeList = [
-    {
-      id: 1,
-      title: "Boulder",
-      filter: "boulder",
-      onPress: () => dispatch(setFilterClimbType("boulder")),
-    },
-    {
-      id: 2,
-      title: "Route",
-      filter: "route",
-      onPress: () => dispatch(setFilterClimbType("route")),
-    },
-  ];
-
-  const statusList = [
-    {
-      id: 1,
-      title: "All",
-      filter: "all",
-      onPress: () => dispatch(setFilterStatus("all")),
-    },
-    {
-      id: 2,
-      title: "Established",
-      filter: "established",
-      onPress: () => dispatch(setFilterStatus("established")),
-    },
-    {
-      id: 3,
-      title: "Open Projects",
-      filter: "projects",
-      onPress: () => dispatch(setFilterStatus("projects")),
-    },
-    {
-      id: 4,
-      title: "My Drafts",
-      filter: "drafts",
-      onPress: () => dispatch(setFilterStatus("drafts")),
-    },
-  ];
 
   const handleCircuitsPress = () => {
     navigation.navigate("FilterCircuit");
@@ -153,7 +86,7 @@ const FilterScreen = ({ navigation }) => {
           <View style={styles.rowHeader}>
             <Text style={styles.rowHeaderTitle}>Sort By</Text>
           </View>
-          {sortByList.map((item) => (
+          {sortBy.map((item) => (
             <FilterButton
               key={item.id}
               title={item.title}
@@ -195,14 +128,14 @@ const FilterScreen = ({ navigation }) => {
               />
             ))
           ) : (
-            <FilterButton title={""} onPress={handleCircuitsPress} />
+            <FilterButton title={"-"} onPress={handleCircuitsPress} />
           )}
         </View>
         <View style={styles.sortBox}>
           <View style={styles.rowHeader}>
             <Text style={styles.rowHeaderTitle}>Climb Type</Text>
           </View>
-          {climbTypeList.map((item) => (
+          {climbType.map((item) => (
             <FilterButton
               key={item.id}
               title={item.title}
@@ -216,7 +149,7 @@ const FilterScreen = ({ navigation }) => {
           <View style={styles.rowHeader}>
             <Text style={styles.rowHeaderTitle}>Status</Text>
           </View>
-          {statusList.map((item) => (
+          {status.map((item) => (
             <FilterButton
               key={item.id}
               title={item.title}
@@ -300,32 +233,5 @@ const styles = StyleSheet.create({
   },
   rowTitle: {
     color: "black",
-  },
-  sliderContainer: {
-    backgroundColor: "#FFFBF1",
-    borderBottomLeftRadius: 10,
-    borderBottomRightRadius: 10,
-    borderLeftWidth: 1,
-    borderRightWidth: 1,
-    borderBottomWidth: 1,
-    borderColor: "black",
-    padding: 10,
-    // adding shadow to slider box
-    shadowColor: "black",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 5, // Required for Android
-  },
-  sliderWrapper: {
-    marginBottom: 16,
-  },
-  sliderLabel: {
-    fontSize: 14,
-    color: "black",
-    marginBottom: 8,
-  },
-  slider: {
-    width: "100%",
   },
 });

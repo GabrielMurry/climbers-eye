@@ -15,6 +15,7 @@ import {
   SET_FILTER_STATUS,
   SET_FILTER_CIRCUITS,
   REMOVE_FILTER_CIRCUITS,
+  RESET_FILTER_CIRCUITS,
 } from "./actions";
 
 const initialState = {
@@ -86,6 +87,8 @@ export function spraywallReducer(state = initialState, action) {
         (circuit) => circuit.id !== action.payload.id
       );
       return { ...state, filterCircuits: updatedCircuits };
+    case RESET_FILTER_CIRCUITS:
+      return { ...state, filterCircuits: [] };
     default:
       return state;
   }

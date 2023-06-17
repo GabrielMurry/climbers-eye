@@ -37,6 +37,12 @@ const ListScreen = ({ navigation }) => {
     defaultImageUri,
     defaultImageWidth,
     defaultImageHeight,
+    filterMinGradeIndex,
+    filterMaxGradeIndex,
+    filterSortBy,
+    filterCircuits,
+    filterClimbType,
+    filterStatus,
   } = useSelector((state) => state.spraywallReducer);
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -60,7 +66,14 @@ const ListScreen = ({ navigation }) => {
       // reset search query and fetch all data upon every new focus on screen - a boulder may have been updated
       setSearchQuery("");
       fetchAllData();
-    }, [])
+    }, [
+      filterMinGradeIndex,
+      filterMaxGradeIndex,
+      filterSortBy,
+      filterCircuits,
+      filterClimbType,
+      filterStatus,
+    ])
   );
 
   useEffect(() => {
@@ -73,7 +86,14 @@ const ListScreen = ({ navigation }) => {
   }, [searchQuery]);
 
   const fetchAllData = async () => {
-    const response = await request("get", `list/${spraywallID}/${userID}`);
+    // extract only the id property from each object in the filterCircuits array
+    // serialize the array into a string representation, such as JSON or comma-separated values.
+    const circuitIds = filterCircuits.map((circuit) => circuit.id);
+    const encodedCircuitIds = encodeURIComponent(JSON.stringify(circuitIds));
+    const response = await request(
+      "get",
+      `list/${spraywallID}/${userID}?minGradeIndex=${filterMinGradeIndex}&maxGradeIndex=${filterMaxGradeIndex}&sortBy=${filterSortBy}&circuits=${encodedCircuitIds}&climbType=${filterClimbType}&status=${filterStatus}`
+    );
     if (response.status !== 200) {
       console.log(response.status);
     }
