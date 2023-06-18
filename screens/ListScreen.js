@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   FlatList,
   Pressable,
+  Keyboard,
 } from "react-native";
 import React, {
   useCallback,
@@ -17,6 +18,7 @@ import {
   AdjustmentsHorizontalIcon,
   PlusIcon,
   MagnifyingGlassIcon,
+  XMarkIcon,
 } from "react-native-heroicons/outline";
 import BoulderCard from "../components/listComponents/BoulderCard";
 import { request } from "../api/requestMethods";
@@ -45,6 +47,8 @@ const ListScreen = ({ navigation }) => {
   const [boulders, setBoulders] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isHeaderTitleVisible, setIsHeaderTitleVisible] = useState(false);
+  const [isTextInputFocused, setIsTextInputFocused] = useState(false);
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -90,6 +94,24 @@ const ListScreen = ({ navigation }) => {
     }
   };
 
+  // Add an event listener to detect changes in keyboard visibility
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      () => setKeyboardVisible(true)
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      () => setKeyboardVisible(false)
+    );
+
+    // Clean up the event listeners when the component unmounts
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
   // Optimization --> use the React.useCallback hook to memoize the navigation function and prevent unnecessary re-creation of the function on every render.
   // Providing navigation as a dependency, the navigateToBoulder function will only be re-created when the navigation prop changes, ensuring better performance.
   const navigateToBoulderScreen = useCallback(
@@ -124,6 +146,21 @@ const ListScreen = ({ navigation }) => {
     }
   };
 
+  const handleTextInputFocus = () => {
+    setIsTextInputFocused(true);
+  };
+
+  const handleTextInputBlur = () => {
+    setIsTextInputFocused(false);
+  };
+
+  const handleCancelSearchPress = () => {
+    setSearchQuery("");
+    if (isKeyboardVisible) {
+      Keyboard.dismiss();
+    }
+  };
+
   const headerComponent = (
     <>
       <View
@@ -136,16 +173,43 @@ const ListScreen = ({ navigation }) => {
         <Text style={styles.titleText}>{gymName}</Text>
         <Text style={styles.subTitleText}>{spraywallName}</Text>
       </View>
-      <View style={styles.searchContainer}>
-        <MagnifyingGlassIcon size={20} color="gray" />
-        <TextInput
-          style={styles.searchInput}
-          value={searchQuery}
-          // onChange doesn't exist in react native. use onChangeText
-          onChangeText={(value) => setSearchQuery(value)} // in react native, you don't have to do e.target.value
-          placeholder="Search (name, setter, or grade)"
-          autoComplete="off"
-        />
+      <View style={styles.SearchInputAndCancelContainer}>
+        <View style={styles.SearchInputContainer}>
+          <MagnifyingGlassIcon size={20} color="gray" />
+          <TextInput
+            style={styles.SearchInput}
+            value={searchQuery}
+            // onChange doesn't exist in react native. use onChangeText
+            onChangeText={(value) => setSearchQuery(value)} // in react native, you don't have to do e.target.value
+            placeholder="Search (name, setter, or grade)"
+            onFocus={handleTextInputFocus}
+            onBlur={handleTextInputBlur}
+            autoComplete="off"
+          />
+          {searchQuery ? (
+            <TouchableOpacity
+              style={{
+                backgroundColor: "gray",
+                width: 18,
+                height: 18,
+                borderRadius: "100%",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+              onPress={() => setSearchQuery("")}
+            >
+              <XMarkIcon size={12} color={"white"} />
+            </TouchableOpacity>
+          ) : null}
+        </View>
+        {(isTextInputFocused || searchQuery) && (
+          <TouchableOpacity
+            style={styles.cancelButton}
+            onPress={handleCancelSearchPress}
+          >
+            <Text style={{ color: "rgb(0, 122, 255)" }}>Cancel</Text>
+          </TouchableOpacity>
+        )}
       </View>
     </>
   );
@@ -185,6 +249,7 @@ const ListScreen = ({ navigation }) => {
           onScroll={handleScroll}
           ListHeaderComponent={headerComponent}
           ListFooterComponent={<View style={{ height: 90 }} />}
+          keyboardShouldPersistTaps="handled" // click on search bar cancel buttons when Keyboard is visible (or click on boulder cards)
         />
         <Pressable style={styles.filterButton} onPress={handleFilterPress}>
           <AdjustmentsHorizontalIcon size={30} color={"blue"} />
@@ -265,5 +330,28 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 5, // Required for Android
+  },
+  SearchInputAndCancelContainer: {
+    flexDirection: "row",
+  },
+  SearchInputContainer: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "rgb(229, 228, 226)",
+    paddingHorizontal: 10,
+    borderRadius: 10,
+  },
+  SearchInput: {
+    flex: 1,
+    height: 35,
+    paddingHorizontal: 5,
+    backgroundColor: "rgb(229, 228, 226)",
+    borderRadius: 10,
+  },
+  cancelButton: {
+    justifyContent: "center",
+    alignItems: "center",
+    marginLeft: 10,
   },
 });
