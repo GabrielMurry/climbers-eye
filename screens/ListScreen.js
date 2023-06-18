@@ -5,28 +5,24 @@ import {
   TextInput,
   TouchableOpacity,
   FlatList,
-  Modal,
   Pressable,
 } from "react-native";
 import React, {
   useCallback,
   useEffect,
   useLayoutEffect,
-  useMemo,
-  useRef,
   useState,
 } from "react";
 import {
   AdjustmentsHorizontalIcon,
   PlusIcon,
   MagnifyingGlassIcon,
-  CameraIcon,
-  ArrowUpOnSquareIcon,
 } from "react-native-heroicons/outline";
 import BoulderCard from "../components/listComponents/BoulderCard";
 import { request } from "../api/requestMethods";
 import { useFocusEffect } from "@react-navigation/native";
 import { useSelector } from "react-redux";
+import ModalAddNewBoulder from "../components/listComponents/ModalAddNewBoulder";
 
 const ListScreen = ({ navigation }) => {
   const { userID } = useSelector((state) => state.userReducer);
@@ -47,7 +43,7 @@ const ListScreen = ({ navigation }) => {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [boulders, setBoulders] = useState([]);
-  const [enableBottomSheet, setEnableBottomSheet] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const [isHeaderTitleVisible, setIsHeaderTitleVisible] = useState(false);
 
   useLayoutEffect(() => {
@@ -64,7 +60,7 @@ const ListScreen = ({ navigation }) => {
   useFocusEffect(
     useCallback(() => {
       // reset search query and fetch all data upon every new focus on screen - a boulder may have been updated
-      setSearchQuery("");
+      // setSearchQuery("");
       fetchAllData();
     }, [
       filterMinGradeIndex,
@@ -73,17 +69,9 @@ const ListScreen = ({ navigation }) => {
       filterCircuits,
       filterClimbType,
       filterStatus,
+      searchQuery,
     ])
   );
-
-  useEffect(() => {
-    // When we mount component, nothing is in our searchQuery so we do nothing
-    if (searchQuery !== "") {
-      fetchSearchQueryData();
-    } else {
-      fetchAllData(); // when we first render screen, fetchAllData is called twice. Here and on useFocusEffect. Fix?
-    }
-  }, [searchQuery]);
 
   const fetchAllData = async () => {
     // extract only the id property from each object in the filterCircuits array
@@ -92,20 +80,7 @@ const ListScreen = ({ navigation }) => {
     const encodedCircuitIds = encodeURIComponent(JSON.stringify(circuitIds));
     const response = await request(
       "get",
-      `list/${spraywallID}/${userID}?minGradeIndex=${filterMinGradeIndex}&maxGradeIndex=${filterMaxGradeIndex}&sortBy=${filterSortBy}&circuits=${encodedCircuitIds}&climbType=${filterClimbType}&status=${filterStatus}`
-    );
-    if (response.status !== 200) {
-      console.log(response.status);
-    }
-    if (response.data) {
-      setBoulders(response.data);
-    }
-  };
-
-  const fetchSearchQueryData = async () => {
-    const response = await request(
-      "get",
-      `query_list/${spraywallID}/${userID}?search=${searchQuery}`
+      `list/${spraywallID}/${userID}?search=${searchQuery}&minGradeIndex=${filterMinGradeIndex}&maxGradeIndex=${filterMaxGradeIndex}&sortBy=${filterSortBy}&circuits=${encodedCircuitIds}&climbType=${filterClimbType}&status=${filterStatus}`
     );
     if (response.status !== 200) {
       console.log(response.status);
@@ -129,7 +104,7 @@ const ListScreen = ({ navigation }) => {
   };
 
   const handleAddNewBoulderPress = () => {
-    setEnableBottomSheet(true);
+    setIsModalVisible(true);
   };
 
   const renderBoulderCards = ({ item }) => {
@@ -176,12 +151,12 @@ const ListScreen = ({ navigation }) => {
   );
 
   const handleCameraPressed = () => {
-    setEnableBottomSheet(false);
+    setIsModalVisible(false);
     navigation.navigate("Camera", { screen: "EditBoulder" });
   };
 
   const handleDefaultImagePressed = () => {
-    setEnableBottomSheet(false);
+    setIsModalVisible(false);
     navigation.navigate("EditBoulder", {
       image: {
         uri: defaultImageUri,
@@ -205,8 +180,8 @@ const ListScreen = ({ navigation }) => {
           data={boulders}
           renderItem={renderBoulderCards}
           keyExtractor={(item) => item.id}
-          initialNumToRender={7} // Render the number of items that are initially visible on the screen
-          windowSize={3} // Render an additional number of items to improve scrolling performance
+          initialNumToRender={8} // Render the number of items that are initially visible on the screen
+          windowSize={2} // Render an additional number of items to improve scrolling performance
           onScroll={handleScroll}
           ListHeaderComponent={headerComponent}
           ListFooterComponent={<View style={{ height: 90 }} />}
@@ -221,40 +196,12 @@ const ListScreen = ({ navigation }) => {
           <PlusIcon size={30} color={"green"} />
         </Pressable>
       </View>
-      <Modal
-        visible={enableBottomSheet}
-        transparent={true}
-        animationType="fade"
-        onRequestClose={() => setEnableBottomSheet(false)}
-      >
-        <TouchableOpacity
-          style={styles.modalContainer}
-          activeOpacity={1}
-          onPress={() => setEnableBottomSheet(false)}
-        >
-          <View style={styles.modalContent}>
-            {/* Add your modal content here */}
-            <TouchableOpacity
-              onPress={() => setEnableBottomSheet(false)}
-              style={styles.uploadButton}
-            >
-              <ArrowUpOnSquareIcon size={20} color={"green"} />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.cameraButton}
-              onPress={handleCameraPressed}
-            >
-              <CameraIcon size={20} color={"green"} />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.defaultImageButton}
-              onPress={handleDefaultImagePressed}
-            >
-              <PlusIcon size={30} color={"green"} />
-            </TouchableOpacity>
-          </View>
-        </TouchableOpacity>
-      </Modal>
+      <ModalAddNewBoulder
+        isModalVisible={isModalVisible}
+        setIsModalVisible={setIsModalVisible}
+        handleCameraPressed={handleCameraPressed}
+        handleDefaultImagePressed={handleDefaultImagePressed}
+      />
     </View>
   );
 };
@@ -262,37 +209,6 @@ const ListScreen = ({ navigation }) => {
 export default ListScreen;
 
 const styles = StyleSheet.create({
-  modalContainer: {
-    flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-  },
-  modalContent: {
-    flex: 1,
-  },
-  uploadButton: {
-    padding: 13,
-    backgroundColor: "white",
-    position: "absolute",
-    borderRadius: "100%",
-    bottom: 155,
-    right: 32,
-  },
-  cameraButton: {
-    padding: 13,
-    backgroundColor: "white",
-    position: "absolute",
-    borderRadius: "100%",
-    bottom: 100,
-    right: 32,
-  },
-  defaultImageButton: {
-    padding: 15,
-    backgroundColor: "white",
-    position: "absolute",
-    borderRadius: "100%",
-    bottom: 30,
-    right: 25,
-  },
   titleText: {
     fontSize: 30,
   },
@@ -327,8 +243,8 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: "100%",
     position: "absolute",
-    bottom: 30,
-    left: 25,
+    bottom: 35,
+    left: 20,
     // adding shadow to add new circuit button
     shadowColor: "black",
     shadowOffset: { width: 0, height: 2 },
@@ -341,8 +257,8 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: "100%",
     position: "absolute",
-    bottom: 30,
-    right: 25,
+    bottom: 35,
+    right: 20,
     // adding shadow to add new circuit button
     shadowColor: "black",
     shadowOffset: { width: 0, height: 2 },
