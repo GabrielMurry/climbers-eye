@@ -188,14 +188,7 @@ const ListScreen = ({ navigation }) => {
           />
           {searchQuery ? (
             <TouchableOpacity
-              style={{
-                backgroundColor: "gray",
-                width: 18,
-                height: 18,
-                borderRadius: "100%",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
+              style={styles.resetSearchQuery}
               onPress={() => setSearchQuery("")}
             >
               <XMarkIcon size={12} color={"white"} />
@@ -353,5 +346,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginLeft: 10,
+  },
+  resetSearchQuery: {
+    backgroundColor: "gray",
+    width: 18,
+    height: 18,
+    borderRadius: "100%",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

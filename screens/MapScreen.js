@@ -11,6 +11,7 @@ import MapView from "react-native-maps";
 import {
   ArrowLeftCircleIcon,
   MagnifyingGlassIcon,
+  XMarkIcon,
 } from "react-native-heroicons/outline";
 import { useDispatch, useSelector } from "react-redux";
 import Geocoder from "react-native-geocoding";
@@ -265,6 +266,14 @@ const MapScreen = ({ navigation }) => {
                     onFocus={handleTextInputFocus}
                     onBlur={handleTextInputBlur}
                   />
+                  {searchQuery ? (
+                    <TouchableOpacity
+                      style={styles.resetSearchQuery}
+                      onPress={() => setSearchQuery("")}
+                    >
+                      <XMarkIcon size={12} color={"white"} />
+                    </TouchableOpacity>
+                  ) : null}
                 </View>
                 {(isTextInputFocused || searchQuery) && (
                   <TouchableOpacity
@@ -337,5 +346,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginLeft: 10,
+  },
+  resetSearchQuery: {
+    backgroundColor: "gray",
+    width: 18,
+    height: 18,
+    borderRadius: "100%",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

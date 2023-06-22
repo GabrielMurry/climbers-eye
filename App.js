@@ -13,7 +13,6 @@ import SignupScreen from "./screens/SignupScreen";
 import MapScreen from "./screens/MapScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import AddGymScreen from "./screens/AddGymScreen";
-import AddSprayWallScreen from "./screens/AddSprayWallScreen";
 import AddBoulderScreen from "./screens/AddBoulderScreen";
 import EditBoulderScreen from "./screens/EditBoulderScreen";
 import CameraScreen from "./screens/CameraScreen";
@@ -167,13 +166,6 @@ export default function App() {
               name="AddGym"
               component={AddGymScreen}
               options={({ navigation }) => customHeader(navigation, "AddGym")}
-            />
-            <Stack.Screen
-              name="AddSprayWall"
-              component={AddSprayWallScreen}
-              options={({ navigation }) =>
-                customHeader(navigation, "AddSprayWall")
-              }
             />
             <Stack.Screen
               name="Camera"

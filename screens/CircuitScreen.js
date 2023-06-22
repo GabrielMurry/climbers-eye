@@ -82,10 +82,6 @@ const CircuitScreen = ({ route }) => {
         tempIsSelected ? "delete" : "post",
         `add_or_remove_boulder_in_circuit/${item.id}/${boulder.id}`
       );
-      //   const response = await request(
-      //     "get",
-      //     `get_boulders_from_circuit/${userID}/${item.id}`
-      //   );
       if (response.status !== 200) {
         console.log(response.status);
         optimisticUpdate();
