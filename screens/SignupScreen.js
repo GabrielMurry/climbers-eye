@@ -13,8 +13,10 @@ const SignupScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordRepeat, setPasswordRepeat] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleCreateAccount = async () => {
+    setIsLoading(true);
     const data = {
       username,
       email,
@@ -24,13 +26,17 @@ const SignupScreen = ({ navigation }) => {
     const response = await request("post", "signup/", data);
     if (response.status !== 200) {
       console.log(response.status);
+      setIsLoading(false);
       return;
     }
     if (response.data) {
       // in dispatch, we enter the action "setUserID" along with the "userID" value (doing this for username also)
+      console.log(response.data);
+      console.log(response.data.userID);
       dispatch(setUserID(response.data.userID));
     }
     navigation.navigate("Map");
+    setIsLoading(false);
   };
 
   const handleTermsOfUse = () => {};
@@ -68,7 +74,11 @@ const SignupScreen = ({ navigation }) => {
         placeholder="Re-Enter Password"
         secureTextEntry={true}
       />
-      <CustomButton onPress={handleCreateAccount} text="Create Account" />
+      <CustomButton
+        onPress={handleCreateAccount}
+        text="Create Account"
+        isLoading={isLoading}
+      />
 
       <Text style={styles.text}>
         By registering, you confirm that you accept our{" "}

@@ -38,7 +38,7 @@ const CircuitBottomSheet = ({
     };
     const response = await request(
       "post",
-      `circuit/${userID}/${spraywallID}`,
+      `circuits/${userID}/${spraywallID}/${0}`,
       data
     );
     if (response.status !== 200) {

@@ -25,8 +25,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     width: "90%",
-    padding: 15,
+    height: 45,
+    padding: 10,
     marginVertical: 5,
+    justifyContent: "center",
   },
   input: {},
 });

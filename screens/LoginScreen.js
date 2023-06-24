@@ -54,6 +54,7 @@ const LoginScreen = ({ navigation }) => {
         navigation.navigate("Map");
       }
     }
+    setIsLoading(false);
   };
 
   const handleForgotPassword = () => {

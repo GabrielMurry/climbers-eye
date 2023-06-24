@@ -6,7 +6,13 @@ import {
   SafeAreaView,
   TouchableOpacity,
 } from "react-native";
-import React, { useCallback, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import { SketchCanvas } from "rn-perfect-sketch-canvas";
 import ReactNativeZoomableView from "@openspacelabs/react-native-zoomable-view/src/ReactNativeZoomableView";
 import ItemEditBar from "../components/ItemEditBar";
@@ -38,6 +44,47 @@ const EditBoulderScreen = ({ route, navigation }) => {
       canvasRef.current?.reset();
     }, [])
   );
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerTitle: () => (
+        <Text
+          style={{
+            fontWeight: "bold",
+            fontSize: 16,
+          }}
+        >
+          Edit
+        </Text>
+      ),
+      headerLeft: () => (
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Text
+            style={{
+              color: "rgb(0,122, 255)",
+              fontWeight: "bold",
+              fontSize: 16,
+            }}
+          >
+            Cancel
+          </Text>
+        </TouchableOpacity>
+      ),
+      headerRight: () => (
+        <TouchableOpacity onPress={handleDonePress}>
+          <Text
+            style={{
+              color: "rgb(0,122, 255)",
+              fontWeight: "bold",
+              fontSize: 16,
+            }}
+          >
+            Done
+          </Text>
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation]);
 
   const handleItemPress = (item) => {
     setSelectedItem(item);
@@ -80,56 +127,69 @@ const EditBoulderScreen = ({ route, navigation }) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      {/* Sketch Canvas on top of Image */}
-      <ReactNativeZoomableView
-        // only zoom in and out when hand selected. If color selected, have max and min zoom equal eachother as to prevent zooming
-        maxZoom={selectedItem === "hand" ? 10 : currentZoomLevel}
-        minZoom={selectedItem === "hand" ? 1 : currentZoomLevel}
-        // disable pan on initial zoom. Update initial zoom every time an item is selected for redundancy (if hand is selected, ENABLE pan on initial zoom)
-        initialZoom={currentZoomLevel}
-        disablePanOnInitialZoom={selectedItem === "hand" ? false : true}
-        ref={zoomRef}
+    <View style={styles.container}>
+      <View
+        style={{
+          flex: 1,
+          width: "100%",
+        }}
       >
-        <View
-          style={{
-            width: image.width / imageScaleDownFactor,
-            height: image.height / imageScaleDownFactor,
-          }}
-          ref={snapshotDrawingRef}
+        {/* Sketch Canvas on top of Image */}
+        <ReactNativeZoomableView
+          // only zoom in and out when hand selected. If color selected, have max and min zoom equal eachother as to prevent zooming
+          maxZoom={selectedItem === "hand" ? 10 : currentZoomLevel}
+          minZoom={selectedItem === "hand" ? 1 : currentZoomLevel}
+          // disable pan on initial zoom. Update initial zoom every time an item is selected for redundancy (if hand is selected, ENABLE pan on initial zoom)
+          initialZoom={currentZoomLevel}
+          disablePanOnInitialZoom={selectedItem === "hand" ? false : true}
+          ref={zoomRef}
+          visualTouchFeedbackEnabled={false}
         >
-          <SketchCanvas
-            ref={canvasRef}
-            strokeColor={selectedItem === "hand" ? "transparent" : selectedItem}
-            strokeWidth={selectedItem === "hand" ? 0 : brushSize}
-            containerStyle={styles.canvas(image, imageScaleDownFactor)}
+          <View
+            style={{
+              width: image.width / imageScaleDownFactor,
+              height: image.height / imageScaleDownFactor,
+            }}
+            ref={snapshotDrawingRef}
+          >
+            <SketchCanvas
+              ref={canvasRef}
+              strokeColor={
+                selectedItem === "hand" ? "transparent" : selectedItem
+              }
+              strokeWidth={selectedItem === "hand" ? 0 : brushSize}
+              containerStyle={styles.canvas(image, imageScaleDownFactor)}
+            />
+          </View>
+          <Image
+            ref={snapshotPhotoRef}
+            source={{ uri: image.uri }}
+            style={styles.image(image, imageScaleDownFactor)}
           />
-        </View>
-        <Image
-          ref={snapshotPhotoRef}
-          source={{ uri: image.uri }}
-          style={styles.image(image, imageScaleDownFactor)}
+        </ReactNativeZoomableView>
+      </View>
+
+      <View
+        style={{
+          backgroundColor: "rgba(33,34,34,0.95)",
+          alignItems: "center",
+          width: "100%",
+          height: 130,
+        }}
+      >
+        {/* Item Edit Bar */}
+        <ItemEditBar
+          selectedItem={selectedItem}
+          handleItemPress={handleItemPress}
+          canvasRef={canvasRef}
         />
-      </ReactNativeZoomableView>
 
-      {/* Item Edit Bar */}
-      <ItemEditBar
-        selectedItem={selectedItem}
-        handleItemPress={handleItemPress}
-        canvasRef={canvasRef}
-      />
-
-      {/* Brush Size preview and slider */}
-      <BrushSize brushSize={brushSize} setBrushSize={setBrushSize} />
-
-      {/* Footer */}
-      <View style={styles.footerContainer}>
-        <TouchableOpacity style={styles.footerButton}>
-          <Text style={styles.footerButtonText}>Reset</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.footerButton} onPress={handleDonePress}>
-          <Text style={styles.footerButtonText}>Done</Text>
-        </TouchableOpacity>
+        {/* Brush Size preview and slider */}
+        <BrushSize
+          brushSize={brushSize}
+          setBrushSize={setBrushSize}
+          selectedItem={selectedItem}
+        />
       </View>
 
       {/* Modal Preview */}
@@ -141,7 +201,7 @@ const EditBoulderScreen = ({ route, navigation }) => {
         navigation={navigation}
         resultImageUri={resultImageUri}
       />
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -150,9 +210,7 @@ export default EditBoulderScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
-    alignItems: "center",
-    justifyContent: "space-between",
+    backgroundColor: "rgba(23,23,23,255)",
   },
   canvas: (image, imageScaleDownFactor) => ({
     width: image.width / imageScaleDownFactor,

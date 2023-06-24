@@ -10,7 +10,7 @@ const ItemEditBar = ({ selectedItem, handleItemPress, canvasRef }) => {
         style={styles.undoButton}
         onPress={() => canvasRef.current?.undo()}
       >
-        <FontAwesome name="undo" size={25} color="black" />
+        <FontAwesome name="undo" size={25} color="white" />
       </TouchableOpacity>
       {/* Eraser Button */}
       <TouchableOpacity
@@ -24,7 +24,7 @@ const ItemEditBar = ({ selectedItem, handleItemPress, canvasRef }) => {
         <FontAwesome
           name={selectedItem === "hand" ? "hand-grab-o" : "hand-stop-o"}
           size={25}
-          color="black"
+          color="white"
         />
       </TouchableOpacity>
       {/* Green Button */}
@@ -79,7 +79,6 @@ export default ItemEditBar;
 
 const styles = StyleSheet.create({
   editBarContainer: {
-    backgroundColor: "lightblue",
     height: 50,
     width: "90%",
     flexDirection: "row",
@@ -94,7 +93,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   eraserButtonSelected: {
-    borderColor: "black",
+    borderColor: "white",
     borderWidth: 2,
     width: 40,
     height: 40,
@@ -108,7 +107,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   colorButtonSelected: {
-    borderColor: "black",
+    borderColor: "white",
     borderWidth: 2,
     width: 40,
     height: 40,
@@ -133,14 +132,12 @@ const styles = StyleSheet.create({
     columnGap: 10,
   },
   brushSizePreview: {
-    backgroundColor: "green",
     justifyContent: "center",
     alignItems: "center",
     width: 50,
     height: 50,
   },
   brushSizeSliderContainer: {
-    backgroundColor: "pink",
     height: 50,
     flex: 1,
     justifyContent: "center",

@@ -43,7 +43,7 @@ const CircuitCard = ({ circuit }) => {
           <View style={styles.contentContainer}>
             {circuit.boulderData.length > 0 ? (
               circuit.boulderData.map((boulder) => (
-                <TouchableOpacity>
+                <TouchableOpacity key={boulder.id}>
                   <BoulderCard boulder={boulder} />
                 </TouchableOpacity>
               ))

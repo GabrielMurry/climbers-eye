@@ -51,7 +51,12 @@ const CameraScreen = ({ route, navigation }) => {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "black" }}>
+    <SafeAreaView
+      style={{
+        flex: 1,
+        backgroundColor: "black",
+      }}
+    >
       {!image ? ( // if we don't have an image, take image
         <>
           <Camera
@@ -78,6 +83,8 @@ const CameraScreen = ({ route, navigation }) => {
             flexDirection: "row",
             justifyContent: "space-evenly",
             height: 100,
+            borderRadius: 20,
+            backgroundColor: "rgba(23,23,23,255)",
           }}
         >
           <CameraButton
@@ -115,6 +122,8 @@ const CameraScreen = ({ route, navigation }) => {
             flexDirection: "row",
             justifyContent: "space-evenly",
             height: 100,
+            borderRadius: 20,
+            backgroundColor: "rgba(23,23,23,255)",
           }}
         >
           <CameraButton icon="check-circle" size={65} onPress={confirmImage} />

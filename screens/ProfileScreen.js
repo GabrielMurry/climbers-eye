@@ -41,7 +41,8 @@ const ProfileScreen = ({ navigation }) => {
   const [totalSendsCount, setTotalSendsCount] = useState(null);
   const [likesCount, setLikesCount] = useState(null);
   const [bookmarksCount, setBookmarksCount] = useState(null);
-  const [circuitsData, setCircuitsData] = useState(null);
+  const [circuitsCount, setCircuitsCount] = useState(null);
+  const [circuitBouldersCount, setCircuitBouldersCount] = useState(null);
   const [section, setSection] = useState(sections.logbook);
   const [sectionData, setSectionData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -79,6 +80,8 @@ const ProfileScreen = ({ navigation }) => {
         setBookmarksCount(response.data.otherData.bookmarksCount);
       } else if (section === "circuits") {
         setSectionData(response.data.circuitsData);
+        setCircuitsCount(response.data.otherData.circuitsCount);
+        setCircuitBouldersCount(response.data.otherData.circuitBouldersCount);
       }
       setIsLoading(false);
     }
@@ -245,7 +248,7 @@ const ProfileScreen = ({ navigation }) => {
             }}
           >
             <Text>Circuits</Text>
-            <Text style={{ fontSize: 24 }}>-</Text>
+            <Text style={{ fontSize: 24 }}>{circuitsCount}</Text>
           </View>
           <View
             style={{
@@ -253,8 +256,8 @@ const ProfileScreen = ({ navigation }) => {
               width: "25%",
             }}
           >
-            <Text>Flashes</Text>
-            <Text style={{ fontSize: 24 }}>-</Text>
+            <Text>Boulders</Text>
+            <Text style={{ fontSize: 24 }}>{circuitBouldersCount}</Text>
           </View>
           <View
             style={{

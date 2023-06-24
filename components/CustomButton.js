@@ -47,7 +47,9 @@ export default CustomButton;
 const styles = StyleSheet.create({
   container: {
     width: "90%",
-    padding: 15,
+    height: 45,
+    justifyContent: "center",
+    padding: 10,
     marginVertical: 5,
     alignItems: "center",
     borderRadius: 5,
