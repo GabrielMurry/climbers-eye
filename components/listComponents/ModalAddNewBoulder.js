@@ -18,6 +18,7 @@ const ModalAddNewBoulder = ({
   setIsModalVisible,
   handleCameraPressed,
   handleDefaultImagePressed,
+  handleUploadImage,
 }) => {
   return (
     <Modal
@@ -62,7 +63,10 @@ const ModalAddNewBoulder = ({
             </View>
             <View style={styles.columnContainer}>
               {/* Upload button (icon) */}
-              <Pressable style={styles.buttonContainerIcon}>
+              <Pressable
+                style={styles.buttonContainerIcon}
+                onPress={handleUploadImage}
+              >
                 <View style={styles.buttonIconSmall}>
                   <ArrowUpOnSquareIcon size={20} color={"rgb(0, 122, 255)"} />
                 </View>

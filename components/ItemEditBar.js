@@ -16,8 +16,8 @@ const ItemEditBar = ({ selectedItem, handleItemPress, canvasRef }) => {
       <TouchableOpacity
         style={
           selectedItem === "hand"
-            ? styles.eraserButtonSelected
-            : styles.eraserButtonUnselected
+            ? styles.handButtonSelected
+            : styles.handButtonUnselected
         }
         onPress={() => handleItemPress("hand")}
       >
@@ -92,15 +92,16 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  eraserButtonSelected: {
+  handButtonSelected: {
     borderColor: "white",
     borderWidth: 2,
     width: 40,
     height: 40,
     justifyContent: "center",
     alignItems: "center",
+    borderRadius: 10,
   },
-  eraserButtonUnselected: {
+  handButtonUnselected: {
     width: 40,
     height: 40,
     justifyContent: "center",
@@ -113,6 +114,7 @@ const styles = StyleSheet.create({
     height: 40,
     justifyContent: "center",
     alignItems: "center",
+    borderRadius: 10,
   },
   colorButtonUnselected: {
     width: 40,
@@ -124,6 +126,7 @@ const styles = StyleSheet.create({
     backgroundColor: col,
     width: 30,
     height: 30,
+    borderRadius: 5,
   }),
   brushSizeContainer: {
     width: "90%",

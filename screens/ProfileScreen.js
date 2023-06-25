@@ -30,19 +30,32 @@ const sections = {
 
 const ProfileScreen = ({ navigation }) => {
   const { gymName } = useSelector((state) => state.gymReducer);
-  const { spraywallID } = useSelector((state) => state.spraywallReducer);
+  const { spraywallID, spraywallName } = useSelector(
+    (state) => state.spraywallReducer
+  );
   const { username, userID } = useSelector((state) => state.userReducer);
 
-  const [sendsCount, setSendsCount] = useState(null);
-  const [flashCount, setFlashCount] = useState(null);
-  const [topGrade, setTopGrade] = useState(null);
-  const [establishedCount, setEstablishedCount] = useState(null);
-  const [projectsCount, setProjectsCount] = useState(null);
-  const [totalSendsCount, setTotalSendsCount] = useState(null);
-  const [likesCount, setLikesCount] = useState(null);
-  const [bookmarksCount, setBookmarksCount] = useState(null);
-  const [circuitsCount, setCircuitsCount] = useState(null);
-  const [circuitBouldersCount, setCircuitBouldersCount] = useState(null);
+  const [logbookData, setLogbookData] = useState({
+    sends: null,
+    flashes: null,
+    topGrade: null,
+  });
+  const [creationsData, setCreationsData] = useState({
+    established: null,
+    projects: null,
+    totalSends: null,
+  });
+  const [likesData, setLikesData] = useState({ count: null, flashes: null });
+  const [bookmarksData, setBookmarksData] = useState({
+    bookmarks: null,
+    flashes: null,
+    topGrade: null,
+  });
+  const [circuitsData, setCircuitsData] = useState({
+    circuits: null,
+    bouldersCount: null,
+    topGrade: null,
+  });
   const [section, setSection] = useState(sections.logbook);
   const [sectionData, setSectionData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -64,24 +77,45 @@ const ProfileScreen = ({ navigation }) => {
     if (response.data) {
       if (section === "logbook") {
         setSectionData(response.data.boulderData);
-        setSendsCount(response.data.otherData.sendsCount);
-        setFlashCount(response.data.otherData.flashCount);
-        setTopGrade(response.data.otherData.topGrade);
+        const { sendsCount, flashCount, topGrade } = response.data.otherData;
+        setLogbookData({
+          sends: sendsCount,
+          flashes: flashCount,
+          topGrade: topGrade,
+        });
       } else if (section === "creations") {
         setSectionData(response.data.boulderData);
-        setEstablishedCount(response.data.otherData.establishedCount);
-        setProjectsCount(response.data.otherData.projectsCount);
-        setTotalSendsCount(response.data.otherData.totalSendsCount);
+        const { establishedCount, projectsCount, totalSendsCount } =
+          response.data.otherData;
+        setCreationsData({
+          established: establishedCount,
+          projects: projectsCount,
+          totalSends: totalSendsCount,
+        });
       } else if (section === "likes") {
         setSectionData(response.data.boulderData);
-        setLikesCount(response.data.otherData.likesCount);
+        const { likesCount, flashCount, topGrade } = response.data.otherData;
+        setLikesData({
+          count: likesCount,
+          flashes: flashCount,
+          topGrade: topGrade,
+        });
       } else if (section === "bookmarks") {
+        const { bookmarksCount, flashCount, topGrade } =
+          response.data.otherData;
         setSectionData(response.data.boulderData);
-        setBookmarksCount(response.data.otherData.bookmarksCount);
+        setBookmarksData({
+          bookmarks: bookmarksCount,
+          flashes: flashCount,
+          topGrade: topGrade,
+        });
       } else if (section === "circuits") {
         setSectionData(response.data.circuitsData);
-        setCircuitsCount(response.data.otherData.circuitsCount);
-        setCircuitBouldersCount(response.data.otherData.circuitBouldersCount);
+        const { circuitsCount, circuitBouldersCount } = response.data.otherData;
+        setCircuitsData({
+          circuits: circuitsCount,
+          bouldersCount: circuitBouldersCount,
+        });
       }
       setIsLoading(false);
     }
@@ -128,7 +162,7 @@ const ProfileScreen = ({ navigation }) => {
             }}
           >
             <Text>Sends</Text>
-            <Text style={{ fontSize: 24 }}>{sendsCount}</Text>
+            <Text style={{ fontSize: 24 }}>{logbookData.sends}</Text>
           </View>
           <View
             style={{
@@ -137,7 +171,7 @@ const ProfileScreen = ({ navigation }) => {
             }}
           >
             <Text>Flashes</Text>
-            <Text style={{ fontSize: 24 }}>{flashCount}</Text>
+            <Text style={{ fontSize: 24 }}>{logbookData.flashes}</Text>
           </View>
           <View
             style={{
@@ -146,7 +180,7 @@ const ProfileScreen = ({ navigation }) => {
             }}
           >
             <Text>Top Grade</Text>
-            <Text style={{ fontSize: 24 }}>{topGrade}</Text>
+            <Text style={{ fontSize: 24 }}>{logbookData.topGrade}</Text>
           </View>
         </>
       ) : section === "creations" ? (
@@ -158,7 +192,7 @@ const ProfileScreen = ({ navigation }) => {
             }}
           >
             <Text>Established</Text>
-            <Text style={{ fontSize: 24 }}>{establishedCount}</Text>
+            <Text style={{ fontSize: 24 }}>{creationsData.established}</Text>
           </View>
           <View
             style={{
@@ -167,7 +201,7 @@ const ProfileScreen = ({ navigation }) => {
             }}
           >
             <Text>Projects</Text>
-            <Text style={{ fontSize: 24 }}>{projectsCount}</Text>
+            <Text style={{ fontSize: 24 }}>{creationsData.projects}</Text>
           </View>
           <View
             style={{
@@ -176,7 +210,7 @@ const ProfileScreen = ({ navigation }) => {
             }}
           >
             <Text>Total Sends</Text>
-            <Text style={{ fontSize: 24 }}>{totalSendsCount}</Text>
+            <Text style={{ fontSize: 24 }}>{creationsData.totalSends}</Text>
           </View>
         </>
       ) : section === "likes" ? (
@@ -188,7 +222,7 @@ const ProfileScreen = ({ navigation }) => {
             }}
           >
             <Text>Likes</Text>
-            <Text style={{ fontSize: 24 }}>{likesCount}</Text>
+            <Text style={{ fontSize: 24 }}>{likesData.count}</Text>
           </View>
           <View
             style={{
@@ -197,7 +231,7 @@ const ProfileScreen = ({ navigation }) => {
             }}
           >
             <Text>Flashes</Text>
-            <Text style={{ fontSize: 24 }}>-</Text>
+            <Text style={{ fontSize: 24 }}>{likesData.flashes}</Text>
           </View>
           <View
             style={{
@@ -206,7 +240,7 @@ const ProfileScreen = ({ navigation }) => {
             }}
           >
             <Text>Top Grade</Text>
-            <Text style={{ fontSize: 24 }}>-</Text>
+            <Text style={{ fontSize: 24 }}>{likesData.topGrade}</Text>
           </View>
         </>
       ) : section === "bookmarks" ? (
@@ -218,7 +252,7 @@ const ProfileScreen = ({ navigation }) => {
             }}
           >
             <Text>Bookmarks</Text>
-            <Text style={{ fontSize: 24 }}>{bookmarksCount}</Text>
+            <Text style={{ fontSize: 24 }}>{bookmarksData.bookmarks}</Text>
           </View>
           <View
             style={{
@@ -227,7 +261,7 @@ const ProfileScreen = ({ navigation }) => {
             }}
           >
             <Text>Flashes</Text>
-            <Text style={{ fontSize: 24 }}>-</Text>
+            <Text style={{ fontSize: 24 }}>{bookmarksData.flashes}</Text>
           </View>
           <View
             style={{
@@ -236,7 +270,7 @@ const ProfileScreen = ({ navigation }) => {
             }}
           >
             <Text>Top Grade</Text>
-            <Text style={{ fontSize: 24 }}>-</Text>
+            <Text style={{ fontSize: 24 }}>{bookmarksData.topGrade}</Text>
           </View>
         </>
       ) : section === "circuits" ? (
@@ -248,7 +282,7 @@ const ProfileScreen = ({ navigation }) => {
             }}
           >
             <Text>Circuits</Text>
-            <Text style={{ fontSize: 24 }}>{circuitsCount}</Text>
+            <Text style={{ fontSize: 24 }}>{circuitsData.circuits}</Text>
           </View>
           <View
             style={{
@@ -257,16 +291,7 @@ const ProfileScreen = ({ navigation }) => {
             }}
           >
             <Text>Boulders</Text>
-            <Text style={{ fontSize: 24 }}>{circuitBouldersCount}</Text>
-          </View>
-          <View
-            style={{
-              alignItems: "center",
-              width: "25%",
-            }}
-          >
-            <Text>Top Grade</Text>
-            <Text style={{ fontSize: 24 }}>-</Text>
+            <Text style={{ fontSize: 24 }}>{circuitsData.bouldersCount}</Text>
           </View>
         </>
       ) : null}
@@ -293,10 +318,9 @@ const ProfileScreen = ({ navigation }) => {
         </View>
         <View style={styles.username}>
           <Text style={styles.usernameText}>{username}</Text>
-          <Text>{sendsCount} Sends</Text>
-          <View>
-            <Text>0 Sessions</Text>
-          </View>
+          <Text>{gymName},</Text>
+          <Text>{spraywallName}</Text>
+          <Text>0 Sessions</Text>
         </View>
       </View>
       <View style={styles.sectionsContainer}>
@@ -499,7 +523,6 @@ const styles = StyleSheet.create({
     flex: 1,
     rowGap: 20,
     padding: 20,
-    backgroundColor: "blue",
   },
   button: {
     backgroundColor: "lightpink",

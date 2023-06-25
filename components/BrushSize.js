@@ -1,4 +1,4 @@
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Text } from "react-native";
 import React from "react";
 import Slider from "@react-native-community/slider";
 
@@ -6,21 +6,22 @@ const BrushSize = ({ brushSize, setBrushSize, selectedItem }) => {
   return (
     <View style={styles.brushSizeContainer}>
       <View style={styles.brushSizePreview}>
-        <View
+        {/* <View
           style={{
             backgroundColor: selectedItem,
             borderRadius: "100%",
             width: brushSize,
             height: brushSize,
           }}
-        ></View>
+        ></View> */}
+        <Text style={{ color: "white" }}>{brushSize.toFixed(0)}</Text>
       </View>
       <View style={styles.brushSizeSliderContainer}>
         <Slider
           // style={{ width: 200, height: 40 }}
           value={brushSize}
           minimumValue={5}
-          maximumValue={50}
+          maximumValue={40}
           minimumTrackTintColor="#FFFFFF"
           maximumTrackTintColor="#000000"
           onValueChange={(newSize) => setBrushSize(newSize)}

@@ -7,6 +7,7 @@ import {
   FlatList,
   Pressable,
   Keyboard,
+  Image,
 } from "react-native";
 import React, {
   useCallback,
@@ -25,6 +26,8 @@ import { request } from "../api/requestMethods";
 import { useFocusEffect } from "@react-navigation/native";
 import { useSelector } from "react-redux";
 import ModalAddNewBoulder from "../components/listComponents/ModalAddNewBoulder";
+import * as ImagePicker from "expo-image-picker";
+import { boulderGrades } from "../utils/constants/boulderConstants";
 
 const ListScreen = ({ navigation }) => {
   const { userID } = useSelector((state) => state.userReducer);
@@ -49,6 +52,7 @@ const ListScreen = ({ navigation }) => {
   const [isHeaderTitleVisible, setIsHeaderTitleVisible] = useState(false);
   const [isTextInputFocused, setIsTextInputFocused] = useState(false);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+  const [hasFilters, setHasFilters] = useState(false);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -60,12 +64,27 @@ const ListScreen = ({ navigation }) => {
     });
   }, [isHeaderTitleVisible]);
 
+  const areFiltersEnabled = () => {
+    if (
+      filterMinGradeIndex !== 0 ||
+      filterMaxGradeIndex !== boulderGrades.length - 1 ||
+      filterSortBy !== "popular" ||
+      filterCircuits.length !== 0 ||
+      filterClimbType !== "boulder" ||
+      filterStatus !== "all"
+    ) {
+      return true;
+    }
+    return false;
+  };
+
   // This event will be triggered when the screen gains focus (i.e., when you navigate back to it).
   useFocusEffect(
     useCallback(() => {
       // reset search query and fetch all data upon every new focus on screen - a boulder may have been updated
       // setSearchQuery("");
       fetchAllData();
+      setHasFilters(areFiltersEnabled);
     }, [
       filterMinGradeIndex,
       filterMaxGradeIndex,
@@ -223,6 +242,31 @@ const ListScreen = ({ navigation }) => {
     });
   };
 
+  const handleUploadImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: false,
+      aspect: [4, 3],
+      quality: 1,
+      base64: true,
+    });
+
+    if (result) {
+      if (!result.canceled) {
+        Image.getSize(result.assets[0].uri, (width, height) => {
+          setIsModalVisible(false);
+          navigation.navigate("EditBoulder", {
+            image: {
+              uri: "data:image/png;base64," + result.assets[0].base64,
+              width: width,
+              height: height,
+            },
+          });
+        });
+      }
+    }
+  };
+
   return (
     <View
       style={{
@@ -244,14 +288,20 @@ const ListScreen = ({ navigation }) => {
           ListFooterComponent={<View style={{ height: 90 }} />}
           keyboardShouldPersistTaps="handled" // click on search bar cancel buttons when Keyboard is visible (or click on boulder cards)
         />
-        <Pressable style={styles.filterButton} onPress={handleFilterPress}>
-          <AdjustmentsHorizontalIcon size={30} color={"blue"} />
+        <Pressable
+          style={styles.filterButton(hasFilters)}
+          onPress={handleFilterPress}
+        >
+          <AdjustmentsHorizontalIcon
+            size={30}
+            color={hasFilters ? "white" : "rgb(0, 122, 255)"}
+          />
         </Pressable>
         <Pressable
           style={styles.addNewBoulderButton}
           onPress={handleAddNewBoulderPress}
         >
-          <PlusIcon size={30} color={"green"} />
+          <PlusIcon size={30} color={"rgb(0, 122, 255)"} />
         </Pressable>
       </View>
       <ModalAddNewBoulder
@@ -259,6 +309,7 @@ const ListScreen = ({ navigation }) => {
         setIsModalVisible={setIsModalVisible}
         handleCameraPressed={handleCameraPressed}
         handleDefaultImagePressed={handleDefaultImagePressed}
+        handleUploadImage={handleUploadImage}
       />
     </View>
   );
@@ -296,9 +347,9 @@ const styles = StyleSheet.create({
     height: "100%",
     paddingHorizontal: 5,
   },
-  filterButton: {
+  filterButton: (hasFilters) => ({
     padding: 15,
-    backgroundColor: "white",
+    backgroundColor: hasFilters ? "rgb(0, 122, 255)" : "white",
     borderRadius: "100%",
     position: "absolute",
     bottom: 35,
@@ -309,7 +360,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 5, // Required for Android
-  },
+  }),
   addNewBoulderButton: {
     padding: 15,
     backgroundColor: "white",
