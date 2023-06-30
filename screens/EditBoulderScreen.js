@@ -116,7 +116,7 @@ const EditBoulderScreen = ({ route, navigation }) => {
     );
 
     axios
-      .post("/composite/", { drawing: snapshotDrawing, photo: snapshotPhoto })
+      .post("composite/", { drawing: snapshotDrawing, photo: snapshotPhoto })
       .then((response) => {
         setResultImageUri(response.data);
       })

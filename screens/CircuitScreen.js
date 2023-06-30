@@ -21,13 +21,10 @@ import { PlusIcon } from "react-native-heroicons/outline";
 const CircuitScreen = ({ route }) => {
   const { boulder } = route.params;
   const { userID } = useSelector((state) => state.userReducer);
-  const { spraywallID, spraywallName } = useSelector(
-    (state) => state.spraywallReducer
-  );
+  const { spraywallID } = useSelector((state) => state.spraywallReducer);
 
   const CIRCUIT_ITEM_HEIGHT = 45;
 
-  const [searchQuery, setSearchQuery] = useState("");
   const [circuits, setCircuits] = useState([]);
   const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
 

@@ -32,6 +32,7 @@ import FilterScreen from "./screens/FilterScreen";
 import CircuitScreen from "./screens/CircuitScreen";
 import BoulderStatsScreen from "./screens/BoulderStatsScreen";
 import FilterCircuitScreen from "./screens/FilterCircuitScreen";
+import CropImageScreen from "./screens/CropImageScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -197,6 +198,13 @@ export default function App() {
               options={{
                 headerShown: false,
               }}
+            />
+            <Stack.Screen
+              name="CropImage"
+              component={CropImageScreen}
+              options={({ navigation }) =>
+                customHeader(navigation, "CropImage")
+              }
             />
             <Stack.Screen
               name="List"

@@ -5,20 +5,41 @@ import {
   SafeAreaView,
   TouchableOpacity,
   FlatList,
-  Pressable,
   ActivityIndicator,
+  Image,
+  Dimensions,
 } from "react-native";
-import React, { useCallback, useEffect, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   ArrowLeftCircleIcon,
-  ChartPieIcon,
   UserCircleIcon,
 } from "react-native-heroicons/outline";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { request } from "../api/requestMethods";
 import BoulderCard from "../components/listComponents/BoulderCard";
-import { SimpleLineIcons } from "@expo/vector-icons";
 import CircuitCard from "../components/profileComponents/CircuitCard";
+import SectionButtons from "../components/profileComponents/SectionButtons";
+import QuickStatsCard from "../components/profileComponents/QuickStatsCard";
+import BottomSheet, {
+  BottomSheetTextInput,
+  useBottomSheet,
+} from "@gorhom/bottom-sheet";
+import * as ImagePicker from "expo-image-picker";
+import { useFocusEffect } from "@react-navigation/native";
+import {
+  setHeadshotImageUri,
+  setHeadshotImageWidth,
+  setHeadshotImageHeight,
+  setBannerImageUri,
+  setBannerImageWidth,
+  setBannerImageHeight,
+} from "../redux/actions";
 
 const sections = {
   logbook: "logbook",
@@ -28,12 +49,61 @@ const sections = {
   circuits: "circuits",
 };
 
-const ProfileScreen = ({ navigation }) => {
+const WINDOW_WIDTH = Dimensions.get("window").width;
+const BACKDROP_IMAGE_HEIGHT = 125;
+const HEADSHOT_IMAGE_SIZE = 100;
+
+const ProfileScreen = ({ route, navigation }) => {
+  const dispatch = useDispatch();
   const { gymName } = useSelector((state) => state.gymReducer);
   const { spraywallID, spraywallName } = useSelector(
     (state) => state.spraywallReducer
   );
-  const { username, userID } = useSelector((state) => state.userReducer);
+  const {
+    username,
+    userID,
+    headshotImageUri,
+    headshotImageWidth,
+    headshotImageHeight,
+    bannerImageUri,
+    bannerImageWidth,
+    bannerImageHeight,
+  } = useSelector((state) => state.userReducer);
+  const [editHeadshotUri, setEditHeadshotUri] = useState(headshotImageUri);
+  const [editHeadshotWidth, setEditHeadshotWidth] =
+    useState(headshotImageWidth);
+  const [editHeadshotHeight, setEditHeadshotHeight] =
+    useState(headshotImageHeight);
+  const [editBannerUri, setEditBannerUri] = useState(bannerImageUri);
+  const [editBannerWidth, setEditBannerWidth] = useState(bannerImageWidth);
+  const [editBannerHeight, setEditBannerHeight] = useState(bannerImageHeight);
+
+  // This event will be triggered when the screen gains focus (i.e., when you navigate back to it).
+  useFocusEffect(
+    useCallback(() => {
+      let headshotUri = null;
+      let headshotWidth = null;
+      let headshotHeight = null;
+      let bannerUri = null;
+      let bannerWidth = null;
+      let bannerHeight = null;
+      if (route?.params?.profileImageUri) {
+        headshotUri = "data:image/png;base64," + route?.params?.profileImageUri;
+        headshotWidth = route?.params?.profileImageWidth;
+        headshotHeight = route?.params?.profileImageHeight;
+        setEditHeadshotUri(headshotUri ?? headshotImageUri);
+        setEditHeadshotWidth(headshotWidth ?? headshotImageWidth);
+        setEditHeadshotHeight(headshotHeight ?? headshotImageHeight);
+      } else if (route?.params?.profileBannerUri) {
+        bannerUri = "data:image/png;base64," + route?.params?.profileBannerUri;
+        bannerWidth = route?.params?.profileBannerWidth;
+        bannerHeight = route?.params?.profileBannerHeight;
+        setEditBannerUri(bannerUri ?? bannerImageUri);
+        setEditBannerWidth(bannerWidth ?? bannerImageWidth);
+        setEditBannerHeight(bannerHeight ?? bannerImageHeight);
+      }
+    }, [route])
+  );
 
   const [logbookData, setLogbookData] = useState({
     sends: null,
@@ -59,6 +129,17 @@ const ProfileScreen = ({ navigation }) => {
   const [section, setSection] = useState(sections.logbook);
   const [sectionData, setSectionData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  // ref
+  const bottomSheetRef = useRef(null);
+
+  // variables
+  const snapPoints = useMemo(() => ["92%"], []);
+
+  // callbacks
+  const handleSheetChanges = useCallback((index) => {
+    console.log("handleSheetChanges", index);
+  }, []);
 
   useEffect(() => {
     fetchProfileData();
@@ -144,302 +225,138 @@ const ProfileScreen = ({ navigation }) => {
     );
   };
 
-  const renderHeaderCard = () => (
-    <View
-      style={{
-        height: 60,
-        flexDirection: "row",
-        justifyContent: "space-evenly",
-        alignItems: "center",
-      }}
-    >
-      {section === "logbook" ? (
-        <>
-          <View
-            style={{
-              alignItems: "center",
-              width: "25%",
-            }}
-          >
-            <Text>Sends</Text>
-            <Text style={{ fontSize: 24 }}>{logbookData.sends}</Text>
-          </View>
-          <View
-            style={{
-              alignItems: "center",
-              width: "25%",
-            }}
-          >
-            <Text>Flashes</Text>
-            <Text style={{ fontSize: 24 }}>{logbookData.flashes}</Text>
-          </View>
-          <View
-            style={{
-              alignItems: "center",
-              width: "25%",
-            }}
-          >
-            <Text>Top Grade</Text>
-            <Text style={{ fontSize: 24 }}>{logbookData.topGrade}</Text>
-          </View>
-        </>
-      ) : section === "creations" ? (
-        <>
-          <View
-            style={{
-              alignItems: "center",
-              width: "25%",
-            }}
-          >
-            <Text>Established</Text>
-            <Text style={{ fontSize: 24 }}>{creationsData.established}</Text>
-          </View>
-          <View
-            style={{
-              alignItems: "center",
-              width: "25%",
-            }}
-          >
-            <Text>Projects</Text>
-            <Text style={{ fontSize: 24 }}>{creationsData.projects}</Text>
-          </View>
-          <View
-            style={{
-              alignItems: "center",
-              width: "25%",
-            }}
-          >
-            <Text>Total Sends</Text>
-            <Text style={{ fontSize: 24 }}>{creationsData.totalSends}</Text>
-          </View>
-        </>
-      ) : section === "likes" ? (
-        <>
-          <View
-            style={{
-              alignItems: "center",
-              width: "25%",
-            }}
-          >
-            <Text>Likes</Text>
-            <Text style={{ fontSize: 24 }}>{likesData.count}</Text>
-          </View>
-          <View
-            style={{
-              alignItems: "center",
-              width: "25%",
-            }}
-          >
-            <Text>Flashes</Text>
-            <Text style={{ fontSize: 24 }}>{likesData.flashes}</Text>
-          </View>
-          <View
-            style={{
-              alignItems: "center",
-              width: "25%",
-            }}
-          >
-            <Text>Top Grade</Text>
-            <Text style={{ fontSize: 24 }}>{likesData.topGrade}</Text>
-          </View>
-        </>
-      ) : section === "bookmarks" ? (
-        <>
-          <View
-            style={{
-              alignItems: "center",
-              width: "25%",
-            }}
-          >
-            <Text>Bookmarks</Text>
-            <Text style={{ fontSize: 24 }}>{bookmarksData.bookmarks}</Text>
-          </View>
-          <View
-            style={{
-              alignItems: "center",
-              width: "25%",
-            }}
-          >
-            <Text>Flashes</Text>
-            <Text style={{ fontSize: 24 }}>{bookmarksData.flashes}</Text>
-          </View>
-          <View
-            style={{
-              alignItems: "center",
-              width: "25%",
-            }}
-          >
-            <Text>Top Grade</Text>
-            <Text style={{ fontSize: 24 }}>{bookmarksData.topGrade}</Text>
-          </View>
-        </>
-      ) : section === "circuits" ? (
-        <>
-          <View
-            style={{
-              alignItems: "center",
-              width: "25%",
-            }}
-          >
-            <Text>Circuits</Text>
-            <Text style={{ fontSize: 24 }}>{circuitsData.circuits}</Text>
-          </View>
-          <View
-            style={{
-              alignItems: "center",
-              width: "25%",
-            }}
-          >
-            <Text>Boulders</Text>
-            <Text style={{ fontSize: 24 }}>{circuitsData.bouldersCount}</Text>
-          </View>
-        </>
-      ) : null}
-    </View>
-  );
+  const handleUploadImage = async (type) => {
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: false,
+        aspect: [4, 3],
+        quality: 1,
+        base64: true,
+      });
+
+      if (result && !result.canceled) {
+        let width = result.assets[0].width;
+        let height = result.assets[0].height;
+        let orientation = width > height ? "horizontal" : "vertical";
+        let scale = orientation === "vertical" ? 8 : 5;
+        let imageUri = "data:image/png;base64," + result.assets[0].base64;
+        navigation.navigate("CropImage", {
+          imageUri: imageUri,
+          type: type,
+          orientation: orientation,
+          scale: scale,
+          width: width,
+          height: height,
+          cropDimensions: {
+            width:
+              type === "banner"
+                ? WINDOW_WIDTH
+                : type === "headshot" && orientation === "vertical"
+                ? width / scale
+                : height / scale,
+            height:
+              type === "banner"
+                ? BACKDROP_IMAGE_HEIGHT
+                : type === "headshot" && orientation === "vertical"
+                ? width / scale
+                : height / scale,
+          },
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleEditProfile = () => {
+    bottomSheetRef.current.snapToIndex(0);
+  };
+
+  const handleCloseEditProfile = () => {
+    bottomSheetRef.current.close();
+  };
+
+  const handleSave = async () => {
+    data = {
+      headshot_image_data: editHeadshotUri.split(",")[1] ?? null,
+      headshot_image_width: editHeadshotWidth ?? null,
+      headshot_image_height: editHeadshotHeight ?? null,
+      banner_image_data: editBannerUri.split(",")[1] ?? null, // using the default image has complete base64 as image.uri --> remove the 'data:image/png;base64,' in the beginning of string
+      banner_image_width: editBannerWidth ?? null,
+      banner_image_height: editBannerHeight ?? null,
+    };
+    const response = await request(
+      "post",
+      `add_profile_banner_image/${userID}`,
+      data
+    );
+    if (response.status !== 200) {
+      console.log(response.status);
+      return;
+    }
+    dispatch(setHeadshotImageUri(editHeadshotUri));
+    dispatch(setHeadshotImageWidth(editHeadshotWidth));
+    dispatch(setHeadshotImageHeight(editHeadshotHeight));
+    dispatch(setBannerImageUri(editBannerUri));
+    dispatch(setBannerImageWidth(editBannerWidth));
+    dispatch(setBannerImageHeight(editBannerHeight));
+    handleCloseEditProfile();
+  };
 
   return (
     <View style={styles.profileContainer}>
-      <View style={styles.headerContainer}>
+      <View style={styles.headerContainer(BACKDROP_IMAGE_HEIGHT)}>
+        <Image
+          source={{ uri: bannerImageUri }}
+          style={{ width: "100%", height: "100%", position: "absolute" }}
+        />
         <SafeAreaView style={styles.header}>
-          <ArrowLeftCircleIcon
-            size={30}
-            color="black"
+          <TouchableOpacity
+            style={{ backgroundColor: "black", borderRadius: "100%" }}
             onPress={() => navigation.goBack()}
-          />
-          <TouchableOpacity style={styles.editProfileButton}>
+          >
+            <ArrowLeftCircleIcon size={30} color="white" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.editProfileButton}
+            onPress={handleEditProfile}
+          >
             <Text style={styles.editProfileText}>Edit Profile</Text>
           </TouchableOpacity>
         </SafeAreaView>
       </View>
       <View style={styles.userContainer}>
-        <View style={styles.userPhoto}>
-          <UserCircleIcon size={100} color="black" />
+        <View
+          style={[
+            styles.userPhoto,
+            {
+              width: HEADSHOT_IMAGE_SIZE,
+              height: HEADSHOT_IMAGE_SIZE,
+            },
+          ]}
+        >
+          {headshotImageUri !== null ? (
+            <Image
+              source={{ uri: headshotImageUri }}
+              style={{ width: "100%", height: "100%", borderRadius: 100 }}
+            />
+          ) : (
+            <UserCircleIcon size={HEADSHOT_IMAGE_SIZE} color="black" />
+          )}
         </View>
         <View style={styles.username}>
           <Text style={styles.usernameText}>{username}</Text>
-          <Text>{gymName},</Text>
+          <Text>{gymName}</Text>
           <Text>{spraywallName}</Text>
           <Text>0 Sessions</Text>
         </View>
       </View>
-      <View style={styles.sectionsContainer}>
-        <TouchableOpacity
-          style={styles.sectionButton}
-          onPress={() => setSection(sections.logbook)}
-        >
-          <Text
-            style={{
-              fontWeight: "bold",
-              opacity: section === "logbook" ? 1 : 0.3,
-            }}
-          >
-            Logbook
-          </Text>
-          <View
-            style={{
-              backgroundColor: "black",
-              width: "100%",
-              height: 2,
-              bottom: 0,
-              position: "absolute",
-              opacity: section === "logbook" ? 1 : 0,
-            }}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.sectionButton}
-          onPress={() => setSection(sections.creations)}
-        >
-          <Text
-            style={{
-              fontWeight: "bold",
-              opacity: section === "creations" ? 1 : 0.3,
-            }}
-          >
-            Creations
-          </Text>
-          <View
-            style={{
-              backgroundColor: "black",
-              width: "100%",
-              height: 2,
-              bottom: 0,
-              position: "absolute",
-              opacity: section === "creations" ? 1 : 0,
-            }}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.sectionButton}
-          onPress={() => setSection(sections.likes)}
-        >
-          <Text
-            style={{
-              fontWeight: "bold",
-              opacity: section === "likes" ? 1 : 0.3,
-            }}
-          >
-            Likes
-          </Text>
-          <View
-            style={{
-              backgroundColor: "black",
-              width: "100%",
-              height: 2,
-              bottom: 0,
-              position: "absolute",
-              opacity: section === "likes" ? 1 : 0,
-            }}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.sectionButton}
-          onPress={() => setSection(sections.bookmarks)}
-        >
-          <Text
-            style={{
-              fontWeight: "bold",
-              opacity: section === "bookmarks" ? 1 : 0.3,
-            }}
-          >
-            Bookmarks
-          </Text>
-          <View
-            style={{
-              backgroundColor: "black",
-              width: "100%",
-              height: 2,
-              bottom: 0,
-              position: "absolute",
-              opacity: section === "bookmarks" ? 1 : 0,
-            }}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.sectionButton}
-          onPress={() => setSection(sections.circuits)}
-        >
-          <Text
-            style={{
-              fontWeight: "bold",
-              opacity: section === "circuits" ? 1 : 0.3,
-            }}
-          >
-            Circuits
-          </Text>
-          <View
-            style={{
-              backgroundColor: "black",
-              width: "100%",
-              height: 2,
-              bottom: 0,
-              position: "absolute",
-              opacity: section === "circuits" ? 1 : 0,
-            }}
-          />
-        </TouchableOpacity>
-      </View>
+      <SectionButtons
+        section={section}
+        setSection={setSection}
+        sections={sections}
+      />
       <View style={{ flex: 1 }}>
         {isLoading ? (
           <View
@@ -461,11 +378,80 @@ const ProfileScreen = ({ navigation }) => {
             }}
             renderItem={renderBoulderCards}
             keyExtractor={(item) => item.id}
-            ListHeaderComponent={renderHeaderCard}
+            ListHeaderComponent={
+              <QuickStatsCard
+                section={section}
+                logbookData={logbookData}
+                creationsData={creationsData}
+                likesData={likesData}
+                bookmarksData={bookmarksData}
+                circuitsData={circuitsData}
+              />
+            }
             ListFooterComponent={<View style={{ height: 60 }} />}
           />
         )}
       </View>
+      <BottomSheet
+        ref={bottomSheetRef}
+        index={-1}
+        snapPoints={snapPoints}
+        onChange={handleSheetChanges}
+        enablePanDownToClose={true}
+        // backgroundStyle={{ backgroundColor: "rgba(23,23,23,1)" }}
+        handleIndicatorStyle={{ opacity: 0 }}
+      >
+        <View
+          style={{
+            justifyContent: "space-between",
+            flexDirection: "row",
+            paddingHorizontal: 20,
+            marginBottom: 20,
+          }}
+        >
+          <TouchableOpacity onPress={handleCloseEditProfile}>
+            <Text style={{ fontSize: 16 }}>Cancel</Text>
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+              Edit Profile
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleSave}>
+            <Text style={{ fontSize: 16 }}>Save</Text>
+          </TouchableOpacity>
+        </View>
+        <TouchableOpacity
+          style={{ backgroundColor: "red", height: BACKDROP_IMAGE_HEIGHT }}
+          onPress={() => handleUploadImage("banner")}
+        >
+          <Image
+            source={{ uri: editBannerUri }}
+            style={{ width: "100%", height: "100%" }}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{
+            backgroundColor: "orange",
+            width: HEADSHOT_IMAGE_SIZE,
+            height: HEADSHOT_IMAGE_SIZE,
+            borderRadius: "100%",
+          }}
+          onPress={() => handleUploadImage("headshot")}
+        >
+          {editHeadshotUri !== null ? (
+            <Image
+              source={{ uri: editHeadshotUri }}
+              style={{ width: "100%", height: "100%", borderRadius: 100 }}
+            />
+          ) : (
+            <UserCircleIcon size={HEADSHOT_IMAGE_SIZE} color="black" />
+          )}
+        </TouchableOpacity>
+        <View style={{ backgroundColor: "green", height: 50 }}>
+          <Text>Name</Text>
+        </View>
+      </BottomSheet>
     </View>
   );
 };
@@ -476,10 +462,10 @@ const styles = StyleSheet.create({
   profileContainer: {
     flex: 1,
   },
-  headerContainer: {
-    backgroundColor: "lightpink",
-    height: 125,
-  },
+  headerContainer: (height) => ({
+    backgroundColor: "#FFD1D1",
+    height: height,
+  }),
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -496,7 +482,7 @@ const styles = StyleSheet.create({
     color: "white",
   },
   userContainer: {
-    height: 100,
+    height: 125,
   },
   userPhoto: {
     position: "absolute",
@@ -504,6 +490,8 @@ const styles = StyleSheet.create({
     marginLeft: 30,
     backgroundColor: "orange",
     borderRadius: 100,
+    borderWidth: 1,
+    borderColor: "white",
   },
   username: {
     left: "50%",
@@ -533,16 +521,5 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     paddingHorizontal: 25,
-  },
-  sectionsContainer: {
-    marginTop: 10,
-    flexDirection: "row",
-    justifyContent: "space-evenly",
-    alignItems: "center",
-    borderBottomWidth: 1,
-    borderColor: "lightgray",
-  },
-  sectionButton: {
-    paddingVertical: 12,
   },
 });

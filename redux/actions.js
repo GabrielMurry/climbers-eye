@@ -6,6 +6,12 @@ export const SET_SPRAYWALL_ID = "SET_SPRAYWALL_ID";
 export const SET_DEFAULT_IMAGE_URI = "SET_DEFAULT_IMAGE_URI";
 export const SET_DEFAULT_IMAGE_WIDTH = "SET_DEFAULT_IMAGE_WIDTH";
 export const SET_DEFAULT_IMAGE_HEIGHT = "SET_DEFAULT_IMAGE_HEIGHT";
+export const SET_HEADSHOT_IMAGE_URI = "SET_HEADSHOT_IMAGE_URI";
+export const SET_HEADSHOT_IMAGE_WIDTH = "SET_HEADSHOT_IMAGE_WIDTH";
+export const SET_HEADSHOT_IMAGE_HEIGHT = "SET_HEADSHOT_IMAGE_HEIGHT";
+export const SET_BANNER_IMAGE_URI = "SET_BANNER_IMAGE_URI";
+export const SET_BANNER_IMAGE_WIDTH = "SET_BANNER_IMAGE_WIDTH";
+export const SET_BANNER_IMAGE_HEIGHT = "SET_BANNER_IMAGE_HEIGHT";
 export const SET_FILTER_SORT_BY = "SET_FILTER_SORT_BY";
 export const SET_FILTER_MIN_GRADE_INDEX = "SET_FILTER_MIN_GRADE_INDEX";
 export const SET_FILTER_MAX_GRADE_INDEX = "SET_FILTER_MAX_GRADE_INDEX";
@@ -68,6 +74,48 @@ export const setDefaultImageHeight = (defaultImageHeight) => (dispatch) => {
   dispatch({
     type: SET_DEFAULT_IMAGE_HEIGHT,
     payload: defaultImageHeight,
+  });
+};
+
+export const setHeadshotImageUri = (headshotImageUri) => (dispatch) => {
+  dispatch({
+    type: SET_HEADSHOT_IMAGE_URI,
+    payload: headshotImageUri,
+  });
+};
+
+export const setHeadshotImageWidth = (headshotImageWidth) => (dispatch) => {
+  dispatch({
+    type: SET_HEADSHOT_IMAGE_WIDTH,
+    payload: headshotImageWidth,
+  });
+};
+
+export const setHeadshotImageHeight = (headshotImageHeight) => (dispatch) => {
+  dispatch({
+    type: SET_HEADSHOT_IMAGE_HEIGHT,
+    payload: headshotImageHeight,
+  });
+};
+
+export const setBannerImageUri = (bannerImageUri) => (dispatch) => {
+  dispatch({
+    type: SET_BANNER_IMAGE_URI,
+    payload: bannerImageUri,
+  });
+};
+
+export const setBannerImageWidth = (bannerImageWidth) => (dispatch) => {
+  dispatch({
+    type: SET_BANNER_IMAGE_WIDTH,
+    payload: bannerImageWidth,
+  });
+};
+
+export const setBannerImageHeight = (bannerImageHeight) => (dispatch) => {
+  dispatch({
+    type: SET_BANNER_IMAGE_HEIGHT,
+    payload: bannerImageHeight,
   });
 };
 

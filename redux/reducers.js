@@ -8,6 +8,12 @@ import {
   SET_DEFAULT_IMAGE_URI,
   SET_DEFAULT_IMAGE_WIDTH,
   SET_DEFAULT_IMAGE_HEIGHT,
+  SET_HEADSHOT_IMAGE_URI,
+  SET_HEADSHOT_IMAGE_WIDTH,
+  SET_HEADSHOT_IMAGE_HEIGHT,
+  SET_BANNER_IMAGE_URI,
+  SET_BANNER_IMAGE_WIDTH,
+  SET_BANNER_IMAGE_HEIGHT,
   SET_FILTER_SORT_BY,
   SET_FILTER_MIN_GRADE_INDEX,
   SET_FILTER_MAX_GRADE_INDEX,
@@ -27,6 +33,12 @@ const initialState = {
   defaultImageUri: null,
   defaultImageWidth: "",
   defaultImageHeight: "",
+  headshotImageUri: null,
+  headshotImageWidth: "",
+  headshotImageHeight: "",
+  bannerImageUri: null,
+  bannerImageWidth: "",
+  bannerImageHeight: "",
   filterSortBy: "popular",
   filterMinGradeIndex: 0,
   filterMaxGradeIndex: boulderGrades.length - 1,
@@ -41,6 +53,18 @@ export function userReducer(state = initialState, action) {
       return { ...state, username: action.payload };
     case SET_USER_ID:
       return { ...state, userID: action.payload };
+    case SET_HEADSHOT_IMAGE_URI:
+      return { ...state, headshotImageUri: action.payload };
+    case SET_HEADSHOT_IMAGE_WIDTH:
+      return { ...state, headshotImageWidth: action.payload };
+    case SET_HEADSHOT_IMAGE_HEIGHT:
+      return { ...state, headshotImageHeight: action.payload };
+    case SET_BANNER_IMAGE_URI:
+      return { ...state, bannerImageUri: action.payload };
+    case SET_BANNER_IMAGE_WIDTH:
+      return { ...state, bannerImageWidth: action.payload };
+    case SET_BANNER_IMAGE_HEIGHT:
+      return { ...state, bannerImageHeight: action.payload };
     default:
       return state;
   }

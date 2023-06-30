@@ -84,11 +84,11 @@ const BoulderScreen = ({ route, navigation }) => {
     }, [])
   );
 
-  // re-fetching certain data (grade, quality, first ascent user) --> in the event of someone successfully sending (climbing) the boulder for the first time
+  // re-fetching certain data (grade, quality, first ascent user, did user send the boulder, liked, bookmarked, is boulder in a circuit) --> in the event of someone successfully sending (climbing) the boulder for the first time, or any other actions
   const fetchCertainData = async () => {
     const response = await request(
       "get",
-      `sent_boulder/${boulder.id}/${userID}`
+      `updated_boulder_data/${boulder.id}/${userID}`
     );
     if (response.status !== 200) {
       console.log(response.status);
@@ -100,6 +100,9 @@ const BoulderScreen = ({ route, navigation }) => {
         quality: response.data.quality,
         firstAscent: response.data.firstAscent,
         isSent: response.data.isSent,
+        isLiked: response.data.isLiked,
+        isBookmarked: response.data.isBookmarked,
+        inCircuit: response.data.inCircuit,
       });
     }
   };

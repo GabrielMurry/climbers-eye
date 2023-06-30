@@ -35,7 +35,12 @@ const FullScreenImage = ({ imageFullScreen, uri, image, onRequestClose }) => {
         >
           <Ionicons name="close" size={40} color="white" />
         </TouchableOpacity>
-        <ReactNativeZoomableView maxZoom={10} minZoom={1} initialZoom={1}>
+        <ReactNativeZoomableView
+          maxZoom={10}
+          minZoom={1}
+          initialZoom={1}
+          visualTouchFeedbackEnabled={false}
+        >
           <Image
             source={{ uri: uri }}
             style={styles.image(
