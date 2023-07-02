@@ -109,9 +109,9 @@ const HomeScreen = ({ navigation }) => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate("AddBoulder")}
+          onPress={() => navigation.navigate("EditGym")}
         >
-          <Text style={styles.buttonText}>Add Boulder/Route</Text>
+          <Text style={styles.buttonText}>Edit Gym</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

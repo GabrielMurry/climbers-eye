@@ -26,20 +26,10 @@ import BoulderCard from "../components/listComponents/BoulderCard";
 import CircuitCard from "../components/profileComponents/CircuitCard";
 import SectionButtons from "../components/profileComponents/SectionButtons";
 import QuickStatsCard from "../components/profileComponents/QuickStatsCard";
-import BottomSheet, {
-  BottomSheetTextInput,
-  useBottomSheet,
-} from "@gorhom/bottom-sheet";
+import BottomSheet from "@gorhom/bottom-sheet";
 import * as ImagePicker from "expo-image-picker";
 import { useFocusEffect } from "@react-navigation/native";
-import {
-  setHeadshotImageUri,
-  setHeadshotImageWidth,
-  setHeadshotImageHeight,
-  setBannerImageUri,
-  setBannerImageWidth,
-  setBannerImageHeight,
-} from "../redux/actions";
+import { setHeadshotImage, setBannerImage } from "../redux/actions";
 
 const sections = {
   logbook: "logbook",
@@ -59,48 +49,29 @@ const ProfileScreen = ({ route, navigation }) => {
   const { spraywallID, spraywallName } = useSelector(
     (state) => state.spraywallReducer
   );
-  const {
-    username,
-    userID,
-    headshotImageUri,
-    headshotImageWidth,
-    headshotImageHeight,
-    bannerImageUri,
-    bannerImageWidth,
-    bannerImageHeight,
-  } = useSelector((state) => state.userReducer);
-  const [editHeadshotUri, setEditHeadshotUri] = useState(headshotImageUri);
-  const [editHeadshotWidth, setEditHeadshotWidth] =
-    useState(headshotImageWidth);
-  const [editHeadshotHeight, setEditHeadshotHeight] =
-    useState(headshotImageHeight);
-  const [editBannerUri, setEditBannerUri] = useState(bannerImageUri);
-  const [editBannerWidth, setEditBannerWidth] = useState(bannerImageWidth);
-  const [editBannerHeight, setEditBannerHeight] = useState(bannerImageHeight);
+  const { username, userID, headshotImage, bannerImage } = useSelector(
+    (state) => state.userReducer
+  );
+  const [editHeadshot, setEditHeadshot] = useState(headshotImage);
+  const [editBanner, setEditBanner] = useState(bannerImage);
 
   // This event will be triggered when the screen gains focus (i.e., when you navigate back to it).
   useFocusEffect(
     useCallback(() => {
-      let headshotUri = null;
-      let headshotWidth = null;
-      let headshotHeight = null;
-      let bannerUri = null;
-      let bannerWidth = null;
-      let bannerHeight = null;
       if (route?.params?.profileImageUri) {
-        headshotUri = "data:image/png;base64," + route?.params?.profileImageUri;
-        headshotWidth = route?.params?.profileImageWidth;
-        headshotHeight = route?.params?.profileImageHeight;
-        setEditHeadshotUri(headshotUri ?? headshotImageUri);
-        setEditHeadshotWidth(headshotWidth ?? headshotImageWidth);
-        setEditHeadshotHeight(headshotHeight ?? headshotImageHeight);
+        const newHeadshot = {
+          uri: "data:image/png;base64," + route?.params?.profileImageUri,
+          width: route?.params?.profileImageWidth,
+          height: route?.params?.profileImageHeight,
+        };
+        setEditHeadshot(newHeadshot);
       } else if (route?.params?.profileBannerUri) {
-        bannerUri = "data:image/png;base64," + route?.params?.profileBannerUri;
-        bannerWidth = route?.params?.profileBannerWidth;
-        bannerHeight = route?.params?.profileBannerHeight;
-        setEditBannerUri(bannerUri ?? bannerImageUri);
-        setEditBannerWidth(bannerWidth ?? bannerImageWidth);
-        setEditBannerHeight(bannerHeight ?? bannerImageHeight);
+        const newBanner = {
+          uri: "data:image/png;base64," + route?.params?.profileBannerUri,
+          width: route?.params?.profileBannerWidth,
+          height: route?.params?.profileBannerHeight,
+        };
+        setEditBanner(newBanner);
       }
     }, [route])
   );
@@ -279,12 +250,12 @@ const ProfileScreen = ({ route, navigation }) => {
 
   const handleSave = async () => {
     data = {
-      headshot_image_data: editHeadshotUri.split(",")[1] ?? null,
-      headshot_image_width: editHeadshotWidth ?? null,
-      headshot_image_height: editHeadshotHeight ?? null,
-      banner_image_data: editBannerUri.split(",")[1] ?? null, // using the default image has complete base64 as image.uri --> remove the 'data:image/png;base64,' in the beginning of string
-      banner_image_width: editBannerWidth ?? null,
-      banner_image_height: editBannerHeight ?? null,
+      headshot_image_data: editHeadshot.uri.split(",")[1] ?? null,
+      headshot_image_width: editHeadshot.width ?? null,
+      headshot_image_height: editHeadshot.height ?? null,
+      banner_image_data: editBanner.uri.split(",")[1] ?? null, // using the default image has complete base64 as image.uri --> remove the 'data:image/png;base64,' in the beginning of string
+      banner_image_width: editBanner.width ?? null,
+      banner_image_height: editBanner.height ?? null,
     };
     const response = await request(
       "post",
@@ -295,12 +266,8 @@ const ProfileScreen = ({ route, navigation }) => {
       console.log(response.status);
       return;
     }
-    dispatch(setHeadshotImageUri(editHeadshotUri));
-    dispatch(setHeadshotImageWidth(editHeadshotWidth));
-    dispatch(setHeadshotImageHeight(editHeadshotHeight));
-    dispatch(setBannerImageUri(editBannerUri));
-    dispatch(setBannerImageWidth(editBannerWidth));
-    dispatch(setBannerImageHeight(editBannerHeight));
+    dispatch(setHeadshotImage(editHeadshot));
+    dispatch(setBannerImage(editBanner));
     handleCloseEditProfile();
   };
 
@@ -308,7 +275,7 @@ const ProfileScreen = ({ route, navigation }) => {
     <View style={styles.profileContainer}>
       <View style={styles.headerContainer(BACKDROP_IMAGE_HEIGHT)}>
         <Image
-          source={{ uri: bannerImageUri }}
+          source={{ uri: bannerImage.uri }}
           style={{ width: "100%", height: "100%", position: "absolute" }}
         />
         <SafeAreaView style={styles.header}>
@@ -336,9 +303,9 @@ const ProfileScreen = ({ route, navigation }) => {
             },
           ]}
         >
-          {headshotImageUri !== null ? (
+          {headshotImage.uri !== null ? (
             <Image
-              source={{ uri: headshotImageUri }}
+              source={{ uri: headshotImage.uri }}
               style={{ width: "100%", height: "100%", borderRadius: 100 }}
             />
           ) : (
@@ -426,7 +393,7 @@ const ProfileScreen = ({ route, navigation }) => {
           onPress={() => handleUploadImage("banner")}
         >
           <Image
-            source={{ uri: editBannerUri }}
+            source={{ uri: editBanner.uri }}
             style={{ width: "100%", height: "100%" }}
           />
         </TouchableOpacity>
@@ -439,9 +406,9 @@ const ProfileScreen = ({ route, navigation }) => {
           }}
           onPress={() => handleUploadImage("headshot")}
         >
-          {editHeadshotUri !== null ? (
+          {editHeadshot.uri !== null ? (
             <Image
-              source={{ uri: editHeadshotUri }}
+              source={{ uri: editHeadshot.uri }}
               style={{ width: "100%", height: "100%", borderRadius: 100 }}
             />
           ) : (

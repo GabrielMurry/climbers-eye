@@ -3,17 +3,14 @@ import {
   SET_USER_NAME,
   SET_USER_ID,
   SET_GYM_NAME,
+  SET_GYM_ID,
   SET_SPRAYWALL_NAME,
   SET_SPRAYWALL_ID,
   SET_DEFAULT_IMAGE_URI,
   SET_DEFAULT_IMAGE_WIDTH,
   SET_DEFAULT_IMAGE_HEIGHT,
-  SET_HEADSHOT_IMAGE_URI,
-  SET_HEADSHOT_IMAGE_WIDTH,
-  SET_HEADSHOT_IMAGE_HEIGHT,
-  SET_BANNER_IMAGE_URI,
-  SET_BANNER_IMAGE_WIDTH,
-  SET_BANNER_IMAGE_HEIGHT,
+  SET_HEADSHOT_IMAGE,
+  SET_BANNER_IMAGE,
   SET_FILTER_SORT_BY,
   SET_FILTER_MIN_GRADE_INDEX,
   SET_FILTER_MAX_GRADE_INDEX,
@@ -28,17 +25,14 @@ const initialState = {
   username: "",
   userID: "",
   gymName: "",
+  gymID: "",
   spraywallName: "",
   spraywallID: "",
   defaultImageUri: null,
   defaultImageWidth: "",
   defaultImageHeight: "",
-  headshotImageUri: null,
-  headshotImageWidth: "",
-  headshotImageHeight: "",
-  bannerImageUri: null,
-  bannerImageWidth: "",
-  bannerImageHeight: "",
+  headshotImage: {},
+  bannerImage: {},
   filterSortBy: "popular",
   filterMinGradeIndex: 0,
   filterMaxGradeIndex: boulderGrades.length - 1,
@@ -53,18 +47,24 @@ export function userReducer(state = initialState, action) {
       return { ...state, username: action.payload };
     case SET_USER_ID:
       return { ...state, userID: action.payload };
-    case SET_HEADSHOT_IMAGE_URI:
-      return { ...state, headshotImageUri: action.payload };
-    case SET_HEADSHOT_IMAGE_WIDTH:
-      return { ...state, headshotImageWidth: action.payload };
-    case SET_HEADSHOT_IMAGE_HEIGHT:
-      return { ...state, headshotImageHeight: action.payload };
-    case SET_BANNER_IMAGE_URI:
-      return { ...state, bannerImageUri: action.payload };
-    case SET_BANNER_IMAGE_WIDTH:
-      return { ...state, bannerImageWidth: action.payload };
-    case SET_BANNER_IMAGE_HEIGHT:
-      return { ...state, bannerImageHeight: action.payload };
+    case SET_HEADSHOT_IMAGE:
+      return {
+        ...state,
+        headshotImage: {
+          uri: action.payload.uri,
+          width: action.payload.width,
+          height: action.payload.height,
+        },
+      };
+    case SET_BANNER_IMAGE:
+      return {
+        ...state,
+        bannerImage: {
+          uri: action.payload.uri,
+          width: action.payload.width,
+          height: action.payload.height,
+        },
+      };
     default:
       return state;
   }
@@ -74,6 +74,8 @@ export function gymReducer(state = initialState, action) {
   switch (action.type) {
     case SET_GYM_NAME:
       return { ...state, gymName: action.payload };
+    case SET_GYM_ID:
+      return { ...state, gymID: action.payload };
     default:
       return state;
   }

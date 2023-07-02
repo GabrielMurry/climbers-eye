@@ -286,6 +286,7 @@ const MapScreen = ({ navigation }) => {
               </View>
               {searchQuery ? (
                 <GymBottomSheetSearchResult
+                  navigation={navigation}
                   gyms={gyms}
                   renderItem={renderItem}
                 />

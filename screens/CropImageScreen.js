@@ -1,20 +1,17 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   View,
   Image,
   StyleSheet,
   Text,
   TouchableOpacity,
-  Dimensions,
   PanResponder,
 } from "react-native";
 import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
-import { useFocusEffect } from "@react-navigation/native";
 
 const CropImageScreen = ({ route, navigation }) => {
   const { imageUri, type, orientation, scale, width, height, cropDimensions } =
     route.params;
-  const [image, setImage] = useState(null);
   const [imageCoordinates, setImageCoordinates] = useState({ x: 0, y: 0 });
 
   const panResponder = useRef(
@@ -40,7 +37,7 @@ const CropImageScreen = ({ route, navigation }) => {
     console.log(
       (width - cropDimensions.width * scale) / 2 - imageCoordinates.x * scale
     );
-    const crop = {
+    const cropData = {
       originX:
         (width - cropDimensions.width * scale) / 2 - imageCoordinates.x * scale, // X-coordinate of the top-left corner of the crop area
       originY:
@@ -49,7 +46,7 @@ const CropImageScreen = ({ route, navigation }) => {
       width: width, // Width of the crop area
       height: cropDimensions.height * scale, // Height of the crop area
     };
-    const manipResult = await manipulateAsync(imageUri, [{ crop: crop }], {
+    const manipResult = await manipulateAsync(imageUri, [{ crop: cropData }], {
       compress: 1,
       format: SaveFormat.PNG,
       base64: true,
@@ -84,7 +81,7 @@ const CropImageScreen = ({ route, navigation }) => {
         }}
       />
       <Image
-        source={{ uri: image ?? imageUri }}
+        source={{ uri: imageUri }}
         style={{
           width: width / scale,
           height: height / scale,

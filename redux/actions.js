@@ -1,17 +1,14 @@
 export const SET_USER_NAME = "SET_USER_NAME";
 export const SET_USER_ID = "SET_USER_ID";
 export const SET_GYM_NAME = "SET_GYM_NAME";
+export const SET_GYM_ID = "SET_GYM_ID";
 export const SET_SPRAYWALL_NAME = "SET_SPRAYWALL_NAME";
 export const SET_SPRAYWALL_ID = "SET_SPRAYWALL_ID";
 export const SET_DEFAULT_IMAGE_URI = "SET_DEFAULT_IMAGE_URI";
 export const SET_DEFAULT_IMAGE_WIDTH = "SET_DEFAULT_IMAGE_WIDTH";
 export const SET_DEFAULT_IMAGE_HEIGHT = "SET_DEFAULT_IMAGE_HEIGHT";
-export const SET_HEADSHOT_IMAGE_URI = "SET_HEADSHOT_IMAGE_URI";
-export const SET_HEADSHOT_IMAGE_WIDTH = "SET_HEADSHOT_IMAGE_WIDTH";
-export const SET_HEADSHOT_IMAGE_HEIGHT = "SET_HEADSHOT_IMAGE_HEIGHT";
-export const SET_BANNER_IMAGE_URI = "SET_BANNER_IMAGE_URI";
-export const SET_BANNER_IMAGE_WIDTH = "SET_BANNER_IMAGE_WIDTH";
-export const SET_BANNER_IMAGE_HEIGHT = "SET_BANNER_IMAGE_HEIGHT";
+export const SET_HEADSHOT_IMAGE = "SET_HEADSHOT_IMAGE";
+export const SET_BANNER_IMAGE = "SET_BANNER_IMAGE";
 export const SET_FILTER_SORT_BY = "SET_FILTER_SORT_BY";
 export const SET_FILTER_MIN_GRADE_INDEX = "SET_FILTER_MIN_GRADE_INDEX";
 export const SET_FILTER_MAX_GRADE_INDEX = "SET_FILTER_MAX_GRADE_INDEX";
@@ -39,6 +36,13 @@ export const setGymName = (gymName) => (dispatch) => {
   dispatch({
     type: SET_GYM_NAME,
     payload: gymName,
+  });
+};
+
+export const setGymID = (gymID) => (dispatch) => {
+  dispatch({
+    type: SET_GYM_ID,
+    payload: gymID,
   });
 };
 
@@ -77,45 +81,17 @@ export const setDefaultImageHeight = (defaultImageHeight) => (dispatch) => {
   });
 };
 
-export const setHeadshotImageUri = (headshotImageUri) => (dispatch) => {
+export const setHeadshotImage = (headshotImage) => (dispatch) => {
   dispatch({
-    type: SET_HEADSHOT_IMAGE_URI,
-    payload: headshotImageUri,
+    type: SET_HEADSHOT_IMAGE,
+    payload: headshotImage,
   });
 };
 
-export const setHeadshotImageWidth = (headshotImageWidth) => (dispatch) => {
+export const setBannerImage = (bannerImage) => (dispatch) => {
   dispatch({
-    type: SET_HEADSHOT_IMAGE_WIDTH,
-    payload: headshotImageWidth,
-  });
-};
-
-export const setHeadshotImageHeight = (headshotImageHeight) => (dispatch) => {
-  dispatch({
-    type: SET_HEADSHOT_IMAGE_HEIGHT,
-    payload: headshotImageHeight,
-  });
-};
-
-export const setBannerImageUri = (bannerImageUri) => (dispatch) => {
-  dispatch({
-    type: SET_BANNER_IMAGE_URI,
-    payload: bannerImageUri,
-  });
-};
-
-export const setBannerImageWidth = (bannerImageWidth) => (dispatch) => {
-  dispatch({
-    type: SET_BANNER_IMAGE_WIDTH,
-    payload: bannerImageWidth,
-  });
-};
-
-export const setBannerImageHeight = (bannerImageHeight) => (dispatch) => {
-  dispatch({
-    type: SET_BANNER_IMAGE_HEIGHT,
-    payload: bannerImageHeight,
+    type: SET_BANNER_IMAGE,
+    payload: bannerImage,
   });
 };
 

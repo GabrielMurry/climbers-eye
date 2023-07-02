@@ -2,7 +2,7 @@ import { BottomSheetFlatList } from "@gorhom/bottom-sheet";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { PlusIcon } from "react-native-heroicons/outline";
 
-const GymBottomSheetSearchResult = ({ gyms, renderItem }) => (
+const GymBottomSheetSearchResult = ({ navigation, gyms, renderItem }) => (
   <>
     <View style={styles.bottomSheetAddGymContainer}>
       <Text>Don't see your gym or home wall?</Text>
