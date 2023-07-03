@@ -33,6 +33,8 @@ import BoulderStatsScreen from "./screens/BoulderStatsScreen";
 import FilterCircuitScreen from "./screens/FilterCircuitScreen";
 import CropImageScreen from "./screens/CropImageScreen";
 import EditGymScreen from "./screens/EditGymScreen";
+import AddNewSprayWallScreen from "./screens/AddNewSprayWallScreen";
+import EditSprayWallScreen from "./screens/EditSprayWallScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -172,6 +174,20 @@ export default function App() {
               name="EditGym"
               component={EditGymScreen}
               options={({ navigation }) => customHeader(navigation, "EditGym")}
+            />
+            <Stack.Screen
+              name="AddNewSprayWall"
+              component={AddNewSprayWallScreen}
+              options={({ navigation }) =>
+                customHeader(navigation, "AddNewSprayWall")
+              }
+            />
+            <Stack.Screen
+              name="EditSprayWall"
+              component={EditSprayWallScreen}
+              options={({ navigation }) =>
+                customHeader(navigation, "EditSprayWall")
+              }
             />
             <Stack.Screen
               name="Camera"

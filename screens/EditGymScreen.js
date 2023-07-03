@@ -1,4 +1,12 @@
-import { View, Text, FlatList, TextInput, Image, Switch } from "react-native";
+import {
+  View,
+  Text,
+  FlatList,
+  TextInput,
+  Image,
+  Switch,
+  TouchableOpacity,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { PlusIcon } from "react-native-heroicons/outline";
 import { request } from "../api/requestMethods";
@@ -6,9 +14,8 @@ import { useSelector } from "react-redux";
 
 const DATA = [{ id: 1 }, { id: 2 }];
 
-const EditGymScreen = () => {
+const EditGymScreen = ({ navigation }) => {
   const { gymName, gymID } = useSelector((state) => state.gymReducer);
-  const [newGymType, setNewGymType] = useState("");
   const [newGymName, setNewGymName] = useState(gymName);
   const [newGymLocation, setNewGymLocation] = useState("");
   const [isCommercialGym, setIsCommercialGym] = useState(true);
@@ -33,7 +40,7 @@ const EditGymScreen = () => {
   };
 
   const renderHeaderItem = () => (
-    <View
+    <TouchableOpacity
       style={{
         width: 100,
         height: 100,
@@ -42,13 +49,14 @@ const EditGymScreen = () => {
         justifyContent: "center",
         alignItems: "center",
       }}
+      onPress={() => navigation.navigate("AddNewSprayWall")}
     >
       <PlusIcon size={35} color={"black"} />
-    </View>
+    </TouchableOpacity>
   );
 
-  const renderImageItem = ({ item }) => (
-    <View
+  const renderSprayWallItem = ({ item }) => (
+    <TouchableOpacity
       style={{
         width: 100,
         height: 100,
@@ -56,16 +64,17 @@ const EditGymScreen = () => {
         borderRadius: 10,
         padding: 5,
       }}
+      onPress={() => navigation.navigate("EditSprayWall", { spraywall: item })}
     >
       <Image
-        source={{ uri: item.uri }}
+        source={{ uri: item.base64 }}
         style={{
           width: "100%",
           height: "100%",
         }}
         resizeMode="contain"
       />
-    </View>
+    </TouchableOpacity>
   );
 
   return (
@@ -157,7 +166,7 @@ const EditGymScreen = () => {
       <Text style={{ fontSize: 16 }}>Spray Walls</Text>
       <FlatList
         data={spraywallsData}
-        renderItem={renderImageItem}
+        renderItem={renderSprayWallItem}
         keyExtractor={(item) => item.id.toString()}
         horizontal={true}
         ListHeaderComponent={renderHeaderItem}

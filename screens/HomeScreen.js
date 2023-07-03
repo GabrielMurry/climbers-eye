@@ -33,27 +33,26 @@ const HomeScreen = ({ navigation }) => {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  useFocusEffect(
-    useCallback(() => {
-      fetchDefaultData();
-    }, [])
-  );
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     fetchDefaultData();
+  //   }, [])
+  // );
 
-  const fetchDefaultData = async () => {
-    const response = await request("get", `home/${userID}`);
-    if (response.status !== 200) {
-      console.log(response.status);
-      return;
-    }
-    if (response.data) {
-      dispatch(setGymName(response.data.gymName));
-      dispatch(setSpraywallName(response.data.spraywallName));
-      dispatch(setSpraywallID(response.data.spraywallID));
-      dispatch(setDefaultImageUri(response.data.imageUri));
-      dispatch(setDefaultImageWidth(response.data.imageWidth));
-      dispatch(setDefaultImageHeight(response.data.imageHeight));
-    }
-  };
+  // const fetchDefaultData = async () => {
+  //   const response = await request("get", `home/${userID}`);
+  //   if (response.status !== 200) {
+  //     console.log(response.status);
+  //     return;
+  //   }
+  //   if (response.data) {
+  //     dispatch(setSpraywallName(response.data.spraywallName));
+  //     dispatch(setSpraywallID(response.data.spraywallID));
+  //     dispatch(setDefaultImageUri(response.data.imageUri));
+  //     dispatch(setDefaultImageWidth(response.data.imageWidth));
+  //     dispatch(setDefaultImageHeight(response.data.imageHeight));
+  //   }
+  // };
 
   return (
     <SafeAreaView

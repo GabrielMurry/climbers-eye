@@ -89,13 +89,12 @@ const AddGymScreen = ({ route, navigation }) => {
       quality: 1,
       base64: true,
     });
-    if (result) {
-      Image.getSize(result.assets[0].uri, (width, height) => {
-        setImage({
-          base64: result.assets[0].base64,
-          width: width,
-          height: height,
-        });
+    if (result && !result.canceled) {
+      const { base64, width, height } = result.assets[0];
+      setImage({
+        base64: base64,
+        width: width,
+        height: height,
       });
     }
   };
