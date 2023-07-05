@@ -2,6 +2,9 @@ export const SET_USER_NAME = "SET_USER_NAME";
 export const SET_USER_ID = "SET_USER_ID";
 export const SET_GYM_NAME = "SET_GYM_NAME";
 export const SET_GYM_ID = "SET_GYM_ID";
+export const SET_SPRAYWALLS = "SET_SPRAYWALLS";
+export const UPDATE_SPRAYWALL = "UPDATE_SPRAYWALL";
+export const SET_SPRAYWALL_INDEX = "SET_SPRAYWALL_INDEX";
 export const SET_SPRAYWALL_NAME = "SET_SPRAYWALL_NAME";
 export const SET_SPRAYWALL_ID = "SET_SPRAYWALL_ID";
 export const SET_DEFAULT_IMAGE_URI = "SET_DEFAULT_IMAGE_URI";
@@ -43,6 +46,28 @@ export const setGymID = (gymID) => (dispatch) => {
   dispatch({
     type: SET_GYM_ID,
     payload: gymID,
+  });
+};
+
+export const setSpraywalls = (spraywalls) => (dispatch) => {
+  dispatch({
+    type: SET_SPRAYWALLS,
+    payload: spraywalls,
+  });
+};
+
+export const updateSpraywall =
+  (spraywallIndex, updatedSpraywall) => (dispatch) => {
+    dispatch({
+      type: UPDATE_SPRAYWALL,
+      payload: { index: spraywallIndex, spraywall: updatedSpraywall },
+    });
+  };
+
+export const setSpraywallIndex = (spraywallIndex) => (dispatch) => {
+  dispatch({
+    type: SET_SPRAYWALL_INDEX,
+    payload: spraywallIndex,
   });
 };
 

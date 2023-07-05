@@ -5,15 +5,21 @@ import {
   TextInput,
   StyleSheet,
   Image,
-  Pressable,
   Alert,
+  TouchableOpacity,
+  Pressable,
+  ActivityIndicator,
 } from "react-native";
 import React, { useState } from "react";
 import { request } from "../api/requestMethods";
+import { useSelector, useDispatch } from "react-redux";
+import { setSpraywalls } from "../redux/actions";
 
-const EditSprayWallScreen = ({ route }) => {
+const EditSprayWallScreen = ({ route, navigation }) => {
+  const dispatch = useDispatch();
   const { id, name, base64, width, height } = route.params.spraywall;
   const [sprayWallName, setSprayWallName] = useState(name);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleDelete = async () => {
     Alert.alert(
@@ -26,12 +32,17 @@ const EditSprayWallScreen = ({ route }) => {
         {
           text: "Delete",
           onPress: async () => {
+            setIsLoading(true);
             const response = await request("delete", `delete_spraywall/${id}`);
             if (response.status !== 200) {
               console.log(response.status);
+              setIsLoading(false);
               return;
             }
+            dispatch(setSpraywalls(response.data.spraywalls));
             console.log("successfully deleted spraywall:", id);
+            setIsLoading(false);
+            navigation.goBack();
           },
           style: "destructive",
         },
@@ -74,9 +85,15 @@ const EditSprayWallScreen = ({ route }) => {
             }}
             onPress={handleDelete}
           >
-            <Text style={{ fontSize: 16, fontWeight: "bold", color: "white" }}>
-              Delete
-            </Text>
+            {isLoading ? (
+              <ActivityIndicator />
+            ) : (
+              <Text
+                style={{ fontSize: 16, fontWeight: "bold", color: "white" }}
+              >
+                Delete
+              </Text>
+            )}
           </Pressable>
         </View>
       </View>

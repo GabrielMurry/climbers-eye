@@ -15,11 +15,7 @@ import {
   setUserID,
   setGymName,
   setGymID,
-  setSpraywallName,
-  setSpraywallID,
-  setDefaultImageUri,
-  setDefaultImageWidth,
-  setDefaultImageHeight,
+  setSpraywalls,
   setHeadshotImage,
   setBannerImage,
 } from "../redux/actions";
@@ -62,11 +58,7 @@ const LoginScreen = ({ navigation }) => {
       if (response.data.gymID) {
         dispatch(setGymName(response.data.gymName));
         dispatch(setGymID(response.data.gymID));
-        dispatch(setSpraywallName(response.data.spraywallName));
-        dispatch(setSpraywallID(response.data.spraywallID));
-        dispatch(setDefaultImageUri(response.data.imageUri));
-        dispatch(setDefaultImageWidth(response.data.imageWidth));
-        dispatch(setDefaultImageHeight(response.data.imageHeight));
+        dispatch(setSpraywalls(response.data.spraywalls));
         navigation.navigate("Home");
       } else {
         navigation.navigate("Map");

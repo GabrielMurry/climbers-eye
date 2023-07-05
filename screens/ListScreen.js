@@ -8,6 +8,7 @@ import {
   Pressable,
   Keyboard,
   Image,
+  ActivityIndicator,
 } from "react-native";
 import React, {
   useCallback,
@@ -33,11 +34,8 @@ const ListScreen = ({ navigation }) => {
   const { userID } = useSelector((state) => state.userReducer);
   const { gymName } = useSelector((state) => state.gymReducer);
   const {
-    spraywallName,
-    spraywallID,
-    defaultImageUri,
-    defaultImageWidth,
-    defaultImageHeight,
+    spraywalls,
+    spraywallIndex,
     filterMinGradeIndex,
     filterMaxGradeIndex,
     filterSortBy,
@@ -45,6 +43,7 @@ const ListScreen = ({ navigation }) => {
     filterClimbType,
     filterStatus,
   } = useSelector((state) => state.spraywallReducer);
+  // const { id, name, base64, width, height } = spraywalls[spraywallIndex];
 
   const [searchQuery, setSearchQuery] = useState("");
   const [boulders, setBoulders] = useState([]);
@@ -53,12 +52,13 @@ const ListScreen = ({ navigation }) => {
   const [isTextInputFocused, setIsTextInputFocused] = useState(false);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const [hasFilters, setHasFilters] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useLayoutEffect(() => {
     navigation.setOptions({
       headerTitle: () => (
         <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-          {isHeaderTitleVisible ? spraywallName : null}
+          {isHeaderTitleVisible ? spraywalls[spraywallIndex].name : null}
         </Text>
       ),
     });
@@ -97,19 +97,22 @@ const ListScreen = ({ navigation }) => {
   );
 
   const fetchAllData = async () => {
+    setIsLoading(true);
     // extract only the id property from each object in the filterCircuits array
     // serialize the array into a string representation, such as JSON or comma-separated values.
     const circuitIds = filterCircuits.map((circuit) => circuit.id);
     const encodedCircuitIds = encodeURIComponent(JSON.stringify(circuitIds));
     const response = await request(
       "get",
-      `list/${spraywallID}/${userID}?search=${searchQuery}&minGradeIndex=${filterMinGradeIndex}&maxGradeIndex=${filterMaxGradeIndex}&sortBy=${filterSortBy}&circuits=${encodedCircuitIds}&climbType=${filterClimbType}&status=${filterStatus}`
+      `list/${spraywalls[spraywallIndex].id}/${userID}?search=${searchQuery}&minGradeIndex=${filterMinGradeIndex}&maxGradeIndex=${filterMaxGradeIndex}&sortBy=${filterSortBy}&circuits=${encodedCircuitIds}&climbType=${filterClimbType}&status=${filterStatus}`
     );
     if (response.status !== 200) {
       console.log(response.status);
+      return;
     }
     if (response.data) {
       setBoulders(response.data);
+      setIsLoading(false);
     }
   };
 
@@ -190,7 +193,9 @@ const ListScreen = ({ navigation }) => {
         }}
       >
         <Text style={styles.titleText}>{gymName}</Text>
-        <Text style={styles.subTitleText}>{spraywallName}</Text>
+        <Text style={styles.subTitleText}>
+          {spraywalls[spraywallIndex].name}
+        </Text>
       </View>
       <View style={styles.SearchInputAndCancelContainer}>
         <View style={styles.SearchInputContainer}>
@@ -235,9 +240,9 @@ const ListScreen = ({ navigation }) => {
     setIsModalVisible(false);
     navigation.navigate("EditBoulder", {
       image: {
-        uri: defaultImageUri,
-        width: defaultImageWidth,
-        height: defaultImageHeight,
+        uri: spraywalls[spraywallIndex].base64,
+        width: spraywalls[spraywallIndex].width,
+        height: spraywalls[spraywallIndex].height,
       },
     });
   };
@@ -267,6 +272,24 @@ const ListScreen = ({ navigation }) => {
     }
   };
 
+  const renderEmptyComponent = () => {
+    return (
+      <View
+        style={{
+          height: "100%",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        {isLoading ? (
+          <ActivityIndicator />
+        ) : (
+          <Text>No boulders in this spray wall</Text>
+        )}
+      </View>
+    );
+  };
+
   return (
     <View
       style={{
@@ -286,6 +309,7 @@ const ListScreen = ({ navigation }) => {
           onScroll={handleScroll}
           ListHeaderComponent={headerComponent}
           ListFooterComponent={<View style={{ height: 90 }} />}
+          ListEmptyComponent={renderEmptyComponent}
           keyboardShouldPersistTaps="handled" // click on search bar cancel buttons when Keyboard is visible (or click on boulder cards)
         />
         <Pressable

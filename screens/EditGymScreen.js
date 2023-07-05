@@ -12,32 +12,31 @@ import { PlusIcon } from "react-native-heroicons/outline";
 import { request } from "../api/requestMethods";
 import { useSelector } from "react-redux";
 
-const DATA = [{ id: 1 }, { id: 2 }];
-
 const EditGymScreen = ({ navigation }) => {
+  const { spraywalls } = useSelector((state) => state.spraywallReducer);
   const { gymName, gymID } = useSelector((state) => state.gymReducer);
   const [newGymName, setNewGymName] = useState(gymName);
   const [newGymLocation, setNewGymLocation] = useState("");
   const [isCommercialGym, setIsCommercialGym] = useState(true);
   const [spraywallsData, setSpraywallsData] = useState([]);
 
-  useEffect(() => {
-    fetchEditGymData();
-  }, []);
+  //   useEffect(() => {
+  //     fetchEditGymData();
+  //   }, []);
 
-  const fetchEditGymData = async () => {
-    const response = await request("get", `edit_gym_data/${gymID}`);
-    if (response.status !== 200) {
-      console.log(response.status);
-      return;
-    }
-    if (response.data) {
-      const { name, location, type, spraywalls } = response.data;
-      setIsCommercialGym("commercial" ? true : false);
-      setNewGymLocation(location);
-      setSpraywallsData(spraywalls);
-    }
-  };
+  //   const fetchEditGymData = async () => {
+  //     const response = await request("get", `edit_gym_data/${gymID}`);
+  //     if (response.status !== 200) {
+  //       console.log(response.status);
+  //       return;
+  //     }
+  //     if (response.data) {
+  //       const { name, location, type, spraywalls } = response.data;
+  //       setIsCommercialGym("commercial" ? true : false);
+  //       setNewGymLocation(location);
+  //       setSpraywallsData(spraywalls);
+  //     }
+  //   };
 
   const renderHeaderItem = () => (
     <TouchableOpacity
@@ -165,15 +164,13 @@ const EditGymScreen = ({ navigation }) => {
       </View>
       <Text style={{ fontSize: 16 }}>Spray Walls</Text>
       <FlatList
-        data={spraywallsData}
+        data={spraywalls}
         renderItem={renderSprayWallItem}
         keyExtractor={(item) => item.id.toString()}
         horizontal={true}
         ListHeaderComponent={renderHeaderItem}
         contentContainerStyle={{
           gap: 10,
-          justifyContent: "center",
-          width: "100%",
         }}
       />
     </View>

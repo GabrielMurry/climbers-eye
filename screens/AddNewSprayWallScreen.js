@@ -7,14 +7,30 @@ import {
   TouchableOpacity,
   SafeAreaView,
   Pressable,
+  ActivityIndicator,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 import { CameraIcon, PhotoIcon } from "react-native-heroicons/outline";
 import { request } from "../api/requestMethods";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  setUsername,
+  setUserID,
+  setGymName,
+  setGymID,
+  setSpraywalls,
+  setSpraywallName,
+  setSpraywallID,
+  setDefaultImageUri,
+  setDefaultImageWidth,
+  setDefaultImageHeight,
+  setHeadshotImage,
+  setBannerImage,
+} from "../redux/actions";
 
 const AddNewSprayWallScreen = ({ navigation, route }) => {
+  const dispatch = useDispatch();
   const { gymID } = useSelector((state) => state.gymReducer);
   const [sprayWallName, setSprayWallName] = useState("");
   const [image, setImage] = useState({
@@ -22,6 +38,7 @@ const AddNewSprayWallScreen = ({ navigation, route }) => {
     width: null,
     height: null,
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (route?.params?.image) {
@@ -54,6 +71,7 @@ const AddNewSprayWallScreen = ({ navigation, route }) => {
   };
 
   const handleAddNewSprayWall = async () => {
+    setIsLoading(true);
     const data = {
       name: sprayWallName,
       spraywall_image_data: image.base64.split(",")[1],
@@ -63,9 +81,13 @@ const AddNewSprayWallScreen = ({ navigation, route }) => {
     const response = await request("post", `add_new_spraywall/${gymID}`, data);
     if (response.status !== 200) {
       console.log(response.status);
+      setIsLoading(false);
       return;
     }
+    dispatch(setSpraywalls(response.data.spraywalls));
     console.log("successfully added spraywall!");
+    setIsLoading(false);
+    navigation.goBack();
   };
 
   return (
@@ -161,9 +183,13 @@ const AddNewSprayWallScreen = ({ navigation, route }) => {
           }}
           onPress={handleAddNewSprayWall}
         >
-          <Text style={{ fontSize: 16, fontWeight: "bold", color: "white" }}>
-            Add
-          </Text>
+          {isLoading ? (
+            <ActivityIndicator />
+          ) : (
+            <Text style={{ fontSize: 16, fontWeight: "bold", color: "white" }}>
+              Add
+            </Text>
+          )}
         </Pressable>
       </View>
     </SafeAreaView>

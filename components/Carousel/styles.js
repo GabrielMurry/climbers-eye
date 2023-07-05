@@ -7,17 +7,15 @@ export const styles = StyleSheet.create({
   },
   container: {
     width: "100%",
-    backgroundColor: "#fbfbfb",
-    borderColor: "#ebebeb",
-    borderWidth: 1,
-    borderRadius: 8,
-    shadowColor: "#fcfcfc",
-    shadowOpacity: 1,
-    marginTop: 10,
-    shadowOffset: {
-      width: 0,
-      height: 5,
-    },
+    minHeight: 425,
+    minWidth: "95%",
+    padding: 10,
+    borderColor: "black",
+    borderWidth: 2,
+    borderRadius: 10,
+    backgroundColor: "#FFFBF1",
+    justifyContent: "center",
+    alignItems: "center",
   },
   scrollView: {
     display: "flex",
@@ -26,17 +24,17 @@ export const styles = StyleSheet.create({
   },
   bullets: {
     position: "absolute",
-    top: 0,
+    bottom: 5,
     width: "100%",
     display: "flex",
-    justifyContent: "space-between",
+    justifyContent: "center",
     flexDirection: "row",
     paddingHorizontal: 10,
     paddingTop: 5,
   },
   bullet: {
     paddingHorizontal: 5,
-    fontSize: 16,
+    fontSize: 18,
   },
 });
 

@@ -1,13 +1,11 @@
-import React from "react";
-import { View, ScrollView, Text, Pressable } from "react-native";
+import React, { useEffect } from "react";
+import { View, ScrollView, Text } from "react-native";
 import { Stat } from "./Stat";
 import { Slide } from "./Slide";
 import { styles } from "./styles";
 
-const sections = ["Logbook", "Created", "Likes", "Bookmarks", "Circuits"];
-
 export const Carousel = (props) => {
-  const { items, style } = props;
+  const { items, style, itemInterval } = props;
   const itemsPerInterval =
     props.itemsPerInterval === undefined ? 1 : props.itemsPerInterval;
 
@@ -15,18 +13,29 @@ export const Carousel = (props) => {
   const [intervals, setIntervals] = React.useState(1);
   const [width, setWidth] = React.useState(0);
 
+  useEffect(() => {
+    // re-initializing when items (spraywalls) changes
+    init(width);
+  }, [items]);
+
+  // redundant? improve?
+  useEffect(() => {
+    // handler function for parent components to access carousel's interval
+    itemInterval(interval);
+  }, [interval]);
+
   const init = (width) => {
-    // initialise width
+    // initialize width
     setWidth(width);
-    // initialise total intervals
+    // initialize total intervals
     const totalItems = items.length;
-    console.log(totalItems);
     setIntervals(Math.ceil(totalItems / itemsPerInterval));
   };
 
   const getInterval = (offset) => {
     for (let i = 1; i <= intervals; i++) {
-      if (offset + 1 < (width / intervals) * i) {
+      // update the interval when user horizontally scrolls to midpoint
+      if (offset + 1 < (width / intervals / 2) * i) {
         return i;
       }
       if (i == intervals) {
@@ -38,18 +47,15 @@ export const Carousel = (props) => {
   let bullets = [];
   for (let i = 1; i <= intervals; i++) {
     bullets.push(
-      <Pressable onPress={() => console.log(sections[i - 1])}>
-        <Text
-          key={i}
-          style={{
-            ...styles.bullet,
-            opacity: interval === i ? 0.5 : 0.1,
-          }}
-        >
-          {/* &bull; */}
-          {sections[i - 1]}
-        </Text>
-      </Pressable>
+      <Text
+        key={i}
+        style={{
+          ...styles.bullet,
+          opacity: interval === i ? 1 : 0.2,
+        }}
+      >
+        &bull;
+      </Text>
     );
   }
 
@@ -67,7 +73,7 @@ export const Carousel = (props) => {
           setWidth(data.nativeEvent.contentSize.width);
           setInterval(getInterval(data.nativeEvent.contentOffset.x));
         }}
-        scrollEventThrottle={200}
+        scrollEventThrottle={25} // every 25 milliseconds onScroll event is called. Could also be lower (which helps improve responsiveness) since we are not doing too many computations
         pagingEnabled
         decelerationRate="fast"
       >
@@ -76,7 +82,7 @@ export const Carousel = (props) => {
             case "stats":
               return <Stat key={index} label={item.label} value={item.value} />;
             default:
-              return <Slide key={index} title={item.title} />;
+              return <Slide key={index} image={item} />;
           }
         })}
       </ScrollView>
