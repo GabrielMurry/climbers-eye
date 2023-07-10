@@ -19,14 +19,7 @@ import { GOOGLE_MAPS_GEOCODER_API_KEY } from "@env";
 import { request } from "../api/requestMethods";
 import GymCard from "../components/GymCard";
 import BottomSheet, { BottomSheetTextInput } from "@gorhom/bottom-sheet";
-import {
-  setGymName,
-  setSpraywallName,
-  setSpraywallID,
-  setDefaultImageUri,
-  setDefaultImageWidth,
-  setDefaultImageHeight,
-} from "../redux/actions";
+import { setGym, setSpraywalls } from "../redux/actions";
 import FullScreenImage from "../components/FullScreenImage";
 import GymMapMarker from "../components/mapComponents/GymMapMarker";
 import GymInfoBottomSheet from "../components/mapComponents/GymInfoBottomSheet";
@@ -39,8 +32,8 @@ Geocoder.init(GOOGLE_MAPS_GEOCODER_API_KEY); // use a valid API key
 
 const MapScreen = ({ navigation }) => {
   const dispatch = useDispatch();
-  const { gymName } = useSelector((state) => state.gymReducer);
-  const { userID } = useSelector((state) => state.userReducer);
+  const { gym } = useSelector((state) => state.gymReducer);
+  const { user } = useSelector((state) => state.userReducer);
   const [searchQuery, setSearchQuery] = useState("");
   const [gyms, setGyms] = useState(null);
   const [gymMarker, setGymMarker] = useState(null);
@@ -68,7 +61,7 @@ const MapScreen = ({ navigation }) => {
   useLayoutEffect(() => {
     // If a user already has gym (and by default then spraywall) add 'goback' to header.
     // If a user is brand new, then they do not have a gym or spraywall, and are immediately directed to this screen (do not add a 'goback' button)
-    if (gymName) {
+    if (gym.name) {
       navigation.setOptions({
         headerLeft: () => (
           <ArrowLeftCircleIcon
@@ -139,9 +132,7 @@ const MapScreen = ({ navigation }) => {
       return;
     }
     if (response.data) {
-      gymData.spraywallImageUri = response.data.imageUri;
-      gymData.spraywallImageWidth = response.data.imageWidth;
-      gymData.spraywallImageHeight = response.data.imageHeight;
+      gymData.spraywalls = response.data.spraywalls;
     }
     setIsLoadingGymInfo(false);
     setGymMarker(gymData);
@@ -159,19 +150,15 @@ const MapScreen = ({ navigation }) => {
 
   const handleConfirmMyGymPress = async (gymID) => {
     setIsLoadingConfirmGym(true);
-    const response = await request("put", `choose_gym/${userID}/${gymID}`);
+    const response = await request("put", `choose_gym/${user.id}/${gymID}`);
     if (response.status !== 200) {
       console.log(response.status);
       setIsLoadingConfirmGym(false);
       return;
     }
     if (response.data) {
-      dispatch(setGymName(response.data.gymName));
-      dispatch(setSpraywallName(response.data.spraywallName));
-      dispatch(setSpraywallID(response.data.spraywallID));
-      dispatch(setDefaultImageUri(response.data.imageUri));
-      dispatch(setDefaultImageWidth(response.data.imageWidth));
-      dispatch(setDefaultImageHeight(response.data.imageHeight));
+      dispatch(setGym(response.data.gym));
+      dispatch(setSpraywalls(response.data.spraywalls));
       setIsLoadingConfirmGym(false);
       navigation.navigate("Home");
     }

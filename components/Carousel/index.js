@@ -34,8 +34,10 @@ export const Carousel = (props) => {
 
   const getInterval = (offset) => {
     for (let i = 1; i <= intervals; i++) {
-      // update the interval when user horizontally scrolls to midpoint
-      if (offset + 1 < (width / intervals / 2) * i) {
+      const intervalWidth = width / intervals;
+      const mid = intervalWidth / 2;
+      const offsetMid = mid + intervalWidth * (i - 1);
+      if (offset + 1 < offsetMid) {
         return i;
       }
       if (i == intervals) {

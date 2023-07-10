@@ -7,12 +7,11 @@ import {
   Image,
   Alert,
   TouchableOpacity,
-  Pressable,
   ActivityIndicator,
 } from "react-native";
 import React, { useState } from "react";
 import { request } from "../api/requestMethods";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setSpraywalls } from "../redux/actions";
 
 const EditSprayWallScreen = ({ route, navigation }) => {
@@ -74,7 +73,7 @@ const EditSprayWallScreen = ({ route, navigation }) => {
           resizeMode="contain"
         />
         <View style={{ height: "15%", justifyContent: "center" }}>
-          <Pressable
+          <TouchableOpacity
             style={{
               backgroundColor: "rgb(255, 59, 48)",
               borderRadius: 5,
@@ -94,7 +93,7 @@ const EditSprayWallScreen = ({ route, navigation }) => {
                 Delete
               </Text>
             )}
-          </Pressable>
+          </TouchableOpacity>
         </View>
       </View>
     </SafeAreaView>

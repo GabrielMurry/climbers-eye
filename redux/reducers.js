@@ -1,17 +1,12 @@
 import { boulderGrades } from "../utils/constants/boulderConstants";
 import {
+  SET_USER,
   SET_USER_NAME,
   SET_USER_ID,
-  SET_GYM_NAME,
-  SET_GYM_ID,
+  SET_GYM,
   SET_SPRAYWALLS,
   UPDATE_SPRAYWALL,
   SET_SPRAYWALL_INDEX,
-  SET_SPRAYWALL_NAME,
-  SET_SPRAYWALL_ID,
-  SET_DEFAULT_IMAGE_URI,
-  SET_DEFAULT_IMAGE_WIDTH,
-  SET_DEFAULT_IMAGE_HEIGHT,
   SET_HEADSHOT_IMAGE,
   SET_BANNER_IMAGE,
   SET_FILTER_SORT_BY,
@@ -25,17 +20,12 @@ import {
 } from "./actions";
 
 const initialState = {
+  user: {},
   username: "",
   userID: "",
-  gymName: "",
-  gymID: "",
+  gym: {},
   spraywalls: [],
   spraywallIndex: 0,
-  spraywallName: "",
-  spraywallID: "",
-  defaultImageUri: null,
-  defaultImageWidth: "",
-  defaultImageHeight: "",
   headshotImage: {},
   bannerImage: {},
   filterSortBy: "popular",
@@ -48,6 +38,8 @@ const initialState = {
 
 export function userReducer(state = initialState, action) {
   switch (action.type) {
+    case SET_USER:
+      return { ...state, user: action.payload };
     case SET_USER_NAME:
       return { ...state, username: action.payload };
     case SET_USER_ID:
@@ -77,10 +69,8 @@ export function userReducer(state = initialState, action) {
 
 export function gymReducer(state = initialState, action) {
   switch (action.type) {
-    case SET_GYM_NAME:
-      return { ...state, gymName: action.payload };
-    case SET_GYM_ID:
-      return { ...state, gymID: action.payload };
+    case SET_GYM:
+      return { ...state, gym: action.payload };
     default:
       return state;
   }
@@ -97,16 +87,6 @@ export function spraywallReducer(state = initialState, action) {
       return { ...state, spraywallArray: updatedSpraywalls };
     case SET_SPRAYWALL_INDEX:
       return { ...state, spraywallIndex: action.payload };
-    case SET_SPRAYWALL_NAME:
-      return { ...state, spraywallName: action.payload };
-    case SET_SPRAYWALL_ID:
-      return { ...state, spraywallID: action.payload };
-    case SET_DEFAULT_IMAGE_URI:
-      return { ...state, defaultImageUri: action.payload };
-    case SET_DEFAULT_IMAGE_WIDTH:
-      return { ...state, defaultImageWidth: action.payload };
-    case SET_DEFAULT_IMAGE_HEIGHT:
-      return { ...state, defaultImageHeight: action.payload };
     case SET_FILTER_SORT_BY:
       return { ...state, filterSortBy: action.payload };
     case SET_FILTER_MIN_GRADE_INDEX:

@@ -49,7 +49,7 @@ const GymInfoBottomSheet = ({
               onPress={() => setImageFullScreen(true)}
             >
               <Image
-                source={{ uri: gymMarker.spraywallImageUri }}
+                source={{ uri: gymMarker.spraywalls[0].base64 }}
                 style={{
                   width: "100%",
                   height: "100%",
@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
   },
   bottomSheetImage: (gymMarker) => ({
     width:
-      gymMarker.spraywallImageWidth * (150 / gymMarker.spraywallImageHeight),
+      gymMarker.spraywalls[0].width * (150 / gymMarker.spraywalls[0].height),
     height: "100%",
   }),
   bottomSheetConfirmGymContainer: {

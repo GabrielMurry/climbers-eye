@@ -31,8 +31,8 @@ import * as ImagePicker from "expo-image-picker";
 import { boulderGrades } from "../utils/constants/boulderConstants";
 
 const ListScreen = ({ navigation }) => {
-  const { userID } = useSelector((state) => state.userReducer);
-  const { gymName } = useSelector((state) => state.gymReducer);
+  const { user } = useSelector((state) => state.userReducer);
+  const { gym } = useSelector((state) => state.gymReducer);
   const {
     spraywalls,
     spraywallIndex,
@@ -43,7 +43,6 @@ const ListScreen = ({ navigation }) => {
     filterClimbType,
     filterStatus,
   } = useSelector((state) => state.spraywallReducer);
-  // const { id, name, base64, width, height } = spraywalls[spraywallIndex];
 
   const [searchQuery, setSearchQuery] = useState("");
   const [boulders, setBoulders] = useState([]);
@@ -104,7 +103,7 @@ const ListScreen = ({ navigation }) => {
     const encodedCircuitIds = encodeURIComponent(JSON.stringify(circuitIds));
     const response = await request(
       "get",
-      `list/${spraywalls[spraywallIndex].id}/${userID}?search=${searchQuery}&minGradeIndex=${filterMinGradeIndex}&maxGradeIndex=${filterMaxGradeIndex}&sortBy=${filterSortBy}&circuits=${encodedCircuitIds}&climbType=${filterClimbType}&status=${filterStatus}`
+      `list/${spraywalls[spraywallIndex].id}/${user.id}?search=${searchQuery}&minGradeIndex=${filterMinGradeIndex}&maxGradeIndex=${filterMaxGradeIndex}&sortBy=${filterSortBy}&circuits=${encodedCircuitIds}&climbType=${filterClimbType}&status=${filterStatus}`
     );
     if (response.status !== 200) {
       console.log(response.status);
@@ -192,7 +191,7 @@ const ListScreen = ({ navigation }) => {
           alignItems: "center",
         }}
       >
-        <Text style={styles.titleText}>{gymName}</Text>
+        <Text style={styles.titleText}>{gym.name}</Text>
         <Text style={styles.subTitleText}>
           {spraywalls[spraywallIndex].name}
         </Text>

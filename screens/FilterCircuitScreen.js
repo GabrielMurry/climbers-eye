@@ -21,8 +21,8 @@ import { removeFilterCircuits, setFilterCircuits } from "../redux/actions";
 
 const FilterCircuitScreen = () => {
   const dispatch = useDispatch();
-  const { userID } = useSelector((state) => state.userReducer);
-  const { spraywallID, spraywallName, filterCircuits } = useSelector(
+  const { user } = useSelector((state) => state.userReducer);
+  const { spraywalls, spraywallIndex, filterCircuits } = useSelector(
     (state) => state.spraywallReducer
   );
 
@@ -44,7 +44,7 @@ const FilterCircuitScreen = () => {
   fetchCircuitData = async () => {
     const response = await request(
       "get",
-      `filter_circuits/${userID}/${spraywallID}`
+      `filter_circuits/${user.id}/${spraywalls[spraywallIndex].id}`
     );
     if (response.status !== 200) {
       console.log(response.status);
@@ -109,7 +109,7 @@ const FilterCircuitScreen = () => {
             onPress: async () => {
               const response = await request(
                 "delete",
-                `delete_circuit/${userID}/${spraywallID}/${item.id}`
+                `delete_circuit/${user.id}/${spraywalls[spraywallIndex].id}/${item.id}`
               );
               if (response.status !== 200) {
                 console.log(response.status);

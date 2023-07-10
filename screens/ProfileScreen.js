@@ -7,7 +7,6 @@ import {
   FlatList,
   ActivityIndicator,
   Image,
-  Dimensions,
 } from "react-native";
 import React, {
   useCallback,
@@ -30,6 +29,7 @@ import BottomSheet from "@gorhom/bottom-sheet";
 import * as ImagePicker from "expo-image-picker";
 import { useFocusEffect } from "@react-navigation/native";
 import { setHeadshotImage, setBannerImage } from "../redux/actions";
+import { FontAwesome5 } from "@expo/vector-icons";
 
 const sections = {
   logbook: "logbook",
@@ -39,17 +39,16 @@ const sections = {
   circuits: "circuits",
 };
 
-const WINDOW_WIDTH = Dimensions.get("window").width;
 const BACKDROP_IMAGE_HEIGHT = 125;
 const HEADSHOT_IMAGE_SIZE = 100;
 
 const ProfileScreen = ({ route, navigation }) => {
   const dispatch = useDispatch();
-  const { gymName } = useSelector((state) => state.gymReducer);
-  const { spraywallID, spraywallName } = useSelector(
+  const { gym } = useSelector((state) => state.gymReducer);
+  const { spraywalls, spraywallIndex } = useSelector(
     (state) => state.spraywallReducer
   );
-  const { username, userID, headshotImage, bannerImage } = useSelector(
+  const { user, headshotImage, bannerImage } = useSelector(
     (state) => state.userReducer
   );
   const [editHeadshot, setEditHeadshot] = useState(headshotImage);
@@ -120,7 +119,7 @@ const ProfileScreen = ({ route, navigation }) => {
     setIsLoading(true);
     const response = await request(
       "get",
-      `profile/${userID}/${spraywallID}?section=${section}`
+      `profile/${user.id}/${spraywalls[spraywallIndex].id}?section=${section}`
     );
     if (response.status !== 200) {
       console.log(response.status);
@@ -203,7 +202,7 @@ const ProfileScreen = ({ route, navigation }) => {
         allowsEditing: false,
         aspect: [4, 3],
         quality: 1,
-        base64: true,
+        base64: false,
       });
 
       if (result && !result.canceled) {
@@ -259,7 +258,7 @@ const ProfileScreen = ({ route, navigation }) => {
     };
     const response = await request(
       "post",
-      `add_profile_banner_image/${userID}`,
+      `add_profile_banner_image/${user.id}`,
       data
     );
     if (response.status !== 200) {
@@ -303,7 +302,7 @@ const ProfileScreen = ({ route, navigation }) => {
             },
           ]}
         >
-          {headshotImage.uri !== null ? (
+          {headshotImage.uri ? (
             <Image
               source={{ uri: headshotImage.uri }}
               style={{ width: "100%", height: "100%", borderRadius: 100 }}
@@ -313,9 +312,9 @@ const ProfileScreen = ({ route, navigation }) => {
           )}
         </View>
         <View style={styles.username}>
-          <Text style={styles.usernameText}>{username}</Text>
-          <Text>{gymName}</Text>
-          <Text>{spraywallName}</Text>
+          <Text style={styles.usernameText}>{user.name}</Text>
+          <Text>{gym.name}</Text>
+          <Text>{spraywalls[spraywallIndex].name}</Text>
           <Text>0 Sessions</Text>
         </View>
       </View>
@@ -406,7 +405,7 @@ const ProfileScreen = ({ route, navigation }) => {
           }}
           onPress={() => handleUploadImage("headshot")}
         >
-          {editHeadshot.uri !== null ? (
+          {editHeadshot.uri ? (
             <Image
               source={{ uri: editHeadshot.uri }}
               style={{ width: "100%", height: "100%", borderRadius: 100 }}

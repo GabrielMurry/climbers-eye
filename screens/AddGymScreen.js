@@ -21,7 +21,7 @@ const imageScaleDownFactor = 16;
 
 const AddGymScreen = ({ route, navigation }) => {
   const dispatch = useDispatch();
-  const { userID } = useSelector((state) => state.userReducer);
+  const { user } = useSelector((state) => state.userReducer);
 
   const [isCommercialGym, setIsCommercialGym] = useState(true);
   const [gymName, setGymName] = useState("");
@@ -65,7 +65,7 @@ const AddGymScreen = ({ route, navigation }) => {
                 gym: null,
               },
             };
-            const response = await request("post", `add_gym/${userID}`, data);
+            const response = await request("post", `add_gym/${user.id}`, data);
             if (response.status !== 200) {
               console.log(response.status);
               setIsLoading(false);

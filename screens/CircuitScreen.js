@@ -20,8 +20,10 @@ import { PlusIcon } from "react-native-heroicons/outline";
 
 const CircuitScreen = ({ route }) => {
   const { boulder } = route.params;
-  const { userID } = useSelector((state) => state.userReducer);
-  const { spraywallID } = useSelector((state) => state.spraywallReducer);
+  const { user } = useSelector((state) => state.userReducer);
+  const { spraywalls, spraywallIndex } = useSelector(
+    (state) => state.spraywallReducer
+  );
 
   const CIRCUIT_ITEM_HEIGHT = 45;
 
@@ -39,7 +41,7 @@ const CircuitScreen = ({ route }) => {
   fetchCircuitData = async () => {
     const response = await request(
       "get",
-      `circuits/${userID}/${spraywallID}/${boulder.id}`
+      `circuits/${user.id}/${spraywalls[spraywallIndex].id}/${boulder.id}`
     );
     if (response.status !== 200) {
       console.log(response.status);
@@ -120,7 +122,7 @@ const CircuitScreen = ({ route }) => {
             onPress: async () => {
               const response = await request(
                 "delete",
-                `delete_circuit/${userID}/${spraywallID}/${item.id}`
+                `delete_circuit/${user.id}/${spraywalls[spraywallIndex].id}/${item.id}`
               );
               if (response.status !== 200) {
                 console.log(response.status);
@@ -188,8 +190,8 @@ const CircuitScreen = ({ route }) => {
           setBottomSheetVisible={setBottomSheetVisible}
           circuits={circuits}
           setCircuits={setCircuits}
-          userID={userID}
-          spraywallID={spraywallID}
+          userID={user.id}
+          spraywallID={spraywalls[spraywallIndex].id}
         />
       ) : null}
     </SafeAreaView>

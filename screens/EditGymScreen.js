@@ -7,172 +7,133 @@ import {
   Switch,
   TouchableOpacity,
 } from "react-native";
-import React, { useEffect, useState } from "react";
-import { PlusIcon } from "react-native-heroicons/outline";
-import { request } from "../api/requestMethods";
+import React, { useState } from "react";
+import { ChevronRightIcon, PlusIcon } from "react-native-heroicons/outline";
 import { useSelector } from "react-redux";
+import SettingsButton from "../components/editGymComponents/SettingsButton";
 
 const EditGymScreen = ({ navigation }) => {
-  const { spraywalls } = useSelector((state) => state.spraywallReducer);
-  const { gymName, gymID } = useSelector((state) => state.gymReducer);
-  const [newGymName, setNewGymName] = useState(gymName);
-  const [newGymLocation, setNewGymLocation] = useState("");
-  const [isCommercialGym, setIsCommercialGym] = useState(true);
-  const [spraywallsData, setSpraywallsData] = useState([]);
-
-  //   useEffect(() => {
-  //     fetchEditGymData();
-  //   }, []);
-
-  //   const fetchEditGymData = async () => {
-  //     const response = await request("get", `edit_gym_data/${gymID}`);
-  //     if (response.status !== 200) {
-  //       console.log(response.status);
-  //       return;
-  //     }
-  //     if (response.data) {
-  //       const { name, location, type, spraywalls } = response.data;
-  //       setIsCommercialGym("commercial" ? true : false);
-  //       setNewGymLocation(location);
-  //       setSpraywallsData(spraywalls);
-  //     }
-  //   };
-
-  const renderHeaderItem = () => (
-    <TouchableOpacity
-      style={{
-        width: 100,
-        height: 100,
-        borderWidth: 1,
-        borderRadius: 10,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-      onPress={() => navigation.navigate("AddNewSprayWall")}
-    >
-      <PlusIcon size={35} color={"black"} />
-    </TouchableOpacity>
+  const { spraywalls, spraywallIndex } = useSelector(
+    (state) => state.spraywallReducer
+  );
+  const { gym } = useSelector((state) => state.gymReducer);
+  const [newGymName, setNewGymName] = useState(gym.name);
+  const [newGymLocation, setNewGymLocation] = useState(gym.location);
+  const [isCommercialGym, setIsCommercialGym] = useState(
+    gym.type === "commercial"
   );
 
-  const renderSprayWallItem = ({ item }) => (
-    <TouchableOpacity
-      style={{
-        width: 100,
-        height: 100,
-        borderWidth: 1,
-        borderRadius: 10,
-        padding: 5,
-      }}
-      onPress={() => navigation.navigate("EditSprayWall", { spraywall: item })}
-    >
-      <Image
-        source={{ uri: item.base64 }}
-        style={{
-          width: "100%",
-          height: "100%",
-        }}
-        resizeMode="contain"
-      />
-    </TouchableOpacity>
-  );
+  const handleEditItemPressed = (item) => {
+    navigation.navigate("Edit", { item });
+  };
+
+  const GYM_DATA = [
+    {
+      id: 1,
+      title: "Gym Type",
+      onPress: handleEditItemPressed,
+    },
+    {
+      id: 2,
+      title: "Gym Name",
+      onPress: handleEditItemPressed,
+    },
+    {
+      id: 3,
+      title: "Gym Location",
+      onPress: handleEditItemPressed,
+    },
+  ];
 
   return (
     <View
       style={{
         flex: 1,
         backgroundColor: "white",
-        gap: 10,
         paddingHorizontal: 10,
       }}
     >
       <View style={{ alignItems: "center" }}>
         <Text style={{ fontSize: 26 }}>Edit Gym</Text>
       </View>
-      <View style={{ borderBottomWidth: 1 }}>
-        <Text>Gym</Text>
-      </View>
-      <Text style={{ fontSize: 16 }}>Gym Type</Text>
       <View
         style={{
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-between",
-          width: "95%",
+          paddingHorizontal: 15,
+          paddingBottom: 10,
+          paddingTop: 20,
         }}
       >
-        <Text
-          style={{
-            fontSize: 16,
-          }}
-        >
-          Commercial Gym
-        </Text>
-        <Switch
-          value={isCommercialGym}
-          onValueChange={() => setIsCommercialGym(!isCommercialGym)}
-        />
+        <Text style={{ fontSize: 14 }}>Gym</Text>
+      </View>
+      <View
+        style={{ backgroundColor: "#FFFBF1", borderWidth: 1, borderRadius: 5 }}
+      >
+        {GYM_DATA.map((item) => (
+          <SettingsButton
+            key={item.id}
+            title={item.title}
+            onPress={() => item.onPress(item.title)}
+          />
+        ))}
       </View>
       <View
         style={{
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-between",
-          width: "95%",
+          paddingHorizontal: 15,
+          paddingBottom: 10,
+          paddingTop: 20,
         }}
       >
-        <Text
+        <Text style={{ fontSize: 14 }}>Spray Wall</Text>
+      </View>
+      <View style={{ gap: 10 }}>
+        <View
           style={{
-            fontSize: 16,
+            backgroundColor: "#FFFBF1",
+            borderWidth: 1,
+            borderRadius: 5,
           }}
         >
-          Non-Commercial Gym (Home)
-        </Text>
-        <Switch
-          value={!isCommercialGym}
-          onValueChange={() => setIsCommercialGym(!isCommercialGym)}
-        />
+          {spraywalls.map((item) => (
+            <SettingsButton
+              key={item.id}
+              title={item.name}
+              onPress={() =>
+                navigation.navigate("EditSprayWall", { spraywall: item })
+              }
+            />
+          ))}
+        </View>
+        <View
+          style={{
+            borderWidth: 1,
+            borderRadius: 5,
+            backgroundColor: "#FFFBF1",
+          }}
+        >
+          <SettingsButton
+            title={"Add New Spray Wall"}
+            onPress={() => navigation.navigate("AddNewSprayWall")}
+          />
+        </View>
       </View>
-      <Text style={{ fontSize: 16 }}>Gym Name</Text>
-      <TextInput
+      <View
+        style={{
+          paddingHorizontal: 15,
+          paddingBottom: 10,
+          paddingTop: 20,
+        }}
+      >
+        <Text style={{ fontSize: 14, color: "red" }}>Delete</Text>
+      </View>
+      <View
         style={{
           borderWidth: 1,
-          borderColor: "#ccc",
+          borderColor: "red",
           borderRadius: 5,
-          paddingVertical: 10,
-          paddingHorizontal: 20,
-          fontSize: 16,
         }}
-        value={newGymName}
-        onChangeText={(text) => setNewGymName(text)}
-      />
-      <Text style={{ fontSize: 16 }}>Gym Location</Text>
-      <TextInput
-        style={{
-          borderWidth: 1,
-          borderColor: "#ccc",
-          borderRadius: 5,
-          paddingVertical: 10,
-          paddingHorizontal: 20,
-          fontSize: 16,
-        }}
-        placeholder={"Current Gym Location"}
-        value={newGymLocation}
-        onChangeText={(text) => setNewGymLocation(text)}
-      />
-      <View style={{ borderBottomWidth: 1 }}>
-        <Text>Spray Wall</Text>
+      >
+        <SettingsButton title={"Delete Gym"} />
       </View>
-      <Text style={{ fontSize: 16 }}>Spray Walls</Text>
-      <FlatList
-        data={spraywalls}
-        renderItem={renderSprayWallItem}
-        keyExtractor={(item) => item.id.toString()}
-        horizontal={true}
-        ListHeaderComponent={renderHeaderItem}
-        contentContainerStyle={{
-          gap: 10,
-        }}
-      />
     </View>
   );
 };

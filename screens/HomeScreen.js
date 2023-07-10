@@ -12,7 +12,7 @@ import { setSpraywallIndex } from "../redux/actions";
 
 const HomeScreen = ({ navigation }) => {
   const dispatch = useDispatch();
-  const { gymName } = useSelector((state) => state.gymReducer);
+  const { gym } = useSelector((state) => state.gymReducer);
   const { spraywalls, spraywallIndex } = useSelector(
     (state) => state.spraywallReducer
   );
@@ -31,12 +31,12 @@ const HomeScreen = ({ navigation }) => {
       <View style={{ paddingHorizontal: 5, flex: 1 }}>
         <View style={styles.titleContainer}>
           {/* Titles */}
-          <Text style={styles.titleText}>{gymName}</Text>
+          <Text style={styles.titleText}>{gym.name}</Text>
           <Text style={styles.subTitleText}>
             {spraywalls[spraywallIndex].name}
           </Text>
         </View>
-        {/* Default Image */}
+        {/* Spray Wall Image(s) */}
         <Carousel
           style="slides"
           itemsPerInterval={1}
@@ -50,12 +50,6 @@ const HomeScreen = ({ navigation }) => {
             onPress={() => navigation.navigate("List")}
           >
             <Text style={styles.buttonText}>Find Boulders</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => navigation.navigate("List")}
-          >
-            <Text style={styles.buttonText}>Find Routes</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.button}

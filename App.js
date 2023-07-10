@@ -35,6 +35,7 @@ import CropImageScreen from "./screens/CropImageScreen";
 import EditGymScreen from "./screens/EditGymScreen";
 import AddNewSprayWallScreen from "./screens/AddNewSprayWallScreen";
 import EditSprayWallScreen from "./screens/EditSprayWallScreen";
+import EditScreen from "./screens/EditScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -174,6 +175,11 @@ export default function App() {
               name="EditGym"
               component={EditGymScreen}
               options={({ navigation }) => customHeader(navigation, "EditGym")}
+            />
+            <Stack.Screen
+              name="Edit"
+              component={EditScreen}
+              options={({ navigation }) => customHeader(navigation, "Edit")}
             />
             <Stack.Screen
               name="AddNewSprayWall"

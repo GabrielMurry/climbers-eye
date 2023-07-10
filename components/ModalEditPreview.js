@@ -15,7 +15,6 @@ import {
 import React, { useState } from "react";
 import FullScreenImage from "./FullScreenImage";
 import { request } from "../api/requestMethods";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useSelector } from "react-redux";
 
 const ModalEditPreview = ({
@@ -27,6 +26,9 @@ const ModalEditPreview = ({
   resultImageUri,
 }) => {
   const { userID } = useSelector((state) => state.userReducer);
+  const { spraywalls, spraywallIndex } = useSelector(
+    (state) => state.spraywallReducer
+  );
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [isMatching, setIsMatching] = useState(true);
@@ -42,10 +44,10 @@ const ModalEditPreview = ({
       boulder_image_data: resultImageUri.split(",")[1], // using the default image has complete base64 as image.uri --> remove the 'data:image/png;base64' in the beginning of string
       boulder_image_width: image.width,
       boulder_image_height: image.height,
-      spraywall: null,
-      setter_person: null,
+      spraywall: spraywalls[spraywallIndex].id,
+      setter_person: userID,
     };
-    const response = await request("post", `add_boulder/${userID}`, data);
+    const response = await request("post", `add_boulder/`, data);
     if (response.status !== 200) {
       console.log(response.status);
       return;

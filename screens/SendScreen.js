@@ -25,8 +25,7 @@ for (let i = 1; i <= 100; i++) {
 }
 
 const SendScreen = ({ route, navigation }) => {
-  const { userID } = useSelector((state) => state.userReducer);
-  const { username } = useSelector((state) => state.userReducer);
+  const { user } = useSelector((state) => state.userReducer);
   const { boulder } = route.params;
 
   const [selectedAttempts, setSelectedAttempts] = useState(1);
@@ -74,7 +73,7 @@ const SendScreen = ({ route, navigation }) => {
       grade: selectedDifficulty,
       quality: qualityCount,
       notes: notes,
-      person: userID,
+      person: user.id,
       boulder: boulder.id,
     };
     const response = await request("post", `sent_boulder/${boulder.id}`, data);
@@ -98,7 +97,7 @@ const SendScreen = ({ route, navigation }) => {
         </View>
         <View style={styles.row}>
           <Text style={styles.label}>User:</Text>
-          <Text style={styles.info}>{username}</Text>
+          <Text style={styles.info}>{user.name}</Text>
         </View>
         <View style={styles.row}>
           <Text style={styles.label}>Date:</Text>

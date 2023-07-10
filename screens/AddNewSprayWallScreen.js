@@ -14,30 +14,18 @@ import * as ImagePicker from "expo-image-picker";
 import { CameraIcon, PhotoIcon } from "react-native-heroicons/outline";
 import { request } from "../api/requestMethods";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  setUsername,
-  setUserID,
-  setGymName,
-  setGymID,
-  setSpraywalls,
-  setSpraywallName,
-  setSpraywallID,
-  setDefaultImageUri,
-  setDefaultImageWidth,
-  setDefaultImageHeight,
-  setHeadshotImage,
-  setBannerImage,
-} from "../redux/actions";
+import { setSpraywalls } from "../redux/actions";
 
 const AddNewSprayWallScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
-  const { gymID } = useSelector((state) => state.gymReducer);
+  const { gym } = useSelector((state) => state.gymReducer);
   const [sprayWallName, setSprayWallName] = useState("");
   const [image, setImage] = useState({
     base64: null,
     width: null,
     height: null,
   });
+  const [isDisabled, setIsDisabled] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -50,6 +38,14 @@ const AddNewSprayWallScreen = ({ navigation, route }) => {
       });
     }
   }, [route]);
+
+  useEffect(() => {
+    if (sprayWallName && image) {
+      setIsDisabled(false);
+    } else {
+      setIsDisabled(true);
+    }
+  }, [sprayWallName, image]);
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -78,7 +74,7 @@ const AddNewSprayWallScreen = ({ navigation, route }) => {
       spraywall_image_width: image.width,
       spraywall_image_height: image.height,
     };
-    const response = await request("post", `add_new_spraywall/${gymID}`, data);
+    const response = await request("post", `add_new_spraywall/${gym.id}`, data);
     if (response.status !== 200) {
       console.log(response.status);
       setIsLoading(false);
@@ -172,7 +168,7 @@ const AddNewSprayWallScreen = ({ navigation, route }) => {
             </>
           )}
         </View>
-        <Pressable
+        <TouchableOpacity
           style={{
             backgroundColor: "rgb(0, 122, 255)",
             borderRadius: 5,
@@ -182,6 +178,7 @@ const AddNewSprayWallScreen = ({ navigation, route }) => {
             alignItems: "center",
           }}
           onPress={handleAddNewSprayWall}
+          disabled={isDisabled}
         >
           {isLoading ? (
             <ActivityIndicator />
@@ -190,7 +187,7 @@ const AddNewSprayWallScreen = ({ navigation, route }) => {
               Add
             </Text>
           )}
-        </Pressable>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );

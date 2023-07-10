@@ -17,7 +17,7 @@ import Titles from "../components/boulderComponents/Titles";
 import BoulderBarChart from "../components/BoulderBarChart";
 
 const BoulderScreen = ({ route, navigation }) => {
-  const { userID } = useSelector((state) => state.userReducer);
+  const { user } = useSelector((state) => state.userReducer);
   const { username } = useSelector((state) => state.userReducer);
 
   const [boulder, setBoulder] = useState(route.params.boulder);
@@ -88,7 +88,7 @@ const BoulderScreen = ({ route, navigation }) => {
   const fetchCertainData = async () => {
     const response = await request(
       "get",
-      `updated_boulder_data/${boulder.id}/${userID}`
+      `updated_boulder_data/${boulder.id}/${user.id}`
     );
     if (response.status !== 200) {
       console.log(response.status);
@@ -127,7 +127,7 @@ const BoulderScreen = ({ route, navigation }) => {
       <Buttons
         boulder={boulder}
         setBoulder={setBoulder}
-        userID={userID}
+        userID={user.id}
         username={username}
         setIsStatsVisible={setIsStatsVisible}
         navigation={navigation}

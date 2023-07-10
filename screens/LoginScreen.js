@@ -3,18 +3,17 @@ import {
   SafeAreaView,
   StyleSheet,
   Text,
+  View,
   useWindowDimensions,
 } from "react-native";
 import CustomInput from "../components/CustomInput";
 import CustomButton from "../components/CustomButton";
 import SocialSignInButtons from "../components/SocialSignInButtons";
 import { request } from "../api/requestMethods";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
-  setUsername,
-  setUserID,
-  setGymName,
-  setGymID,
+  setUser,
+  setGym,
   setSpraywalls,
   setHeadshotImage,
   setBannerImage,
@@ -23,8 +22,8 @@ import {
 const LoginScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const { height } = useWindowDimensions();
-  const { username } = useSelector((state) => state.userReducer);
 
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -39,7 +38,7 @@ const LoginScreen = ({ navigation }) => {
     }
     if (response.data) {
       // in dispatch, we enter the action "setUserID" along with the "userID" value (doing this for username also)
-      dispatch(setUserID(response.data.userID));
+      dispatch(setUser(response.data.user));
       dispatch(
         setHeadshotImage({
           uri: response.data.headshotImageUri,
@@ -55,9 +54,8 @@ const LoginScreen = ({ navigation }) => {
         })
       );
       // for redundancy. If user signs up, but restarts the app, then logs in, they still don't belong to a gym or spraywall, so redirect to Map screen
-      if (response.data.gymID) {
-        dispatch(setGymName(response.data.gymName));
-        dispatch(setGymID(response.data.gymID));
+      if (response.data.gym) {
+        dispatch(setGym(response.data.gym));
         dispatch(setSpraywalls(response.data.spraywalls));
         navigation.navigate("Home");
       } else {
@@ -77,10 +75,17 @@ const LoginScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={[styles.logo, { height: height * 0.3 }]}>SPRAY</Text>
+      <View
+        style={{
+          justifyContent: "center",
+          height: height * 0.25,
+        }}
+      >
+        <Text style={styles.logo}>SPRAY</Text>
+      </View>
       <CustomInput
         value={username}
-        setValue={(value) => dispatch(setUsername(value))}
+        setValue={(value) => setUsername(value)}
         placeholder="Username"
         secureTextEntry={false}
       />
