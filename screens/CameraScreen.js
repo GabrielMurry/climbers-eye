@@ -62,7 +62,18 @@ const CameraScreen = ({ route, navigation }) => {
 
   const confirmImage = async () => {
     if (image) {
-      navigation.navigate(screen, { image: image });
+      const modifiedImageObj = {
+        url: "data:image/png;base64," + image.base64,
+        width: image.width,
+        height: image.height,
+      };
+      if (route?.params?.item) {
+        // mainly for changing spray wall image through camera. Spray wall image settings is a component rather than its own screen
+        const item = route.params.item;
+        navigation.navigate(screen, { image: modifiedImageObj, item: item });
+        return;
+      }
+      navigation.navigate(screen, { image: modifiedImageObj });
     }
   };
 

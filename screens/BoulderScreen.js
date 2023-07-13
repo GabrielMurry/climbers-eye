@@ -1,10 +1,5 @@
-import { View, Text, StyleSheet, SafeAreaView, Dimensions } from "react-native";
-import React, {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useState,
-} from "react";
+import { View, StyleSheet, SafeAreaView } from "react-native";
+import React, { useCallback, useLayoutEffect, useState } from "react";
 import FullScreenImage from "../components/FullScreenImage";
 import { request } from "../api/requestMethods";
 import { FontAwesome } from "@expo/vector-icons";
@@ -18,10 +13,8 @@ import BoulderBarChart from "../components/BoulderBarChart";
 
 const BoulderScreen = ({ route, navigation }) => {
   const { user } = useSelector((state) => state.userReducer);
-  const { username } = useSelector((state) => state.userReducer);
 
   const [boulder, setBoulder] = useState(route.params.boulder);
-  const [image, setImage] = useState({ uri: null, width: null, height: null });
   const [imageFullScreen, setImageFullScreen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isStatsVisible, setIsStatsVisible] = useState(false);
@@ -57,25 +50,6 @@ const BoulderScreen = ({ route, navigation }) => {
       ),
     });
   }, [navigation, boulder]);
-
-  // get image base64 uri when on individual boulder screen. Not getting base64 image from list screen since it will take a long time to load every boulder card in list
-  useEffect(() => {
-    const getData = async () => {
-      const response = await request("get", `boulder_image/${boulder.id}`);
-      if (response.status !== 200) {
-        console.log(response.status);
-      }
-      if (response.data) {
-        setImage({
-          uri: response.data.image_uri,
-          width: response.data.image_width,
-          height: response.data.image_height,
-        });
-      }
-    };
-
-    getData();
-  }, []);
 
   // This event will be triggered when the screen gains focus (i.e., when you navigate back to it).
   useFocusEffect(
@@ -116,7 +90,7 @@ const BoulderScreen = ({ route, navigation }) => {
         <BoulderBarChart boulder={boulder} />
       ) : (
         <ImageDisplay
-          image={image}
+          image={boulder}
           setImageFullScreen={setImageFullScreen}
           isLoading={isLoading}
           setIsLoading={setIsLoading}
@@ -128,16 +102,16 @@ const BoulderScreen = ({ route, navigation }) => {
         boulder={boulder}
         setBoulder={setBoulder}
         userID={user.id}
-        username={username}
+        username={user.name}
         setIsStatsVisible={setIsStatsVisible}
         navigation={navigation}
       />
       <FullScreenImage
         imageFullScreen={imageFullScreen}
-        uri={image.uri}
+        url={boulder.url}
         image={{
-          width: image.width,
-          height: image.height,
+          width: boulder.width,
+          height: boulder.height,
         }}
         onRequestClose={() => setImageFullScreen(false)}
       />

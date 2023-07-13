@@ -12,7 +12,7 @@ import { Ionicons } from "@expo/vector-icons";
 
 const window = Dimensions.get("window");
 
-const FullScreenImage = ({ imageFullScreen, uri, image, onRequestClose }) => {
+const FullScreenImage = ({ imageFullScreen, url, image, onRequestClose }) => {
   return (
     <Modal
       visible={imageFullScreen}
@@ -42,7 +42,7 @@ const FullScreenImage = ({ imageFullScreen, uri, image, onRequestClose }) => {
           visualTouchFeedbackEnabled={false}
         >
           <Image
-            source={{ uri: uri }}
+            source={{ uri: url }}
             style={styles.image(
               window.width,
               image.height * (window.width / image.width)

@@ -49,7 +49,7 @@ const GymInfoBottomSheet = ({
               onPress={() => setImageFullScreen(true)}
             >
               <Image
-                source={{ uri: gymMarker.spraywalls[0].base64 }}
+                source={{ uri: gymMarker.spraywalls[0].url }}
                 style={{
                   width: "100%",
                   height: "100%",

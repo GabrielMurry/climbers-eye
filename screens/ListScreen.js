@@ -239,7 +239,7 @@ const ListScreen = ({ navigation }) => {
     setIsModalVisible(false);
     navigation.navigate("EditBoulder", {
       image: {
-        uri: spraywalls[spraywallIndex].base64,
+        url: spraywalls[spraywallIndex].url,
         width: spraywalls[spraywallIndex].width,
         height: spraywalls[spraywallIndex].height,
       },
@@ -280,11 +280,7 @@ const ListScreen = ({ navigation }) => {
           justifyContent: "center",
         }}
       >
-        {isLoading ? (
-          <ActivityIndicator />
-        ) : (
-          <Text>No boulders in this spray wall</Text>
-        )}
+        {isLoading ? <ActivityIndicator /> : <Text>No Boulders Found</Text>}
       </View>
     );
   };

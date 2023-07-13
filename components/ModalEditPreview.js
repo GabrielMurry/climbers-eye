@@ -25,7 +25,7 @@ const ModalEditPreview = ({
   navigation,
   resultImageUri,
 }) => {
-  const { userID } = useSelector((state) => state.userReducer);
+  const { user } = useSelector((state) => state.userReducer);
   const { spraywalls, spraywallIndex } = useSelector(
     (state) => state.spraywallReducer
   );
@@ -41,13 +41,15 @@ const ModalEditPreview = ({
       description,
       matching: isMatching,
       publish: isPublish,
-      boulder_image_data: resultImageUri.split(",")[1], // using the default image has complete base64 as image.uri --> remove the 'data:image/png;base64' in the beginning of string
-      boulder_image_width: image.width,
-      boulder_image_height: image.height,
-      spraywall: spraywalls[spraywallIndex].id,
-      setter_person: userID,
+      image_data: resultImageUri.split(",")[1], // using the default image has complete base64 as image.uri --> remove the 'data:image/png;base64' in the beginning of string
+      image_width: image.width,
+      image_height: image.height,
     };
-    const response = await request("post", `add_boulder/`, data);
+    const response = await request(
+      "post",
+      `add_boulder/${spraywalls[spraywallIndex].id}/${user.id}`,
+      data
+    );
     if (response.status !== 200) {
       console.log(response.status);
       return;
@@ -144,7 +146,7 @@ const ModalEditPreview = ({
       </KeyboardAvoidingView>
       <FullScreenImage
         imageFullScreen={imageFullScreen}
-        uri={resultImageUri}
+        url={resultImageUri}
         image={image}
         onRequestClose={() => setImageFullScreen(false)}
       />

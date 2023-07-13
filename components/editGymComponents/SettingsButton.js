@@ -3,7 +3,12 @@ import React from "react";
 import { TouchableOpacity } from "react-native";
 import { ChevronRightIcon } from "react-native-heroicons/outline";
 
-const SettingsButton = ({ title, onPress }) => {
+const SettingsButton = ({
+  title,
+  onPress,
+  textColor = "black",
+  destructive = false,
+}) => {
   return (
     <TouchableOpacity
       style={{
@@ -14,8 +19,8 @@ const SettingsButton = ({ title, onPress }) => {
       }}
       onPress={onPress}
     >
-      <Text style={{ fontSize: 16 }}>{title}</Text>
-      <ChevronRightIcon size={15} color={"black"} />
+      <Text style={{ fontSize: 16, color: textColor }}>{title}</Text>
+      {destructive ? null : <ChevronRightIcon size={15} color={"black"} />}
     </TouchableOpacity>
   );
 };

@@ -88,11 +88,12 @@ const Buttons = ({
   const handleShowOptionsPressed = async () => {
     let options = ["Share", "Report", "Cancel"];
     let destructiveButtonIndex = -1;
-    const cancelButtonIndex = 3;
+    let cancelButtonIndex = 2;
     // if current user is the creator of the boulder, give only them the option to delete
     if (boulder.setter === username) {
       options = ["Share", "Report", "Delete", "Cancel"];
       destructiveButtonIndex = 2;
+      cancelButtonIndex = 3;
     }
 
     showActionSheetWithOptions(

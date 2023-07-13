@@ -5,6 +5,7 @@ import {
   Image,
   SafeAreaView,
   TouchableOpacity,
+  Dimensions,
 } from "react-native";
 import React, {
   useCallback,
@@ -22,10 +23,12 @@ import axios from "../api/axios";
 import { captureRef } from "react-native-view-shot";
 import { useFocusEffect } from "@react-navigation/native";
 
+const screenWidth = Dimensions.get("window").width;
+
 const EditBoulderScreen = ({ route, navigation }) => {
   const { image } = route.params;
 
-  const imageScaleDownFactor = image.width > image.height ? 10 : 7;
+  const imageScaleDownFactor = image.width > image.height ? 10 : 8;
 
   const canvasRef = useRef();
   const zoomRef = useRef();
@@ -163,7 +166,7 @@ const EditBoulderScreen = ({ route, navigation }) => {
           </View>
           <Image
             ref={snapshotPhotoRef}
-            source={{ uri: image.uri }}
+            source={{ uri: image.url }}
             style={styles.image(image, imageScaleDownFactor)}
           />
         </ReactNativeZoomableView>

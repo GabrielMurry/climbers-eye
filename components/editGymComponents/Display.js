@@ -10,6 +10,7 @@ import {
   StyleSheet,
   SafeAreaView,
   ActivityIndicator,
+  Pressable,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
@@ -21,7 +22,10 @@ import {
   setSpraywalls,
   setHeadshotImage,
   setBannerImage,
+  updateSpraywall,
 } from "../../redux/actions";
+import { useActionSheet } from "@expo/react-native-action-sheet";
+import * as ImagePicker from "expo-image-picker";
 
 export const GymType = () => {
   const dispatch = useDispatch();
@@ -268,59 +272,203 @@ export const GymLocation = () => {
   );
 };
 
-export const SprayWalls = ({ navigation }) => {
-  const { spraywalls } = useSelector((state) => state.spraywallReducer);
+export const SprayWallName = ({ spraywall, navigation }) => {
+  const dispatch = useDispatch();
+  const [newSprayWallName, setNewSprayWallName] = useState(spraywall.name);
+  const [isDisabled, setIsDisabled] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const renderHeaderItem = () => (
-    <TouchableOpacity
-      style={{
-        width: 150,
-        height: 150,
-        borderWidth: 1,
-        borderRadius: 10,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-      onPress={() => navigation.navigate("AddNewSprayWall")}
-    >
-      <PlusIcon size={35} color={"black"} />
-    </TouchableOpacity>
-  );
+  useEffect(() => {
+    if (newSprayWallName !== spraywall.name) {
+      setIsDisabled(false);
+    } else {
+      setIsDisabled(true);
+    }
+  }, [newSprayWallName, spraywall.name]);
 
-  const renderSprayWallItem = ({ item }) => (
-    <TouchableOpacity
-      style={{
-        width: 150,
-        height: 150,
-        borderWidth: 1,
-        borderRadius: 10,
-        padding: 5,
-      }}
-      onPress={() => navigation.navigate("EditSprayWall", { spraywall: item })}
-    >
-      <Image
-        source={{ uri: item.base64 }}
-        style={{
-          width: "100%",
-          height: "100%",
-        }}
-        resizeMode="contain"
-      />
-    </TouchableOpacity>
-  );
+  const handleSave = async () => {
+    setIsLoading(true);
+    const data = { name: newSprayWallName };
+    const response = await request(
+      "post",
+      `edit_spraywall/${spraywall.id}`,
+      data
+    );
+    if (response.status !== 200) {
+      console.log(response.status);
+      setIsLoading(false);
+      return;
+    }
+    if (response.data) {
+      dispatch(setSpraywalls(response.data.spraywalls));
+      setIsLoading(false);
+      console.log("success!");
+      navigation.goBack();
+    }
+  };
 
   return (
-    <View style={{ alignItems: "center", height: "100%" }}>
-      <FlatList
-        data={spraywalls}
-        renderItem={renderSprayWallItem}
-        keyExtractor={(item) => item.id.toString()}
-        ListHeaderComponent={renderHeaderItem}
-        contentContainerStyle={{
-          gap: 10,
-        }}
-      />
-    </View>
+    <SafeAreaView
+      style={{
+        flex: 1,
+        justifyContent: "space-between",
+      }}
+    >
+      <View style={{ gap: 10 }}>
+        <Text>Spray Wall Name</Text>
+        <TextInput
+          style={{
+            borderWidth: 1,
+            borderColor: "#ccc",
+            borderRadius: 5,
+            paddingVertical: 10,
+            paddingHorizontal: 20,
+            fontSize: 16,
+          }}
+          value={newSprayWallName}
+          onChangeText={(text) => setNewSprayWallName(text)}
+        />
+      </View>
+      <View>
+        <TouchableOpacity
+          style={[styles.button, isDisabled && styles.disabledButton]}
+          disabled={isDisabled}
+          onPress={handleSave}
+        >
+          {isLoading ? (
+            <ActivityIndicator />
+          ) : (
+            <Text style={{ color: "white", fontWeight: "bold" }}>Save</Text>
+          )}
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
+  );
+};
+
+export const SprayWallImage = ({ spraywall, navigation, image }) => {
+  const dispatch = useDispatch();
+  const { showActionSheetWithOptions } = useActionSheet();
+  const [newImage, setNewImage] = useState(image);
+  const [isDisabled, setIsDisabled] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    setNewImage(image);
+  }, [image]);
+
+  useEffect(() => {
+    if (newImage.url) {
+      setIsDisabled(false);
+    } else {
+      setIsDisabled(true);
+    }
+  }, [newImage, spraywall.url]);
+
+  const handleSave = async () => {
+    setIsLoading(true);
+    const data = newImage;
+    const response = await request(
+      "post",
+      `edit_spraywall/${spraywall.id}`,
+      data
+    );
+    if (response.status !== 200) {
+      console.log(response.status);
+      setIsLoading(false);
+      return;
+    }
+    if (response.data) {
+      dispatch(setSpraywalls(response.data.spraywalls));
+      setIsLoading(false);
+      console.log("success!");
+      navigation.goBack();
+    }
+  };
+
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: false,
+      aspect: [4, 3],
+      quality: 1,
+      base64: true,
+    });
+    if (result && !result.canceled) {
+      const { base64, width, height } = result.assets[0];
+      setNewImage({
+        url: "data:image/png;base64," + base64,
+        width: width,
+        height: height,
+      });
+    }
+  };
+
+  const handleImagePress = async () => {
+    let options = ["Take New Photo", "Upload from Album", "Cancel"];
+    let destructiveButtonIndex = -1;
+    const cancelButtonIndex = 2;
+
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+        destructiveButtonIndex,
+      },
+      (selectedIndex) => {
+        switch (selectedIndex) {
+          case 0:
+            navigation.navigate("Camera", {
+              screen: "Edit",
+              item: { title: "Spray Wall Image", spraywall },
+            });
+            break;
+
+          case 1:
+            pickImage();
+            break;
+
+          case destructiveButtonIndex:
+            // Delete
+            deleteBoulder();
+            break;
+
+          case cancelButtonIndex:
+          // Canceled
+        }
+      }
+    );
+  };
+
+  return (
+    <SafeAreaView
+      style={{
+        flex: 1,
+        justifyContent: "space-between",
+      }}
+    >
+      <Pressable style={{ flex: 1 }} onPress={handleImagePress}>
+        <Image
+          source={{ uri: newImage.url ?? spraywall.url }}
+          style={{ width: "100%", height: "100%" }}
+          resizeMode="contain"
+        />
+      </Pressable>
+      <View>
+        <TouchableOpacity
+          style={[styles.button, isDisabled && styles.disabledButton]}
+          disabled={isDisabled}
+          onPress={handleSave}
+        >
+          {isLoading ? (
+            <ActivityIndicator />
+          ) : (
+            <Text style={{ color: "white", fontWeight: "bold" }}>Save</Text>
+          )}
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
   );
 };
 

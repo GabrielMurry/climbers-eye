@@ -27,7 +27,7 @@ const AddGymScreen = ({ route, navigation }) => {
   const [gymName, setGymName] = useState("");
   const [gymLocation, setGymLocation] = useState("");
   const [image, setImage] = useState({
-    base64: null,
+    url: null,
     width: null,
     height: null,
   });
@@ -59,10 +59,9 @@ const AddGymScreen = ({ route, navigation }) => {
               },
               spraywall: {
                 name: sprayWallName,
-                spraywall_image_data: image.base64,
-                spraywall_image_width: image.width,
-                spraywall_image_height: image.height,
-                gym: null,
+                image_data: image.url,
+                image_width: image.width,
+                image_height: image.height,
               },
             };
             const response = await request("post", `add_gym/${user.id}`, data);
@@ -71,6 +70,7 @@ const AddGymScreen = ({ route, navigation }) => {
               setIsLoading(false);
               return;
             }
+            // DO: put response data in redux state
             navigation.navigate("Home");
             setIsLoading(false);
           },
@@ -92,7 +92,7 @@ const AddGymScreen = ({ route, navigation }) => {
     if (result && !result.canceled) {
       const { base64, width, height } = result.assets[0];
       setImage({
-        base64: base64,
+        url: "data:image/png;base64," + base64,
         width: width,
         height: height,
       });
@@ -163,7 +163,7 @@ const AddGymScreen = ({ route, navigation }) => {
             />
           </View>
           <View style={styles.imageContainer}>
-            {image.base64 ? (
+            {image.url ? (
               <View
                 style={{
                   width: "100%",
@@ -173,7 +173,7 @@ const AddGymScreen = ({ route, navigation }) => {
                 }}
               >
                 <Image
-                  source={{ uri: "data:image/png;base64," + image.base64 }}
+                  source={{ uri: image.url }}
                   style={{
                     flex: 1,
                   }}

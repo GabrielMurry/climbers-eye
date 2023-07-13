@@ -159,7 +159,7 @@ const CircuitScreen = ({ route }) => {
   const renderEmptyList = () => {
     return (
       <View>
-        <Text>Create a Circuit</Text>
+        <Text>No Circuits Created</Text>
       </View>
     );
   };
@@ -183,7 +183,7 @@ const CircuitScreen = ({ route }) => {
         style={styles.addNewCircuitButton}
         onPress={handleAddNewCircuitPressed}
       >
-        <PlusIcon size={30} color={"green"} />
+        <PlusIcon size={30} color={"rgb(0, 122, 255)"} />
       </TouchableOpacity>
       {bottomSheetVisible ? (
         <CircuitBottomSheet

@@ -24,7 +24,7 @@ const ImageDisplay = ({
         <View style={styles.imageContainer(image, imageScaleDownFactor)}>
           <Image
             source={{
-              uri: image.uri,
+              uri: image.url,
             }}
             resizeMode="contain"
             onLoadStart={() => setIsLoading(true)}
@@ -34,7 +34,7 @@ const ImageDisplay = ({
           {isLoading && (
             <ActivityIndicator
               size="large"
-              style={{ width: "100%", height: "100%" }}
+              style={{ width: "100%", height: "100%", position: "absolute" }}
             />
           )}
         </View>

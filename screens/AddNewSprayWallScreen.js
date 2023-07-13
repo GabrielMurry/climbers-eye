@@ -21,7 +21,7 @@ const AddNewSprayWallScreen = ({ navigation, route }) => {
   const { gym } = useSelector((state) => state.gymReducer);
   const [sprayWallName, setSprayWallName] = useState("");
   const [image, setImage] = useState({
-    base64: null,
+    url: null,
     width: null,
     height: null,
   });
@@ -32,7 +32,7 @@ const AddNewSprayWallScreen = ({ navigation, route }) => {
     if (route?.params?.image) {
       const { image } = route.params;
       setImage({
-        base64: "data:image/png;base64," + image.base64,
+        url: image.url,
         width: image.width,
         height: image.height,
       });
@@ -59,7 +59,7 @@ const AddNewSprayWallScreen = ({ navigation, route }) => {
     if (result && !result.canceled) {
       const { base64, width, height } = result.assets[0];
       setImage({
-        base64: "data:image/png;base64," + base64,
+        url: "data:image/png;base64," + base64,
         width: width,
         height: height,
       });
@@ -70,9 +70,9 @@ const AddNewSprayWallScreen = ({ navigation, route }) => {
     setIsLoading(true);
     const data = {
       name: sprayWallName,
-      spraywall_image_data: image.base64.split(",")[1],
-      spraywall_image_width: image.width,
-      spraywall_image_height: image.height,
+      image_data: image.url.split(",")[1],
+      image_width: image.width,
+      image_height: image.height,
     };
     const response = await request("post", `add_new_spraywall/${gym.id}`, data);
     if (response.status !== 200) {
@@ -81,7 +81,6 @@ const AddNewSprayWallScreen = ({ navigation, route }) => {
       return;
     }
     dispatch(setSpraywalls(response.data.spraywalls));
-    console.log("successfully added spraywall!");
     setIsLoading(false);
     navigation.goBack();
   };
@@ -99,7 +98,7 @@ const AddNewSprayWallScreen = ({ navigation, route }) => {
           />
         </View>
         <View style={styles.imageContainer}>
-          {image.base64 ? (
+          {image.url ? (
             <View
               style={{
                 width: "100%",
@@ -109,7 +108,7 @@ const AddNewSprayWallScreen = ({ navigation, route }) => {
               }}
             >
               <Image
-                source={{ uri: image.base64 }}
+                source={{ uri: image.url }}
                 style={{
                   flex: 1,
                 }}
@@ -127,7 +126,7 @@ const AddNewSprayWallScreen = ({ navigation, route }) => {
                     alignItems: "center",
                   }}
                   onPress={() =>
-                    navigation.navigate("Camera", { screen: "AddGym" })
+                    navigation.navigate("Camera", { screen: "AddNewSprayWall" })
                   }
                 >
                   <CameraIcon size={25} color="black" />

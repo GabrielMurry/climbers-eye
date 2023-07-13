@@ -26,7 +26,6 @@ import SendScreen from "./screens/SendScreen";
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
-import TestDrawScreen from "./screens/TestDrawScreen";
 import FilterScreen from "./screens/FilterScreen";
 import CircuitScreen from "./screens/CircuitScreen";
 import BoulderStatsScreen from "./screens/BoulderStatsScreen";
@@ -36,6 +35,7 @@ import EditGymScreen from "./screens/EditGymScreen";
 import AddNewSprayWallScreen from "./screens/AddNewSprayWallScreen";
 import EditSprayWallScreen from "./screens/EditSprayWallScreen";
 import EditScreen from "./screens/EditScreen";
+import TestImageScreen from "./screens/TestImageScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -112,7 +112,14 @@ export default function App() {
         <NavigationContainer>
           <Stack.Navigator>
             {/* Screens */}
-            {/* <Stack.Screen name="TestDraw" component={TestDrawScreen} /> */}
+            {/* <Stack.Screen
+              name="TestImage"
+              component={TestImageScreen}
+              options={{
+                headerShown: false,
+                animation: "none",
+              }}
+            /> */}
             <Stack.Screen
               name="Login"
               component={LoginScreen}
