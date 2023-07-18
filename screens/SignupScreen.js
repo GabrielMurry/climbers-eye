@@ -53,29 +53,34 @@ const SignupScreen = ({ navigation }) => {
         setValue={(value) => setUsername(value)}
         placeholder="Username"
         secureTextEntry={false}
+        width="90%"
       />
       <CustomInput
         value={email}
         setValue={setEmail}
         placeholder="Email"
         secureTextEntry={false}
+        width="90%"
       />
       <CustomInput
         value={password}
         setValue={setPassword}
         placeholder="Password"
         secureTextEntry={true}
+        width="90%"
       />
       <CustomInput
         value={passwordRepeat}
         setValue={setPasswordRepeat}
         placeholder="Re-Enter Password"
         secureTextEntry={true}
+        width="90%"
       />
       <CustomButton
         onPress={handleCreateAccount}
         text="Create Account"
         isLoading={isLoading}
+        width="90%"
       />
 
       <Text style={styles.text}>
@@ -95,6 +100,7 @@ const SignupScreen = ({ navigation }) => {
         onPress={handleLogin}
         text="Already have an account? Login"
         type="TERTIARY"
+        width="90%"
       />
     </SafeAreaView>
   );

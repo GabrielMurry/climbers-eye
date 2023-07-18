@@ -88,24 +88,33 @@ const LoginScreen = ({ navigation }) => {
         setValue={(value) => setUsername(value)}
         placeholder="Username"
         secureTextEntry={false}
+        width="90%"
       />
       <CustomInput
         value={password}
         setValue={setPassword}
         placeholder="Password"
         secureTextEntry={true}
+        width="90%"
       />
-      <CustomButton onPress={handleLogin} text="Login" isLoading={isLoading} />
+      <CustomButton
+        onPress={handleLogin}
+        text="Login"
+        isLoading={isLoading}
+        width="90%"
+      />
       <CustomButton
         onPress={handleForgotPassword}
         text="Forgot password?"
         type="TERTIARY"
+        width="90%"
       />
       <SocialSignInButtons />
       <CustomButton
         onPress={handleCreateAccount}
         text="Don't have an account? Create one"
         type="TERTIARY"
+        width="90%"
       />
     </SafeAreaView>
   );

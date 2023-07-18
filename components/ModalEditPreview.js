@@ -11,17 +11,21 @@ import {
   Platform,
   Switch,
   Pressable,
+  SafeAreaView,
+  ActivityIndicator,
 } from "react-native";
 import React, { useState } from "react";
 import FullScreenImage from "./FullScreenImage";
 import { request } from "../api/requestMethods";
 import { useSelector } from "react-redux";
+import CustomInput from "./CustomInput";
+import CustomButton from "./CustomButton";
 
 const ModalEditPreview = ({
   image,
   imageScaleDownFactor,
-  modalVisible,
-  setModalVisible,
+  isModalVisible,
+  setIsModalVisible,
   navigation,
   resultImageUri,
 }) => {
@@ -34,8 +38,11 @@ const ModalEditPreview = ({
   const [isMatching, setIsMatching] = useState(true);
   const [isPublish, setIsPublish] = useState(true);
   const [imageFullScreen, setImageFullScreen] = useState(false);
+  const [isImageLoading, setIsImageLoading] = useState(true);
+  const [isConfirmLoading, setIsConfirmLoading] = useState(false);
 
-  const handleNext = async () => {
+  const handleConfirm = async () => {
+    setIsConfirmLoading(true);
     data = {
       name,
       description,
@@ -52,98 +59,124 @@ const ModalEditPreview = ({
     );
     if (response.status !== 200) {
       console.log(response.status);
+      setIsConfirmLoading(false);
       return;
     }
     if (response.data) {
       navigation.navigate("Boulder", { boulder: response.data });
+      setIsConfirmLoading(false);
     }
-    setModalVisible(!modalVisible);
+    setIsModalVisible(!isModalVisible);
   };
 
   return (
     <Modal
-      animationType="slide"
+      visible={isModalVisible}
       transparent={true}
-      visible={modalVisible}
-      onRequestClose={() => {
-        Alert.alert("Modal has been closed.");
-        setModalVisible(!modalVisible);
-      }}
+      animationType="fade"
+      onRequestClose={() => setIsModalVisible(false)}
     >
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <View style={styles.centeredView}>
-          <View style={styles.modalView(image, imageScaleDownFactor)}>
-            <Pressable
-              style={styles.modalImageContainer(image, imageScaleDownFactor)}
-              onPress={() => setImageFullScreen(true)}
-            >
+      <View style={styles.modalContainer}>
+        <SafeAreaView style={styles.modalContent}>
+          {/* Add modal content here */}
+          {/* Input Data Section */}
+          <View
+            style={{
+              height: "40%",
+              paddingHorizontal: 10,
+              justifyContent: "center",
+            }}
+          >
+            <Text>Boulder Name</Text>
+            <CustomInput
+              value={name}
+              setValue={(value) => setName(value)}
+              placeholder="Boulder Name"
+              secureTextEntry={false}
+            />
+            <Text>Boulder Description</Text>
+            <CustomInput
+              value={description}
+              setValue={(value) => setDescription(value)}
+              placeholder="Boulder Description"
+              secureTextEntry={false}
+            />
+            <View style={{ marginTop: 10, gap: 10, paddingHorizontal: 40 }}>
               <View
                 style={{
-                  width: image.width / (imageScaleDownFactor + 2.5),
-                  height: image.height / (imageScaleDownFactor + 2.5),
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
                 }}
               >
-                <Image
-                  source={{ uri: resultImageUri }}
-                  style={styles.modalImage}
-                  resizeMode="contain"
-                />
-              </View>
-            </Pressable>
-            <View style={styles.labelAndInputContainer}>
-              <View>
-                <TextInput
-                  style={styles.input}
-                  value={name}
-                  onChangeText={setName}
-                  placeholder="Boulder Name"
-                  placeholderTextColor="lightgray"
-                />
-              </View>
-              <View>
-                <TextInput
-                  style={styles.input}
-                  value={description}
-                  onChangeText={setDescription}
-                  placeholder="Description"
-                  placeholderTextColor="lightgray"
-                />
-              </View>
-            </View>
-            <View style={styles.labelAndToggleContainer}>
-              <View style={styles.labelAndToggle}>
                 <Text style={styles.toggleLabel}>Matching Allowed</Text>
                 <Switch value={isMatching} onValueChange={setIsMatching} />
               </View>
-              <View style={styles.labelAndToggle}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
                 <Text style={styles.toggleLabel}>Publish</Text>
                 <Switch value={isPublish} onValueChange={setIsPublish} />
               </View>
             </View>
-            <View style={styles.modalButtonsContainer}>
-              <TouchableOpacity
-                style={styles.modalButton("rgba(15, 10, 222, 0.2)")}
-                onPress={() => setModalVisible(!modalVisible)}
-              >
-                <Text style={styles.buttonText}>Cancel</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.modalButton("rgba(15, 10, 222, 1)")}
-                onPress={handleNext}
-              >
-                <Text style={styles.buttonText}>Next</Text>
-              </TouchableOpacity>
-            </View>
           </View>
-        </View>
-      </KeyboardAvoidingView>
+          {/* Manipulated Image Section */}
+          <View
+            style={{
+              height: "50%",
+              paddingHorizontal: 10,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Pressable onPress={() => setImageFullScreen(true)}>
+              <Image
+                source={{ uri: resultImageUri }}
+                style={{
+                  aspectRatio: 1, // Ensures the image maintains its aspect ratio
+                  width: "100%",
+                }}
+                resizeMode="contain"
+                onLoadStart={() => setIsImageLoading(true)}
+                onLoadEnd={() => setIsImageLoading(false)}
+              />
+            </Pressable>
+            {isImageLoading ? (
+              <ActivityIndicator
+                size="large"
+                style={{ width: "100%", height: "100%", position: "absolute" }}
+              />
+            ) : null}
+          </View>
+          {/* Cancel / Confirm Buttons */}
+          <View
+            style={{
+              height: "10%",
+              paddingHorizontal: 10,
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-evenly",
+            }}
+          >
+            <CustomButton
+              onPress={() => setIsModalVisible(!isModalVisible)}
+              text="Cancel"
+              type="TERTIARY"
+              width="40%"
+            />
+            <CustomButton
+              onPress={handleConfirm}
+              text="Confirm"
+              width="40%"
+              isLoading={isConfirmLoading}
+            />
+          </View>
+        </SafeAreaView>
+      </View>
       <FullScreenImage
         imageFullScreen={imageFullScreen}
         url={resultImageUri}
@@ -157,87 +190,63 @@ const ModalEditPreview = ({
 export default ModalEditPreview;
 
 const styles = StyleSheet.create({
-  centeredView: {
+  modalContainer: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  modalView: (image, imageScaleDownFactor) => ({
-    backgroundColor: "lightblue",
-    borderRadius: 10,
-    width: image.width / imageScaleDownFactor,
-    paddingVertical: 20,
-    alignItems: "center",
-    justifyContent: "space-evenly",
-    shadowColor: "#000",
-    position: "absolute",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  }),
-  modalImageContainer: (image, imageScaleDownFactor) => ({
-    width:
-      imageScaleDownFactor === 10
-        ? image.width / (imageScaleDownFactor + 1)
-        : image.width / (imageScaleDownFactor - 1),
-    height:
-      imageScaleDownFactor === 10
-        ? image.width / (imageScaleDownFactor + 1)
-        : image.width / (imageScaleDownFactor - 1),
-    justifyContent: "center",
-    alignItems: "center",
-  }),
-  modalImage: {
-    width: "100%",
-    height: "100%",
-    borderRadius: 10,
-  },
-  labelAndInputContainer: {
-    marginTop: 20,
-    width: "75%",
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "gray",
     backgroundColor: "white",
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-    marginBottom: 20,
   },
-  modalButtonsContainer: {
-    marginTop: 20,
-    flexDirection: "row",
-    justifyContent: "space-evenly",
-    width: "100%",
+  modalContent: {
+    flex: 1,
   },
-  modalButton: (col) => ({
-    width: 100,
+  displayContainer: {
+    flex: 1,
+  },
+  columnContainer: {
+    justifyContent: "flex-end",
+    alignItems: "center",
+    gap: 10,
+  },
+  buttonTextSmall: {
+    width: 125,
     height: 40,
-    backgroundColor: col,
+    justifyContent: "center",
+    alignItems: "flex-end",
+  },
+  buttonTextBig: {
+    width: 125,
+    height: 60,
+    justifyContent: "center",
+    alignItems: "flex-end",
+  },
+  buttonContainerIcon: {
+    width: "100%",
+    alignItems: "center",
+  },
+  buttonIconSmall: {
+    width: 40,
+    height: 40,
+    backgroundColor: "white",
+    borderRadius: "100%",
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: 10,
-  }),
-  buttonText: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center",
+    // shadow
+    shadowColor: "black",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5, // Required for Android
   },
-  labelAndToggleContainer: {
-    width: "60%",
-    rowGap: 10,
-  },
-  labelAndToggle: {
-    flexDirection: "row",
+  buttonIconBig: {
+    width: 60,
+    height: 60,
+    backgroundColor: "rgb(0, 122, 255)",
+    borderRadius: "100%",
+    justifyContent: "center",
     alignItems: "center",
-    justifyContent: "space-between",
-  },
-  toggleLabel: {
-    fontSize: 16,
+    // shadow
+    shadowColor: "black",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5, // Required for Android
   },
 });

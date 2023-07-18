@@ -22,6 +22,7 @@ import ModalEditPreview from "../components/ModalEditPreview";
 import axios from "../api/axios";
 import { captureRef } from "react-native-view-shot";
 import { useFocusEffect } from "@react-navigation/native";
+import { request } from "../api/requestMethods";
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -38,7 +39,7 @@ const EditBoulderScreen = ({ route, navigation }) => {
   const [selectedItem, setSelectedItem] = useState("green");
   const [brushSize, setBrushSize] = useState(20);
   const [currentZoomLevel, setCurrentZoomLevel] = useState(1.0);
-  const [modalVisible, setModalVisible] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const [resultImageUri, setResultImageUri] = useState(null);
 
   // resetting the canvas every time we focus on edit screen (prevent previous drawn points from showing up)
@@ -95,6 +96,7 @@ const EditBoulderScreen = ({ route, navigation }) => {
   };
 
   const handleDonePress = async () => {
+    setIsModalVisible(true);
     // snapshot of drawing in base64 png
     const snapshotDrawing = await captureRef(snapshotDrawingRef, {
       format: "png",
@@ -118,15 +120,16 @@ const EditBoulderScreen = ({ route, navigation }) => {
       (error) => console.error("Oops, snapshot failed", error)
     );
 
-    axios
-      .post("composite/", { drawing: snapshotDrawing, photo: snapshotPhoto })
-      .then((response) => {
-        setResultImageUri(response.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    setModalVisible(true);
+    const data = { drawing: snapshotDrawing, photo: snapshotPhoto };
+
+    const response = await request("post", "composite/", data);
+    if (response.status !== 200) {
+      console.log(response.status);
+      return;
+    }
+    if (response.data) {
+      setResultImageUri(response.data.uri);
+    }
   };
 
   return (
@@ -199,8 +202,8 @@ const EditBoulderScreen = ({ route, navigation }) => {
       <ModalEditPreview
         image={image}
         imageScaleDownFactor={imageScaleDownFactor}
-        modalVisible={modalVisible}
-        setModalVisible={setModalVisible}
+        isModalVisible={isModalVisible}
+        setIsModalVisible={setIsModalVisible}
         navigation={navigation}
         resultImageUri={resultImageUri}
       />

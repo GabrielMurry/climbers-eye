@@ -25,12 +25,12 @@ export const Slide = ({ image }) => {
           onLoadStart={() => setIsLoading(true)}
           onLoadEnd={() => setIsLoading(false)}
         />
-        {isLoading && (
+        {isLoading ? (
           <ActivityIndicator
             size="large"
             style={{ width: "100%", height: "100%", position: "absolute" }}
           />
-        )}
+        ) : null}
       </View>
     </View>
   );

@@ -8,6 +8,7 @@ const CustomButton = ({
   type = "PRIMARY",
   bgColor,
   fgColor,
+  width = "100%",
   isLoading,
 }) => {
   return (
@@ -16,6 +17,7 @@ const CustomButton = ({
         styles.container,
         styles[`container_${type}`],
         bgColor ? { backgroundColor: bgColor } : {},
+        { width: width },
       ]}
       onPress={onPress}
     >
@@ -46,7 +48,6 @@ export default CustomButton;
 
 const styles = StyleSheet.create({
   container: {
-    width: "90%",
     height: 50,
     justifyContent: "center",
     padding: 10,

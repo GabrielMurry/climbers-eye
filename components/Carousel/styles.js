@@ -24,17 +24,13 @@ export const styles = StyleSheet.create({
   },
   bullets: {
     position: "absolute",
-    bottom: 5,
-    width: "100%",
-    display: "flex",
+    bottom: 0,
     justifyContent: "center",
     flexDirection: "row",
-    paddingHorizontal: 10,
-    paddingTop: 5,
   },
   bullet: {
     paddingHorizontal: 5,
-    fontSize: 18,
+    fontSize: 24,
   },
 });
 

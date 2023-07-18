@@ -1,35 +1,15 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  SafeAreaView,
-  TouchableOpacity,
-  FlatList,
-  ActivityIndicator,
-  Image,
-} from "react-native";
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
-import {
-  ArrowLeftCircleIcon,
-  UserCircleIcon,
-} from "react-native-heroicons/outline";
+import { View } from "react-native";
+import React, { useCallback, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { request } from "../api/requestMethods";
-import BoulderCard from "../components/listComponents/BoulderCard";
-import CircuitCard from "../components/profileComponents/CircuitCard";
 import SectionButtons from "../components/profileComponents/SectionButtons";
-import QuickStatsCard from "../components/profileComponents/QuickStatsCard";
-import BottomSheet from "@gorhom/bottom-sheet";
 import * as ImagePicker from "expo-image-picker";
 import { useFocusEffect } from "@react-navigation/native";
 import { setHeadshotImage, setBannerImage } from "../redux/actions";
-import { FontAwesome5 } from "@expo/vector-icons";
+import Header from "../components/profileComponents/Header";
+import GymAndSprayWallButtons from "../components/profileComponents/GymAndSprayWallButtons";
+import StatisticsButton from "../components/profileComponents/StatisticsButton";
+import ModalProfile from "../components/profileComponents/ModalProfile";
 
 const sections = {
   logbook: "logbook",
@@ -53,6 +33,8 @@ const ProfileScreen = ({ route, navigation }) => {
   );
   const [editHeadshot, setEditHeadshot] = useState(headshotImage);
   const [editBanner, setEditBanner] = useState(bannerImage);
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedGyms, setSelectedGyms] = useState([]);
 
   // This event will be triggered when the screen gains focus (i.e., when you navigate back to it).
   useFocusEffect(
@@ -98,18 +80,7 @@ const ProfileScreen = ({ route, navigation }) => {
   });
   const [section, setSection] = useState(sections.logbook);
   const [sectionData, setSectionData] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-
-  // ref
-  const bottomSheetRef = useRef(null);
-
-  // variables
-  const snapPoints = useMemo(() => ["92%"], []);
-
-  // callbacks
-  const handleSheetChanges = useCallback((index) => {
-    console.log("handleSheetChanges", index);
-  }, []);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   useEffect(() => {
     fetchProfileData();
@@ -170,29 +141,6 @@ const ProfileScreen = ({ route, navigation }) => {
       }
       setIsLoading(false);
     }
-  };
-
-  // Optimization --> use the React.useCallback hook to memoize the navigation function and prevent unnecessary re-creation of the function on every render.
-  // Providing navigation as a dependency, the navigateToBoulder function will only be re-created when the navigation prop changes, ensuring better performance.
-  const navigateToBoulderScreen = useCallback(
-    (item) => {
-      navigation.navigate("Boulder", { boulder: item });
-    },
-    [navigation]
-  );
-
-  const renderBoulderCards = ({ item }) => {
-    return (
-      <>
-        {section !== "circuits" ? (
-          <TouchableOpacity onPress={() => navigateToBoulderScreen(item)}>
-            <BoulderCard boulder={item} />
-          </TouchableOpacity>
-        ) : (
-          <CircuitCard circuit={item} />
-        )}
-      </>
-    );
   };
 
   const handleUploadImage = async (type) => {
@@ -270,222 +218,28 @@ const ProfileScreen = ({ route, navigation }) => {
     handleCloseEditProfile();
   };
 
+  useEffect(() => {
+    console.log(selectedGyms);
+  }, [selectedGyms]);
+
   return (
-    <View style={styles.profileContainer}>
-      <View style={styles.headerContainer(BACKDROP_IMAGE_HEIGHT)}>
-        <Image
-          source={{ uri: bannerImage.uri }}
-          style={{ width: "100%", height: "100%", position: "absolute" }}
-        />
-        <SafeAreaView style={styles.header}>
-          <TouchableOpacity
-            style={{ backgroundColor: "black", borderRadius: "100%" }}
-            onPress={() => navigation.goBack()}
-          >
-            <ArrowLeftCircleIcon size={30} color="white" />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.editProfileButton}
-            onPress={handleEditProfile}
-          >
-            <Text style={styles.editProfileText}>Edit Profile</Text>
-          </TouchableOpacity>
-        </SafeAreaView>
-      </View>
-      <View style={styles.userContainer}>
-        <View
-          style={[
-            styles.userPhoto,
-            {
-              width: HEADSHOT_IMAGE_SIZE,
-              height: HEADSHOT_IMAGE_SIZE,
-            },
-          ]}
-        >
-          {headshotImage.uri ? (
-            <Image
-              source={{ uri: headshotImage.uri }}
-              style={{ width: "100%", height: "100%", borderRadius: 100 }}
-            />
-          ) : (
-            <UserCircleIcon size={HEADSHOT_IMAGE_SIZE} color="black" />
-          )}
-        </View>
-        <View style={styles.username}>
-          <Text style={styles.usernameText}>{user.name}</Text>
-          <Text>{gym.name}</Text>
-          <Text>{spraywalls[spraywallIndex].name}</Text>
-          <Text>0 Sessions</Text>
-        </View>
-      </View>
-      <SectionButtons
-        section={section}
-        setSection={setSection}
-        sections={sections}
+    <View style={{ flex: 1 }}>
+      {/* Header (banner image, headshot image, name, username) */}
+      <Header navigation={navigation} />
+      {/* Gym and Spray Wall Selection Buttons */}
+      <GymAndSprayWallButtons setIsModalVisible={setIsModalVisible} />
+      {/* Statistics Button */}
+      <StatisticsButton />
+      {/* Section Buttons (Logbook, Likes, Bookmarks, Circuits, Created) */}
+      <SectionButtons />
+      <ModalProfile
+        isModalVisible={isModalVisible}
+        setIsModalVisible={setIsModalVisible}
+        selectedGyms={selectedGyms}
+        setSelectedGyms={setSelectedGyms}
       />
-      <View style={{ flex: 1 }}>
-        {isLoading ? (
-          <View
-            style={{
-              flex: 1,
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <ActivityIndicator size={"large"} />
-          </View>
-        ) : (
-          <FlatList
-            data={sectionData}
-            contentContainerStyle={{
-              marginTop: 10,
-              rowGap: 10,
-              paddingHorizontal: 10, // add the same for ListScreen inside the flat list?
-            }}
-            renderItem={renderBoulderCards}
-            keyExtractor={(item) => item.id}
-            ListHeaderComponent={
-              <QuickStatsCard
-                section={section}
-                logbookData={logbookData}
-                creationsData={creationsData}
-                likesData={likesData}
-                bookmarksData={bookmarksData}
-                circuitsData={circuitsData}
-              />
-            }
-            ListFooterComponent={<View style={{ height: 60 }} />}
-          />
-        )}
-      </View>
-      <BottomSheet
-        ref={bottomSheetRef}
-        index={-1}
-        snapPoints={snapPoints}
-        onChange={handleSheetChanges}
-        enablePanDownToClose={true}
-        // backgroundStyle={{ backgroundColor: "rgba(23,23,23,1)" }}
-        handleIndicatorStyle={{ opacity: 0 }}
-      >
-        <View
-          style={{
-            justifyContent: "space-between",
-            flexDirection: "row",
-            paddingHorizontal: 20,
-            marginBottom: 20,
-          }}
-        >
-          <TouchableOpacity onPress={handleCloseEditProfile}>
-            <Text style={{ fontSize: 16 }}>Cancel</Text>
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <Text style={{ fontSize: 18, fontWeight: "bold" }}>
-              Edit Profile
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={handleSave}>
-            <Text style={{ fontSize: 16 }}>Save</Text>
-          </TouchableOpacity>
-        </View>
-        <TouchableOpacity
-          style={{ backgroundColor: "red", height: BACKDROP_IMAGE_HEIGHT }}
-          onPress={() => handleUploadImage("banner")}
-        >
-          <Image
-            source={{ uri: editBanner.uri }}
-            style={{ width: "100%", height: "100%" }}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={{
-            backgroundColor: "orange",
-            width: HEADSHOT_IMAGE_SIZE,
-            height: HEADSHOT_IMAGE_SIZE,
-            borderRadius: "100%",
-          }}
-          onPress={() => handleUploadImage("headshot")}
-        >
-          {editHeadshot.uri ? (
-            <Image
-              source={{ uri: editHeadshot.uri }}
-              style={{ width: "100%", height: "100%", borderRadius: 100 }}
-            />
-          ) : (
-            <UserCircleIcon size={HEADSHOT_IMAGE_SIZE} color="black" />
-          )}
-        </TouchableOpacity>
-        <View style={{ backgroundColor: "green", height: 50 }}>
-          <Text>Name</Text>
-        </View>
-      </BottomSheet>
     </View>
   );
 };
 
 export default ProfileScreen;
-
-const styles = StyleSheet.create({
-  profileContainer: {
-    flex: 1,
-  },
-  headerContainer: (height) => ({
-    backgroundColor: "#FFD1D1",
-    height: height,
-  }),
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginHorizontal: 20,
-  },
-  editProfileButton: {
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 6,
-    borderRadius: 10,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-  },
-  editProfileText: {
-    color: "white",
-  },
-  userContainer: {
-    height: 125,
-  },
-  userPhoto: {
-    position: "absolute",
-    marginTop: -15,
-    marginLeft: 30,
-    backgroundColor: "orange",
-    borderRadius: 100,
-    borderWidth: 1,
-    borderColor: "white",
-  },
-  username: {
-    left: "50%",
-    transform: [{ translateX: -50 }],
-    justifyContent: "space-around",
-    flex: 1,
-  },
-  usernameText: {
-    fontSize: 24,
-    fontWeight: "bold",
-  },
-  followingFollowers: {
-    flexDirection: "row",
-    columnGap: 10,
-  },
-  buttonsContainer: {
-    flex: 1,
-    rowGap: 20,
-    padding: 20,
-  },
-  button: {
-    backgroundColor: "lightpink",
-    height: 60,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 10,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingHorizontal: 25,
-  },
-});

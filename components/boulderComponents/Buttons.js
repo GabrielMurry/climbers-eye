@@ -7,14 +7,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import { request } from "../../api/requestMethods";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 
-const Buttons = ({
-  boulder,
-  setBoulder,
-  userID,
-  username,
-  setIsStatsVisible,
-  navigation,
-}) => {
+const Buttons = ({ boulder, setBoulder, userID, username, navigation }) => {
   const { showActionSheetWithOptions } = useActionSheet();
 
   const handleLikePressed = async () => {

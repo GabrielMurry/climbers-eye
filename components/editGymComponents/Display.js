@@ -406,7 +406,7 @@ export const SprayWallImage = ({ spraywall, navigation, image }) => {
   };
 
   const handleImagePress = async () => {
-    let options = ["Take New Photo", "Upload from Album", "Cancel"];
+    let options = ["Take a photo", "Choose from library", "Cancel"];
     let destructiveButtonIndex = -1;
     const cancelButtonIndex = 2;
 

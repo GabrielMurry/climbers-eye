@@ -1,6 +1,4 @@
 export const SET_USER = "SET_USER";
-export const SET_USER_NAME = "SET_USER_NAME";
-export const SET_USER_ID = "SET_USER_ID";
 export const SET_GYM = "SET_GYM";
 export const SET_SPRAYWALLS = "SET_SPRAYWALLS";
 export const UPDATE_SPRAYWALL = "UPDATE_SPRAYWALL";
@@ -20,20 +18,6 @@ export const setUser = (user) => (dispatch) => {
   dispatch({
     type: SET_USER,
     payload: user,
-  });
-};
-
-export const setUsername = (username) => (dispatch) => {
-  dispatch({
-    type: SET_USER_NAME,
-    payload: username,
-  });
-};
-
-export const setUserID = (userID) => (dispatch) => {
-  dispatch({
-    type: SET_USER_ID,
-    payload: userID,
   });
 };
 

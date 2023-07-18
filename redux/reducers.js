@@ -1,8 +1,6 @@
 import { boulderGrades } from "../utils/constants/boulderConstants";
 import {
   SET_USER,
-  SET_USER_NAME,
-  SET_USER_ID,
   SET_GYM,
   SET_SPRAYWALLS,
   UPDATE_SPRAYWALL,
@@ -21,8 +19,6 @@ import {
 
 const initialState = {
   user: {},
-  username: "",
-  userID: "",
   gym: {},
   spraywalls: [],
   spraywallIndex: 0,
@@ -40,10 +36,6 @@ export function userReducer(state = initialState, action) {
   switch (action.type) {
     case SET_USER:
       return { ...state, user: action.payload };
-    case SET_USER_NAME:
-      return { ...state, username: action.payload };
-    case SET_USER_ID:
-      return { ...state, userID: action.payload };
     case SET_HEADSHOT_IMAGE:
       return {
         ...state,

@@ -246,7 +246,7 @@ const ListScreen = ({ navigation }) => {
     });
   };
 
-  const handleUploadImage = async () => {
+  const handleUploadImagePressed = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: false,
@@ -255,19 +255,17 @@ const ListScreen = ({ navigation }) => {
       base64: true,
     });
 
-    if (result) {
-      if (!result.canceled) {
-        Image.getSize(result.assets[0].uri, (width, height) => {
-          setIsModalVisible(false);
-          navigation.navigate("EditBoulder", {
-            image: {
-              uri: "data:image/png;base64," + result.assets[0].base64,
-              width: width,
-              height: height,
-            },
-          });
+    if (result && !result.canceled) {
+      Image.getSize(result.assets[0].uri, (width, height) => {
+        setIsModalVisible(false);
+        navigation.navigate("EditBoulder", {
+          image: {
+            url: "data:image/png;base64," + result.assets[0].base64,
+            width: width,
+            height: height,
+          },
         });
-      }
+      });
     }
   };
 
@@ -328,7 +326,7 @@ const ListScreen = ({ navigation }) => {
         setIsModalVisible={setIsModalVisible}
         handleCameraPressed={handleCameraPressed}
         handleDefaultImagePressed={handleDefaultImagePressed}
-        handleUploadImage={handleUploadImage}
+        handleUploadImagePressed={handleUploadImagePressed}
       />
     </View>
   );

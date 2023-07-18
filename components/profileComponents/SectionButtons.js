@@ -1,139 +1,103 @@
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
 
-const SectionButtons = ({ section, setSection, sections }) => {
+const SectionButtons = () => {
   return (
-    <View style={styles.sectionsContainer}>
-      <TouchableOpacity
-        style={styles.sectionButton}
-        onPress={() => setSection(sections.logbook)}
+    <View style={{ alignItems: "center", marginTop: 20 }}>
+      <View
+        style={{
+          width: "90%",
+          gap: 20,
+        }}
       >
-        <Text
-          style={{
-            fontWeight: "bold",
-            opacity: section === "logbook" ? 1 : 0.3,
-          }}
-        >
-          Logbook
-        </Text>
         <View
           style={{
-            backgroundColor: "black",
-            width: "100%",
-            height: 2,
-            bottom: 0,
-            position: "absolute",
-            opacity: section === "logbook" ? 1 : 0,
-          }}
-        />
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.sectionButton}
-        onPress={() => setSection(sections.creations)}
-      >
-        <Text
-          style={{
-            fontWeight: "bold",
-            opacity: section === "creations" ? 1 : 0.3,
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            gap: 20,
           }}
         >
-          Creations
-        </Text>
+          {/* Logbook Button */}
+          <TouchableOpacity
+            style={{
+              backgroundColor: "#FFFBF1",
+              flex: 1,
+              height: 175,
+              borderRadius: 10,
+            }}
+          >
+            <Text style={{ marginTop: 10, marginLeft: 10, fontSize: 16 }}>
+              Logbook
+            </Text>
+          </TouchableOpacity>
+          <View style={{ flex: 1, gap: 20 }}>
+            {/* Likes Button */}
+            <TouchableOpacity
+              style={{
+                backgroundColor: "#FFFBF1",
+                flex: 1,
+                height: 75,
+                borderRadius: 10,
+              }}
+            >
+              <Text style={{ marginTop: 10, marginLeft: 10, fontSize: 16 }}>
+                Likes
+              </Text>
+            </TouchableOpacity>
+            {/* Bookmarks Button */}
+            <TouchableOpacity
+              style={{
+                backgroundColor: "#FFFBF1",
+                flex: 1,
+                height: 75,
+                borderRadius: 10,
+              }}
+            >
+              <Text style={{ marginTop: 10, marginLeft: 10, fontSize: 16 }}>
+                Bookmarks
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
         <View
           style={{
-            backgroundColor: "black",
-            width: "100%",
-            height: 2,
-            bottom: 0,
-            position: "absolute",
-            opacity: section === "creations" ? 1 : 0,
-          }}
-        />
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.sectionButton}
-        onPress={() => setSection(sections.likes)}
-      >
-        <Text
-          style={{
-            fontWeight: "bold",
-            opacity: section === "likes" ? 1 : 0.3,
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            gap: 20,
           }}
         >
-          Likes
-        </Text>
-        <View
-          style={{
-            backgroundColor: "black",
-            width: "100%",
-            height: 2,
-            bottom: 0,
-            position: "absolute",
-            opacity: section === "likes" ? 1 : 0,
-          }}
-        />
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.sectionButton}
-        onPress={() => setSection(sections.bookmarks)}
-      >
-        <Text
-          style={{
-            fontWeight: "bold",
-            opacity: section === "bookmarks" ? 1 : 0.3,
-          }}
-        >
-          Bookmarks
-        </Text>
-        <View
-          style={{
-            backgroundColor: "black",
-            width: "100%",
-            height: 2,
-            bottom: 0,
-            position: "absolute",
-            opacity: section === "bookmarks" ? 1 : 0,
-          }}
-        />
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.sectionButton}
-        onPress={() => setSection(sections.circuits)}
-      >
-        <Text
-          style={{
-            fontWeight: "bold",
-            opacity: section === "circuits" ? 1 : 0.3,
-          }}
-        >
-          Circuits
-        </Text>
-        <View
-          style={{
-            backgroundColor: "black",
-            width: "100%",
-            height: 2,
-            bottom: 0,
-            position: "absolute",
-            opacity: section === "circuits" ? 1 : 0,
-          }}
-        />
-      </TouchableOpacity>
+          {/* Circuits Button */}
+          <TouchableOpacity
+            style={{
+              backgroundColor: "#FFFBF1",
+              flex: 1,
+              height: 75,
+              borderRadius: 10,
+            }}
+          >
+            <Text style={{ marginTop: 10, marginLeft: 10, fontSize: 16 }}>
+              Circuits
+            </Text>
+          </TouchableOpacity>
+          {/* Created Button */}
+          <TouchableOpacity
+            style={{
+              backgroundColor: "#FFFBF1",
+              flex: 1,
+              height: 75,
+              borderRadius: 10,
+            }}
+          >
+            <Text style={{ marginTop: 10, marginLeft: 10, fontSize: 16 }}>
+              Created
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
     </View>
   );
 };
 
 export default SectionButtons;
-
-const styles = StyleSheet.create({
-  sectionsContainer: {
-    flexDirection: "row",
-    justifyContent: "space-evenly",
-    alignItems: "center",
-    borderBottomWidth: 1,
-    borderColor: "lightgray",
-  },
-  sectionButton: {
-    paddingVertical: 12,
-  },
-});
