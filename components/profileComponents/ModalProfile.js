@@ -7,7 +7,9 @@ import {
   Pressable,
   FlatList,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
+import { request } from "../../api/requestMethods";
+import { useSelector } from "react-redux";
 
 const dataGyms = [
   {
@@ -33,6 +35,25 @@ const ModalProfile = ({
   selectedGyms,
   setSelectedGyms,
 }) => {
+  const { user } = useSelector((state) => state.userReducer);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    const response = await request("get", `get_all_user_gyms/${user.id}`);
+    if (response.status !== 200) {
+      console.log(response.status);
+      return;
+    }
+    if (response.data) {
+      console.log(response.data.all_gyms_data);
+    }
+  };
+
+  // Scroll List containing gym name items. Click on item --> drop down of that gym's spray walls preselected. Click for specific walls in that gym. multiple gyms can be selected
+
   const renderCards = ({ item }) => {
     const handleCardPress = () => {
       setSelectedGyms((prevSelectedGyms) => {
