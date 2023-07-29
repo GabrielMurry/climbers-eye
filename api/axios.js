@@ -1,7 +1,7 @@
 import axios from "axios";
 // import { BASE_URL } from "@env";
 
-const url = "http://192.168.1.176:8000/";
+const url = "http://192.168.50.29:8000/";
 
 export default axios.create({
   baseURL: url,

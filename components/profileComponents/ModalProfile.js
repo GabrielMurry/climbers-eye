@@ -7,35 +7,22 @@ import {
   Pressable,
   FlatList,
 } from "react-native";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { request } from "../../api/requestMethods";
 import { useSelector } from "react-redux";
-
-const dataGyms = [
-  {
-    id: 1,
-    name: "The Boulder Field",
-    location: "500 El Camino Real",
-  },
-  {
-    id: 2,
-    name: "The Boulder Field",
-    location: "500 El Camino Real",
-  },
-  {
-    id: 3,
-    name: "The Boulder Field",
-    location: "500 El Camino Real",
-  },
-];
+import GymCard from "./GymCard";
+import { ArrowLeftCircleIcon } from "react-native-heroicons/outline";
 
 const ModalProfile = ({
   isModalVisible,
   setIsModalVisible,
-  selectedGyms,
-  setSelectedGyms,
+  selectedWalls,
+  setSelectedWalls,
+  spraywalls,
+  spraywallIndex,
 }) => {
   const { user } = useSelector((state) => state.userReducer);
+  const [data, setData] = useState([]);
 
   useEffect(() => {
     fetchData();
@@ -48,41 +35,32 @@ const ModalProfile = ({
       return;
     }
     if (response.data) {
-      console.log(response.data.all_gyms_data);
+      setData(response.data.all_gyms_data);
     }
   };
 
   // Scroll List containing gym name items. Click on item --> drop down of that gym's spray walls preselected. Click for specific walls in that gym. multiple gyms can be selected
 
   const renderCards = ({ item }) => {
-    const handleCardPress = () => {
-      setSelectedGyms((prevSelectedGyms) => {
-        const index = prevSelectedGyms.indexOf(item.id);
+    return (
+      <GymCard
+        gym={item}
+        selectedWalls={selectedWalls}
+        setSelectedWalls={setSelectedWalls}
+      />
+    );
+  };
 
-        if (index === -1) {
-          // Gym ID not found in the array, append it
-          return [...prevSelectedGyms, item.id];
-        } else {
-          // Gym ID found in the array, remove it
-          const newGyms = [...prevSelectedGyms];
-          newGyms.splice(index, 1);
-          return newGyms;
-        }
-      });
+  const renderHeaderCard = () => {
+    const resetSelectionsPress = () => {
+      setSelectedWalls([spraywalls[spraywallIndex].id]);
     };
-
     return (
       <Pressable
-        style={{
-          backgroundColor: "lightblue",
-          width: "100%",
-          height: 50,
-          borderRadius: 10,
-          opacity: selectedGyms.includes(item.id) ? 1 : 0.5,
-        }}
-        onPress={handleCardPress}
+        style={{ alignItems: "flex-end", marginBottom: 10 }}
+        onPress={resetSelectionsPress}
       >
-        <Text>The Boulder Field</Text>
+        <Text>Reset Selections</Text>
       </Pressable>
     );
   };
@@ -97,16 +75,23 @@ const ModalProfile = ({
       <View style={styles.modalContainer}>
         <SafeAreaView style={styles.modalContent}>
           {/* Add modal content here */}
-          <Text>Select Gyms</Text>
+          <View style={{ flexDirection: "row" }}>
+            <ArrowLeftCircleIcon
+              size={30}
+              color="black"
+              onPress={() => setIsModalVisible(false)}
+            />
+            <View style={{ alignItems: "center", marginLeft: 20 }}>
+              <Text style={{ fontSize: 24 }}>Select Gyms</Text>
+            </View>
+          </View>
           <FlatList
             contentContainerStyle={{ gap: 10, marginTop: 10 }}
-            data={dataGyms}
+            data={data}
             renderItem={renderCards}
             keyExtractor={(item) => item.id}
+            ListHeaderComponent={renderHeaderCard}
           />
-          <Pressable onPress={() => setIsModalVisible(false)}>
-            <Text>Cancel</Text>
-          </Pressable>
         </SafeAreaView>
       </View>
     </Modal>

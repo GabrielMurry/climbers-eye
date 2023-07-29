@@ -34,28 +34,22 @@ const ProfileScreen = ({ route, navigation }) => {
   const [editHeadshot, setEditHeadshot] = useState(headshotImage);
   const [editBanner, setEditBanner] = useState(bannerImage);
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedGyms, setSelectedGyms] = useState([]);
-
-  // This event will be triggered when the screen gains focus (i.e., when you navigate back to it).
-  useFocusEffect(
-    useCallback(() => {
-      if (route?.params?.profileImageUri) {
-        const newHeadshot = {
-          uri: "data:image/png;base64," + route?.params?.profileImageUri,
-          width: route?.params?.profileImageWidth,
-          height: route?.params?.profileImageHeight,
-        };
-        setEditHeadshot(newHeadshot);
-      } else if (route?.params?.profileBannerUri) {
-        const newBanner = {
-          uri: "data:image/png;base64," + route?.params?.profileBannerUri,
-          width: route?.params?.profileBannerWidth,
-          height: route?.params?.profileBannerHeight,
-        };
-        setEditBanner(newBanner);
-      }
-    }, [route])
-  );
+  const [selectedWalls, setSelectedWalls] = useState([
+    spraywalls[spraywallIndex].id,
+  ]);
+  const [data, setData] = useState([
+    {
+      gymID: gym.id,
+      gymName: gym.name,
+      spraywalls: [
+        {
+          spraywallID: spraywalls[spraywallIndex].id,
+          spraywallName: spraywalls[spraywallIndex].name,
+          url: spraywalls[spraywallIndex].url,
+        },
+      ],
+    },
+  ]);
 
   const [logbookData, setLogbookData] = useState({
     sends: null,
@@ -84,64 +78,82 @@ const ProfileScreen = ({ route, navigation }) => {
 
   useEffect(() => {
     fetchProfileData();
-  }, [section]);
+  }, [selectedWalls]);
 
   const fetchProfileData = async () => {
-    setIsLoading(true);
     const response = await request(
       "get",
-      `profile/${user.id}/${spraywalls[spraywallIndex].id}?section=${section}`
+      `profile_main/${user.id}?walls=${selectedWalls}`
     );
     if (response.status !== 200) {
       console.log(response.status);
       return;
     }
     if (response.data) {
-      if (section === "logbook") {
-        setSectionData(response.data.boulderData);
-        const { sendsCount, flashCount, topGrade } = response.data.otherData;
-        setLogbookData({
-          sends: sendsCount,
-          flashes: flashCount,
-          topGrade: topGrade,
-        });
-      } else if (section === "creations") {
-        setSectionData(response.data.boulderData);
-        const { establishedCount, projectsCount, totalSendsCount } =
-          response.data.otherData;
-        setCreationsData({
-          established: establishedCount,
-          projects: projectsCount,
-          totalSends: totalSendsCount,
-        });
-      } else if (section === "likes") {
-        setSectionData(response.data.boulderData);
-        const { likesCount, flashCount, topGrade } = response.data.otherData;
-        setLikesData({
-          count: likesCount,
-          flashes: flashCount,
-          topGrade: topGrade,
-        });
-      } else if (section === "bookmarks") {
-        const { bookmarksCount, flashCount, topGrade } =
-          response.data.otherData;
-        setSectionData(response.data.boulderData);
-        setBookmarksData({
-          bookmarks: bookmarksCount,
-          flashes: flashCount,
-          topGrade: topGrade,
-        });
-      } else if (section === "circuits") {
-        setSectionData(response.data.circuitsData);
-        const { circuitsCount, circuitBouldersCount } = response.data.otherData;
-        setCircuitsData({
-          circuits: circuitsCount,
-          bouldersCount: circuitBouldersCount,
-        });
-      }
-      setIsLoading(false);
+      setData(response.data.gym_data);
     }
   };
+
+  // useEffect(() => {
+  //   fetchProfileData();
+  // }, [section]);
+
+  // const fetchProfileData = async () => {
+  //   setIsLoading(true);
+  //   const response = await request(
+  //     "get",
+  //     `profile/${user.id}/${spraywalls[spraywallIndex].id}?section=${section}`
+  //   );
+  //   if (response.status !== 200) {
+  //     console.log(response.status);
+  //     return;
+  //   }
+  //   if (response.data) {
+  //     if (section === "logbook") {
+  //       setSectionData(response.data.boulderData);
+  //       const { sendsCount, flashCount, topGrade } = response.data.otherData;
+  //       setLogbookData({
+  //         sends: sendsCount,
+  //         flashes: flashCount,
+  //         topGrade: topGrade,
+  //       });
+  //     } else if (section === "creations") {
+  //       setSectionData(response.data.boulderData);
+  //       const { establishedCount, projectsCount, totalSendsCount } =
+  //         response.data.otherData;
+  //       setCreationsData({
+  //         established: establishedCount,
+  //         projects: projectsCount,
+  //         totalSends: totalSendsCount,
+  //       });
+  //     } else if (section === "likes") {
+  //       setSectionData(response.data.boulderData);
+  //       const { likesCount, flashCount, topGrade } = response.data.otherData;
+  //       setLikesData({
+  //         count: likesCount,
+  //         flashes: flashCount,
+  //         topGrade: topGrade,
+  //       });
+  //     } else if (section === "bookmarks") {
+  //       const { bookmarksCount, flashCount, topGrade } =
+  //         response.data.otherData;
+  //       setSectionData(response.data.boulderData);
+  //       setBookmarksData({
+  //         bookmarks: bookmarksCount,
+  //         flashes: flashCount,
+  //         topGrade: topGrade,
+  //       });
+  //     } else if (section === "circuits") {
+  //       setSectionData(response.data.circuitsData);
+  //       const { circuitsCount, circuitBouldersCount } = response.data.otherData;
+  //       setCircuitsData({
+  //         circuits: circuitsCount,
+  //         bouldersCount: circuitBouldersCount,
+  //       });
+  //     }
+  //     setIsLoading(false);
+  //   }
+  // };
 
   const handleUploadImage = async (type) => {
     try {
@@ -218,16 +230,15 @@ const ProfileScreen = ({ route, navigation }) => {
     handleCloseEditProfile();
   };
 
-  useEffect(() => {
-    console.log(selectedGyms);
-  }, [selectedGyms]);
-
   return (
     <View style={{ flex: 1 }}>
       {/* Header (banner image, headshot image, name, username) */}
       <Header navigation={navigation} />
       {/* Gym and Spray Wall Selection Buttons */}
-      <GymAndSprayWallButtons setIsModalVisible={setIsModalVisible} />
+      <GymAndSprayWallButtons
+        setIsModalVisible={setIsModalVisible}
+        data={data}
+      />
       {/* Statistics Button */}
       <StatisticsButton />
       {/* Section Buttons (Logbook, Likes, Bookmarks, Circuits, Created) */}
@@ -235,8 +246,10 @@ const ProfileScreen = ({ route, navigation }) => {
       <ModalProfile
         isModalVisible={isModalVisible}
         setIsModalVisible={setIsModalVisible}
-        selectedGyms={selectedGyms}
-        setSelectedGyms={setSelectedGyms}
+        selectedWalls={selectedWalls}
+        setSelectedWalls={setSelectedWalls}
+        spraywalls={spraywalls}
+        spraywallIndex={spraywallIndex}
       />
     </View>
   );

@@ -59,7 +59,7 @@ const AddGymScreen = ({ route, navigation }) => {
               },
               spraywall: {
                 name: sprayWallName,
-                image_data: image.url,
+                image_data: image.url.split(",")[1],
                 image_width: image.width,
                 image_height: image.height,
               },

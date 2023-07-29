@@ -1,9 +1,12 @@
-import { View, Text } from "react-native";
+import { View, Text, Alert } from "react-native";
 import React, { useLayoutEffect } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import SettingsButton from "../components/editGymComponents/SettingsButton";
+import { setGym, setSpraywalls } from "../redux/actions";
+import { request } from "../api/requestMethods";
 
 const EditGymScreen = ({ navigation }) => {
+  const dispatch = useDispatch();
   const { spraywalls } = useSelector((state) => state.spraywallReducer);
   const { gym } = useSelector((state) => state.gymReducer);
 
@@ -33,6 +36,33 @@ const EditGymScreen = ({ navigation }) => {
       title: "Gym Location",
     },
   ];
+
+  const handleDelete = () => {
+    Alert.alert(
+      "Delete Gym",
+      `Are you sure you want to delete "${gym.name}"?`,
+      [
+        {
+          text: "Cancel",
+        },
+        {
+          text: "Delete",
+          onPress: async () => {
+            const response = await request("delete", `delete_gym/${gym.id}`);
+            if (response.status !== 200) {
+              console.log(response.status);
+              return;
+            }
+            navigation.navigate("Map");
+            dispatch(setGym({}));
+            dispatch(setSpraywalls([]));
+          },
+          style: "destructive",
+        },
+      ],
+      { cancelable: false }
+    );
+  };
 
   return (
     <View
@@ -116,6 +146,7 @@ const EditGymScreen = ({ navigation }) => {
           title={"Delete Gym"}
           textColor={"white"}
           destructive={true}
+          onPress={handleDelete}
         />
       </View>
     </View>
