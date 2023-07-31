@@ -235,12 +235,12 @@ const ProfileScreen = ({ route, navigation }) => {
       {/* Header (banner image, headshot image, name, username) */}
       <Header navigation={navigation} />
       {/* Gym and Spray Wall Selection Buttons */}
-      <GymAndSprayWallButtons
+      {/* <GymAndSprayWallButtons
         setIsModalVisible={setIsModalVisible}
         data={data}
-      />
+      /> */}
       {/* Statistics Button */}
-      <StatisticsButton />
+      {/* <StatisticsButton /> */}
       {/* Section Buttons (Logbook, Likes, Bookmarks, Circuits, Created) */}
       <SectionButtons />
       <ModalProfile
