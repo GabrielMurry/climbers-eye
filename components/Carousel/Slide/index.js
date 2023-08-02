@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, Image, ActivityIndicator } from "react-native";
 import { styles } from "./styles";
 
-export const Slide = ({ image }) => {
+export const Slide = ({ image, isSquare }) => {
   const [isLoading, setIsLoading] = useState(false);
   return (
     <View style={styles.slide}>
@@ -16,10 +16,10 @@ export const Slide = ({ image }) => {
       >
         <Image
           source={{ uri: image.url }}
-          resizeMode="contain"
+          resizeMode={isSquare ? null : "contain"}
           style={{
-            width: "100%",
-            height: "100%",
+            width: isSquare ? 100 : "100%",
+            height: isSquare ? 100 : "100%",
             borderRadius: 10,
           }}
           onLoadStart={() => setIsLoading(true)}

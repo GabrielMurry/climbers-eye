@@ -149,6 +149,7 @@ const MapScreen = ({ navigation }) => {
   };
 
   const handleConfirmMyGymPress = async (gymID) => {
+    console.log(user.id);
     setIsLoadingConfirmGym(true);
     const response = await request("put", `choose_gym/${user.id}/${gymID}`);
     if (response.status !== 200) {

@@ -7,7 +7,8 @@ export const styles = StyleSheet.create({
   },
   container: {
     width: "100%",
-    minHeight: 425,
+    // minHeight: 425,
+    aspectRatio: 1,
     minWidth: "95%",
     padding: 10,
     borderColor: "black",

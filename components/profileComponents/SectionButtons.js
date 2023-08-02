@@ -5,9 +5,25 @@ import {
   ScrollView,
   SafeAreaView,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import Carousel from "../Carousel";
+import { setSpraywallIndex } from "../../redux/actions";
+import { ChartPieIcon } from "react-native-heroicons/outline";
 
-const SectionButtons = () => {
+const SectionButtons = ({
+  sectionQuickData,
+  setIsModalVisible,
+  navigation,
+}) => {
+  const dispatch = useDispatch();
+  const { gym } = useSelector((state) => state.gymReducer);
+  const { spraywalls } = useSelector((state) => state.spraywallReducer);
+
+  const handleSwitchWall = (interval) => {
+    dispatch(setSpraywallIndex(interval - 1));
+  };
+
   return (
     <ScrollView
       contentContainerStyle={{
@@ -30,7 +46,6 @@ const SectionButtons = () => {
           }}
         >
           <View style={{ flex: 1, gap: 10 }}>
-            {/* Likes Button */}
             <TouchableOpacity
               style={{
                 backgroundColor: "#FFFBF1",
@@ -39,39 +54,72 @@ const SectionButtons = () => {
                 borderRadius: 10,
                 justifyContent: "center",
                 alignItems: "center",
+                borderWidth: 1.5,
               }}
+              onPress={() => setIsModalVisible(true)}
             >
-              <Text style={{ fontSize: 16 }}>The Boulder Field</Text>
-            </TouchableOpacity>
-            {/* Bookmarks Button */}
-            <TouchableOpacity
-              style={{
-                backgroundColor: "#FFFBF1",
-                flex: 1,
-                height: 75,
-                borderRadius: 10,
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Text style={{ marginTop: 10, marginLeft: 10, fontSize: 16 }}>
-                Statistics
+              <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+                {gym.name}
               </Text>
             </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                backgroundColor: "#FFFBF1",
+                flex: 1,
+                height: 75,
+                borderRadius: 10,
+                justifyContent: "space-evenly",
+                alignItems: "center",
+                flexDirection: "row",
+                borderWidth: 1.5,
+              }}
+            >
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <ChartPieIcon size={30} color={"black"} />
+              </View>
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <View
+                  style={{
+                    backgroundColor: "lightblue",
+                    width: "80%",
+                    height: "80%",
+                    borderRadius: 10,
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={{ fontSize: 16 }}>
+                    {sectionQuickData.statistics}
+                  </Text>
+                </View>
+              </View>
+            </TouchableOpacity>
           </View>
-          {/* Logbook Button */}
-          <TouchableOpacity
+          <View
             style={{
-              backgroundColor: "#FFFBF1",
               flex: 1,
-              height: 175,
-              borderRadius: 10,
             }}
           >
-            <Text style={{ marginTop: 10, marginLeft: 10, fontSize: 16 }}>
-              Logbook
-            </Text>
-          </TouchableOpacity>
+            <Carousel
+              style="slides"
+              itemsPerInterval={1}
+              items={spraywalls}
+              itemInterval={handleSwitchWall}
+              isSquare={true}
+            />
+          </View>
         </View>
         <TouchableOpacity
           style={{
@@ -79,7 +127,11 @@ const SectionButtons = () => {
             backgroundColor: "#FFFBF1",
             borderRadius: 10,
             flexDirection: "row",
+            borderWidth: 1.5,
           }}
+          onPress={() =>
+            navigation.navigate("ProfileSection", { section: "logbook" })
+          }
         >
           <View
             style={{
@@ -88,7 +140,7 @@ const SectionButtons = () => {
               alignItems: "center",
             }}
           >
-            <Text>Logbook</Text>
+            <Text style={{ fontWeight: "bold" }}>Logbook</Text>
           </View>
           <View
             style={{
@@ -107,7 +159,7 @@ const SectionButtons = () => {
                 alignItems: "center",
               }}
             >
-              <Text>20</Text>
+              <Text>{sectionQuickData.logbook}</Text>
             </View>
           </View>
         </TouchableOpacity>
@@ -117,7 +169,11 @@ const SectionButtons = () => {
             backgroundColor: "#FFFBF1",
             borderRadius: 10,
             flexDirection: "row",
+            borderWidth: 1.5,
           }}
+          onPress={() =>
+            navigation.navigate("ProfileSection", { section: "likes" })
+          }
         >
           <View
             style={{
@@ -126,7 +182,7 @@ const SectionButtons = () => {
               alignItems: "center",
             }}
           >
-            <Text>Likes</Text>
+            <Text style={{ fontWeight: "bold" }}>Likes</Text>
           </View>
           <View
             style={{
@@ -145,7 +201,7 @@ const SectionButtons = () => {
                 alignItems: "center",
               }}
             >
-              <Text>20</Text>
+              <Text>{sectionQuickData.likes}</Text>
             </View>
           </View>
         </TouchableOpacity>
@@ -155,7 +211,11 @@ const SectionButtons = () => {
             backgroundColor: "#FFFBF1",
             borderRadius: 10,
             flexDirection: "row",
+            borderWidth: 1.5,
           }}
+          onPress={() =>
+            navigation.navigate("ProfileSection", { section: "bookmarks" })
+          }
         >
           <View
             style={{
@@ -164,7 +224,7 @@ const SectionButtons = () => {
               alignItems: "center",
             }}
           >
-            <Text>Bookmarks</Text>
+            <Text style={{ fontWeight: "bold" }}>Bookmarks</Text>
           </View>
           <View
             style={{
@@ -183,7 +243,7 @@ const SectionButtons = () => {
                 alignItems: "center",
               }}
             >
-              <Text>20</Text>
+              <Text>{sectionQuickData.bookmarks}</Text>
             </View>
           </View>
         </TouchableOpacity>
@@ -193,7 +253,11 @@ const SectionButtons = () => {
             backgroundColor: "#FFFBF1",
             borderRadius: 10,
             flexDirection: "row",
+            borderWidth: 1.5,
           }}
+          onPress={() =>
+            navigation.navigate("ProfileSection", { section: "circuits" })
+          }
         >
           <View
             style={{
@@ -202,7 +266,7 @@ const SectionButtons = () => {
               alignItems: "center",
             }}
           >
-            <Text>Circuits</Text>
+            <Text style={{ fontWeight: "bold" }}>Circuits</Text>
           </View>
           <View
             style={{
@@ -221,7 +285,7 @@ const SectionButtons = () => {
                 alignItems: "center",
               }}
             >
-              <Text>20</Text>
+              <Text>{sectionQuickData.circuits}</Text>
             </View>
           </View>
         </TouchableOpacity>
@@ -231,7 +295,11 @@ const SectionButtons = () => {
             backgroundColor: "#FFFBF1",
             borderRadius: 10,
             flexDirection: "row",
+            borderWidth: 1.5,
           }}
+          onPress={() =>
+            navigation.navigate("ProfileSection", { section: "creations" })
+          }
         >
           <View
             style={{
@@ -240,7 +308,7 @@ const SectionButtons = () => {
               alignItems: "center",
             }}
           >
-            <Text>Creations</Text>
+            <Text style={{ fontWeight: "bold" }}>Creations</Text>
           </View>
           <View
             style={{
@@ -259,13 +327,11 @@ const SectionButtons = () => {
                 alignItems: "center",
               }}
             >
-              <Text>20</Text>
+              <Text>{sectionQuickData.creations}</Text>
             </View>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={{ height: 75, backgroundColor: "black", borderRadius: 10 }}
-        ></TouchableOpacity>
+        <View style={{ height: 75, borderRadius: 10 }}></View>
       </View>
     </ScrollView>
   );

@@ -5,7 +5,7 @@ import { Slide } from "./Slide";
 import { styles } from "./styles";
 
 export const Carousel = (props) => {
-  const { items, style, itemInterval } = props;
+  const { items, style, itemInterval, isSquare = false } = props;
   const itemsPerInterval =
     props.itemsPerInterval === undefined ? 1 : props.itemsPerInterval;
 
@@ -84,7 +84,7 @@ export const Carousel = (props) => {
             case "stats":
               return <Stat key={index} label={item.label} value={item.value} />;
             default:
-              return <Slide key={index} image={item} />;
+              return <Slide key={index} image={item} isSquare={isSquare} />;
           }
         })}
       </ScrollView>

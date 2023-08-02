@@ -62,8 +62,8 @@ const Header = ({ navigation }) => {
               bottom: "-50%",
               justifyContent: "center",
               alignItems: "center",
-              borderWidth: 1,
-              borderColor: "white",
+              borderWidth: 1.5,
+              borderColor: "black",
               backgroundColor: "white",
             }}
           >

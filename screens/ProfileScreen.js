@@ -4,20 +4,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { request } from "../api/requestMethods";
 import SectionButtons from "../components/profileComponents/SectionButtons";
 import * as ImagePicker from "expo-image-picker";
-import { useFocusEffect } from "@react-navigation/native";
-import { setHeadshotImage, setBannerImage } from "../redux/actions";
+import { setHeadshotImage, setBannerImage, setGym } from "../redux/actions";
 import Header from "../components/profileComponents/Header";
-import GymAndSprayWallButtons from "../components/profileComponents/GymAndSprayWallButtons";
-import StatisticsButton from "../components/profileComponents/StatisticsButton";
 import ModalProfile from "../components/profileComponents/ModalProfile";
-
-const sections = {
-  logbook: "logbook",
-  creations: "creations",
-  likes: "likes",
-  bookmarks: "bookmarks",
-  circuits: "circuits",
-};
 
 const BACKDROP_IMAGE_HEIGHT = 125;
 const HEADSHOT_IMAGE_SIZE = 100;
@@ -33,10 +22,6 @@ const ProfileScreen = ({ route, navigation }) => {
   );
   const [editHeadshot, setEditHeadshot] = useState(headshotImage);
   const [editBanner, setEditBanner] = useState(bannerImage);
-  const [isLoading, setIsLoading] = useState(false);
-  const [selectedWalls, setSelectedWalls] = useState([
-    spraywalls[spraywallIndex].id,
-  ]);
   const [data, setData] = useState([
     {
       gymID: gym.id,
@@ -50,110 +35,33 @@ const ProfileScreen = ({ route, navigation }) => {
       ],
     },
   ]);
-
-  const [logbookData, setLogbookData] = useState({
-    sends: null,
-    flashes: null,
-    topGrade: null,
+  const [sectionQuickData, setSectionQuickData] = useState({
+    statistics: 0,
+    logbook: 0,
+    likes: 0,
+    bookmarks: 0,
+    circuits: 0,
+    creations: 0,
   });
-  const [creationsData, setCreationsData] = useState({
-    established: null,
-    projects: null,
-    totalSends: null,
-  });
-  const [likesData, setLikesData] = useState({ count: null, flashes: null });
-  const [bookmarksData, setBookmarksData] = useState({
-    bookmarks: null,
-    flashes: null,
-    topGrade: null,
-  });
-  const [circuitsData, setCircuitsData] = useState({
-    circuits: null,
-    bouldersCount: null,
-    topGrade: null,
-  });
-  const [section, setSection] = useState(sections.logbook);
-  const [sectionData, setSectionData] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   useEffect(() => {
-    fetchProfileData();
-  }, [selectedWalls]);
+    fetchProfileQuickData();
+  }, [gym, spraywallIndex]);
 
-  const fetchProfileData = async () => {
+  const fetchProfileQuickData = async () => {
     const response = await request(
       "get",
-      `profile_main/${user.id}?walls=${selectedWalls}`
+      `profile_quick_data/${user.id}/${spraywalls[spraywallIndex].id}`
     );
     if (response.status !== 200) {
       console.log(response.status);
       return;
     }
     if (response.data) {
-      setData(response.data.gym_data);
+      setSectionQuickData(response.data);
     }
   };
-
-  // useEffect(() => {
-  //   fetchProfileData();
-  // }, [section]);
-
-  // const fetchProfileData = async () => {
-  //   setIsLoading(true);
-  //   const response = await request(
-  //     "get",
-  //     `profile/${user.id}/${spraywalls[spraywallIndex].id}?section=${section}`
-  //   );
-  //   if (response.status !== 200) {
-  //     console.log(response.status);
-  //     return;
-  //   }
-  //   if (response.data) {
-  //     if (section === "logbook") {
-  //       setSectionData(response.data.boulderData);
-  //       const { sendsCount, flashCount, topGrade } = response.data.otherData;
-  //       setLogbookData({
-  //         sends: sendsCount,
-  //         flashes: flashCount,
-  //         topGrade: topGrade,
-  //       });
-  //     } else if (section === "creations") {
-  //       setSectionData(response.data.boulderData);
-  //       const { establishedCount, projectsCount, totalSendsCount } =
-  //         response.data.otherData;
-  //       setCreationsData({
-  //         established: establishedCount,
-  //         projects: projectsCount,
-  //         totalSends: totalSendsCount,
-  //       });
-  //     } else if (section === "likes") {
-  //       setSectionData(response.data.boulderData);
-  //       const { likesCount, flashCount, topGrade } = response.data.otherData;
-  //       setLikesData({
-  //         count: likesCount,
-  //         flashes: flashCount,
-  //         topGrade: topGrade,
-  //       });
-  //     } else if (section === "bookmarks") {
-  //       const { bookmarksCount, flashCount, topGrade } =
-  //         response.data.otherData;
-  //       setSectionData(response.data.boulderData);
-  //       setBookmarksData({
-  //         bookmarks: bookmarksCount,
-  //         flashes: flashCount,
-  //         topGrade: topGrade,
-  //       });
-  //     } else if (section === "circuits") {
-  //       setSectionData(response.data.circuitsData);
-  //       const { circuitsCount, circuitBouldersCount } = response.data.otherData;
-  //       setCircuitsData({
-  //         circuits: circuitsCount,
-  //         bouldersCount: circuitBouldersCount,
-  //       });
-  //     }
-  //     setIsLoading(false);
-  //   }
-  // };
 
   const handleUploadImage = async (type) => {
     try {
@@ -231,23 +139,17 @@ const ProfileScreen = ({ route, navigation }) => {
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: "white" }}>
       {/* Header (banner image, headshot image, name, username) */}
       <Header navigation={navigation} />
-      {/* Gym and Spray Wall Selection Buttons */}
-      {/* <GymAndSprayWallButtons
+      <SectionButtons
+        sectionQuickData={sectionQuickData}
         setIsModalVisible={setIsModalVisible}
-        data={data}
-      /> */}
-      {/* Statistics Button */}
-      {/* <StatisticsButton /> */}
-      {/* Section Buttons (Logbook, Likes, Bookmarks, Circuits, Created) */}
-      <SectionButtons />
+        navigation={navigation}
+      />
       <ModalProfile
         isModalVisible={isModalVisible}
         setIsModalVisible={setIsModalVisible}
-        selectedWalls={selectedWalls}
-        setSelectedWalls={setSelectedWalls}
         spraywalls={spraywalls}
         spraywallIndex={spraywallIndex}
       />

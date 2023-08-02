@@ -16,8 +16,6 @@ import { ArrowLeftCircleIcon } from "react-native-heroicons/outline";
 const ModalProfile = ({
   isModalVisible,
   setIsModalVisible,
-  selectedWalls,
-  setSelectedWalls,
   spraywalls,
   spraywallIndex,
 }) => {
@@ -42,27 +40,7 @@ const ModalProfile = ({
   // Scroll List containing gym name items. Click on item --> drop down of that gym's spray walls preselected. Click for specific walls in that gym. multiple gyms can be selected
 
   const renderCards = ({ item }) => {
-    return (
-      <GymCard
-        gym={item}
-        selectedWalls={selectedWalls}
-        setSelectedWalls={setSelectedWalls}
-      />
-    );
-  };
-
-  const renderHeaderCard = () => {
-    const resetSelectionsPress = () => {
-      setSelectedWalls([spraywalls[spraywallIndex].id]);
-    };
-    return (
-      <Pressable
-        style={{ alignItems: "flex-end", marginBottom: 10 }}
-        onPress={resetSelectionsPress}
-      >
-        <Text>Reset Selections</Text>
-      </Pressable>
-    );
+    return <GymCard gymCard={item} />;
   };
 
   return (
@@ -81,7 +59,13 @@ const ModalProfile = ({
               color="black"
               onPress={() => setIsModalVisible(false)}
             />
-            <View style={{ alignItems: "center", marginLeft: 20 }}>
+            <View
+              style={{
+                alignItems: "center",
+                marginLeft: 20,
+                paddingBottom: 10,
+              }}
+            >
               <Text style={{ fontSize: 24 }}>Select Gyms</Text>
             </View>
           </View>
@@ -90,7 +74,6 @@ const ModalProfile = ({
             data={data}
             renderItem={renderCards}
             keyExtractor={(item) => item.id}
-            ListHeaderComponent={renderHeaderCard}
           />
         </SafeAreaView>
       </View>

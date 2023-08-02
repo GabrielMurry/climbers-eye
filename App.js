@@ -35,7 +35,7 @@ import EditGymScreen from "./screens/EditGymScreen";
 import AddNewSprayWallScreen from "./screens/AddNewSprayWallScreen";
 import EditSprayWallScreen from "./screens/EditSprayWallScreen";
 import EditScreen from "./screens/EditScreen";
-import TestImageScreen from "./screens/TestImageScreen";
+import ProfileSectionScreen from "./screens/ProfileSectionScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -222,6 +222,13 @@ export default function App() {
             <Stack.Screen
               name="Profile"
               component={ProfileScreen}
+              options={{
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen
+              name="ProfileSection"
+              component={ProfileSectionScreen}
               options={{
                 headerShown: false,
               }}
