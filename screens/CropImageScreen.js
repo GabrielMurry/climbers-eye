@@ -8,8 +8,10 @@ import {
   PanResponder,
 } from "react-native";
 import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
+import { useDispatch } from "react-redux";
 
 const CropImageScreen = ({ route, navigation }) => {
+  const dispatch = useDispatch();
   const { imageUri, type, orientation, scale, width, height, cropDimensions } =
     route.params;
   const [imageCoordinates, setImageCoordinates] = useState({ x: 0, y: 0 });
@@ -52,17 +54,19 @@ const CropImageScreen = ({ route, navigation }) => {
       base64: true,
     });
     if (type === "headshot") {
-      navigation.navigate("Profile", {
-        profileImageUri: manipResult.base64,
-        profileImageWidth: width,
-        profileImageHeight: height,
-      });
+      const headshotImage = {
+        url: "data:image/png;base64," + manipResult.base64,
+        width: width,
+        height: height,
+      };
+      navigation.navigate("Headshot", { headshotImage });
     } else if (type === "banner") {
-      navigation.navigate("Profile", {
-        profileBannerUri: manipResult.base64,
-        profileBannerWidth: width,
-        profileBannerHeight: height,
-      });
+      const bannerImage = {
+        url: "data:image/png;base64," + manipResult.base64,
+        width: width,
+        height: height,
+      };
+      navigation.navigate("Banner", { bannerImage });
     }
   };
 

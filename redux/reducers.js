@@ -37,23 +37,9 @@ export function userReducer(state = initialState, action) {
     case SET_USER:
       return { ...state, user: action.payload };
     case SET_HEADSHOT_IMAGE:
-      return {
-        ...state,
-        headshotImage: {
-          uri: action.payload.uri,
-          width: action.payload.width,
-          height: action.payload.height,
-        },
-      };
+      return { ...state, headshotImage: action.payload };
     case SET_BANNER_IMAGE:
-      return {
-        ...state,
-        bannerImage: {
-          uri: action.payload.uri,
-          width: action.payload.width,
-          height: action.payload.height,
-        },
-      };
+      return { ...state, bannerImage: action.payload };
     default:
       return state;
   }

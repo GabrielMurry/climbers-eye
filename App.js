@@ -11,7 +11,7 @@ import {
 import LoginScreen from "./screens/LoginScreen";
 import SignupScreen from "./screens/SignupScreen";
 import MapScreen from "./screens/MapScreen";
-import ProfileScreen from "./screens/ProfileScreen";
+import ProfileScreen from "./screens/profile/ProfileScreen";
 import AddGymScreen from "./screens/AddGymScreen";
 import EditBoulderScreen from "./screens/EditBoulderScreen";
 import CameraScreen from "./screens/CameraScreen";
@@ -35,7 +35,10 @@ import EditGymScreen from "./screens/EditGymScreen";
 import AddNewSprayWallScreen from "./screens/AddNewSprayWallScreen";
 import EditSprayWallScreen from "./screens/EditSprayWallScreen";
 import EditScreen from "./screens/EditScreen";
-import ProfileSectionScreen from "./screens/ProfileSectionScreen";
+import ProfileSectionScreen from "./screens/profile/section/ProfileSectionScreen";
+import SettingsScreen from "./screens/profile/edit/SettingsScreen";
+import BannerScreen from "./screens/profile/edit/BannerScreen";
+import HeadshotScreen from "./screens/profile/edit/HeadshotScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -229,6 +232,27 @@ export default function App() {
             <Stack.Screen
               name="ProfileSection"
               component={ProfileSectionScreen}
+              options={{
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen
+              name="Settings"
+              component={SettingsScreen}
+              options={{
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen
+              name="Banner"
+              component={BannerScreen}
+              options={{
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen
+              name="Headshot"
+              component={HeadshotScreen}
               options={{
                 headerShown: false,
               }}

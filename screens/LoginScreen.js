@@ -39,20 +39,8 @@ const LoginScreen = ({ navigation }) => {
     if (response.data) {
       // in dispatch, we enter the action "setUserID" along with the "userID" value (doing this for username also)
       dispatch(setUser(response.data.user));
-      dispatch(
-        setHeadshotImage({
-          uri: response.data.headshotImageUri,
-          width: response.data.headshotImageWidth,
-          height: response.data.headshotImageHeight,
-        })
-      );
-      dispatch(
-        setBannerImage({
-          uri: response.data.bannerImageUri,
-          width: response.data.bannerImageWidth,
-          height: response.data.bannerImageHeight,
-        })
-      );
+      dispatch(setHeadshotImage(response.data.headshotImage));
+      dispatch(setBannerImage(response.data.bannerImage));
       // for redundancy. If user signs up, but restarts the app, then logs in, they still don't belong to a gym or spraywall, so redirect to Map screen
       if (response.data.gym) {
         dispatch(setGym(response.data.gym));

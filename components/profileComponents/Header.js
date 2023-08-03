@@ -1,12 +1,16 @@
-import { View, Text, SafeAreaView } from "react-native";
+import { View, Text, SafeAreaView, Image } from "react-native";
 import React from "react";
 import {
   ArrowLeftCircleIcon,
   Cog8ToothIcon,
   UserIcon,
 } from "react-native-heroicons/outline";
+import { useSelector } from "react-redux";
 
 const Header = ({ navigation }) => {
+  const { headshotImage } = useSelector((state) => state.userReducer);
+  const { spraywalls } = useSelector((state) => state.spraywallReducer);
+
   return (
     <SafeAreaView
       style={{
@@ -24,8 +28,8 @@ const Header = ({ navigation }) => {
       >
         <View
           style={{
+            width: 360,
             height: 100,
-            width: "90%",
             borderRadius: 10,
             alignItems: "center",
             backgroundColor: "lightblue",
@@ -40,6 +44,7 @@ const Header = ({ navigation }) => {
               left: 0,
               marginLeft: 5,
               marginTop: 5,
+              zIndex: 1,
             }}
           />
           <Cog8ToothIcon
@@ -50,9 +55,18 @@ const Header = ({ navigation }) => {
               right: 0,
               marginRight: 5,
               marginTop: 5,
+              zIndex: 1,
             }}
+            onPress={() => navigation.navigate("Settings")}
           />
-          {/* <Image /> */}
+          {/* <Image
+            source={{ uri: spraywalls[0].url }}
+            resizeMode="contain"
+            style={{
+              width: "100%",
+              aspectRatio: 1,
+            }}
+          /> */}
           <View
             style={{
               width: 100,
@@ -67,14 +81,23 @@ const Header = ({ navigation }) => {
               backgroundColor: "white",
             }}
           >
-            <UserIcon size={50} color={"black"} />
+            {headshotImage.url ? (
+              <Image
+                source={{ uri: headshotImage.url }}
+                style={{ width: "100%", height: "100%", borderRadius: 100 }}
+              />
+            ) : (
+              <UserIcon size={50} color={"black"} />
+            )}
           </View>
         </View>
       </View>
-      {/* Name */}
-      <Text style={{ fontSize: 24 }}>Gabriel Murry</Text>
-      {/* Username */}
-      <Text style={{ fontSize: 18 }}>@Gabriel</Text>
+      <View style={{ alignItems: "center", gap: 5, paddingBottom: 5 }}>
+        {/* Name */}
+        <Text style={{ fontSize: 24 }}>Gabriel Murry</Text>
+        {/* Username */}
+        <Text style={{ fontSize: 18 }}>@Gabriel</Text>
+      </View>
     </SafeAreaView>
   );
 };

@@ -20,11 +20,11 @@ import {
   UserIcon,
   XMarkIcon,
 } from "react-native-heroicons/outline";
-import BoulderCard from "../components/listComponents/BoulderCard";
-import { request } from "../api/requestMethods";
+import BoulderCard from "../../../components/listComponents/BoulderCard";
+import { request } from "../../../api/requestMethods";
 import { useSelector } from "react-redux";
 import { useFocusEffect } from "@react-navigation/native";
-import { boulderGrades } from "../utils/constants/boulderConstants";
+import { boulderGrades } from "../../../utils/constants/boulderConstants";
 
 const ProfileSectionScreen = ({ route, navigation }) => {
   const { section } = route.params;

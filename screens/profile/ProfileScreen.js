@@ -1,12 +1,12 @@
 import { View } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { request } from "../api/requestMethods";
-import SectionButtons from "../components/profileComponents/SectionButtons";
+import { request } from "../../api/requestMethods";
+import SectionButtons from "../../components/profileComponents/SectionButtons";
 import * as ImagePicker from "expo-image-picker";
-import { setHeadshotImage, setBannerImage, setGym } from "../redux/actions";
-import Header from "../components/profileComponents/Header";
-import ModalProfile from "../components/profileComponents/ModalProfile";
+import { setHeadshotImage, setBannerImage, setGym } from "../../redux/actions";
+import Header from "../../components/profileComponents/Header";
+import ModalProfile from "../../components/profileComponents/ModalProfile";
 
 const BACKDROP_IMAGE_HEIGHT = 125;
 const HEADSHOT_IMAGE_SIZE = 100;
@@ -60,50 +60,6 @@ const ProfileScreen = ({ route, navigation }) => {
     }
     if (response.data) {
       setSectionQuickData(response.data);
-    }
-  };
-
-  const handleUploadImage = async (type) => {
-    try {
-      const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.All,
-        allowsEditing: false,
-        aspect: [4, 3],
-        quality: 1,
-        base64: false,
-      });
-
-      if (result && !result.canceled) {
-        let width = result.assets[0].width;
-        let height = result.assets[0].height;
-        let orientation = width > height ? "horizontal" : "vertical";
-        let scale = orientation === "vertical" ? 8 : 5;
-        let imageUri = "data:image/png;base64," + result.assets[0].base64;
-        navigation.navigate("CropImage", {
-          imageUri: imageUri,
-          type: type,
-          orientation: orientation,
-          scale: scale,
-          width: width,
-          height: height,
-          cropDimensions: {
-            width:
-              type === "banner"
-                ? WINDOW_WIDTH
-                : type === "headshot" && orientation === "vertical"
-                ? width / scale
-                : height / scale,
-            height:
-              type === "banner"
-                ? BACKDROP_IMAGE_HEIGHT
-                : type === "headshot" && orientation === "vertical"
-                ? width / scale
-                : height / scale,
-          },
-        });
-      }
-    } catch (error) {
-      console.log(error);
     }
   };
 
