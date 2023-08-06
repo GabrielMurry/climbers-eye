@@ -130,7 +130,7 @@ const SectionButtons = ({
             borderWidth: 1.5,
           }}
           onPress={() =>
-            navigation.navigate("ProfileSection", { section: "logbook" })
+            navigation.navigate("ProfileSection", { section: "Logbook" })
           }
         >
           <View
@@ -172,7 +172,7 @@ const SectionButtons = ({
             borderWidth: 1.5,
           }}
           onPress={() =>
-            navigation.navigate("ProfileSection", { section: "likes" })
+            navigation.navigate("ProfileSection", { section: "Likes" })
           }
         >
           <View
@@ -214,7 +214,7 @@ const SectionButtons = ({
             borderWidth: 1.5,
           }}
           onPress={() =>
-            navigation.navigate("ProfileSection", { section: "bookmarks" })
+            navigation.navigate("ProfileSection", { section: "Bookmarks" })
           }
         >
           <View
@@ -256,7 +256,7 @@ const SectionButtons = ({
             borderWidth: 1.5,
           }}
           onPress={() =>
-            navigation.navigate("ProfileSection", { section: "circuits" })
+            navigation.navigate("ProfileSection", { section: "Circuits" })
           }
         >
           <View
@@ -298,7 +298,7 @@ const SectionButtons = ({
             borderWidth: 1.5,
           }}
           onPress={() =>
-            navigation.navigate("ProfileSection", { section: "creations" })
+            navigation.navigate("ProfileSection", { section: "Creations" })
           }
         >
           <View

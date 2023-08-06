@@ -2,6 +2,7 @@ import { View, Text, SafeAreaView } from "react-native";
 import React, { useEffect, useLayoutEffect } from "react";
 import { ArrowLeftCircleIcon } from "react-native-heroicons/outline";
 import SettingsButton from "../../../components/editGymComponents/SettingsButton";
+import Header from "../../../components/general/Header";
 
 const SettingsScreen = ({ navigation }) => {
   return (
@@ -11,31 +12,7 @@ const SettingsScreen = ({ navigation }) => {
         backgroundColor: "rgba(245,245,245,255)",
       }}
     >
-      <View style={{ alignItems: "center" }}>
-        <View
-          style={{
-            flexDirection: "row",
-            width: "90%",
-            marginLeft: 5,
-            marginTop: 5,
-          }}
-        >
-          <ArrowLeftCircleIcon
-            size={30}
-            color="black"
-            onPress={() => navigation.goBack()}
-          />
-          <View
-            style={{
-              alignItems: "center",
-              marginLeft: 20,
-              paddingBottom: 10,
-            }}
-          >
-            <Text style={{ fontSize: 24 }}>Settings</Text>
-          </View>
-        </View>
-      </View>
+      <Header navigation={navigation} title={"Settings"} />
       {/* profile settings */}
       <View style={{ paddingHorizontal: 10 }}>
         {/* profile images */}

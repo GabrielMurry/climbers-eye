@@ -4,9 +4,10 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
+  SafeAreaView,
 } from "react-native";
 import React, { useState } from "react";
-import { CheckIcon } from "react-native-heroicons/outline";
+import { ArrowLeftCircleIcon, CheckIcon } from "react-native-heroicons/outline";
 import { useSelector, useDispatch } from "react-redux";
 import {
   setFilterSortBy,
@@ -20,6 +21,7 @@ import { boulderGrades } from "../utils/constants/boulderConstants";
 import FilterButton from "../components/filterComponents/FilterButton";
 import GradeRange from "../components/filterComponents/GradeRange";
 import filterLists from "../utils/constants/filterListConstants";
+import Header from "../components/general/Header";
 
 const FilterScreen = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -75,6 +77,7 @@ const FilterScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      <Header navigation={navigation} title={"Search Filters"} />
       <ScrollView contentContainerStyle={{ gap: 10, paddingBottom: 30 }}>
         <TouchableOpacity
           style={styles.resetButton}

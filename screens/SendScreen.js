@@ -8,12 +8,15 @@ import {
   TextInput,
   Keyboard,
   TouchableWithoutFeedback,
+  Vibration,
+  Platform,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { StarIcon } from "react-native-heroicons/outline";
 import { request } from "../api/requestMethods";
 import { useSelector } from "react-redux";
 import { boulderGrades } from "../utils/constants/boulderConstants";
+import * as Haptics from "expo-haptics";
 
 const options = {
   attempts: [],
@@ -81,7 +84,12 @@ const SendScreen = ({ route, navigation }) => {
       console.log(response.status);
       return;
     }
+    handleVibrate();
     navigation.goBack();
+  };
+
+  const handleVibrate = () => {
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
   };
 
   const dismissKeyboard = () => {

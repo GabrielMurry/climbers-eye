@@ -7,6 +7,7 @@ import {
   UserIcon,
   MapPinIcon,
   ArrowLeftCircleIcon,
+  HomeIcon,
 } from "react-native-heroicons/outline";
 import LoginScreen from "./screens/LoginScreen";
 import SignupScreen from "./screens/SignupScreen";
@@ -39,6 +40,7 @@ import ProfileSectionScreen from "./screens/profile/section/ProfileSectionScreen
 import SettingsScreen from "./screens/profile/edit/SettingsScreen";
 import BannerScreen from "./screens/profile/edit/BannerScreen";
 import HeadshotScreen from "./screens/profile/edit/HeadshotScreen";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 const Stack = createNativeStackNavigator();
 
@@ -108,11 +110,24 @@ export default function App() {
     fetchAndStoreCsrfToken();
   }, []);
 
+  const Tab = createBottomTabNavigator();
+
+  function HomeTabs() {
+    return (
+      <Tab.Navigator>
+        <Tab.Screen name="HomeTab" component={HomeScreen} />
+        <Tab.Screen name="MapTab" component={MapScreen} />
+        <Tab.Screen name="ProfileTab" component={ProfileScreen} />
+      </Tab.Navigator>
+    );
+  }
+
   return (
     // ReactNativeActionSheet uses React context to allow your components to invoke the menu
     <ActionSheetProvider>
       <Provider store={store}>
         <NavigationContainer>
+          {/* Preload the images before rendering any screen */}
           <Stack.Navigator>
             {/* Screens */}
             {/* <Stack.Screen
@@ -184,7 +199,7 @@ export default function App() {
             <Stack.Screen
               name="EditGym"
               component={EditGymScreen}
-              options={({ navigation }) => customHeader(navigation, "EditGym")}
+              options={{ headerShown: false }}
             />
             <Stack.Screen
               name="Edit"
@@ -212,7 +227,7 @@ export default function App() {
             />
             <Stack.Screen
               name="Home"
-              component={HomeScreen}
+              component={HomeTabs}
               options={({ navigation }) => customHeader(navigation, "Home")}
             />
             <Stack.Screen
@@ -272,7 +287,7 @@ export default function App() {
             <Stack.Screen
               name="Filter"
               component={FilterScreen}
-              options={({ navigation }) => customHeader(navigation, "Filter")}
+              options={{ headerShown: false }}
             />
             <Stack.Screen
               name="FilterCircuit"

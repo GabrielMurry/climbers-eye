@@ -6,6 +6,7 @@ import { SimpleLineIcons } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { request } from "../../api/requestMethods";
 import { useActionSheet } from "@expo/react-native-action-sheet";
+import * as Haptics from "expo-haptics";
 
 const Buttons = ({ boulder, setBoulder, userID, username, navigation }) => {
   const { showActionSheetWithOptions } = useActionSheet();
@@ -13,6 +14,7 @@ const Buttons = ({ boulder, setBoulder, userID, username, navigation }) => {
   const handleLikePressed = async () => {
     const optimisticUpdate = () => {
       setBoulder({ ...boulder, isLiked: !boulder.isLiked });
+      handleVibrate();
     };
 
     const tempIsLiked = boulder.isLiked;
@@ -32,6 +34,7 @@ const Buttons = ({ boulder, setBoulder, userID, username, navigation }) => {
   const handleBookmarkPressed = async () => {
     const optimisticUpdate = () => {
       setBoulder({ ...boulder, isBookmarked: !boulder.isBookmarked });
+      handleVibrate();
     };
 
     const tempIsBookmarked = boulder.isBookmarked;
@@ -124,6 +127,10 @@ const Buttons = ({ boulder, setBoulder, userID, username, navigation }) => {
   const handleBoulderStatsPressed = () => {
     // setIsStatsVisible((prev) => !prev);
     navigation.navigate("BoulderStats", { boulder: boulder });
+  };
+
+  const handleVibrate = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
   };
 
   return (

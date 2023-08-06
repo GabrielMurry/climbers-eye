@@ -20,6 +20,7 @@ import { request } from "../api/requestMethods";
 import { useSelector } from "react-redux";
 import CustomInput from "./CustomInput";
 import CustomButton from "./CustomButton";
+import * as Haptics from "expo-haptics";
 
 const ModalEditPreview = ({
   image,
@@ -63,10 +64,15 @@ const ModalEditPreview = ({
       return;
     }
     if (response.data) {
+      handleVibrate();
       navigation.navigate("Boulder", { boulder: response.data });
       setIsConfirmLoading(false);
     }
     setIsModalVisible(!isModalVisible);
+  };
+
+  const handleVibrate = () => {
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
   };
 
   return (

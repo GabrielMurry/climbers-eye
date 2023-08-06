@@ -25,6 +25,7 @@ import { request } from "../../../api/requestMethods";
 import { useSelector } from "react-redux";
 import { useFocusEffect } from "@react-navigation/native";
 import { boulderGrades } from "../../../utils/constants/boulderConstants";
+import Header from "../../../components/general/Header";
 
 const ProfileSectionScreen = ({ route, navigation }) => {
   const { section } = route.params;
@@ -206,31 +207,11 @@ const ProfileSectionScreen = ({ route, navigation }) => {
 
   return (
     <View style={{ flex: 1 }}>
-      <SafeAreaView style={{ alignItems: "center" }}>
-        <View
-          style={{
-            flexDirection: "row",
-            width: "90%",
-            marginLeft: 5,
-            marginTop: 5,
-          }}
-        >
-          <ArrowLeftCircleIcon
-            size={30}
-            color="black"
-            onPress={() => navigation.goBack()}
-          />
-          <View
-            style={{
-              alignItems: "center",
-              marginLeft: 20,
-              paddingBottom: 10,
-            }}
-          >
-            <Text style={{ fontSize: 24 }}>Logbook</Text>
-          </View>
-        </View>
-      </SafeAreaView>
+      <Header
+        navigation={navigation}
+        title={section}
+        style={{ marginBottom: 10 }}
+      />
       <View style={styles.listContainer}>
         {/* List of Boulders */}
         <FlatList
