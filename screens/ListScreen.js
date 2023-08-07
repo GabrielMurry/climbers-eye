@@ -9,11 +9,17 @@ import {
   Keyboard,
   Image,
   ActivityIndicator,
+  SafeAreaView,
+  Animated,
+  Dimensions,
+  ScrollView,
+  Platform,
 } from "react-native";
 import React, {
   useCallback,
   useEffect,
   useLayoutEffect,
+  useRef,
   useState,
 } from "react";
 import {
@@ -25,12 +31,17 @@ import {
 import BoulderCard from "../components/listComponents/BoulderCard";
 import { request } from "../api/requestMethods";
 import { useFocusEffect } from "@react-navigation/native";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import ModalAddNewBoulder from "../components/listComponents/ModalAddNewBoulder";
 import * as ImagePicker from "expo-image-picker";
 import { boulderGrades } from "../utils/constants/boulderConstants";
+import { setSpraywallIndex } from "../redux/actions";
+import Carousel from "react-native-reanimated-carousel";
+
+const width = Dimensions.get("window").width;
 
 const ListScreen = ({ navigation }) => {
+  const dispatch = useDispatch();
   const { user } = useSelector((state) => state.userReducer);
   const { gym } = useSelector((state) => state.gymReducer);
   const {
@@ -47,21 +58,21 @@ const ListScreen = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [boulders, setBoulders] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isHeaderTitleVisible, setIsHeaderTitleVisible] = useState(false);
+  const [isHeaderImageVisible, setIsHeaderImageVisible] = useState(false);
   const [isTextInputFocused, setIsTextInputFocused] = useState(false);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const [hasFilters, setHasFilters] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerTitle: () => (
-        <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-          {isHeaderTitleVisible ? spraywalls[spraywallIndex].name : null}
-        </Text>
-      ),
-    });
-  }, [isHeaderTitleVisible]);
+  // useLayoutEffect(() => {
+  //   navigation.setOptions({
+  //     headerTitle: () => (
+  //       <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+  //         {isHeaderTitleVisible ? spraywalls[spraywallIndex].name : null}
+  //       </Text>
+  //     ),
+  //   });
+  // }, [isHeaderTitleVisible]);
 
   const areFiltersEnabled = () => {
     if (
@@ -110,7 +121,7 @@ const ListScreen = ({ navigation }) => {
       return;
     }
     if (response.data) {
-      setBoulders(response.data);
+      setBoulders([component1, component2, ...response.data]);
       setIsLoading(false);
     }
   };
@@ -150,21 +161,15 @@ const ListScreen = ({ navigation }) => {
     setIsModalVisible(true);
   };
 
-  const renderBoulderCards = ({ item }) => {
+  const renderBoulderCards = ({ item, index }) => {
+    if (index <= 1) {
+      return item;
+    }
     return (
       <TouchableOpacity onPress={() => navigateToBoulderScreen(item)}>
         <BoulderCard boulder={item} />
       </TouchableOpacity>
     );
-  };
-
-  const handleScroll = (event) => {
-    const scrollY = event.nativeEvent.contentOffset.y;
-    if (scrollY > 70 && !isHeaderTitleVisible) {
-      setIsHeaderTitleVisible(true);
-    } else if (scrollY <= 70 && isHeaderTitleVisible) {
-      setIsHeaderTitleVisible(false);
-    }
   };
 
   const handleTextInputFocus = () => {
@@ -182,52 +187,106 @@ const ListScreen = ({ navigation }) => {
     }
   };
 
-  const headerComponent = (
-    <>
+  const renderItem = ({ item }) => (
+    <View style={{ flex: 1 }}>
+      <Image
+        source={{ uri: item.url }}
+        style={{
+          width: "100%",
+          height: "100%",
+          borderRadius: 10,
+        }}
+      />
       <View
         style={{
-          height: 80,
+          position: "absolute",
+          backgroundColor: "rgba(0, 0, 0, 0.75)",
+          width: 100,
+          height: 50,
           justifyContent: "center",
           alignItems: "center",
+          borderTopLeftRadius: 10,
+          borderBottomRightRadius: 10,
+          width: "50%",
         }}
       >
-        <Text style={styles.titleText}>{gym.name}</Text>
-        <Text style={styles.subTitleText}>
-          {spraywalls[spraywallIndex].name}
+        <Text style={{ color: "white", fontWeight: "bold", fontSize: 20 }}>
+          {item.name}
         </Text>
       </View>
-      <View style={styles.SearchInputAndCancelContainer}>
-        <View style={styles.SearchInputContainer}>
-          <MagnifyingGlassIcon size={20} color="gray" />
-          <TextInput
-            style={styles.SearchInput}
-            value={searchQuery}
-            // onChange doesn't exist in react native. use onChangeText
-            onChangeText={(value) => setSearchQuery(value)} // in react native, you don't have to do e.target.value
-            placeholder="Search (name, setter, or grade)"
-            onFocus={handleTextInputFocus}
-            onBlur={handleTextInputBlur}
-            autoComplete="off"
-          />
-          {searchQuery ? (
-            <TouchableOpacity
-              style={styles.resetSearchQuery}
-              onPress={() => setSearchQuery("")}
-            >
-              <XMarkIcon size={12} color={"white"} />
-            </TouchableOpacity>
-          ) : null}
-        </View>
-        {(isTextInputFocused || searchQuery) && (
+    </View>
+  );
+
+  const scrollY = useRef(new Animated.Value(0)).current;
+
+  const handleScroll = (event) => {
+    const offsetY = event.nativeEvent.contentOffset.y;
+    scrollY.setValue(offsetY);
+
+    if (offsetY > 250 && !isHeaderImageVisible) {
+      setIsHeaderImageVisible(true);
+    } else if (offsetY <= 250 && isHeaderImageVisible) {
+      setIsHeaderImageVisible(false);
+    }
+  };
+
+  const headerImageOpacity = scrollY.interpolate({
+    inputRange: [250, 350],
+    outputRange: [0, 1],
+    extrapolate: "clamp",
+  });
+
+  const component1 = (
+    <View style={{ flex: 1, backgroundColor: "blue" }}>
+      <Carousel
+        loop={false}
+        width={width}
+        height={width - 75}
+        data={spraywalls}
+        scrollAnimationDuration={250}
+        onSnapToItem={(index) => dispatch(setSpraywallIndex(index))}
+        renderItem={renderItem}
+        mode="parallax"
+        modeConfig={{
+          parallaxScrollingScale: 0.9,
+          parallaxScrollingOffset: 50,
+        }}
+      />
+    </View>
+  );
+
+  const component2 = (
+    <View style={styles.SearchInputAndCancelContainer}>
+      <View style={styles.SearchInputContainer}>
+        <MagnifyingGlassIcon size={20} color="gray" />
+        <TextInput
+          style={styles.SearchInput}
+          value={searchQuery}
+          // onChange doesn't exist in react native. use onChangeText
+          onChangeText={(value) => setSearchQuery(value)} // in react native, you don't have to do e.target.value
+          placeholder="Search (name, setter, or grade)"
+          onFocus={handleTextInputFocus}
+          onBlur={handleTextInputBlur}
+          autoComplete="off"
+        />
+        {searchQuery ? (
           <TouchableOpacity
-            style={styles.cancelButton}
-            onPress={handleCancelSearchPress}
+            style={styles.resetSearchQuery}
+            onPress={() => setSearchQuery("")}
           >
-            <Text style={{ color: "rgb(0, 122, 255)" }}>Cancel</Text>
+            <XMarkIcon size={12} color={"white"} />
           </TouchableOpacity>
-        )}
+        ) : null}
       </View>
-    </>
+      {(isTextInputFocused || searchQuery) && (
+        <TouchableOpacity
+          style={styles.cancelButton}
+          onPress={handleCancelSearchPress}
+        >
+          <Text style={{ color: "rgb(0, 122, 255)" }}>Cancel</Text>
+        </TouchableOpacity>
+      )}
+    </View>
   );
 
   const handleCameraPressed = () => {
@@ -284,23 +343,48 @@ const ListScreen = ({ navigation }) => {
   };
 
   return (
-    <View
+    <SafeAreaView
       style={{
         flex: 1,
         backgroundColor: "#fff",
       }}
     >
+      <View
+        style={{
+          height: 75,
+          alignItems: "center",
+          flexDirection: "row",
+          backgroundColor: "white",
+          paddingHorizontal: 10,
+        }}
+      >
+        <View style={{ width: "75%" }}>
+          <Text style={styles.titleText}>{gym.name}</Text>
+        </View>
+        <View style={{ width: "25%", alignItems: "center" }}>
+          <Animated.Image
+            source={{ uri: spraywalls[spraywallIndex].url }}
+            style={{
+              width: 60,
+              height: 60,
+              opacity: headerImageOpacity,
+              borderRadius: 10,
+            }}
+          />
+        </View>
+      </View>
       <View style={styles.listContainer}>
         {/* List of Boulders */}
         <FlatList
           contentContainerStyle={styles.bouldersList}
           data={boulders}
           renderItem={renderBoulderCards}
+          stickyHeaderIndices={[1]}
           keyExtractor={(item) => item.id}
           initialNumToRender={8} // Render the number of items that are initially visible on the screen
           windowSize={2} // Render an additional number of items to improve scrolling performance
           onScroll={handleScroll}
-          ListHeaderComponent={headerComponent}
+          // ListHeaderComponent={headerComponent}
           ListFooterComponent={<View style={{ height: 90 }} />}
           ListEmptyComponent={renderEmptyComponent}
           keyboardShouldPersistTaps="handled" // click on search bar cancel buttons when Keyboard is visible (or click on boulder cards)
@@ -328,7 +412,7 @@ const ListScreen = ({ navigation }) => {
         handleDefaultImagePressed={handleDefaultImagePressed}
         handleUploadImagePressed={handleUploadImagePressed}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -344,7 +428,7 @@ const styles = StyleSheet.create({
   listContainer: {
     flex: 1,
     rowGap: 10,
-    paddingHorizontal: 10,
+    // paddingHorizontal: 10,
   },
   bouldersList: {
     rowGap: 10,
@@ -394,6 +478,8 @@ const styles = StyleSheet.create({
   },
   SearchInputAndCancelContainer: {
     flexDirection: "row",
+    backgroundColor: "white",
+    paddingBottom: 5,
   },
   SearchInputContainer: {
     flex: 1,

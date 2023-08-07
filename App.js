@@ -9,6 +9,11 @@ import {
   ArrowLeftCircleIcon,
   HomeIcon,
 } from "react-native-heroicons/outline";
+import {
+  UserIcon as UserIconSolid,
+  MapPinIcon as MapPinIconSolid,
+  HomeIcon as HomeIconSolid,
+} from "react-native-heroicons/solid";
 import LoginScreen from "./screens/LoginScreen";
 import SignupScreen from "./screens/SignupScreen";
 import MapScreen from "./screens/MapScreen";
@@ -41,6 +46,7 @@ import SettingsScreen from "./screens/profile/edit/SettingsScreen";
 import BannerScreen from "./screens/profile/edit/BannerScreen";
 import HeadshotScreen from "./screens/profile/edit/HeadshotScreen";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { Text } from "react-native";
 
 const Stack = createNativeStackNavigator();
 
@@ -114,8 +120,49 @@ export default function App() {
 
   function HomeTabs() {
     return (
-      <Tab.Navigator>
-        <Tab.Screen name="HomeTab" component={HomeScreen} />
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          headerShown: false,
+          tabBarIcon: ({ color, size, focused }) => {
+            // Set the appropriate icon based on the route name and focused state
+            let iconSource;
+            if (route.name === "ListTab") {
+              iconSource = focused ? (
+                <HomeIconSolid size={size} color={"black"} />
+              ) : (
+                <HomeIcon size={size} color={"black"} />
+              );
+            } else if (route.name === "MapTab") {
+              iconSource = focused ? (
+                <MapPinIconSolid size={size} color={"black"} />
+              ) : (
+                <MapPinIcon size={size} color={"black"} />
+              );
+            } else if (route.name === "ProfileTab") {
+              iconSource = focused ? (
+                <UserIconSolid size={size} color={"black"} />
+              ) : (
+                <UserIcon size={size} color={"black"} />
+              );
+            }
+
+            return iconSource;
+          },
+          tabBarLabel: ({ focused, color }) => {
+            // Set the label text and style based on the focused state
+            const labelColor = focused
+              ? "rgba(0, 0, 0, 1)"
+              : "rgba(0, 0, 0, 0.5)"; // Change these colors as desired
+
+            return (
+              <Text style={{ color: labelColor, fontSize: 10 }}>
+                {route.name}
+              </Text>
+            );
+          },
+        })}
+      >
+        <Tab.Screen name="ListTab" component={ListScreen} />
         <Tab.Screen name="MapTab" component={MapScreen} />
         <Tab.Screen name="ProfileTab" component={ProfileScreen} />
       </Tab.Navigator>
@@ -228,7 +275,9 @@ export default function App() {
             <Stack.Screen
               name="Home"
               component={HomeTabs}
-              options={({ navigation }) => customHeader(navigation, "Home")}
+              options={{
+                headerShown: false,
+              }}
             />
             <Stack.Screen
               name="EditBoulder"
@@ -282,7 +331,9 @@ export default function App() {
             <Stack.Screen
               name="List"
               component={ListScreen}
-              options={({ navigation }) => customHeader(navigation, "List")}
+              options={{
+                headerShown: false,
+              }}
             />
             <Stack.Screen
               name="Filter"
