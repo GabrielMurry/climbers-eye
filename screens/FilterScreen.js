@@ -78,7 +78,13 @@ const FilterScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Header navigation={navigation} title={"Search Filters"} />
-      <ScrollView contentContainerStyle={{ gap: 10, paddingBottom: 30 }}>
+      <ScrollView
+        contentContainerStyle={{
+          gap: 10,
+          paddingBottom: 30,
+          paddingHorizontal: 10,
+        }}
+      >
         <TouchableOpacity
           style={styles.resetButton}
           onPress={handleResetFilters}
@@ -173,7 +179,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    padding: 10,
     width: "100%",
     height: "100%",
     // gap: 10,

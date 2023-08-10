@@ -18,8 +18,9 @@ import CircuitCard from "../components/circuitComponents/CircuitCard";
 import Swipeable from "react-native-gesture-handler/Swipeable";
 import { PlusIcon } from "react-native-heroicons/outline";
 import { removeFilterCircuits, setFilterCircuits } from "../redux/actions";
+import Header from "../components/general/Header";
 
-const FilterCircuitScreen = () => {
+const FilterCircuitScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.userReducer);
   const { spraywalls, spraywallIndex, filterCircuits } = useSelector(
@@ -144,9 +145,7 @@ const FilterCircuitScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.titleContainer}>
-        <Text style={styles.titleText}>Circuits</Text>
-      </View>
+      <Header navigation={navigation} title={"Circuits"} />
       <View style={styles.flatListContainer}>
         <FlatList
           contentContainerStyle={styles.flatList}
@@ -164,8 +163,9 @@ export default FilterCircuitScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
-    alignItems: "center",
+    backgroundColor: "#fff",
+    width: "100%",
+    height: "100%",
   },
   titleContainer: {
     padding: 10,

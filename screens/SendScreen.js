@@ -10,6 +10,7 @@ import {
   TouchableWithoutFeedback,
   Vibration,
   Platform,
+  SafeAreaView,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { StarIcon } from "react-native-heroicons/outline";
@@ -17,6 +18,7 @@ import { request } from "../api/requestMethods";
 import { useSelector } from "react-redux";
 import { boulderGrades } from "../utils/constants/boulderConstants";
 import * as Haptics from "expo-haptics";
+import Header from "../components/general/Header";
 
 const options = {
   attempts: [],
@@ -97,96 +99,99 @@ const SendScreen = ({ route, navigation }) => {
   };
 
   return (
-    <TouchableWithoutFeedback onPress={dismissKeyboard}>
-      <View style={styles.container}>
-        <View style={styles.row}>
-          <Text style={styles.label}>Boulder:</Text>
-          <Text style={styles.info}>{boulder.name}</Text>
-        </View>
-        <View style={styles.row}>
-          <Text style={styles.label}>User:</Text>
-          <Text style={styles.info}>{user.name}</Text>
-        </View>
-        <View style={styles.row}>
-          <Text style={styles.label}>Date:</Text>
-          <Text style={styles.info}>{new Date().toLocaleString()}</Text>
-        </View>
-        <TouchableOpacity style={styles.row} onPress={toggleAttemptsPicker}>
-          <Text style={styles.label}>Attempts:</Text>
-          <Text style={styles.info}>{selectedAttempts}</Text>
-        </TouchableOpacity>
-        {showAttemptsPicker && (
-          <Animated.View
-            style={[styles.pickerContainer, { opacity: fadeAnim }]}
-          >
-            <Picker
-              selectedValue={selectedAttempts}
-              onValueChange={(value) => {
-                setSelectedAttempts(value);
-                toggleAttemptsPicker();
-              }}
+    <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
+      <Header navigation={navigation} title={"Send"} />
+      <TouchableWithoutFeedback onPress={dismissKeyboard}>
+        <View style={styles.container}>
+          <View style={styles.row}>
+            <Text style={styles.label}>Boulder:</Text>
+            <Text style={styles.info}>{boulder.name}</Text>
+          </View>
+          <View style={styles.row}>
+            <Text style={styles.label}>User:</Text>
+            <Text style={styles.info}>{user.name}</Text>
+          </View>
+          <View style={styles.row}>
+            <Text style={styles.label}>Date:</Text>
+            <Text style={styles.info}>{new Date().toLocaleString()}</Text>
+          </View>
+          <TouchableOpacity style={styles.row} onPress={toggleAttemptsPicker}>
+            <Text style={styles.label}>Attempts:</Text>
+            <Text style={styles.info}>{selectedAttempts}</Text>
+          </TouchableOpacity>
+          {showAttemptsPicker && (
+            <Animated.View
+              style={[styles.pickerContainer, { opacity: fadeAnim }]}
             >
-              {renderPickerItems("attempts")}
-            </Picker>
-          </Animated.View>
-        )}
-        <TouchableOpacity style={styles.row} onPress={toggleDifficultyPicker}>
-          <Text style={styles.label}>Difficulty:</Text>
-          <Text style={styles.info}>{selectedDifficulty}</Text>
-        </TouchableOpacity>
-        {showDifficultyPicker && (
-          <Animated.View
-            style={[styles.pickerContainer, { opacity: fadeAnim }]}
-          >
-            <Picker
-              selectedValue={selectedDifficulty}
-              onValueChange={(value) => {
-                setSelectedDifficulty(value);
-                toggleDifficultyPicker();
-              }}
+              <Picker
+                selectedValue={selectedAttempts}
+                onValueChange={(value) => {
+                  setSelectedAttempts(value);
+                  toggleAttemptsPicker();
+                }}
+              >
+                {renderPickerItems("attempts")}
+              </Picker>
+            </Animated.View>
+          )}
+          <TouchableOpacity style={styles.row} onPress={toggleDifficultyPicker}>
+            <Text style={styles.label}>Difficulty:</Text>
+            <Text style={styles.info}>{selectedDifficulty}</Text>
+          </TouchableOpacity>
+          {showDifficultyPicker && (
+            <Animated.View
+              style={[styles.pickerContainer, { opacity: fadeAnim }]}
             >
-              {renderPickerItems("difficulty")}
-            </Picker>
-          </Animated.View>
-        )}
-        <View style={styles.row}>
-          <Text style={styles.label}>Quality:</Text>
-          <View style={styles.info}>
-            <StarIcon
-              size={35}
-              fill={qualityCount >= 1 ? "gold" : "black"}
-              color={qualityCount >= 1 ? "gold" : "black"}
-              onPress={() => setQualityCount(1)}
-            />
-            <StarIcon
-              size={35}
-              fill={qualityCount >= 2 ? "gold" : "black"}
-              color={qualityCount >= 2 ? "gold" : "black"}
-              onPress={() => setQualityCount(2)}
-            />
-            <StarIcon
-              size={35}
-              fill={qualityCount === 3 ? "gold" : "black"}
-              color={qualityCount === 3 ? "gold" : "black"}
-              onPress={() => setQualityCount(3)}
+              <Picker
+                selectedValue={selectedDifficulty}
+                onValueChange={(value) => {
+                  setSelectedDifficulty(value);
+                  toggleDifficultyPicker();
+                }}
+              >
+                {renderPickerItems("difficulty")}
+              </Picker>
+            </Animated.View>
+          )}
+          <View style={styles.row}>
+            <Text style={styles.label}>Quality:</Text>
+            <View style={styles.info}>
+              <StarIcon
+                size={35}
+                fill={qualityCount >= 1 ? "gold" : "black"}
+                color={qualityCount >= 1 ? "gold" : "black"}
+                onPress={() => setQualityCount(1)}
+              />
+              <StarIcon
+                size={35}
+                fill={qualityCount >= 2 ? "gold" : "black"}
+                color={qualityCount >= 2 ? "gold" : "black"}
+                onPress={() => setQualityCount(2)}
+              />
+              <StarIcon
+                size={35}
+                fill={qualityCount === 3 ? "gold" : "black"}
+                color={qualityCount === 3 ? "gold" : "black"}
+                onPress={() => setQualityCount(3)}
+              />
+            </View>
+          </View>
+          <View style={styles.row}>
+            <Text style={styles.label}>Notes:</Text>
+            <TextInput
+              style={styles.notesInput}
+              multiline={true}
+              placeholder="Enter notes..."
+              value={notes}
+              onChangeText={setNotes}
             />
           </View>
+          <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+            <Text style={styles.submitButtonText}>Submit</Text>
+          </TouchableOpacity>
         </View>
-        <View style={styles.row}>
-          <Text style={styles.label}>Notes:</Text>
-          <TextInput
-            style={styles.notesInput}
-            multiline={true}
-            placeholder="Enter notes..."
-            value={notes}
-            onChangeText={setNotes}
-          />
-        </View>
-        <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-          <Text style={styles.submitButtonText}>Submit</Text>
-        </TouchableOpacity>
-      </View>
-    </TouchableWithoutFeedback>
+      </TouchableWithoutFeedback>
+    </SafeAreaView>
   );
 };
 

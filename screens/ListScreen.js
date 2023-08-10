@@ -14,6 +14,7 @@ import {
   Dimensions,
   ScrollView,
   Platform,
+  Modal,
 } from "react-native";
 import React, {
   useCallback,
@@ -58,11 +59,15 @@ const ListScreen = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [boulders, setBoulders] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isModalSpraywallsVisible, setIsModalSpraywallsVisible] =
+    useState(false);
   const [isHeaderImageVisible, setIsHeaderImageVisible] = useState(false);
   const [isTextInputFocused, setIsTextInputFocused] = useState(false);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const [hasFilters, setHasFilters] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  const flatListRef = useRef(null);
 
   // useLayoutEffect(() => {
   //   navigation.setOptions({
@@ -103,6 +108,7 @@ const ListScreen = ({ navigation }) => {
       filterClimbType,
       filterStatus,
       searchQuery,
+      spraywallIndex,
     ])
   );
 
@@ -121,7 +127,7 @@ const ListScreen = ({ navigation }) => {
       return;
     }
     if (response.data) {
-      setBoulders([component1, component2, ...response.data]);
+      setBoulders([{ id: "c1" }, ...response.data]);
       setIsLoading(false);
     }
   };
@@ -162,11 +168,71 @@ const ListScreen = ({ navigation }) => {
   };
 
   const renderBoulderCards = ({ item, index }) => {
-    if (index <= 1) {
-      return item;
+    // if (index === 0) {
+    //   // spraywall(s) images
+    //   return (
+    //     <View key={item.id} style={{ flex: 1, marginVertical: -10 }}>
+    //       <Carousel
+    //         loop={false}
+    //         width={width}
+    //         height={width - 90}
+    //         data={spraywalls}
+    //         keyExtractor={(item) => item.id}
+    //         scrollAnimationDuration={250}
+    //         onSnapToItem={(index) => dispatch(setSpraywallIndex(index))}
+    //         renderItem={renderItem}
+    //         mode="parallax"
+    //         modeConfig={{
+    //           parallaxScrollingScale: 0.9,
+    //           parallaxScrollingOffset: 50,
+    //         }}
+    //       />
+    //     </View>
+    //   );
+    // }
+    if (index === 0) {
+      // search input
+      return (
+        <View key={item.id} style={styles.SearchInputAndCancelContainer}>
+          <View style={styles.SearchInputContainer}>
+            <MagnifyingGlassIcon size={20} color="gray" />
+            <TextInput
+              style={styles.SearchInput}
+              value={searchQuery}
+              // onChange doesn't exist in react native. use onChangeText
+              onChangeText={(value) => setSearchQuery(value)} // in react native, you don't have to do e.target.value
+              placeholder="Search (name, setter, or grade)"
+              onFocus={handleTextInputFocus}
+              onBlur={handleTextInputBlur}
+              autoComplete="off"
+            />
+            {searchQuery ? (
+              <TouchableOpacity
+                style={styles.resetSearchQuery}
+                onPress={() => setSearchQuery("")}
+              >
+                <XMarkIcon size={12} color={"white"} />
+              </TouchableOpacity>
+            ) : null}
+          </View>
+          {(isTextInputFocused || searchQuery) && (
+            <TouchableOpacity
+              style={styles.cancelButton}
+              onPress={handleCancelSearchPress}
+            >
+              <Text style={{ color: "rgb(0, 122, 255)" }}>Cancel</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+      );
     }
+    // boulder cards
     return (
-      <TouchableOpacity onPress={() => navigateToBoulderScreen(item)}>
+      <TouchableOpacity
+        onPress={() => navigateToBoulderScreen(item)}
+        key={item.id}
+        style={{ paddingHorizontal: 10 }}
+      >
         <BoulderCard boulder={item} />
       </TouchableOpacity>
     );
@@ -188,7 +254,7 @@ const ListScreen = ({ navigation }) => {
   };
 
   const renderItem = ({ item }) => (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1 }} key={item.id}>
       <Image
         source={{ uri: item.url }}
         style={{
@@ -230,64 +296,28 @@ const ListScreen = ({ navigation }) => {
     }
   };
 
+  // const [scrolledPastElement0, setScrolledPastElement0] = useState(false);
+
+  // const handleScroll = (event) => {
+  //   const yOffset = event.nativeEvent.contentOffset.y;
+  //   if (yOffset > width - 90) {
+  //     if (!scrolledPastElement0) {
+  //       setScrolledPastElement0(true);
+  //       // Adjust scroll position to keep element 1 at the top
+  //       flatListRef.current.scrollToIndex({ animated: true, index: 1 });
+  //     }
+  //   } else {
+  //     if (scrolledPastElement0) {
+  //       setScrolledPastElement0(false);
+  //     }
+  //   }
+  // };
+
   const headerImageOpacity = scrollY.interpolate({
     inputRange: [250, 350],
     outputRange: [0, 1],
     extrapolate: "clamp",
   });
-
-  const component1 = (
-    <View style={{ flex: 1, backgroundColor: "blue" }}>
-      <Carousel
-        loop={false}
-        width={width}
-        height={width - 75}
-        data={spraywalls}
-        scrollAnimationDuration={250}
-        onSnapToItem={(index) => dispatch(setSpraywallIndex(index))}
-        renderItem={renderItem}
-        mode="parallax"
-        modeConfig={{
-          parallaxScrollingScale: 0.9,
-          parallaxScrollingOffset: 50,
-        }}
-      />
-    </View>
-  );
-
-  const component2 = (
-    <View style={styles.SearchInputAndCancelContainer}>
-      <View style={styles.SearchInputContainer}>
-        <MagnifyingGlassIcon size={20} color="gray" />
-        <TextInput
-          style={styles.SearchInput}
-          value={searchQuery}
-          // onChange doesn't exist in react native. use onChangeText
-          onChangeText={(value) => setSearchQuery(value)} // in react native, you don't have to do e.target.value
-          placeholder="Search (name, setter, or grade)"
-          onFocus={handleTextInputFocus}
-          onBlur={handleTextInputBlur}
-          autoComplete="off"
-        />
-        {searchQuery ? (
-          <TouchableOpacity
-            style={styles.resetSearchQuery}
-            onPress={() => setSearchQuery("")}
-          >
-            <XMarkIcon size={12} color={"white"} />
-          </TouchableOpacity>
-        ) : null}
-      </View>
-      {(isTextInputFocused || searchQuery) && (
-        <TouchableOpacity
-          style={styles.cancelButton}
-          onPress={handleCancelSearchPress}
-        >
-          <Text style={{ color: "rgb(0, 122, 255)" }}>Cancel</Text>
-        </TouchableOpacity>
-      )}
-    </View>
-  );
 
   const handleCameraPressed = () => {
     setIsModalVisible(false);
@@ -342,44 +372,53 @@ const ListScreen = ({ navigation }) => {
     );
   };
 
+  const scrollToTop = () => {
+    flatListRef.current.scrollToOffset({ offset: 0, animated: true });
+  };
+
   return (
     <SafeAreaView
       style={{
         flex: 1,
-        backgroundColor: "#fff",
+        backgroundColor: "white",
       }}
     >
       <View
         style={{
-          height: 75,
+          height: 60,
           alignItems: "center",
           flexDirection: "row",
           backgroundColor: "white",
-          paddingHorizontal: 10,
+          paddingHorizontal: 20,
         }}
       >
         <View style={{ width: "75%" }}>
           <Text style={styles.titleText}>{gym.name}</Text>
         </View>
-        <View style={{ width: "25%", alignItems: "center" }}>
+        <Pressable
+          style={{ width: "25%", alignItems: "center" }}
+          // disabled={isHeaderImageVisible ? false : true}
+          onPress={() => setIsModalSpraywallsVisible(true)}
+        >
           <Animated.Image
             source={{ uri: spraywalls[spraywallIndex].url }}
             style={{
-              width: 60,
-              height: 60,
-              opacity: headerImageOpacity,
+              width: 50,
+              height: 50,
+              // opacity: headerImageOpacity,
               borderRadius: 10,
             }}
           />
-        </View>
+        </Pressable>
       </View>
       <View style={styles.listContainer}>
         {/* List of Boulders */}
         <FlatList
+          ref={flatListRef}
           contentContainerStyle={styles.bouldersList}
           data={boulders}
           renderItem={renderBoulderCards}
-          stickyHeaderIndices={[1]}
+          stickyHeaderIndices={[0]}
           keyExtractor={(item) => item.id}
           initialNumToRender={8} // Render the number of items that are initially visible on the screen
           windowSize={2} // Render an additional number of items to improve scrolling performance
@@ -412,6 +451,39 @@ const ListScreen = ({ navigation }) => {
         handleDefaultImagePressed={handleDefaultImagePressed}
         handleUploadImagePressed={handleUploadImagePressed}
       />
+      <Modal
+        visible={isModalSpraywallsVisible}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setIsModalSpraywallsVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <SafeAreaView style={styles.modalContent}>
+            <TouchableOpacity
+              style={{ flex: 1 }}
+              onPress={() => setIsModalSpraywallsVisible(false)}
+            />
+            <View style={styles.displayContainer}>
+              <Carousel
+                loop={false}
+                width={width}
+                height={width - 125}
+                data={spraywalls}
+                defaultIndex={spraywallIndex}
+                keyExtractor={(item) => item.id}
+                scrollAnimationDuration={250}
+                onSnapToItem={(index) => dispatch(setSpraywallIndex(index))}
+                renderItem={renderItem}
+                mode="parallax"
+                modeConfig={{
+                  parallaxScrollingScale: 0.9,
+                  parallaxScrollingOffset: 50,
+                }}
+              />
+            </View>
+          </SafeAreaView>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -420,7 +492,8 @@ export default ListScreen;
 
 const styles = StyleSheet.create({
   titleText: {
-    fontSize: 30,
+    fontSize: 28,
+    fontWeight: "bold",
   },
   subTitleText: {
     fontSize: 24,
@@ -428,7 +501,6 @@ const styles = StyleSheet.create({
   listContainer: {
     flex: 1,
     rowGap: 10,
-    // paddingHorizontal: 10,
   },
   bouldersList: {
     rowGap: 10,
@@ -453,7 +525,7 @@ const styles = StyleSheet.create({
     backgroundColor: hasFilters ? "rgb(0, 122, 255)" : "white",
     borderRadius: "100%",
     position: "absolute",
-    bottom: 35,
+    bottom: 25,
     left: 20,
     // adding shadow to add new circuit button
     shadowColor: "black",
@@ -467,7 +539,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: "100%",
     position: "absolute",
-    bottom: 35,
+    bottom: 25,
     right: 20,
     // adding shadow to add new circuit button
     shadowColor: "black",
@@ -479,7 +551,9 @@ const styles = StyleSheet.create({
   SearchInputAndCancelContainer: {
     flexDirection: "row",
     backgroundColor: "white",
-    paddingBottom: 5,
+    padding: 10,
+    paddingTop: 15,
+    marginVertical: -10,
   },
   SearchInputContainer: {
     flex: 1,
@@ -508,5 +582,69 @@ const styles = StyleSheet.create({
     borderRadius: "100%",
     justifyContent: "center",
     alignItems: "center",
+  },
+  modalContainer: {
+    flex: 1,
+  },
+  modalContent: {
+    flex: 1,
+  },
+  displayContainer: {
+    width: "100%",
+    height: 325,
+    justifyContent: "center",
+    flexDirection: "row",
+    position: "absolute", //Here is the trick
+    bottom: 0, //Here is the trick
+    backgroundColor: "rgba(255, 255, 255, 1)",
+  },
+  columnContainer: {
+    justifyContent: "flex-end",
+    alignItems: "center",
+    gap: 10,
+  },
+  buttonTextSmall: {
+    width: 125,
+    height: 40,
+    justifyContent: "center",
+    alignItems: "flex-end",
+  },
+  buttonTextBig: {
+    width: 125,
+    height: 60,
+    justifyContent: "center",
+    alignItems: "flex-end",
+  },
+  buttonContainerIcon: {
+    width: "100%",
+    alignItems: "center",
+  },
+  buttonIconSmall: {
+    width: 40,
+    height: 40,
+    backgroundColor: "white",
+    borderRadius: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    // shadow
+    shadowColor: "black",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5, // Required for Android
+  },
+  buttonIconBig: {
+    width: 60,
+    height: 60,
+    backgroundColor: "rgb(0, 122, 255)",
+    borderRadius: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    // shadow
+    shadowColor: "black",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5, // Required for Android
   },
 });

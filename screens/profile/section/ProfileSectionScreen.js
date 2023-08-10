@@ -219,6 +219,7 @@ const ProfileSectionScreen = ({ route, navigation }) => {
           data={boulders}
           renderItem={renderBoulderCards}
           keyExtractor={(item) => item.id}
+          stickyHeaderIndices={[0]}
           initialNumToRender={8} // Render the number of items that are initially visible on the screen
           windowSize={2} // Render an additional number of items to improve scrolling performance
           //   onScroll={handleScroll}

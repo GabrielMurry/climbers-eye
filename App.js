@@ -123,6 +123,9 @@ export default function App() {
       <Tab.Navigator
         screenOptions={({ route }) => ({
           headerShown: false,
+          tabBarStyle: {
+            borderTopWidth: 0,
+          },
           tabBarIcon: ({ color, size, focused }) => {
             // Set the appropriate icon based on the route name and focused state
             let iconSource;
@@ -343,9 +346,9 @@ export default function App() {
             <Stack.Screen
               name="FilterCircuit"
               component={FilterCircuitScreen}
-              options={({ navigation }) =>
-                customHeader(navigation, "FilterCircuit")
-              }
+              options={{
+                headerShown: false,
+              }}
             />
             <Stack.Screen
               name="Boulder"
@@ -355,7 +358,9 @@ export default function App() {
             <Stack.Screen
               name="Send"
               component={SendScreen}
-              options={({ navigation }) => customHeader(navigation, "Send")}
+              options={{
+                headerShown: false,
+              }}
             />
             <Stack.Screen
               name="Circuit"

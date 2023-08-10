@@ -56,7 +56,8 @@
     "redux": "^4.2.1",
     "redux-thunk": "^2.4.2",
     "rn-perfect-sketch-canvas": "^0.3.0",
-    "victory-native": "^36.6.11"
+    "victory-native": "^36.6.11",
+    "expo-linear-gradient": "~12.1.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

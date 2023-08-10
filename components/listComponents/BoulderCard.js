@@ -92,17 +92,19 @@ const styles = StyleSheet.create({
   boulder: {
     height: 80,
     flexDirection: "row",
-    backgroundColor: "#FFFBF1",
+    backgroundColor: "#FFFEF2",
     borderColor: "black",
     borderWidth: 1,
+    // borderBottomWidth: 1,
+    // borderTopWidth: 1,
     borderRadius: 10,
     paddingHorizontal: 10,
-    // adding shadow to boulder card
-    shadowColor: "black",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 5, // Required for Android
+    // // adding shadow to boulder card
+    // shadowColor: "black",
+    // shadowOffset: { width: 0, height: 2 },
+    // shadowOpacity: 0.3,
+    // shadowRadius: 4,
+    // elevation: 5, // Required for Android
   },
   boulderLeftWrapper: {
     flex: 1,
