@@ -66,7 +66,7 @@ const ModalProfile = ({
                 paddingBottom: 10,
               }}
             >
-              <Text style={{ fontSize: 24 }}>Select Gyms</Text>
+              <Text style={{ fontSize: 24 }}>Select Your Gyms</Text>
             </View>
           </View>
           <FlatList

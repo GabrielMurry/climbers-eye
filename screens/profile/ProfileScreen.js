@@ -1,4 +1,10 @@
-import { View } from "react-native";
+import {
+  SafeAreaView,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { request } from "../../api/requestMethods";
@@ -95,21 +101,23 @@ const ProfileScreen = ({ route, navigation }) => {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: "white" }}>
-      {/* Header (banner image, headshot image, name, username) */}
-      <Header navigation={navigation} />
-      <SectionButtons
-        sectionQuickData={sectionQuickData}
-        setIsModalVisible={setIsModalVisible}
-        navigation={navigation}
-      />
-      <ModalProfile
-        isModalVisible={isModalVisible}
-        setIsModalVisible={setIsModalVisible}
-        spraywalls={spraywalls}
-        spraywallIndex={spraywallIndex}
-      />
-    </View>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "rgba(240,243,246,255)" }}>
+      <ScrollView>
+        {/* Header (banner image, headshot image, name, username) */}
+        <Header navigation={navigation} />
+        <SectionButtons
+          sectionQuickData={sectionQuickData}
+          setIsModalVisible={setIsModalVisible}
+          navigation={navigation}
+        />
+        <ModalProfile
+          isModalVisible={isModalVisible}
+          setIsModalVisible={setIsModalVisible}
+          spraywalls={spraywalls}
+          spraywallIndex={spraywallIndex}
+        />
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 

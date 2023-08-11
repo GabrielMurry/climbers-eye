@@ -1,4 +1,10 @@
-import { View, Text, SafeAreaView, Image } from "react-native";
+import {
+  View,
+  Text,
+  SafeAreaView,
+  Image,
+  TouchableOpacity,
+} from "react-native";
 import React from "react";
 import {
   ArrowLeftCircleIcon,
@@ -13,44 +19,48 @@ const Header = ({ navigation }) => {
   const { spraywalls } = useSelector((state) => state.spraywallReducer);
 
   return (
-    <SafeAreaView>
-      <View
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-between",
-          paddingHorizontal: 40,
-        }}
-      >
-        <View>
+    <View
+      style={{
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        paddingHorizontal: 30,
+        height: 80,
+        marginBottom: 10,
+      }}
+    >
+      <View style={{ flex: 1 }}>
+        <View style={{ height: "25%" }} />
+        <View style={{ height: "50%" }}>
           {/* Name */}
-          <Text style={{ fontSize: 26, fontWeight: "bold" }}>
+          <Text style={{ fontSize: 30, fontWeight: "bold" }}>
             Gabriel Murry
           </Text>
-          {/* Username */}
-          <Text style={{ fontSize: 18 }}>@Gabriel</Text>
         </View>
-        <View
-          style={{
-            width: 80,
-            height: 80,
-            borderRadius: "100%",
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "white",
-          }}
-        >
-          {headshotImage.url ? (
-            <Image
-              source={{ uri: headshotImage.url }}
-              style={{ width: "100%", height: "100%", borderRadius: 100 }}
-            />
-          ) : (
-            <UserIcon size={50} color={"black"} />
-          )}
+        <View style={{ height: "25%" }}>
+          <Text style={{ fontSize: 16 }}>@Gabriel</Text>
         </View>
       </View>
-    </SafeAreaView>
+      <View
+        style={{
+          width: 75,
+          height: 75,
+          borderRadius: "100%",
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "white",
+        }}
+      >
+        {headshotImage.url ? (
+          <Image
+            source={{ uri: headshotImage.url }}
+            style={{ width: "100%", height: "100%", borderRadius: 100 }}
+          />
+        ) : (
+          <UserIcon size={50} color={"black"} />
+        )}
+      </View>
+    </View>
   );
 };
 

@@ -127,7 +127,7 @@ const ListScreen = ({ navigation }) => {
       return;
     }
     if (response.data) {
-      setBoulders([{ id: "c1" }, ...response.data]);
+      setBoulders(response.data);
       setIsLoading(false);
     }
   };
@@ -167,66 +167,7 @@ const ListScreen = ({ navigation }) => {
     setIsModalVisible(true);
   };
 
-  const renderBoulderCards = ({ item, index }) => {
-    // if (index === 0) {
-    //   // spraywall(s) images
-    //   return (
-    //     <View key={item.id} style={{ flex: 1, marginVertical: -10 }}>
-    //       <Carousel
-    //         loop={false}
-    //         width={width}
-    //         height={width - 90}
-    //         data={spraywalls}
-    //         keyExtractor={(item) => item.id}
-    //         scrollAnimationDuration={250}
-    //         onSnapToItem={(index) => dispatch(setSpraywallIndex(index))}
-    //         renderItem={renderItem}
-    //         mode="parallax"
-    //         modeConfig={{
-    //           parallaxScrollingScale: 0.9,
-    //           parallaxScrollingOffset: 50,
-    //         }}
-    //       />
-    //     </View>
-    //   );
-    // }
-    if (index === 0) {
-      // search input
-      return (
-        <View key={item.id} style={styles.SearchInputAndCancelContainer}>
-          <View style={styles.SearchInputContainer}>
-            <MagnifyingGlassIcon size={20} color="gray" />
-            <TextInput
-              style={styles.SearchInput}
-              value={searchQuery}
-              // onChange doesn't exist in react native. use onChangeText
-              onChangeText={(value) => setSearchQuery(value)} // in react native, you don't have to do e.target.value
-              placeholder="Search (name, setter, or grade)"
-              onFocus={handleTextInputFocus}
-              onBlur={handleTextInputBlur}
-              autoComplete="off"
-            />
-            {searchQuery ? (
-              <TouchableOpacity
-                style={styles.resetSearchQuery}
-                onPress={() => setSearchQuery("")}
-              >
-                <XMarkIcon size={12} color={"white"} />
-              </TouchableOpacity>
-            ) : null}
-          </View>
-          {(isTextInputFocused || searchQuery) && (
-            <TouchableOpacity
-              style={styles.cancelButton}
-              onPress={handleCancelSearchPress}
-            >
-              <Text style={{ color: "rgb(0, 122, 255)" }}>Cancel</Text>
-            </TouchableOpacity>
-          )}
-        </View>
-      );
-    }
-    // boulder cards
+  const renderBoulderCards = ({ item }) => {
     return (
       <TouchableOpacity
         onPress={() => navigateToBoulderScreen(item)}
@@ -403,11 +344,69 @@ const ListScreen = ({ navigation }) => {
           <Animated.Image
             source={{ uri: spraywalls[spraywallIndex].url }}
             style={{
-              width: 50,
-              height: 50,
+              width: 60,
+              height: 60,
               // opacity: headerImageOpacity,
-              borderRadius: 10,
+              borderRadius: 100,
             }}
+          />
+        </Pressable>
+      </View>
+      <View style={styles.SearchInputAndCancelContainer}>
+        <View style={styles.SearchInputContainer}>
+          <MagnifyingGlassIcon size={20} color="gray" />
+          <TextInput
+            style={styles.SearchInput}
+            value={searchQuery}
+            // onChange doesn't exist in react native. use onChangeText
+            onChangeText={(value) => setSearchQuery(value)} // in react native, you don't have to do e.target.value
+            placeholder="Search (name, setter, or grade)"
+            onFocus={handleTextInputFocus}
+            onBlur={handleTextInputBlur}
+            autoComplete="off"
+          />
+          {searchQuery ? (
+            <TouchableOpacity
+              style={styles.resetSearchQuery}
+              onPress={() => setSearchQuery("")}
+            >
+              <XMarkIcon size={12} color={"white"} />
+            </TouchableOpacity>
+          ) : null}
+        </View>
+        {(isTextInputFocused || searchQuery) && (
+          <TouchableOpacity
+            style={styles.cancelButton}
+            onPress={handleCancelSearchPress}
+          >
+            <Text style={{ color: "rgb(0, 122, 255)" }}>Cancel</Text>
+          </TouchableOpacity>
+        )}
+      </View>
+      <View
+        style={{
+          flexDirection: "row",
+          backgroundColor: "white",
+          paddingHorizontal: 10,
+          marginBottom: 5,
+        }}
+      >
+        <Pressable
+          style={{
+            backgroundColor: hasFilters
+              ? "rgb(0, 122, 255)"
+              : "rgb(229, 228, 226)",
+            width: 40,
+            height: 40,
+            justifyContent: "center",
+            alignItems: "center",
+            borderRadius: 10,
+          }}
+          onPress={handleFilterPress}
+        >
+          <AdjustmentsHorizontalIcon
+            size={30}
+            color={hasFilters ? "white" : "rgb(0, 122, 255)"}
           />
         </Pressable>
       </View>
@@ -418,7 +417,6 @@ const ListScreen = ({ navigation }) => {
           contentContainerStyle={styles.bouldersList}
           data={boulders}
           renderItem={renderBoulderCards}
-          stickyHeaderIndices={[0]}
           keyExtractor={(item) => item.id}
           initialNumToRender={8} // Render the number of items that are initially visible on the screen
           windowSize={2} // Render an additional number of items to improve scrolling performance
@@ -551,9 +549,8 @@ const styles = StyleSheet.create({
   SearchInputAndCancelContainer: {
     flexDirection: "row",
     backgroundColor: "white",
-    padding: 10,
-    paddingTop: 15,
-    marginVertical: -10,
+    paddingHorizontal: 10,
+    marginVertical: 5,
   },
   SearchInputContainer: {
     flex: 1,
