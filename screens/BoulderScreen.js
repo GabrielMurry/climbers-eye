@@ -1,10 +1,10 @@
-import { View, StyleSheet, SafeAreaView } from "react-native";
+import { View, StyleSheet, SafeAreaView, BackHandler } from "react-native";
 import React, { useCallback, useLayoutEffect, useState } from "react";
 import FullScreenImage from "../components/FullScreenImage";
 import { request } from "../api/requestMethods";
 import { FontAwesome } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
-import { LinkIcon } from "react-native-heroicons/outline";
+import { ArrowLeftCircleIcon, LinkIcon } from "react-native-heroicons/outline";
 import { useSelector } from "react-redux";
 import Buttons from "../components/boulderComponents/Buttons";
 import ImageDisplay from "../components/boulderComponents/ImageDisplay";
@@ -14,6 +14,8 @@ import BoulderBarChart from "../components/BoulderBarChart";
 const BoulderScreen = ({ route, navigation }) => {
   const { user } = useSelector((state) => state.userReducer);
 
+  const { fromScreen, toScreen } = route.params;
+
   const [boulder, setBoulder] = useState(route.params.boulder);
   const [imageFullScreen, setImageFullScreen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -21,6 +23,20 @@ const BoulderScreen = ({ route, navigation }) => {
 
   useLayoutEffect(() => {
     navigation.setOptions({
+      gestureEnabled: fromScreen === "EditBoulder" ? false : true,
+      headerLeft: () => (
+        <ArrowLeftCircleIcon
+          size={30}
+          color="black"
+          onPress={() => {
+            if (toScreen === "ProfileSection") {
+              navigation.goBack();
+            } else {
+              navigation.navigate(toScreen);
+            }
+          }}
+        />
+      ),
       headerTitle: () => (
         <View style={{ flexDirection: "row", gap: 10 }}>
           <FontAwesome
@@ -48,6 +64,7 @@ const BoulderScreen = ({ route, navigation }) => {
           />
         </View>
       ),
+      headerRight: () => {},
     });
   }, [navigation, boulder]);
 

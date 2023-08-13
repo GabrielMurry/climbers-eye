@@ -50,6 +50,8 @@ const ProfileSectionScreen = ({ route, navigation }) => {
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const [hasFilters, setHasFilters] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [title, setTitle] = useState("");
+  const [color, setColor] = useState("");
 
   // Add an event listener to detect changes in keyboard visibility
   useEffect(() => {
@@ -74,8 +76,15 @@ const ProfileSectionScreen = ({ route, navigation }) => {
     useCallback(() => {
       // reset search query and fetch all data upon every new focus on screen - a boulder may have been updated
       // setSearchQuery("");
-      fetchLogbookData();
-      setHasFilters(areFiltersEnabled);
+      if (section === "Circuits") {
+        setBoulders(route.params.circuit.boulderData);
+        setTitle(route.params.circuit.name);
+        setColor(route.params.circuit.color);
+      } else {
+        fetchLogbookData();
+        setHasFilters(areFiltersEnabled);
+        setTitle(section);
+      }
     }, [
       filterMinGradeIndex,
       filterMaxGradeIndex,
@@ -125,7 +134,11 @@ const ProfileSectionScreen = ({ route, navigation }) => {
   // Providing navigation as a dependency, the navigateToBoulder function will only be re-created when the navigation prop changes, ensuring better performance.
   const navigateToBoulderScreen = useCallback(
     (item) => {
-      navigation.navigate("Boulder", { boulder: item });
+      navigation.navigate("Boulder", {
+        boulder: item,
+        fromScreen: "ProfileSection",
+        toScreen: "ProfileSection",
+      });
     },
     [navigation]
   );
@@ -157,40 +170,6 @@ const ProfileSectionScreen = ({ route, navigation }) => {
     }
   };
 
-  const headerComponent = (
-    <View style={styles.SearchInputAndCancelContainer}>
-      <View style={styles.SearchInputContainer}>
-        <MagnifyingGlassIcon size={20} color="gray" />
-        <TextInput
-          style={styles.SearchInput}
-          value={searchQuery}
-          // onChange doesn't exist in react native. use onChangeText
-          onChangeText={(value) => setSearchQuery(value)} // in react native, you don't have to do e.target.value
-          placeholder="Search (name, setter, or grade)"
-          onFocus={handleTextInputFocus}
-          onBlur={handleTextInputBlur}
-          autoComplete="off"
-        />
-        {searchQuery ? (
-          <TouchableOpacity
-            style={styles.resetSearchQuery}
-            onPress={() => setSearchQuery("")}
-          >
-            <XMarkIcon size={12} color={"white"} />
-          </TouchableOpacity>
-        ) : null}
-      </View>
-      {(isTextInputFocused || searchQuery) && (
-        <TouchableOpacity
-          style={styles.cancelButton}
-          onPress={handleCancelSearchPress}
-        >
-          <Text style={{ color: "rgb(0, 122, 255)" }}>Cancel</Text>
-        </TouchableOpacity>
-      )}
-    </View>
-  );
-
   const renderEmptyComponent = () => {
     return (
       <View
@@ -209,9 +188,66 @@ const ProfileSectionScreen = ({ route, navigation }) => {
     <View style={{ flex: 1 }}>
       <Header
         navigation={navigation}
-        title={section}
+        title={title}
+        color={color}
         style={{ marginBottom: 10 }}
       />
+      <View style={styles.SearchInputAndCancelContainer}>
+        <View style={styles.SearchInputContainer}>
+          <MagnifyingGlassIcon size={20} color="gray" />
+          <TextInput
+            style={styles.SearchInput}
+            value={searchQuery}
+            // onChange doesn't exist in react native. use onChangeText
+            onChangeText={(value) => setSearchQuery(value)} // in react native, you don't have to do e.target.value
+            placeholder="Search (name, setter, or grade)"
+            onFocus={handleTextInputFocus}
+            onBlur={handleTextInputBlur}
+            autoComplete="off"
+          />
+          {searchQuery ? (
+            <TouchableOpacity
+              style={styles.resetSearchQuery}
+              onPress={() => setSearchQuery("")}
+            >
+              <XMarkIcon size={12} color={"white"} />
+            </TouchableOpacity>
+          ) : null}
+        </View>
+        {(isTextInputFocused || searchQuery) && (
+          <TouchableOpacity
+            style={styles.cancelButton}
+            onPress={handleCancelSearchPress}
+          >
+            <Text style={{ color: "rgb(0, 122, 255)" }}>Cancel</Text>
+          </TouchableOpacity>
+        )}
+        <View
+          style={{
+            flexDirection: "row",
+            paddingLeft: 5,
+          }}
+        >
+          <Pressable
+            style={{
+              backgroundColor: hasFilters
+                ? "rgb(0, 122, 255)"
+                : "rgb(229, 228, 226)",
+              width: 40,
+              height: 40,
+              justifyContent: "center",
+              alignItems: "center",
+              borderRadius: 10,
+            }}
+            onPress={handleFilterPress}
+          >
+            <AdjustmentsHorizontalIcon
+              size={30}
+              color={hasFilters ? "white" : "rgb(0, 122, 255)"}
+            />
+          </Pressable>
+        </View>
+      </View>
       <View style={styles.listContainer}>
         {/* List of Boulders */}
         <FlatList
@@ -219,24 +255,12 @@ const ProfileSectionScreen = ({ route, navigation }) => {
           data={boulders}
           renderItem={renderBoulderCards}
           keyExtractor={(item) => item.id}
-          stickyHeaderIndices={[0]}
           initialNumToRender={8} // Render the number of items that are initially visible on the screen
           windowSize={2} // Render an additional number of items to improve scrolling performance
-          //   onScroll={handleScroll}
-          ListHeaderComponent={headerComponent}
-          ListFooterComponent={<View style={{ height: 90 }} />}
+          ListFooterComponent={<View style={{ height: 50 }} />}
           ListEmptyComponent={renderEmptyComponent}
           keyboardShouldPersistTaps="handled" // click on search bar cancel buttons when Keyboard is visible (or click on boulder cards)
         />
-        <Pressable
-          style={styles.filterButton(hasFilters)}
-          onPress={handleFilterPress}
-        >
-          <AdjustmentsHorizontalIcon
-            size={30}
-            color={hasFilters ? "white" : "rgb(0, 122, 255)"}
-          />
-        </Pressable>
       </View>
     </View>
   );
@@ -304,6 +328,7 @@ const styles = StyleSheet.create({
   },
   SearchInputAndCancelContainer: {
     flexDirection: "row",
+    paddingHorizontal: 10,
   },
   SearchInputContainer: {
     flex: 1,

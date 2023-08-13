@@ -8,11 +8,18 @@ import {
   MapPinIcon,
   ArrowLeftCircleIcon,
   HomeIcon,
+  Square3Stack3DIcon,
+  PlusIcon,
+  PhotoIcon,
+  CameraIcon,
+  ArrowUpOnSquareIcon,
 } from "react-native-heroicons/outline";
 import {
   UserIcon as UserIconSolid,
   MapPinIcon as MapPinIconSolid,
   HomeIcon as HomeIconSolid,
+  Square3Stack3DIcon as Square3Stack3DIconSolid,
+  PlusIcon as PlusIconSolid,
 } from "react-native-heroicons/solid";
 import LoginScreen from "./screens/LoginScreen";
 import SignupScreen from "./screens/SignupScreen";
@@ -25,7 +32,7 @@ import ConfirmEmailScreen from "./screens/ConfirmEmailScreen";
 import ForgotPasswordScreen from "./screens/ForgotPasswordScreen";
 import ResetPasswordScreen from "./screens/ResetPasswordScreen";
 import SubmitCodeScreen from "./screens/SubmitCodeScreen";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import fetchCsrfToken from "./api/configToken";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import SendScreen from "./screens/SendScreen";
@@ -46,7 +53,9 @@ import SettingsScreen from "./screens/profile/edit/SettingsScreen";
 import BannerScreen from "./screens/profile/edit/BannerScreen";
 import HeadshotScreen from "./screens/profile/edit/HeadshotScreen";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Text } from "react-native";
+import { Text, View } from "react-native";
+import AddBoulderModal from "./components/general/AddBoulderModal";
+import ActivityScreen from "./screens/ActivityScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -118,57 +127,110 @@ export default function App() {
 
   const Tab = createBottomTabNavigator();
 
-  function HomeTabs() {
+  function Tabs({ navigation }) {
+    const [modalVisible, setModalVisible] = useState(false);
+
+    const toggleModal = () => {
+      setModalVisible(!modalVisible);
+    };
+
+    const ModalTabScreen = () => (
+      <View>
+        <Text>Modal Tab Screen</Text>
+      </View>
+    );
+
     return (
-      <Tab.Navigator
-        screenOptions={({ route }) => ({
-          headerShown: false,
-          tabBarStyle: {
-            borderTopWidth: 0,
-          },
-          tabBarIcon: ({ color, size, focused }) => {
-            // Set the appropriate icon based on the route name and focused state
-            let iconSource;
-            if (route.name === "ListTab") {
-              iconSource = focused ? (
-                <HomeIconSolid size={size} color={"black"} />
-              ) : (
-                <HomeIcon size={size} color={"black"} />
-              );
-            } else if (route.name === "MapTab") {
-              iconSource = focused ? (
-                <MapPinIconSolid size={size} color={"black"} />
-              ) : (
-                <MapPinIcon size={size} color={"black"} />
-              );
-            } else if (route.name === "ProfileTab") {
-              iconSource = focused ? (
-                <UserIconSolid size={size} color={"black"} />
-              ) : (
-                <UserIcon size={size} color={"black"} />
-              );
-            }
+      <>
+        <Tab.Navigator
+          screenOptions={({ route }) => ({
+            headerShown: false,
+            tabBarStyle: {
+              borderTopWidth: 0,
+            },
+            tabBarIcon: ({ color, size, focused }) => {
+              // Set the appropriate icon based on the route name and focused state
+              let iconSource;
+              if (route.name === "Home") {
+                iconSource = focused ? (
+                  <HomeIconSolid size={size} color={"black"} />
+                ) : (
+                  <HomeIcon size={size} color={"black"} />
+                );
+              } else if (route.name === "Map") {
+                iconSource = focused ? (
+                  <MapPinIconSolid size={size} color={"black"} />
+                ) : (
+                  <MapPinIcon size={size} color={"black"} />
+                );
+              } else if (route.name === "AddBoulder") {
+                iconSource = (
+                  <View
+                    style={{
+                      borderRadius: 100,
+                      backgroundColor: "rgba(0,190,146,1)",
+                      padding: 8,
+                    }}
+                  >
+                    <PlusIcon size={size} color={"white"} />
+                  </View>
+                );
+              } else if (route.name === "Activity") {
+                iconSource = focused ? (
+                  <Square3Stack3DIconSolid size={size} color={"black"} />
+                ) : (
+                  <Square3Stack3DIcon size={size} color={"black"} />
+                );
+              } else if (route.name === "Profile") {
+                iconSource = focused ? (
+                  <UserIconSolid size={size} color={"black"} />
+                ) : (
+                  <UserIcon size={size} color={"black"} />
+                );
+              }
 
-            return iconSource;
-          },
-          tabBarLabel: ({ focused, color }) => {
-            // Set the label text and style based on the focused state
-            const labelColor = focused
-              ? "rgba(0, 0, 0, 1)"
-              : "rgba(0, 0, 0, 0.5)"; // Change these colors as desired
+              return iconSource;
+            },
+            tabBarLabel: ({ focused, color }) => {
+              // Set the label text and style based on the focused state
+              const labelColor = focused
+                ? "rgba(0, 0, 0, 1)"
+                : "rgba(0, 0, 0, 0.5)"; // Change these colors as desired
 
-            return (
-              <Text style={{ color: labelColor, fontSize: 10 }}>
-                {route.name}
-              </Text>
-            );
-          },
-        })}
-      >
-        <Tab.Screen name="ListTab" component={ListScreen} />
-        <Tab.Screen name="MapTab" component={MapScreen} />
-        <Tab.Screen name="ProfileTab" component={ProfileScreen} />
-      </Tab.Navigator>
+              if (route.name === "AddBoulder") {
+                return;
+              }
+
+              return (
+                <Text style={{ color: labelColor, fontSize: 10 }}>
+                  {route.name}
+                </Text>
+              );
+            },
+          })}
+        >
+          <Tab.Screen name="Home" component={ListScreen} />
+          <Tab.Screen name="Map" component={MapScreen} />
+          <Tab.Screen
+            name="AddBoulder"
+            component={ModalTabScreen}
+            listeners={({ navigation }) => ({
+              tabPress: (e) => {
+                e.preventDefault(); // Prevent default tab behavior
+                toggleModal(); // Show the modal
+              },
+            })}
+          />
+          <Tab.Screen name="Activity" component={ActivityScreen} />
+          <Tab.Screen name="Profile" component={ProfileScreen} />
+        </Tab.Navigator>
+        {/* Render the modal */}
+        <AddBoulderModal
+          isVisible={modalVisible}
+          onClose={toggleModal}
+          navigation={navigation}
+        />
+      </>
     );
   }
 
@@ -180,14 +242,6 @@ export default function App() {
           {/* Preload the images before rendering any screen */}
           <Stack.Navigator>
             {/* Screens */}
-            {/* <Stack.Screen
-              name="TestImage"
-              component={TestImageScreen}
-              options={{
-                headerShown: false,
-                animation: "none",
-              }}
-            /> */}
             <Stack.Screen
               name="Login"
               component={LoginScreen}
@@ -236,11 +290,11 @@ export default function App() {
                 animation: "none",
               }}
             />
-            <Stack.Screen
+            {/* <Stack.Screen
               name="Map"
               component={MapScreen}
               options={({ navigation }) => customHeader(navigation, "Map")}
-            />
+            /> */}
             <Stack.Screen
               name="AddGym"
               component={AddGymScreen}
@@ -276,12 +330,13 @@ export default function App() {
               options={({ navigation }) => customHeader(navigation, "Camera")}
             />
             <Stack.Screen
-              name="Home"
-              component={HomeTabs}
+              name="Tabs"
               options={{
                 headerShown: false,
               }}
-            />
+            >
+              {({ navigation }) => <Tabs navigation={navigation} />}
+            </Stack.Screen>
             <Stack.Screen
               name="EditBoulder"
               component={EditBoulderScreen}
@@ -289,13 +344,13 @@ export default function App() {
                 customHeader(navigation, "EditBoulder")
               }
             />
-            <Stack.Screen
+            {/* <Stack.Screen
               name="Profile"
               component={ProfileScreen}
               options={{
                 headerShown: false,
               }}
-            />
+            /> */}
             <Stack.Screen
               name="ProfileSection"
               component={ProfileSectionScreen}
@@ -331,13 +386,13 @@ export default function App() {
                 customHeader(navigation, "CropImage")
               }
             />
-            <Stack.Screen
+            {/* <Stack.Screen
               name="List"
               component={ListScreen}
               options={{
                 headerShown: false,
               }}
-            />
+            /> */}
             <Stack.Screen
               name="Filter"
               component={FilterScreen}

@@ -12,8 +12,6 @@ import {
   SafeAreaView,
   Animated,
   Dimensions,
-  ScrollView,
-  Platform,
   Modal,
 } from "react-native";
 import React, {
@@ -25,7 +23,6 @@ import React, {
 } from "react";
 import {
   AdjustmentsHorizontalIcon,
-  PlusIcon,
   MagnifyingGlassIcon,
   XMarkIcon,
 } from "react-native-heroicons/outline";
@@ -33,11 +30,10 @@ import BoulderCard from "../components/listComponents/BoulderCard";
 import { request } from "../api/requestMethods";
 import { useFocusEffect } from "@react-navigation/native";
 import { useSelector, useDispatch } from "react-redux";
-import ModalAddNewBoulder from "../components/listComponents/ModalAddNewBoulder";
-import * as ImagePicker from "expo-image-picker";
 import { boulderGrades } from "../utils/constants/boulderConstants";
 import { setSpraywallIndex } from "../redux/actions";
 import Carousel from "react-native-reanimated-carousel";
+import { BlurView } from "expo-blur";
 
 const width = Dimensions.get("window").width;
 
@@ -68,16 +64,6 @@ const ListScreen = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const flatListRef = useRef(null);
-
-  // useLayoutEffect(() => {
-  //   navigation.setOptions({
-  //     headerTitle: () => (
-  //       <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-  //         {isHeaderTitleVisible ? spraywalls[spraywallIndex].name : null}
-  //       </Text>
-  //     ),
-  //   });
-  // }, [isHeaderTitleVisible]);
 
   const areFiltersEnabled = () => {
     if (
@@ -154,7 +140,11 @@ const ListScreen = ({ navigation }) => {
   // Providing navigation as a dependency, the navigateToBoulder function will only be re-created when the navigation prop changes, ensuring better performance.
   const navigateToBoulderScreen = useCallback(
     (item) => {
-      navigation.navigate("Boulder", { boulder: item });
+      navigation.navigate("Boulder", {
+        boulder: item,
+        fromScreen: "Home",
+        toScreen: "Home",
+      });
     },
     [navigation]
   );
@@ -163,16 +153,11 @@ const ListScreen = ({ navigation }) => {
     navigation.navigate("Filter");
   };
 
-  const handleAddNewBoulderPress = () => {
-    setIsModalVisible(true);
-  };
-
   const renderBoulderCards = ({ item }) => {
     return (
       <TouchableOpacity
         onPress={() => navigateToBoulderScreen(item)}
         key={item.id}
-        style={{ paddingHorizontal: 10 }}
       >
         <BoulderCard boulder={item} />
       </TouchableOpacity>
@@ -237,68 +222,6 @@ const ListScreen = ({ navigation }) => {
     }
   };
 
-  // const [scrolledPastElement0, setScrolledPastElement0] = useState(false);
-
-  // const handleScroll = (event) => {
-  //   const yOffset = event.nativeEvent.contentOffset.y;
-  //   if (yOffset > width - 90) {
-  //     if (!scrolledPastElement0) {
-  //       setScrolledPastElement0(true);
-  //       // Adjust scroll position to keep element 1 at the top
-  //       flatListRef.current.scrollToIndex({ animated: true, index: 1 });
-  //     }
-  //   } else {
-  //     if (scrolledPastElement0) {
-  //       setScrolledPastElement0(false);
-  //     }
-  //   }
-  // };
-
-  const headerImageOpacity = scrollY.interpolate({
-    inputRange: [250, 350],
-    outputRange: [0, 1],
-    extrapolate: "clamp",
-  });
-
-  const handleCameraPressed = () => {
-    setIsModalVisible(false);
-    navigation.navigate("Camera", { screen: "EditBoulder" });
-  };
-
-  const handleDefaultImagePressed = () => {
-    setIsModalVisible(false);
-    navigation.navigate("EditBoulder", {
-      image: {
-        url: spraywalls[spraywallIndex].url,
-        width: spraywalls[spraywallIndex].width,
-        height: spraywalls[spraywallIndex].height,
-      },
-    });
-  };
-
-  const handleUploadImagePressed = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: false,
-      aspect: [4, 3],
-      quality: 1,
-      base64: true,
-    });
-
-    if (result && !result.canceled) {
-      Image.getSize(result.assets[0].uri, (width, height) => {
-        setIsModalVisible(false);
-        navigation.navigate("EditBoulder", {
-          image: {
-            url: "data:image/png;base64," + result.assets[0].base64,
-            width: width,
-            height: height,
-          },
-        });
-      });
-    }
-  };
-
   const renderEmptyComponent = () => {
     return (
       <View
@@ -311,10 +234,6 @@ const ListScreen = ({ navigation }) => {
         {isLoading ? <ActivityIndicator /> : <Text>No Boulders Found</Text>}
       </View>
     );
-  };
-
-  const scrollToTop = () => {
-    flatListRef.current.scrollToOffset({ offset: 0, animated: true });
   };
 
   return (
@@ -338,15 +257,13 @@ const ListScreen = ({ navigation }) => {
         </View>
         <Pressable
           style={{ width: "25%", alignItems: "center" }}
-          // disabled={isHeaderImageVisible ? false : true}
           onPress={() => setIsModalSpraywallsVisible(true)}
         >
-          <Animated.Image
+          <Image
             source={{ uri: spraywalls[spraywallIndex].url }}
             style={{
               width: 60,
               height: 60,
-              // opacity: headerImageOpacity,
               borderRadius: 100,
             }}
           />
@@ -382,33 +299,31 @@ const ListScreen = ({ navigation }) => {
             <Text style={{ color: "rgb(0, 122, 255)" }}>Cancel</Text>
           </TouchableOpacity>
         )}
-      </View>
-      <View
-        style={{
-          flexDirection: "row",
-          backgroundColor: "white",
-          paddingHorizontal: 10,
-          marginBottom: 5,
-        }}
-      >
-        <Pressable
+        <View
           style={{
-            backgroundColor: hasFilters
-              ? "rgb(0, 122, 255)"
-              : "rgb(229, 228, 226)",
-            width: 40,
-            height: 40,
-            justifyContent: "center",
-            alignItems: "center",
-            borderRadius: 10,
+            flexDirection: "row",
+            paddingLeft: 5,
           }}
-          onPress={handleFilterPress}
         >
-          <AdjustmentsHorizontalIcon
-            size={30}
-            color={hasFilters ? "white" : "rgb(0, 122, 255)"}
-          />
-        </Pressable>
+          <Pressable
+            style={{
+              backgroundColor: hasFilters
+                ? "rgb(0, 122, 255)"
+                : "rgb(229, 228, 226)",
+              width: 40,
+              height: 40,
+              justifyContent: "center",
+              alignItems: "center",
+              borderRadius: 10,
+            }}
+            onPress={handleFilterPress}
+          >
+            <AdjustmentsHorizontalIcon
+              size={30}
+              color={hasFilters ? "white" : "rgb(0, 122, 255)"}
+            />
+          </Pressable>
+        </View>
       </View>
       <View style={styles.listContainer}>
         {/* List of Boulders */}
@@ -421,35 +336,11 @@ const ListScreen = ({ navigation }) => {
           initialNumToRender={8} // Render the number of items that are initially visible on the screen
           windowSize={2} // Render an additional number of items to improve scrolling performance
           onScroll={handleScroll}
-          // ListHeaderComponent={headerComponent}
-          ListFooterComponent={<View style={{ height: 90 }} />}
           ListEmptyComponent={renderEmptyComponent}
           keyboardShouldPersistTaps="handled" // click on search bar cancel buttons when Keyboard is visible (or click on boulder cards)
         />
-        <Pressable
-          style={styles.filterButton(hasFilters)}
-          onPress={handleFilterPress}
-        >
-          <AdjustmentsHorizontalIcon
-            size={30}
-            color={hasFilters ? "white" : "rgb(0, 122, 255)"}
-          />
-        </Pressable>
-        <Pressable
-          style={styles.addNewBoulderButton}
-          onPress={handleAddNewBoulderPress}
-        >
-          <PlusIcon size={30} color={"rgb(0, 122, 255)"} />
-        </Pressable>
       </View>
-      <ModalAddNewBoulder
-        isModalVisible={isModalVisible}
-        setIsModalVisible={setIsModalVisible}
-        handleCameraPressed={handleCameraPressed}
-        handleDefaultImagePressed={handleDefaultImagePressed}
-        handleUploadImagePressed={handleUploadImagePressed}
-      />
-      <Modal
+      {/* <Modal
         visible={isModalSpraywallsVisible}
         transparent={true}
         animationType="slide"
@@ -481,6 +372,51 @@ const ListScreen = ({ navigation }) => {
             </View>
           </SafeAreaView>
         </View>
+      </Modal> */}
+      <Modal
+        visible={isModalSpraywallsVisible}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setIsModalSpraywallsVisible(false)}
+      >
+        <View style={styles.modalContainer} activeOpacity={1}>
+          <BlurView style={styles.modalContent} intensity={25}>
+            <Pressable
+              style={{ flex: 1 }}
+              onPress={() => setIsModalSpraywallsVisible(false)}
+            />
+            {/* Add modal content here */}
+            <View style={styles.displayContainer}>
+              <View
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  backgroundColor: "white",
+                  borderRadius: 20,
+                  justifyContent: "space-evenly",
+                  alignItems: "center",
+                }}
+              >
+                <Carousel
+                  loop={false}
+                  width={width}
+                  height={width - 125}
+                  data={spraywalls}
+                  defaultIndex={spraywallIndex}
+                  keyExtractor={(item) => item.id}
+                  scrollAnimationDuration={250}
+                  onSnapToItem={(index) => dispatch(setSpraywallIndex(index))}
+                  renderItem={renderItem}
+                  mode="parallax"
+                  modeConfig={{
+                    parallaxScrollingScale: 0.9,
+                    parallaxScrollingOffset: 50,
+                  }}
+                />
+              </View>
+            </View>
+          </BlurView>
+        </View>
       </Modal>
     </SafeAreaView>
   );
@@ -499,9 +435,10 @@ const styles = StyleSheet.create({
   listContainer: {
     flex: 1,
     rowGap: 10,
+    paddingHorizontal: 10,
   },
   bouldersList: {
-    rowGap: 10,
+    // rowGap: 10,
   },
   searchContainer: {
     flex: 1,
@@ -537,7 +474,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: "100%",
     position: "absolute",
-    bottom: 25,
+    bottom: 10,
     right: 20,
     // adding shadow to add new circuit button
     shadowColor: "black",
@@ -582,6 +519,7 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   modalContent: {
     flex: 1,
@@ -593,7 +531,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     position: "absolute", //Here is the trick
     bottom: 0, //Here is the trick
-    backgroundColor: "rgba(255, 255, 255, 1)",
   },
   columnContainer: {
     justifyContent: "flex-end",

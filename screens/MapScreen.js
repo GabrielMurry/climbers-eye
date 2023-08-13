@@ -161,7 +161,7 @@ const MapScreen = ({ navigation }) => {
       dispatch(setGym(response.data.gym));
       dispatch(setSpraywalls(response.data.spraywalls));
       setIsLoadingConfirmGym(false);
-      navigation.navigate("Home");
+      navigation.navigate("Tabs");
     }
   };
 

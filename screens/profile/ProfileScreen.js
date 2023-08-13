@@ -1,18 +1,16 @@
-import {
-  SafeAreaView,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import React, { useCallback, useEffect, useState } from "react";
+import { SafeAreaView, ScrollView } from "react-native";
+import React, { useCallback, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { request } from "../../api/requestMethods";
-import SectionButtons from "../../components/profileComponents/SectionButtons";
 import * as ImagePicker from "expo-image-picker";
-import { setHeadshotImage, setBannerImage, setGym } from "../../redux/actions";
+import { setHeadshotImage, setBannerImage } from "../../redux/actions";
 import Header from "../../components/profileComponents/Header";
 import ModalProfile from "../../components/profileComponents/ModalProfile";
+import { useFocusEffect } from "@react-navigation/native";
+import BouldersSection from "../../components/profileComponents/BouldersSection";
+import CircuitsSection from "../../components/profileComponents/CircuitsSection";
+import GymSection from "../../components/profileComponents/GymSection";
+import AccountSection from "../../components/profileComponents/AccountSection";
 
 const BACKDROP_IMAGE_HEIGHT = 125;
 const HEADSHOT_IMAGE_SIZE = 100;
@@ -41,19 +39,22 @@ const ProfileScreen = ({ route, navigation }) => {
       ],
     },
   ]);
-  const [sectionQuickData, setSectionQuickData] = useState({
-    statistics: 0,
-    logbook: 0,
-    likes: 0,
-    bookmarks: 0,
-    circuits: 0,
-    creations: 0,
-  });
+  const [bouldersSectionQuickData, setBouldersSectionQuickData] = useState([
+    { title: "Statistics", data: 0 },
+    { title: "Logbook", data: 0 },
+    { title: "Likes", data: 0 },
+    { title: "Bookmarks", data: 0 },
+    { title: "Creations", data: 0 },
+  ]);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [circuits, setCircuits] = useState([]);
 
-  useEffect(() => {
-    fetchProfileQuickData();
-  }, [gym, spraywallIndex]);
+  useFocusEffect(
+    useCallback(() => {
+      fetchProfileQuickData();
+      fetchCircuits();
+    }, [gym, spraywallIndex])
+  );
 
   const fetchProfileQuickData = async () => {
     const response = await request(
@@ -65,7 +66,21 @@ const ProfileScreen = ({ route, navigation }) => {
       return;
     }
     if (response.data) {
-      setSectionQuickData(response.data);
+      setBouldersSectionQuickData(response.data.bouldersSectionQuickData);
+    }
+  };
+
+  const fetchCircuits = async () => {
+    const response = await request(
+      "get",
+      `get_user_circuits/${user.id}/${spraywalls[spraywallIndex].id}`
+    );
+    if (response.status !== 200) {
+      console.log(response.status);
+      return;
+    }
+    if (response.data) {
+      setCircuits(response.data.circuitsData);
     }
   };
 
@@ -105,11 +120,16 @@ const ProfileScreen = ({ route, navigation }) => {
       <ScrollView>
         {/* Header (banner image, headshot image, name, username) */}
         <Header navigation={navigation} />
-        <SectionButtons
-          sectionQuickData={sectionQuickData}
+        <GymSection
           setIsModalVisible={setIsModalVisible}
           navigation={navigation}
         />
+        <BouldersSection
+          bouldersSectionQuickData={bouldersSectionQuickData}
+          navigation={navigation}
+        />
+        <CircuitsSection circuits={circuits} navigation={navigation} />
+        <AccountSection navigation={navigation} />
         <ModalProfile
           isModalVisible={isModalVisible}
           setIsModalVisible={setIsModalVisible}

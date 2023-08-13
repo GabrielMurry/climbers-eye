@@ -45,7 +45,7 @@ const LoginScreen = ({ navigation }) => {
       if (response.data.gym) {
         dispatch(setGym(response.data.gym));
         dispatch(setSpraywalls(response.data.spraywalls));
-        navigation.navigate("Home");
+        navigation.navigate("Tabs");
       } else {
         navigation.navigate("Map");
       }
