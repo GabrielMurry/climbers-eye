@@ -34,6 +34,8 @@ import { boulderGrades } from "../utils/constants/boulderConstants";
 import { setSpraywallIndex } from "../redux/actions";
 import Carousel from "react-native-reanimated-carousel";
 import { BlurView } from "expo-blur";
+import AnimatedHeader from "../components/AnimatedHeader";
+import { Easing } from "react-native";
 
 const width = Dimensions.get("window").width;
 
@@ -209,18 +211,18 @@ const ListScreen = ({ navigation }) => {
     </View>
   );
 
-  const scrollY = useRef(new Animated.Value(0)).current;
+  // const scrollY = useRef(new Animated.Value(0)).current;
 
-  const handleScroll = (event) => {
-    const offsetY = event.nativeEvent.contentOffset.y;
-    scrollY.setValue(offsetY);
+  // const handleScroll = (event) => {
+  //   const offsetY = event.nativeEvent.contentOffset.y;
+  //   scrollY.setValue(offsetY);
 
-    if (offsetY > 250 && !isHeaderImageVisible) {
-      setIsHeaderImageVisible(true);
-    } else if (offsetY <= 250 && isHeaderImageVisible) {
-      setIsHeaderImageVisible(false);
-    }
-  };
+  //   if (offsetY > 250 && !isHeaderImageVisible) {
+  //     setIsHeaderImageVisible(true);
+  //   } else if (offsetY <= 250 && isHeaderImageVisible) {
+  //     setIsHeaderImageVisible(false);
+  //   }
+  // };
 
   const renderEmptyComponent = () => {
     return (
@@ -236,6 +238,45 @@ const ListScreen = ({ navigation }) => {
     );
   };
 
+  const [scrollY] = useState(new Animated.Value(0));
+  const [headerHeight] = useState(new Animated.Value(80)); // Initial header height
+  const [triggerScrollY] = useState(1);
+  const [animationInProgress, setAnimationInProgress] = useState(false);
+
+  const handleScroll = Animated.event(
+    [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+    {
+      useNativeDriver: false,
+      listener: (event) => {
+        const currentScrollY = event.nativeEvent.contentOffset.y;
+        if (!animationInProgress) {
+          if (headerHeight._value === 0 && currentScrollY < triggerScrollY) {
+            setAnimationInProgress(true);
+            Animated.timing(headerHeight, {
+              toValue: 80,
+              duration: 200,
+              useNativeDriver: false,
+            }).start(() => {
+              setAnimationInProgress(false);
+            });
+          } else if (
+            headerHeight._value === 80 &&
+            currentScrollY > triggerScrollY
+          ) {
+            setAnimationInProgress(true);
+            Animated.timing(headerHeight, {
+              toValue: 0,
+              duration: 200,
+              useNativeDriver: false,
+            }).start(() => {
+              setAnimationInProgress(false);
+            });
+          }
+        }
+      },
+    }
+  );
+
   return (
     <SafeAreaView
       style={{
@@ -243,32 +284,58 @@ const ListScreen = ({ navigation }) => {
         backgroundColor: "white",
       }}
     >
+      {/* <AnimatedHeader scrollY={scrollY} /> */}
       <View
         style={{
-          height: 60,
+          paddingHorizontal: 20,
+          height: 80,
           alignItems: "center",
           flexDirection: "row",
-          backgroundColor: "white",
-          paddingHorizontal: 20,
         }}
       >
-        <View style={{ width: "75%" }}>
-          <Text style={styles.titleText}>{gym.name}</Text>
+        <View
+          style={{
+            width: "80%",
+            justifyContent: "center",
+          }}
+        >
+          <Text style={{ fontSize: 28, fontWeight: "bold" }} numberOfLines={2}>
+            The Boulder Field
+          </Text>
         </View>
         <Pressable
-          style={{ width: "25%", alignItems: "center" }}
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+            width: "20%",
+            aspectRatio: 1,
+          }}
           onPress={() => setIsModalSpraywallsVisible(true)}
         >
           <Image
             source={{ uri: spraywalls[spraywallIndex].url }}
-            style={{
-              width: 60,
-              height: 60,
-              borderRadius: 100,
-            }}
+            style={{ width: "100%", height: "100%", borderRadius: 20 }}
           />
         </Pressable>
       </View>
+      {/* <Animated.View style={{ height: headerHeight }}>
+        <Carousel
+          loop={false}
+          width={width}
+          height={headerHeight}
+          data={spraywalls}
+          defaultIndex={spraywallIndex}
+          keyExtractor={(item) => item.id}
+          scrollAnimationDuration={250}
+          onSnapToItem={(index) => dispatch(setSpraywallIndex(index))}
+          renderItem={renderItem}
+          mode="parallax"
+          modeConfig={{
+            parallaxScrollingScale: 0.9,
+            parallaxScrollingOffset: 50,
+          }}
+        />
+      </Animated.View> */}
       <View style={styles.SearchInputAndCancelContainer}>
         <View style={styles.SearchInputContainer}>
           <MagnifyingGlassIcon size={20} color="gray" />
@@ -287,9 +354,26 @@ const ListScreen = ({ navigation }) => {
               style={styles.resetSearchQuery}
               onPress={() => setSearchQuery("")}
             >
-              <XMarkIcon size={12} color={"white"} />
+              <XMarkIcon size={14} color={"white"} />
             </TouchableOpacity>
           ) : null}
+          <Pressable
+            style={{
+              backgroundColor: hasFilters
+                ? "rgb(0, 122, 255)"
+                : "rgb(229, 228, 226)",
+              justifyContent: "center",
+              alignItems: "center",
+              borderRadius: 10,
+              aspectRatio: 1,
+            }}
+            onPress={handleFilterPress}
+          >
+            <AdjustmentsHorizontalIcon
+              size={30}
+              color={hasFilters ? "white" : "black"}
+            />
+          </Pressable>
         </View>
         {(isTextInputFocused || searchQuery) && (
           <TouchableOpacity
@@ -299,7 +383,7 @@ const ListScreen = ({ navigation }) => {
             <Text style={{ color: "rgb(0, 122, 255)" }}>Cancel</Text>
           </TouchableOpacity>
         )}
-        <View
+        {/* <View
           style={{
             flexDirection: "row",
             paddingLeft: 5,
@@ -310,11 +394,10 @@ const ListScreen = ({ navigation }) => {
               backgroundColor: hasFilters
                 ? "rgb(0, 122, 255)"
                 : "rgb(229, 228, 226)",
-              width: 40,
-              height: 40,
               justifyContent: "center",
               alignItems: "center",
               borderRadius: 10,
+              aspectRatio: 1,
             }}
             onPress={handleFilterPress}
           >
@@ -323,7 +406,7 @@ const ListScreen = ({ navigation }) => {
               color={hasFilters ? "white" : "rgb(0, 122, 255)"}
             />
           </Pressable>
-        </View>
+        </View> */}
       </View>
       <View style={styles.listContainer}>
         {/* List of Boulders */}
@@ -335,44 +418,12 @@ const ListScreen = ({ navigation }) => {
           keyExtractor={(item) => item.id}
           initialNumToRender={8} // Render the number of items that are initially visible on the screen
           windowSize={2} // Render an additional number of items to improve scrolling performance
-          onScroll={handleScroll}
           ListEmptyComponent={renderEmptyComponent}
+          onScroll={handleScroll}
+          scrollEventThrottle={16}
           keyboardShouldPersistTaps="handled" // click on search bar cancel buttons when Keyboard is visible (or click on boulder cards)
         />
       </View>
-      {/* <Modal
-        visible={isModalSpraywallsVisible}
-        transparent={true}
-        animationType="slide"
-        onRequestClose={() => setIsModalSpraywallsVisible(false)}
-      >
-        <View style={styles.modalContainer}>
-          <SafeAreaView style={styles.modalContent}>
-            <TouchableOpacity
-              style={{ flex: 1 }}
-              onPress={() => setIsModalSpraywallsVisible(false)}
-            />
-            <View style={styles.displayContainer}>
-              <Carousel
-                loop={false}
-                width={width}
-                height={width - 125}
-                data={spraywalls}
-                defaultIndex={spraywallIndex}
-                keyExtractor={(item) => item.id}
-                scrollAnimationDuration={250}
-                onSnapToItem={(index) => dispatch(setSpraywallIndex(index))}
-                renderItem={renderItem}
-                mode="parallax"
-                modeConfig={{
-                  parallaxScrollingScale: 0.9,
-                  parallaxScrollingOffset: 50,
-                }}
-              />
-            </View>
-          </SafeAreaView>
-        </View>
-      </Modal> */}
       <Modal
         visible={isModalSpraywallsVisible}
         transparent={true}
@@ -487,6 +538,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     backgroundColor: "white",
     paddingHorizontal: 10,
+    // marginVertical: 5,
     marginVertical: 5,
   },
   SearchInputContainer: {
@@ -499,7 +551,7 @@ const styles = StyleSheet.create({
   },
   SearchInput: {
     flex: 1,
-    height: 35,
+    height: 40,
     paddingHorizontal: 5,
     backgroundColor: "rgb(229, 228, 226)",
     borderRadius: 10,
@@ -511,11 +563,12 @@ const styles = StyleSheet.create({
   },
   resetSearchQuery: {
     backgroundColor: "gray",
-    width: 18,
-    height: 18,
+    width: 20,
+    height: 20,
     borderRadius: "100%",
     justifyContent: "center",
     alignItems: "center",
+    marginRight: 10,
   },
   modalContainer: {
     flex: 1,

@@ -53,7 +53,7 @@ const BoulderCard = React.memo(
           </View>
         </View>
         <View style={styles.boulderRightWrapper}>
-          <Text>{boulder.grade ?? "Project"}</Text>
+          <Text>{boulder.grade ? boulder.grade : "Project"}</Text>
           <View style={styles.starsContainer}>
             <StarIcon
               size={15}
@@ -94,17 +94,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     // backgroundColor: "#FFFEF2",
     borderColor: "lightgray",
-    // borderWidth: 1,
     borderBottomWidth: 1,
-    // borderTopWidth: 1,
-    borderRadius: 10,
     paddingHorizontal: 10,
-    // // adding shadow to boulder card
-    // shadowColor: "black",
-    // shadowOffset: { width: 0, height: 2 },
-    // shadowOpacity: 0.3,
-    // shadowRadius: 4,
-    // elevation: 5, // Required for Android
   },
   boulderLeftWrapper: {
     flex: 1,

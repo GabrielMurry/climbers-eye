@@ -10,14 +10,15 @@ import { request } from "../api/requestMethods";
 import { useSelector } from "react-redux";
 import Header from "../components/general/Header";
 import { useFocusEffect } from "@react-navigation/native";
+import { RefreshControl } from "react-native";
 
 const ActivityScreen = ({ navigation }) => {
-  const activityVerb = {
+  const activityAction = {
     published: "orange",
     sent: "green",
     repeated: "s",
     liked: "red",
-    bookmarked: "yellow",
+    bookmarked: "gold",
     added: "blue",
     created: "purple",
     deleted: "black",
@@ -27,27 +28,40 @@ const ActivityScreen = ({ navigation }) => {
   const { gym } = useSelector((state) => state.gymReducer);
 
   const [activityData, setActivityData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [noMoreData, setNoMoreData] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false); // Add this state
+  const itemsPerPage = 10; // Number of items per page
 
-  useFocusEffect(
-    useCallback(() => {
-      fetchActivityData();
-    }, [])
-  );
+  useEffect(() => {
+    fetchActivityData();
+  }, [currentPage]);
 
   const fetchActivityData = async () => {
-    const response = await request("get", `user_activity/${user.id}/${gym.id}`);
+    console.log("test");
+    console.log(currentPage);
+    const response = await request(
+      "get",
+      `user_activity/${user.id}/${gym.id}?page=${currentPage}`
+    );
     if (response.status !== 200) {
       console.log(response.status);
       return;
     }
     if (response.data) {
-      setActivityData(response.data.activityData);
+      const newData = response.data.activityData;
+      setActivityData((prevData) => [...prevData, ...newData]);
+      if (newData.length < itemsPerPage) {
+        setNoMoreData(true);
+      }
+      setLoading(false);
+      setRefreshing(false);
     }
   };
 
   const renderActivityCard = ({ item }) => {
-    console.log(item.grade);
-    const verbColor = activityVerb[item.verb];
+    const actionColor = activityAction[item.action];
     return (
       <TouchableOpacity
         key={item.id}
@@ -67,12 +81,12 @@ const ActivityScreen = ({ navigation }) => {
         >
           <Text>{item.date}</Text>
           <Text>
-            You{" "}
-            <Text style={{ fontWeight: "bold", color: verbColor }}>
-              {item.verb}
+            {item.username === user.name ? "You" : item.username}{" "}
+            <Text style={{ fontWeight: "bold", color: actionColor }}>
+              {item.action}
             </Text>{" "}
-            <Text style={{ fontWeight: "bold" }}>{item.name}</Text> -{" "}
-            {item.grade}
+            <Text style={{ fontWeight: "bold" }}>{item.item}</Text>{" "}
+            <Text>{item.otherInfo}</Text>{" "}
           </Text>
           <Text>
             - {item.spraywallName} at {gym.name}
@@ -92,8 +106,27 @@ const ActivityScreen = ({ navigation }) => {
     );
   };
 
+  const handleEndReached = () => {
+    if (!loading && !noMoreData && !refreshing) {
+      console.log(currentPage);
+      setCurrentPage((prevPage) => prevPage + 1);
+      setLoading(true);
+    }
+  };
+
+  const handleRefresh = async () => {
+    setRefreshing(true); // Start refreshing animation
+    setActivityData([]);
+    setNoMoreData(false);
+    if (currentPage === 1) {
+      fetchActivityData();
+    } else {
+      setCurrentPage(1);
+    }
+  };
+
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{ flex: 1 }}>
       <View
         style={{
           height: 75,
@@ -103,19 +136,22 @@ const ActivityScreen = ({ navigation }) => {
       >
         <Text style={{ fontSize: 28, fontWeight: "bold" }}>Activity</Text>
       </View>
-      <FlatList
-        //   ref={flatListRef}
-        //   contentContainerStyle={styles.bouldersList}
-        data={activityData}
-        renderItem={renderActivityCard}
-        keyExtractor={(item) => item.id}
-        initialNumToRender={8} // Render the number of items that are initially visible on the screen
-        windowSize={2} // Render an additional number of items to improve scrolling performance
-        ListFooterComponent={<View style={{ height: 75 }} />}
-        //   onScroll={handleScroll}
-        //   ListEmptyComponent={renderEmptyComponent}
-        //   keyboardShouldPersistTaps="handled" // click on search bar cancel buttons when Keyboard is visible (or click on boulder cards)
-      />
+      <View style={{ flex: 1 }}>
+        <FlatList
+          data={activityData}
+          renderItem={renderActivityCard}
+          keyExtractor={(item) => item.id}
+          // initialNumToRender={8} // Render the number of items that are initially visible on the screen
+          // windowSize={2} // Render an additional number of items to improve scrolling performance
+          ListFooterComponent={<View style={{ height: 75 }} />}
+          onEndReached={handleEndReached}
+          // onEndReachedThreshold={0.5} // Adjust the threshold as needed
+          refreshControl={
+            // Add this prop for pull-to-refresh
+            <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+          }
+        />
+      </View>
     </SafeAreaView>
   );
 };

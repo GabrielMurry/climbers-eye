@@ -19,7 +19,6 @@ const BoulderScreen = ({ route, navigation }) => {
   const [boulder, setBoulder] = useState(route.params.boulder);
   const [imageFullScreen, setImageFullScreen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [isStatsVisible, setIsStatsVisible] = useState(false);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -103,24 +102,18 @@ const BoulderScreen = ({ route, navigation }) => {
       {/* Titles */}
       <Titles boulder={boulder} />
       {/* Image */}
-      {isStatsVisible ? (
-        <BoulderBarChart boulder={boulder} />
-      ) : (
-        <ImageDisplay
-          image={boulder}
-          setImageFullScreen={setImageFullScreen}
-          isLoading={isLoading}
-          setIsLoading={setIsLoading}
-          isStatsVisible={isStatsVisible}
-        />
-      )}
+      <ImageDisplay
+        image={boulder}
+        setImageFullScreen={setImageFullScreen}
+        isLoading={isLoading}
+        setIsLoading={setIsLoading}
+      />
       {/* Buttons */}
       <Buttons
         boulder={boulder}
         setBoulder={setBoulder}
         userID={user.id}
         username={user.name}
-        setIsStatsVisible={setIsStatsVisible}
         navigation={navigation}
       />
       <FullScreenImage

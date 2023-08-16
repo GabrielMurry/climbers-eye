@@ -43,7 +43,6 @@
     "react-native-gesture-handler": "~2.9.0",
     "react-native-gifted-charts": "^1.2.42",
     "react-native-heroicons": "^3.2.0",
-    "react-native-image-crop-picker": "^0.40.0",
     "react-native-image-picker": "^5.4.0",
     "react-native-maps": "1.3.2",
     "react-native-reanimated": "~2.14.4",

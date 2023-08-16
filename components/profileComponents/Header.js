@@ -31,7 +31,7 @@ const Header = ({ navigation }) => {
     >
       <View style={{ flex: 1 }}>
         <View style={{ height: "25%" }} />
-        <View style={{ height: "50%" }}>
+        <View style={{ height: "50%", justifyContent: "center" }}>
           {/* Name */}
           <Text style={{ fontSize: 30, fontWeight: "bold" }}>
             Gabriel Murry
