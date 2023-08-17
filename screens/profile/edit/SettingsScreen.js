@@ -27,10 +27,6 @@ const SettingsScreen = ({ navigation }) => {
         </View>
         <View style={{ backgroundColor: "white", borderRadius: 5 }}>
           <SettingsButton
-            title={"Banner Image"}
-            onPress={() => navigation.navigate("Banner")}
-          />
-          <SettingsButton
             title={"Headshot Image"}
             onPress={() => navigation.navigate("Headshot")}
           />

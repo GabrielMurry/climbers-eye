@@ -56,7 +56,7 @@ const HeadshotScreen = ({ route, navigation }) => {
     }
   };
 
-  const handleUploadImage = async (type) => {
+  const handleUploadImage = async () => {
     try {
       const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -74,25 +74,11 @@ const HeadshotScreen = ({ route, navigation }) => {
         let imageUri = "data:image/png;base64," + result.assets[0].base64;
         navigation.navigate("CropImage", {
           imageUri: imageUri,
-          type: type,
           orientation: orientation,
           scale: scale,
           width: width,
           height: height,
-          cropDimensions: {
-            width:
-              type === "banner"
-                ? WINDOW_WIDTH
-                : type === "headshot" && orientation === "vertical"
-                ? width / scale
-                : height / scale,
-            height:
-              type === "banner"
-                ? BANNER_IMAGE_HEIGHT
-                : type === "headshot" && orientation === "vertical"
-                ? width / scale
-                : height / scale,
-          },
+          cropDimensions: {},
         });
       }
     } catch (error) {
@@ -152,7 +138,7 @@ const HeadshotScreen = ({ route, navigation }) => {
                 backgroundColor: "lightblue",
                 borderRadius: 100,
               }}
-              onPress={() => handleUploadImage("headshot")}
+              onPress={handleUploadImage}
             >
               {newHeadshotImage.url ? (
                 <Image
@@ -160,7 +146,7 @@ const HeadshotScreen = ({ route, navigation }) => {
                   style={{
                     width: "100%",
                     height: "100%",
-                    borderRadius: 100,
+                    // borderRadius: 100,
                   }}
                 />
               ) : null}
