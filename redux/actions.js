@@ -4,7 +4,6 @@ export const SET_SPRAYWALLS = "SET_SPRAYWALLS";
 export const UPDATE_SPRAYWALL = "UPDATE_SPRAYWALL";
 export const SET_SPRAYWALL_INDEX = "SET_SPRAYWALL_INDEX";
 export const SET_HEADSHOT_IMAGE = "SET_HEADSHOT_IMAGE";
-export const SET_BANNER_IMAGE = "SET_BANNER_IMAGE";
 export const SET_FILTER_SORT_BY = "SET_FILTER_SORT_BY";
 export const SET_FILTER_MIN_GRADE_INDEX = "SET_FILTER_MIN_GRADE_INDEX";
 export const SET_FILTER_MAX_GRADE_INDEX = "SET_FILTER_MAX_GRADE_INDEX";
@@ -54,13 +53,6 @@ export const setHeadshotImage = (headshotImage) => (dispatch) => {
   dispatch({
     type: SET_HEADSHOT_IMAGE,
     payload: headshotImage,
-  });
-};
-
-export const setBannerImage = (bannerImage) => (dispatch) => {
-  dispatch({
-    type: SET_BANNER_IMAGE,
-    payload: bannerImage,
   });
 };
 

@@ -6,7 +6,6 @@ import {
   UPDATE_SPRAYWALL,
   SET_SPRAYWALL_INDEX,
   SET_HEADSHOT_IMAGE,
-  SET_BANNER_IMAGE,
   SET_FILTER_SORT_BY,
   SET_FILTER_MIN_GRADE_INDEX,
   SET_FILTER_MAX_GRADE_INDEX,
@@ -23,7 +22,6 @@ const initialState = {
   spraywalls: [],
   spraywallIndex: 0,
   headshotImage: {},
-  bannerImage: {},
   filterSortBy: "popular",
   filterMinGradeIndex: 0,
   filterMaxGradeIndex: boulderGrades.length - 1,
@@ -38,8 +36,6 @@ export function userReducer(state = initialState, action) {
       return { ...state, user: action.payload };
     case SET_HEADSHOT_IMAGE:
       return { ...state, headshotImage: action.payload };
-    case SET_BANNER_IMAGE:
-      return { ...state, bannerImage: action.payload };
     default:
       return state;
   }

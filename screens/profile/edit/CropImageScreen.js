@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useRef } from "react";
+import React, { useLayoutEffect, useRef, useState } from "react";
 import {
   View,
   Image,
@@ -6,17 +6,20 @@ import {
   Text,
   TouchableOpacity,
   Dimensions,
+  ActivityIndicator,
 } from "react-native";
 import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ReactNativeZoomableView from "@openspacelabs/react-native-zoomable-view/src/ReactNativeZoomableView";
+import { setHeadshotImage } from "../../../redux/actions";
+import { request } from "../../../api/requestMethods";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
 const CropImageScreen = ({ route, navigation }) => {
   const dispatch = useDispatch();
-  const { imageUri, orientation, scale, width, height, cropDimensions } =
-    route.params;
+  const { user } = useSelector((state) => state.userReducer);
+  const { imageUri, width, height } = route.params;
 
   const zoomRef = useRef();
 
@@ -87,29 +90,25 @@ const CropImageScreen = ({ route, navigation }) => {
       format: SaveFormat.PNG,
       base64: true,
     });
-    const headshotImage = {
-      url: "data:image/png;base64," + manipResult.base64,
+    const data = {
+      url: manipResult.base64, // raw base64 (does not include png specifier at beginning)
       width: width,
-      height: height,
+      height: width, // squarecrop - same dimensions - based on image width
     };
-    navigation.navigate("Headshot", { headshotImage });
+    const response = await request("post", `edit_headshot/${user.id}`, data);
+    if (response.status !== 200) {
+      console.log(response.status);
+      return;
+    }
+    if (response.data) {
+      dispatch(setHeadshotImage(response.data.headshotImage));
+    }
+    navigation.goBack();
   };
 
   return (
-    <View
-      style={{ flex: 1, backgroundColor: "black", justifyContent: "center" }}
-    >
-      <View
-        style={{
-          borderWidth: 2,
-          borderColor: "red",
-          width: SCREEN_WIDTH,
-          height: SCREEN_WIDTH,
-          position: "absolute",
-          zIndex: 1,
-          pointerEvents: "none",
-        }}
-      />
+    <View style={styles.container}>
+      <View style={styles.cropSquare} />
       <ReactNativeZoomableView
         maxZoom={10}
         minZoom={1}
@@ -128,6 +127,20 @@ const CropImageScreen = ({ route, navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "black",
+    justifyContent: "center",
+  },
+  cropSquare: {
+    borderWidth: 1,
+    borderColor: "white",
+    width: SCREEN_WIDTH,
+    height: SCREEN_WIDTH,
+    position: "absolute",
+    zIndex: 1,
+    pointerEvents: "none",
+  },
   image: (width, height) => ({
     width: width,
     height: height,

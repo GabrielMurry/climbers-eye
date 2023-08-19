@@ -30,7 +30,7 @@ const EditScreen = ({ navigation, route }) => {
         <Text style={{ fontWeight: "bold", fontSize: 16 }}>{item.title}</Text>
       ),
       headerStyle: {
-        backgroundColor: "rgba(245,245,245,255)", // Set your desired color here
+        backgroundColor: "rgba(245,245,245,255)",
       },
     });
   }, [navigation]);

@@ -1,55 +1,37 @@
-import {
-  View,
-  Text,
-  SafeAreaView,
-  Image,
-  TouchableOpacity,
-} from "react-native";
-import React from "react";
-import {
-  ArrowLeftCircleIcon,
-  Cog8ToothIcon,
-  UserIcon,
-} from "react-native-heroicons/outline";
+import { View, Text, Image, Pressable } from "react-native";
+import React, { useState } from "react";
+import { UserIcon } from "react-native-heroicons/outline";
 import { useSelector } from "react-redux";
-import { LinearGradient } from "expo-linear-gradient";
+import FullScreenImage from "../FullScreenImage";
 
 const Header = ({ navigation }) => {
-  const { headshotImage } = useSelector((state) => state.userReducer);
-  const { spraywalls } = useSelector((state) => state.spraywallReducer);
+  const { user, headshotImage } = useSelector((state) => state.userReducer);
+
+  const [imageFullScreen, setImageFullScreen] = useState(false);
 
   return (
     <View
       style={{
         flexDirection: "row",
-        alignItems: "center",
         justifyContent: "space-between",
-        paddingHorizontal: 30,
-        height: 80,
-        marginBottom: 10,
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        height: 100,
       }}
     >
-      <View style={{ flex: 1 }}>
-        <View style={{ height: "25%" }} />
-        <View style={{ height: "50%", justifyContent: "center" }}>
-          {/* Name */}
-          <Text style={{ fontSize: 30, fontWeight: "bold" }}>
-            Gabriel Murry
-          </Text>
-        </View>
-        <View style={{ height: "25%" }}>
-          <Text style={{ fontSize: 16 }}>@Gabriel</Text>
-        </View>
+      <View style={{ width: "75%" }}>
+        <Text style={{ fontSize: 30, fontWeight: "bold" }}>{user?.name}</Text>
       </View>
-      <View
+      <Pressable
         style={{
-          width: 75,
-          height: 75,
-          borderRadius: "100%",
+          height: "100%",
+          aspectRatio: 1,
+          borderRadius: 100,
           justifyContent: "center",
           alignItems: "center",
           backgroundColor: "white",
         }}
+        onPress={() => setImageFullScreen(true)}
       >
         {headshotImage.url ? (
           <Image
@@ -59,7 +41,14 @@ const Header = ({ navigation }) => {
         ) : (
           <UserIcon size={50} color={"black"} />
         )}
-      </View>
+      </Pressable>
+      <FullScreenImage
+        imageFullScreen={imageFullScreen}
+        url={headshotImage.url}
+        width={headshotImage.width}
+        height={headshotImage.height}
+        onRequestClose={() => setImageFullScreen(false)}
+      />
     </View>
   );
 };

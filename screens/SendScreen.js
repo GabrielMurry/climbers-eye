@@ -109,7 +109,7 @@ const SendScreen = ({ route, navigation }) => {
           </View>
           <View style={styles.row}>
             <Text style={styles.label}>User:</Text>
-            <Text style={styles.info}>{user.name}</Text>
+            <Text style={styles.info}>{user.username}</Text>
           </View>
           <View style={styles.row}>
             <Text style={styles.label}>Date:</Text>

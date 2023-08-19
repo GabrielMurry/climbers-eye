@@ -14,13 +14,7 @@ import {
   Dimensions,
   Modal,
 } from "react-native";
-import React, {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   AdjustmentsHorizontalIcon,
   MagnifyingGlassIcon,
@@ -34,8 +28,6 @@ import { boulderGrades } from "../utils/constants/boulderConstants";
 import { setSpraywallIndex } from "../redux/actions";
 import Carousel from "react-native-reanimated-carousel";
 import { BlurView } from "expo-blur";
-import AnimatedHeader from "../components/AnimatedHeader";
-import { Easing } from "react-native";
 
 const width = Dimensions.get("window").width;
 
@@ -211,19 +203,6 @@ const ListScreen = ({ navigation }) => {
     </View>
   );
 
-  // const scrollY = useRef(new Animated.Value(0)).current;
-
-  // const handleScroll = (event) => {
-  //   const offsetY = event.nativeEvent.contentOffset.y;
-  //   scrollY.setValue(offsetY);
-
-  //   if (offsetY > 250 && !isHeaderImageVisible) {
-  //     setIsHeaderImageVisible(true);
-  //   } else if (offsetY <= 250 && isHeaderImageVisible) {
-  //     setIsHeaderImageVisible(false);
-  //   }
-  // };
-
   const renderEmptyComponent = () => {
     return (
       <View
@@ -284,25 +263,15 @@ const ListScreen = ({ navigation }) => {
         backgroundColor: "white",
       }}
     >
-      {/* <AnimatedHeader scrollY={scrollY} /> */}
       <View
         style={{
           paddingHorizontal: 20,
           height: 80,
           alignItems: "center",
           flexDirection: "row",
+          gap: 10,
         }}
       >
-        <View
-          style={{
-            width: "80%",
-            justifyContent: "center",
-          }}
-        >
-          <Text style={{ fontSize: 28, fontWeight: "bold" }} numberOfLines={2}>
-            The Boulder Field
-          </Text>
-        </View>
         <Pressable
           style={{
             justifyContent: "center",
@@ -317,25 +286,17 @@ const ListScreen = ({ navigation }) => {
             style={{ width: "100%", height: "100%", borderRadius: 20 }}
           />
         </Pressable>
-      </View>
-      {/* <Animated.View style={{ height: headerHeight }}>
-        <Carousel
-          loop={false}
-          width={width}
-          height={headerHeight}
-          data={spraywalls}
-          defaultIndex={spraywallIndex}
-          keyExtractor={(item) => item.id}
-          scrollAnimationDuration={250}
-          onSnapToItem={(index) => dispatch(setSpraywallIndex(index))}
-          renderItem={renderItem}
-          mode="parallax"
-          modeConfig={{
-            parallaxScrollingScale: 0.9,
-            parallaxScrollingOffset: 50,
+        <View
+          style={{
+            width: "80%",
+            justifyContent: "center",
           }}
-        />
-      </Animated.View> */}
+        >
+          <Text style={{ fontSize: 28, fontWeight: "bold" }} numberOfLines={2}>
+            {gym.name}
+          </Text>
+        </View>
+      </View>
       <View style={styles.SearchInputAndCancelContainer}>
         <View style={styles.SearchInputContainer}>
           <MagnifyingGlassIcon size={20} color="gray" />
@@ -383,30 +344,6 @@ const ListScreen = ({ navigation }) => {
             <Text style={{ color: "rgb(0, 122, 255)" }}>Cancel</Text>
           </TouchableOpacity>
         )}
-        {/* <View
-          style={{
-            flexDirection: "row",
-            paddingLeft: 5,
-          }}
-        >
-          <Pressable
-            style={{
-              backgroundColor: hasFilters
-                ? "rgb(0, 122, 255)"
-                : "rgb(229, 228, 226)",
-              justifyContent: "center",
-              alignItems: "center",
-              borderRadius: 10,
-              aspectRatio: 1,
-            }}
-            onPress={handleFilterPress}
-          >
-            <AdjustmentsHorizontalIcon
-              size={30}
-              color={hasFilters ? "white" : "rgb(0, 122, 255)"}
-            />
-          </Pressable>
-        </View> */}
       </View>
       <View style={styles.listContainer}>
         {/* List of Boulders */}
@@ -538,7 +475,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     backgroundColor: "white",
     paddingHorizontal: 10,
-    // marginVertical: 5,
     marginVertical: 5,
   },
   SearchInputContainer: {

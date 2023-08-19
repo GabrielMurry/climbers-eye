@@ -4,7 +4,6 @@ import {
   Modal,
   StyleSheet,
   SafeAreaView,
-  Pressable,
   FlatList,
 } from "react-native";
 import React, { useEffect, useState } from "react";
@@ -13,7 +12,7 @@ import { useSelector } from "react-redux";
 import GymCard from "./GymCard";
 import { ArrowLeftCircleIcon } from "react-native-heroicons/outline";
 
-const ModalProfile = ({
+const ModalSelectGyms = ({
   isModalVisible,
   setIsModalVisible,
   spraywalls,
@@ -81,7 +80,7 @@ const ModalProfile = ({
   );
 };
 
-export default ModalProfile;
+export default ModalSelectGyms;
 
 const styles = StyleSheet.create({
   modalContainer: {

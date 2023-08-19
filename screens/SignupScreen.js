@@ -4,7 +4,7 @@ import CustomInput from "../components/CustomInput";
 import CustomButton from "../components/CustomButton";
 import SocialSignInButtons from "../components/SocialSignInButtons";
 import { request } from "../api/requestMethods";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setUser } from "../redux/actions";
 
 const SignupScreen = ({ navigation }) => {

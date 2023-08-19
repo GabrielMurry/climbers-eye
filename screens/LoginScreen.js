@@ -16,7 +16,6 @@ import {
   setGym,
   setSpraywalls,
   setHeadshotImage,
-  setBannerImage,
 } from "../redux/actions";
 
 const LoginScreen = ({ navigation }) => {
@@ -40,7 +39,6 @@ const LoginScreen = ({ navigation }) => {
       // in dispatch, we enter the action "setUserID" along with the "userID" value (doing this for username also)
       dispatch(setUser(response.data.user));
       dispatch(setHeadshotImage(response.data.headshotImage));
-      dispatch(setBannerImage(response.data.bannerImage));
       // for redundancy. If user signs up, but restarts the app, then logs in, they still don't belong to a gym or spraywall, so redirect to Map screen
       if (response.data.gym) {
         dispatch(setGym(response.data.gym));

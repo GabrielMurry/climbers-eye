@@ -13,6 +13,7 @@ import {
   PhotoIcon,
   CameraIcon,
   ArrowUpOnSquareIcon,
+  ChevronLeftIcon,
 } from "react-native-heroicons/outline";
 import {
   UserIcon as UserIconSolid,
@@ -43,19 +44,20 @@ import FilterScreen from "./screens/FilterScreen";
 import CircuitScreen from "./screens/CircuitScreen";
 import BoulderStatsScreen from "./screens/BoulderStatsScreen";
 import FilterCircuitScreen from "./screens/FilterCircuitScreen";
-import CropImageScreen from "./screens/CropImageScreen";
+import CropImageScreen from "./screens/profile/edit/CropImageScreen";
 import EditGymScreen from "./screens/EditGymScreen";
 import AddNewSprayWallScreen from "./screens/AddNewSprayWallScreen";
 import EditSprayWallScreen from "./screens/EditSprayWallScreen";
 import EditScreen from "./screens/EditScreen";
 import ProfileSectionScreen from "./screens/profile/section/ProfileSectionScreen";
 import SettingsScreen from "./screens/profile/edit/SettingsScreen";
-import BannerScreen from "./screens/profile/edit/BannerScreen";
-import HeadshotScreen from "./screens/profile/edit/HeadshotScreen";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Text, View } from "react-native";
 import AddBoulderModal from "./components/general/AddBoulderModal";
 import ActivityScreen from "./screens/ActivityScreen";
+import EditProfileScreen from "./screens/profile/edit/EditProfileScreen";
+import EditNameScreen from "./screens/profile/edit/EditNameScreen";
+import { StatusBar } from "react-native";
 
 const Stack = createNativeStackNavigator();
 
@@ -74,15 +76,6 @@ function customHeader(navigation, screenName) {
         size={30}
         color="black"
         onPress={() => navigation.navigate("Map")}
-      />
-    );
-  }
-  if (screenName === "Boulder") {
-    headerLeft = () => (
-      <ArrowLeftCircleIcon
-        size={30}
-        color="black"
-        onPress={() => navigation.navigate("List")}
       />
     );
   }
@@ -144,7 +137,6 @@ export default function App() {
       <>
         <Tab.Navigator
           screenOptions={({ route }) => ({
-            headerShown: false,
             tabBarStyle: {
               borderTopWidth: 0,
             },
@@ -209,8 +201,20 @@ export default function App() {
             },
           })}
         >
-          <Tab.Screen name="Home" component={ListScreen} />
-          <Tab.Screen name="Map" component={MapScreen} />
+          <Tab.Screen
+            name="Home"
+            component={ListScreen}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Tab.Screen
+            name="Map"
+            component={MapScreen}
+            options={{
+              headerShown: false,
+            }}
+          />
           <Tab.Screen
             name="AddBoulder"
             component={ModalTabScreen}
@@ -221,7 +225,13 @@ export default function App() {
               },
             })}
           />
-          <Tab.Screen name="Activity" component={ActivityScreen} />
+          <Tab.Screen
+            name="Activity"
+            component={ActivityScreen}
+            options={{
+              headerShown: false,
+            }}
+          />
           <Tab.Screen name="Profile" component={ProfileScreen} />
         </Tab.Navigator>
         {/* Render the modal */}
@@ -239,6 +249,7 @@ export default function App() {
     <ActionSheetProvider>
       <Provider store={store}>
         <NavigationContainer>
+          <StatusBar barStyle={"dark-content"} />
           {/* Preload the images before rendering any screen */}
           <Stack.Navigator>
             {/* Screens */}
@@ -366,18 +377,16 @@ export default function App() {
               }}
             />
             <Stack.Screen
-              name="Banner"
-              component={BannerScreen}
+              name="EditProfile"
+              component={EditProfileScreen}
               options={{
                 headerShown: false,
               }}
             />
             <Stack.Screen
-              name="Headshot"
-              component={HeadshotScreen}
-              options={{
-                headerShown: false,
-              }}
+              name="EditName"
+              component={EditNameScreen}
+              options={({ navigation }) => customHeader(navigation, "EditName")}
             />
             <Stack.Screen
               name="CropImage"
@@ -408,7 +417,9 @@ export default function App() {
             <Stack.Screen
               name="Boulder"
               component={BoulderScreen}
-              options={({ navigation }) => customHeader(navigation, "Boulder")}
+              // options={{
+              //   headerShown: false,
+              // }}
             />
             <Stack.Screen
               name="Send"

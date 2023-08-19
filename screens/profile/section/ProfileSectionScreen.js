@@ -213,6 +213,23 @@ const ProfileSectionScreen = ({ route, navigation }) => {
               <XMarkIcon size={12} color={"white"} />
             </TouchableOpacity>
           ) : null}
+          <Pressable
+            style={{
+              backgroundColor: hasFilters
+                ? "rgb(0, 122, 255)"
+                : "rgb(229, 228, 226)",
+              justifyContent: "center",
+              alignItems: "center",
+              borderRadius: 10,
+              aspectRatio: 1,
+            }}
+            onPress={handleFilterPress}
+          >
+            <AdjustmentsHorizontalIcon
+              size={30}
+              color={hasFilters ? "white" : "black"}
+            />
+          </Pressable>
         </View>
         {(isTextInputFocused || searchQuery) && (
           <TouchableOpacity
@@ -222,31 +239,6 @@ const ProfileSectionScreen = ({ route, navigation }) => {
             <Text style={{ color: "rgb(0, 122, 255)" }}>Cancel</Text>
           </TouchableOpacity>
         )}
-        <View
-          style={{
-            flexDirection: "row",
-            paddingLeft: 5,
-          }}
-        >
-          <Pressable
-            style={{
-              backgroundColor: hasFilters
-                ? "rgb(0, 122, 255)"
-                : "rgb(229, 228, 226)",
-              width: 40,
-              height: 40,
-              justifyContent: "center",
-              alignItems: "center",
-              borderRadius: 10,
-            }}
-            onPress={handleFilterPress}
-          >
-            <AdjustmentsHorizontalIcon
-              size={30}
-              color={hasFilters ? "white" : "rgb(0, 122, 255)"}
-            />
-          </Pressable>
-        </View>
       </View>
       <View style={styles.listContainer}>
         {/* List of Boulders */}
@@ -329,6 +321,7 @@ const styles = StyleSheet.create({
   SearchInputAndCancelContainer: {
     flexDirection: "row",
     paddingHorizontal: 10,
+    marginVertical: 5,
   },
   SearchInputContainer: {
     flex: 1,
@@ -340,7 +333,7 @@ const styles = StyleSheet.create({
   },
   SearchInput: {
     flex: 1,
-    height: 35,
+    height: 40,
     paddingHorizontal: 5,
     backgroundColor: "rgb(229, 228, 226)",
     borderRadius: 10,

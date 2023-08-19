@@ -6,14 +6,6 @@ const BrushSize = ({ brushSize, setBrushSize, selectedItem }) => {
   return (
     <View style={styles.brushSizeContainer}>
       <View style={styles.brushSizePreview}>
-        {/* <View
-          style={{
-            backgroundColor: selectedItem,
-            borderRadius: "100%",
-            width: brushSize,
-            height: brushSize,
-          }}
-        ></View> */}
         <Text style={{ color: "white" }}>{brushSize.toFixed(0)}</Text>
       </View>
       <View style={styles.brushSizeSliderContainer}>

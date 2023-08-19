@@ -4,8 +4,15 @@ import {
   ActivityIndicator,
   StyleSheet,
   Image,
+  Dimensions,
+  SafeAreaView,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import Header from "../general/Header";
+
+const THEME_STYLE = "black";
+
+const SCREEN_WIDTH = Dimensions.get("window").width;
 
 const ImageDisplay = ({
   image,
@@ -13,49 +20,103 @@ const ImageDisplay = ({
   isLoading,
   setIsLoading,
 }) => {
-  const imageScaleDownFactor = image.width > image.height ? 10 : 9;
+  const [modScreenWidth, setModScreenWidth] = useState(SCREEN_WIDTH);
+
+  useEffect(() => {
+    setModScreenWidth(
+      image.width > image.height ? SCREEN_WIDTH - 40 : SCREEN_WIDTH - 60
+    );
+  }, []);
 
   return (
-    <View style={styles.container}>
-      <Pressable
-        style={styles.imageContainer(image, imageScaleDownFactor)}
-        onPress={() => setImageFullScreen(true)}
-      >
-        <Image
-          source={{
-            uri: image.url,
-          }}
-          resizeMode="contain"
-          onLoadStart={() => setIsLoading(true)}
-          onLoadEnd={() => setIsLoading(false)}
-          style={styles.image}
+    // <View
+    //   style={{
+    //     alignItems: "center",
+    //     paddingHorizontal: 10,
+    //   }}
+    // >
+    //   <View
+    //     style={{
+    //       backgroundColor: "gray",
+    //       width: "100%",
+    //       aspectRatio: 1,
+    //       justifyContent: "center",
+    //       alignItems: "center",
+    //       borderRadius: 20,
+    //       backgroundColor: THEME_STYLE,
+    //     }}
+    //   >
+    //     <View
+    //       style={{
+    //         width: WIDTH,
+    //         aspectRatio: 1,
+    //         justifyContent: "center",
+    //         alignItems: "center",
+    //       }}
+    //     >
+    //       <Pressable
+    //         style={{
+    //           width:
+    //             orientation === "horizontal"
+    //               ? "100%"
+    //               : image.width * (WIDTH / image.height),
+    //           height:
+    //             orientation === "horizontal"
+    //               ? image.height * (WIDTH / image.width)
+    //               : WIDTH,
+    //         }}
+    //         onPress={() => setImageFullScreen(true)}
+    //       >
+    //         <Image
+    //           source={{
+    //             uri: image.url,
+    //           }}
+    //           resizeMode="contain"
+    //           onLoadStart={() => setIsLoading(true)}
+    //           onLoadEnd={() => setIsLoading(false)}
+    //           style={{
+    //             width: "100%",
+    //             height: "100%",
+    //             borderRadius: 20,
+    //           }}
+    //         />
+    //         {isLoading && (
+    //           <ActivityIndicator
+    //             size="large"
+    //             style={{ width: "100%", height: "100%", position: "absolute" }}
+    //           />
+    //         )}
+    //       </Pressable>
+    //     </View>
+    //   </View>
+    // </View>
+    <Pressable
+      style={{
+        width: "100%",
+        height: image.height * (modScreenWidth / image.width),
+      }}
+      onPress={() => setImageFullScreen(true)}
+    >
+      <Image
+        source={{
+          uri: image.url,
+        }}
+        resizeMode="contain"
+        onLoadStart={() => setIsLoading(true)}
+        onLoadEnd={() => setIsLoading(false)}
+        style={{
+          width: "100%",
+          height: "100%",
+        }}
+      />
+      {isLoading && (
+        <ActivityIndicator
+          size="large"
+          style={{ width: "100%", height: "100%", position: "absolute" }}
         />
-        {isLoading && (
-          <ActivityIndicator
-            size="large"
-            style={{ width: "100%", height: "100%", position: "absolute" }}
-          />
-        )}
-      </Pressable>
-    </View>
+      )}
+    </Pressable>
   );
 };
 
 export default ImageDisplay;
-
-const styles = StyleSheet.create({
-  container: {
-    height: "60%",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  imageContainer: (image, imageScaleDownFactor) => ({
-    width: image.width / (imageScaleDownFactor + 0.5),
-    height: image.height / (imageScaleDownFactor + 0.5),
-  }),
-  image: {
-    width: "100%",
-    height: "100%",
-    borderRadius: 10,
-  },
-});

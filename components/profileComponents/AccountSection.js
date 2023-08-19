@@ -41,7 +41,7 @@ const AccountSection = ({ navigation }) => {
               alignItems: "center",
               flexDirection: "row",
             }}
-            onPress={() => navigation.navigate("Settings")}
+            onPress={() => navigation.navigate("EditProfile")}
           >
             <View style={{ width: 30 }}>
               <WrenchScrewdriverIcon color={"black"} size={20} />

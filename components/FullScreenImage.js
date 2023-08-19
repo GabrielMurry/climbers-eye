@@ -10,9 +10,15 @@ import React from "react";
 import ReactNativeZoomableView from "@openspacelabs/react-native-zoomable-view/src/ReactNativeZoomableView";
 import { Ionicons } from "@expo/vector-icons";
 
-const window = Dimensions.get("window");
+const SCREEN_WIDTH = Dimensions.get("window").width;
 
-const FullScreenImage = ({ imageFullScreen, url, image, onRequestClose }) => {
+const FullScreenImage = ({
+  imageFullScreen,
+  url,
+  width,
+  height,
+  onRequestClose,
+}) => {
   return (
     <Modal
       visible={imageFullScreen}
@@ -43,10 +49,10 @@ const FullScreenImage = ({ imageFullScreen, url, image, onRequestClose }) => {
         >
           <Image
             source={{ uri: url }}
-            style={styles.image(
-              window.width,
-              image.height * (window.width / image.width)
-            )}
+            style={{
+              width: SCREEN_WIDTH,
+              height: height * (SCREEN_WIDTH / width),
+            }}
           />
         </ReactNativeZoomableView>
       </SafeAreaView>
