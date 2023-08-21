@@ -190,7 +190,8 @@ const ModalEditPreview = ({
       <FullScreenImage
         imageFullScreen={imageFullScreen}
         url={resultImageUri}
-        image={image}
+        width={image.width}
+        height={image.height}
         onRequestClose={() => setImageFullScreen(false)}
       />
     </Modal>

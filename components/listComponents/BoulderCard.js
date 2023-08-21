@@ -92,7 +92,6 @@ const styles = StyleSheet.create({
   boulder: {
     height: 80,
     flexDirection: "row",
-    // backgroundColor: "#FFFEF2",
     borderColor: "lightgray",
     borderBottomWidth: 1,
     paddingHorizontal: 10,

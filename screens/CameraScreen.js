@@ -12,6 +12,8 @@ import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
 import CameraButton from "../components/CameraButton";
 import { ChevronRightIcon, XMarkIcon } from "react-native-heroicons/outline";
 
+const THEME_STYLE = "black"; // rgba(23,23,23,255)
+
 const CameraScreen = ({ route, navigation }) => {
   const { screen } = route.params;
 
@@ -31,7 +33,7 @@ const CameraScreen = ({ route, navigation }) => {
         </TouchableOpacity>
       ),
       headerRight: () => "",
-      headerStyle: { backgroundColor: "rgba(23,23,23,255)" },
+      headerStyle: { backgroundColor: THEME_STYLE },
     });
   }, [navigation]);
 
@@ -49,7 +51,7 @@ const CameraScreen = ({ route, navigation }) => {
         // const options = { base64: true, ImageType: "png", quality: 0 }; // cameraPictureOptions for expo camera types (uri, width, and height are default)
         const data = await cameraRef.current.takePictureAsync();
         const compressedData = await manipulateAsync(data.uri, [], {
-          compress: 0.5,
+          compress: 0.7, // lower values (closer to 0) might indicate higher compression ratios and more loss of image quality, while higher values (closer to 1) might indicate lower compression ratios and better image quality.
           format: SaveFormat.PNG,
           base64: true,
         });
@@ -82,10 +84,10 @@ const CameraScreen = ({ route, navigation }) => {
   }
 
   return (
-    <SafeAreaView
+    <View
       style={{
         flex: 1,
-        backgroundColor: "rgba(23,23,23,1)",
+        backgroundColor: THEME_STYLE,
       }}
     >
       {!image ? ( // if we don't have an image, take image
@@ -95,6 +97,8 @@ const CameraScreen = ({ route, navigation }) => {
             type={type}
             flashMode={flash}
             ref={cameraRef}
+            ratio="3:4" // Set the aspect ratio to 4:3
+            pictureSize={"Photo"} // expo camera zoom is automatically set to 0, but appears to be slightly zoomed in compared to normal phone camera. pictureSize "Photo" fixed it for some reason
           >
             <View
               style={{
@@ -116,11 +120,8 @@ const CameraScreen = ({ route, navigation }) => {
               justifyContent: "space-evenly",
               height: 100,
               borderRadius: 20,
-              backgroundColor: "rgba(23,23,23,1)",
-              position: "absolute",
-              bottom: 0,
+              backgroundColor: THEME_STYLE,
               width: "100%",
-              marginBottom: 25,
               zIndex: 1,
             }}
           >
@@ -163,18 +164,14 @@ const CameraScreen = ({ route, navigation }) => {
               justifyContent: "space-evenly",
               height: 100,
               borderRadius: 20,
-              backgroundColor: "rgba(23,23,23,1)",
-              position: "absolute",
-              bottom: 0,
+              backgroundColor: THEME_STYLE,
               width: "100%",
-              marginBottom: 25,
               zIndex: 1,
               alignItems: "center",
             }}
           >
             <TouchableOpacity
               style={{
-                // backgroundColor: "blue",
                 width: 125,
                 height: 50,
                 borderRadius: 20,
@@ -217,7 +214,7 @@ const CameraScreen = ({ route, navigation }) => {
           <View style={{ width: "100%", height: 75 }} />
         </>
       )}
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -225,7 +222,9 @@ export default CameraScreen;
 
 const styles = StyleSheet.create({
   camera: {
-    flex: 1,
+    flex: 4 / 3, // This maintains the 4:3 aspect ratio
     justifyContent: "flex-end",
+    marginTop: 40,
+    marginBottom: 18,
   },
 });

@@ -1,4 +1,11 @@
-import { View, StyleSheet, SafeAreaView, BackHandler } from "react-native";
+import {
+  View,
+  StyleSheet,
+  SafeAreaView,
+  BackHandler,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
 import React, { useCallback, useLayoutEffect, useState } from "react";
 import FullScreenImage from "../components/FullScreenImage";
 import { request } from "../api/requestMethods";
@@ -7,6 +14,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import {
   ArrowLeftCircleIcon,
   ChevronLeftIcon,
+  EllipsisHorizontalIcon,
   LinkIcon,
 } from "react-native-heroicons/outline";
 import { useSelector } from "react-redux";
@@ -14,8 +22,9 @@ import Buttons from "../components/boulderComponents/Buttons";
 import ImageDisplay from "../components/boulderComponents/ImageDisplay";
 import Titles from "../components/boulderComponents/Titles";
 import BoulderBarChart from "../components/BoulderBarChart";
+import { Text } from "react-native";
 
-const THEME_STYLE = "rgba(245,245,245,255)";
+const THEME_STYLE = "white"; //rgba(245,245,245,255)
 
 const BoulderScreen = ({ route, navigation }) => {
   const { user } = useSelector((state) => state.userReducer);
@@ -30,9 +39,8 @@ const BoulderScreen = ({ route, navigation }) => {
     navigation.setOptions({
       gestureEnabled: fromScreen === "EditBoulder" ? false : true,
       headerLeft: () => (
-        <ChevronLeftIcon
-          size={25}
-          color="black"
+        <TouchableOpacity
+          style={{ width: 50 }}
           onPress={() => {
             if (toScreen === "ProfileSection") {
               navigation.goBack();
@@ -40,9 +48,11 @@ const BoulderScreen = ({ route, navigation }) => {
               navigation.navigate(toScreen);
             }
           }}
-        />
+        >
+          <ChevronLeftIcon size={25} color="black" />
+        </TouchableOpacity>
       ),
-      headerRight: () => {},
+      headerRight: () => <EllipsisHorizontalIcon size={35} color={"black"} />,
       headerStyle: {
         backgroundColor: THEME_STYLE,
       },
@@ -80,22 +90,41 @@ const BoulderScreen = ({ route, navigation }) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ImageDisplay
-        image={boulder}
-        setImageFullScreen={setImageFullScreen}
-        isLoading={isLoading}
-        setIsLoading={setIsLoading}
-      />
-      {/* <Titles boulder={boulder} /> */}
-      {/* Buttons */}
-      {/* <Buttons
-        boulder={boulder}
-        setBoulder={setBoulder}
-        userID={user.id}
-        username={user.name}
-        navigation={navigation}
-      /> */}
+    <View style={styles.container}>
+      <ScrollView>
+        <ImageDisplay
+          image={boulder}
+          setImageFullScreen={setImageFullScreen}
+          isLoading={isLoading}
+          setIsLoading={setIsLoading}
+        />
+        <Titles boulder={boulder} />
+        {/* Buttons */}
+        <Buttons
+          boulder={boulder}
+          setBoulder={setBoulder}
+          userID={user.id}
+          username={user.name}
+          navigation={navigation}
+        />
+        {/* date */}
+        <View style={{ paddingHorizontal: 20, marginTop: 20 }}>
+          <Text style={{ color: "gray" }}>{boulder.date}</Text>
+        </View>
+        {/* separator line */}
+        <View style={{ paddingHorizontal: 20 }}>
+          <View
+            style={{
+              width: "100%",
+              height: 1,
+              backgroundColor: "lightgray",
+              marginTop: 20,
+            }}
+          />
+        </View>
+        {/* empty view cushion */}
+        <View style={{ height: 50 }} />
+      </ScrollView>
       <FullScreenImage
         imageFullScreen={imageFullScreen}
         url={boulder.url}
@@ -103,7 +132,7 @@ const BoulderScreen = ({ route, navigation }) => {
         height={boulder.height}
         onRequestClose={() => setImageFullScreen(false)}
       />
-    </SafeAreaView>
+    </View>
   );
 };
 

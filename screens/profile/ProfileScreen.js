@@ -38,7 +38,7 @@ const ProfileScreen = ({ route, navigation }) => {
       },
       headerShadowVisible: false,
       animation: "none",
-      headerTitle: () => <Text>@{user?.username}</Text>,
+      headerTitle: () => {},
       headerRight: () => (
         <EllipsisHorizontalIcon
           size={35}

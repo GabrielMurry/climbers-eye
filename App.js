@@ -204,9 +204,9 @@ export default function App() {
           <Tab.Screen
             name="Home"
             component={ListScreen}
-            options={{
-              headerShown: false,
-            }}
+            // options={{
+            //   headerShown: false,
+            // }}
           />
           <Tab.Screen
             name="Map"

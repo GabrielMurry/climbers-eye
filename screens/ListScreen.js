@@ -14,9 +14,16 @@ import {
   Dimensions,
   Modal,
 } from "react-native";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import {
   AdjustmentsHorizontalIcon,
+  EllipsisHorizontalIcon,
   MagnifyingGlassIcon,
   XMarkIcon,
 } from "react-native-heroicons/outline";
@@ -29,7 +36,8 @@ import { setSpraywallIndex } from "../redux/actions";
 import Carousel from "react-native-reanimated-carousel";
 import { BlurView } from "expo-blur";
 
-const width = Dimensions.get("window").width;
+const SCREEN_WIDTH = Dimensions.get("window").width;
+const THEME_STYLE = "white";
 
 const ListScreen = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -58,6 +66,24 @@ const ListScreen = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const flatListRef = useRef(null);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerShadowVisible: false,
+      headerLeft: () => {},
+      headerTitle: () => {},
+      headerRight: () => (
+        <EllipsisHorizontalIcon
+          size={35}
+          color={"black"}
+          style={{ marginRight: 20 }}
+        />
+      ),
+      headerStyle: {
+        backgroundColor: THEME_STYLE,
+      },
+    });
+  }, [navigation]);
 
   const areFiltersEnabled = () => {
     if (
@@ -107,7 +133,7 @@ const ListScreen = ({ navigation }) => {
       return;
     }
     if (response.data) {
-      setBoulders(response.data);
+      setBoulders([spraywalls, ...response.data]);
       setIsLoading(false);
     }
   };
@@ -147,11 +173,159 @@ const ListScreen = ({ navigation }) => {
     navigation.navigate("Filter");
   };
 
-  const renderBoulderCards = ({ item }) => {
+  const Com2 = () => {
+    return (
+      <View style={styles.SearchInputAndCancelContainer}>
+        <View style={styles.SearchInputContainer}>
+          <MagnifyingGlassIcon size={20} color="gray" />
+          <TextInput
+            style={styles.SearchInput}
+            value={searchQuery}
+            // onChange doesn't exist in react native. use onChangeText
+            onChangeText={(value) => setSearchQuery(value)} // in react native, you don't have to do e.target.value
+            placeholder="Search (name, setter, or grade)"
+            onFocus={handleTextInputFocus}
+            onBlur={handleTextInputBlur}
+            autoComplete="off"
+          />
+          {searchQuery ? (
+            <TouchableOpacity
+              style={styles.resetSearchQuery}
+              onPress={() => setSearchQuery("")}
+            >
+              <XMarkIcon size={14} color={"white"} />
+            </TouchableOpacity>
+          ) : null}
+          <Pressable
+            style={{
+              backgroundColor: hasFilters
+                ? "rgb(0, 122, 255)"
+                : "rgb(229, 228, 226)",
+              justifyContent: "center",
+              alignItems: "center",
+              borderRadius: 10,
+              aspectRatio: 1,
+            }}
+            onPress={handleFilterPress}
+          >
+            <AdjustmentsHorizontalIcon
+              size={30}
+              color={hasFilters ? "white" : "black"}
+            />
+          </Pressable>
+        </View>
+        {(isTextInputFocused || searchQuery) && (
+          <TouchableOpacity
+            style={styles.cancelButton}
+            onPress={handleCancelSearchPress}
+          >
+            <Text style={{ color: "rgb(0, 122, 255)" }}>Cancel</Text>
+          </TouchableOpacity>
+        )}
+      </View>
+    );
+  };
+
+  const renderSpraywallImages = ({ item, index }) => {
+    if (index === 0) {
+      return (
+        <Pressable
+          style={{
+            height: "100%",
+            aspectRatio: 1,
+            backgroundColor: index === spraywallIndex ? "black" : null,
+            padding: 5,
+            borderRadius: 5,
+          }}
+          key={item.id}
+          onPress={() => dispatch(setSpraywallIndex(index))}
+        >
+          <Image
+            source={{ uri: item.url }}
+            style={{ width: "100%", height: "100%", borderRadius: 2 }}
+          />
+        </Pressable>
+      );
+    }
+  };
+
+  const renderBoulderCards = ({ item, index }) => {
+    if (index === 0) {
+      return (
+        <View
+          style={{
+            paddingHorizontal: 20,
+            paddingVertical: 10,
+            height: 150,
+            justifyContent: "space-between",
+            gap: 10,
+          }}
+          key={index}
+        >
+          <Text style={{ fontSize: 30, fontWeight: "bold" }} numberOfLines={2}>
+            Feed
+          </Text>
+          {/* <FlatList
+            data={item}
+            renderItem={renderSpraywallImages}
+            keyExtractor={(item) => item.id.toString()}
+            contentContainerStyle={{ gap: 10 }}
+            horizontal
+          /> */}
+          {/* <View
+            style={{ flexDirection: "row", backgroundColor: "blue", flex: 1 }}
+          >
+            {item.map((spraywall, index) => (
+              <Pressable
+                style={{
+                  height: "100%",
+                  aspectRatio: 1,
+                  backgroundColor: index === spraywallIndex ? "black" : null,
+                  padding: 5,
+                  borderRadius: 5,
+                }}
+                key={spraywall.id}
+                onPress={() => dispatch(setSpraywallIndex(index))}
+              >
+                <Image
+                  source={{ uri: spraywall.url }}
+                  style={{ width: "100%", height: "100%", borderRadius: 2 }}
+                />
+              </Pressable>
+            ))}
+          </View> */}
+          <FlatList
+            data={item}
+            renderItem={({ item, index }) => (
+              <Pressable
+                style={{
+                  height: "100%",
+                  aspectRatio: 1,
+                  backgroundColor: index === spraywallIndex ? "black" : null,
+                  padding: 5,
+                  borderRadius: 5,
+                }}
+                key={item.id}
+                onPress={() => dispatch(setSpraywallIndex(index))}
+              >
+                <Image
+                  source={{ uri: item.url }}
+                  style={{ width: "100%", height: "100%", borderRadius: 2 }}
+                />
+              </Pressable>
+            )}
+            keyExtractor={(item) => item.id} // Generate UUID for each item
+            contentContainerStyle={{ gap: 10 }}
+            horizontal
+          />
+        </View>
+      );
+    }
     return (
       <TouchableOpacity
         onPress={() => navigateToBoulderScreen(item)}
         key={item.id}
+        style={{ paddingHorizontal: 10 }}
       >
         <BoulderCard boulder={item} />
       </TouchableOpacity>
@@ -263,7 +437,7 @@ const ListScreen = ({ navigation }) => {
         backgroundColor: "white",
       }}
     >
-      <View
+      {/* <View
         style={{
           paddingHorizontal: 20,
           height: 80,
@@ -344,12 +518,11 @@ const ListScreen = ({ navigation }) => {
             <Text style={{ color: "rgb(0, 122, 255)" }}>Cancel</Text>
           </TouchableOpacity>
         )}
-      </View>
+      </View> */}
       <View style={styles.listContainer}>
         {/* List of Boulders */}
         <FlatList
           ref={flatListRef}
-          contentContainerStyle={styles.bouldersList}
           data={boulders}
           renderItem={renderBoulderCards}
           keyExtractor={(item) => item.id}
@@ -387,8 +560,8 @@ const ListScreen = ({ navigation }) => {
               >
                 <Carousel
                   loop={false}
-                  width={width}
-                  height={width - 125}
+                  width={SCREEN_WIDTH}
+                  height={SCREEN_WIDTH - 125}
                   data={spraywalls}
                   defaultIndex={spraywallIndex}
                   keyExtractor={(item) => item.id}
@@ -423,10 +596,6 @@ const styles = StyleSheet.create({
   listContainer: {
     flex: 1,
     rowGap: 10,
-    paddingHorizontal: 10,
-  },
-  bouldersList: {
-    // rowGap: 10,
   },
   searchContainer: {
     flex: 1,

@@ -1,6 +1,6 @@
 import { View, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import React from "react";
-import { LinkIcon } from "react-native-heroicons/outline";
+import { CheckIcon, LinkIcon } from "react-native-heroicons/outline";
 import { AntDesign } from "@expo/vector-icons";
 import { SimpleLineIcons } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
@@ -135,49 +135,41 @@ const Buttons = ({ boulder, setBoulder, userID, username, navigation }) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.buttonsRow}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={handleShowOptionsPressed}
-        >
-          <SimpleLineIcons name="options" size={24} color="black" />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={handleBoulderStatsPressed}
-        >
-          <FontAwesome name="book" size={24} color="black" />
-        </TouchableOpacity>
-      </View>
-      <View style={styles.buttonsRow}>
-        <TouchableOpacity style={styles.button} onPress={handleCircuitPressed}>
-          <LinkIcon size={24} />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={handleBookmarkPressed}>
-          {boulder.isBookmarked ? (
-            <FontAwesome name="bookmark" size={24} color="gold" />
-          ) : (
-            <FontAwesome name="bookmark-o" size={24} color="gold" />
-          )}
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={handleLikePressed}>
-          {boulder.isLiked ? (
-            <FontAwesome name="heart" size={24} color="red" />
-          ) : (
-            <FontAwesome name="heart-o" size={24} color="red" />
-          )}
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={handleSentBoulderPressed}
-        >
-          {boulder.isSent ? (
-            <AntDesign name="checkcircle" size={28} color="green" />
-          ) : (
-            <AntDesign name="checkcircleo" size={28} color="green" />
-          )}
-        </TouchableOpacity>
-      </View>
+      {/* <TouchableOpacity
+        style={styles.button}
+        onPress={handleShowOptionsPressed}
+      >
+        <SimpleLineIcons name="options" size={24} color="black" />
+      </TouchableOpacity> */}
+      {/* <TouchableOpacity
+        style={styles.button}
+        onPress={handleBoulderStatsPressed}
+      >
+        <FontAwesome name="book" size={24} color="black" />
+      </TouchableOpacity> */}
+      <TouchableOpacity style={styles.button} onPress={handleCircuitPressed}>
+        <LinkIcon size={25} color={boulder.inCircuit ? "blue" : "lightgray"} />
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.button} onPress={handleBookmarkPressed}>
+        {boulder.isBookmarked ? (
+          <FontAwesome name="bookmark" size={22} color="gold" />
+        ) : (
+          <FontAwesome name="bookmark-o" size={22} color="lightgray" />
+        )}
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.button} onPress={handleLikePressed}>
+        {boulder.isLiked ? (
+          <FontAwesome name="heart" size={22} color="red" />
+        ) : (
+          <FontAwesome name="heart-o" size={22} color="lightgray" />
+        )}
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={handleSentBoulderPressed}
+      >
+        <CheckIcon size={25} color={boulder.isSent ? "green" : "lightgray"} />
+      </TouchableOpacity>
     </View>
   );
 };
@@ -186,9 +178,10 @@ export default Buttons;
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: "center",
-    gap: 20,
-    padding: 20,
+    paddingHorizontal: 40,
+    justifyContent: "space-between",
+    flexDirection: "row",
+    marginTop: 20,
   },
   buttonsRow: {
     flexDirection: "row",
@@ -197,19 +190,7 @@ const styles = StyleSheet.create({
     gap: 20,
   },
   button: {
-    width: 60,
-    height: 60,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: "black",
-    backgroundColor: "#FFFBF1",
     justifyContent: "center",
     alignItems: "center",
-    // adding shadow to button
-    shadowColor: "black",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 5, // Required for Android
   },
 });
