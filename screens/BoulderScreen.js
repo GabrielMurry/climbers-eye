@@ -12,16 +12,13 @@ import { request } from "../api/requestMethods";
 import { FontAwesome } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
 import {
-  ArrowLeftCircleIcon,
   ChevronLeftIcon,
   EllipsisHorizontalIcon,
-  LinkIcon,
 } from "react-native-heroicons/outline";
 import { useSelector } from "react-redux";
 import Buttons from "../components/boulderComponents/Buttons";
 import ImageDisplay from "../components/boulderComponents/ImageDisplay";
 import Titles from "../components/boulderComponents/Titles";
-import BoulderBarChart from "../components/BoulderBarChart";
 import { Text } from "react-native";
 
 const THEME_STYLE = "white"; //rgba(245,245,245,255)
@@ -52,6 +49,7 @@ const BoulderScreen = ({ route, navigation }) => {
           <ChevronLeftIcon size={25} color="black" />
         </TouchableOpacity>
       ),
+      headerTitle: () => <Text></Text>,
       headerRight: () => <EllipsisHorizontalIcon size={35} color={"black"} />,
       headerStyle: {
         backgroundColor: THEME_STYLE,

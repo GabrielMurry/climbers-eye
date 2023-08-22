@@ -35,6 +35,7 @@ import { boulderGrades } from "../utils/constants/boulderConstants";
 import { setSpraywallIndex } from "../redux/actions";
 import Carousel from "react-native-reanimated-carousel";
 import { BlurView } from "expo-blur";
+import SearchInput from "../components/listComponents/SearchInput";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const THEME_STYLE = "white";
@@ -60,30 +61,63 @@ const ListScreen = ({ navigation }) => {
   const [isModalSpraywallsVisible, setIsModalSpraywallsVisible] =
     useState(false);
   const [isHeaderImageVisible, setIsHeaderImageVisible] = useState(false);
-  const [isTextInputFocused, setIsTextInputFocused] = useState(false);
-  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const [hasFilters, setHasFilters] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isHeaderTitleVisible, setIsHeaderTitleVisible] = useState(false);
+  const [isSearchVisible, setIsSearchVisible] = useState(false);
 
   const flatListRef = useRef(null);
 
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShadowVisible: false,
-      headerLeft: () => {},
-      headerTitle: () => {},
+      headerLeft: () => (
+        <Pressable
+          style={{
+            backgroundColor: hasFilters ? "rgb(0, 122, 255)" : null,
+            justifyContent: "center",
+            alignItems: "center",
+            borderRadius: 10,
+            aspectRatio: 1,
+            marginLeft: 20,
+          }}
+          onPress={handleFilterPress}
+        >
+          <AdjustmentsHorizontalIcon
+            size={30}
+            color={hasFilters ? "white" : "black"}
+          />
+        </Pressable>
+      ),
+      headerTitle: () => (
+        <Text style={{ fontWeight: "bold", textAlign: "center" }}>
+          {isHeaderTitleVisible ? gym.name : ""}
+        </Text>
+      ),
       headerRight: () => (
-        <EllipsisHorizontalIcon
-          size={35}
-          color={"black"}
-          style={{ marginRight: 20 }}
-        />
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            gap: 10,
+            marginRight: 20,
+          }}
+        >
+          <TouchableOpacity onPress={() => setIsSearchVisible((prev) => !prev)}>
+            {isSearchVisible ? (
+              <XMarkIcon size={25} color={"black"} />
+            ) : (
+              <MagnifyingGlassIcon size={25} color={"black"} />
+            )}
+          </TouchableOpacity>
+          <EllipsisHorizontalIcon size={35} color={"black"} />
+        </View>
       ),
       headerStyle: {
         backgroundColor: THEME_STYLE,
       },
     });
-  }, [navigation]);
+  }, [navigation, isHeaderTitleVisible, isSearchVisible]);
 
   const areFiltersEnabled = () => {
     if (
@@ -133,28 +167,13 @@ const ListScreen = ({ navigation }) => {
       return;
     }
     if (response.data) {
-      setBoulders([spraywalls, ...response.data]);
+      setBoulders([
+        { id: "spraywalls", spraywalls: spraywalls },
+        ...response.data,
+      ]);
       setIsLoading(false);
     }
   };
-
-  // Add an event listener to detect changes in keyboard visibility
-  useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      "keyboardDidShow",
-      () => setKeyboardVisible(true)
-    );
-    const keyboardDidHideListener = Keyboard.addListener(
-      "keyboardDidHide",
-      () => setKeyboardVisible(false)
-    );
-
-    // Clean up the event listeners when the component unmounts
-    return () => {
-      keyboardDidShowListener.remove();
-      keyboardDidHideListener.remove();
-    };
-  }, []);
 
   // Optimization --> use the React.useCallback hook to memoize the navigation function and prevent unnecessary re-creation of the function on every render.
   // Providing navigation as a dependency, the navigateToBoulder function will only be re-created when the navigation prop changes, ensuring better performance.
@@ -171,59 +190,6 @@ const ListScreen = ({ navigation }) => {
 
   const handleFilterPress = () => {
     navigation.navigate("Filter");
-  };
-
-  const Com2 = () => {
-    return (
-      <View style={styles.SearchInputAndCancelContainer}>
-        <View style={styles.SearchInputContainer}>
-          <MagnifyingGlassIcon size={20} color="gray" />
-          <TextInput
-            style={styles.SearchInput}
-            value={searchQuery}
-            // onChange doesn't exist in react native. use onChangeText
-            onChangeText={(value) => setSearchQuery(value)} // in react native, you don't have to do e.target.value
-            placeholder="Search (name, setter, or grade)"
-            onFocus={handleTextInputFocus}
-            onBlur={handleTextInputBlur}
-            autoComplete="off"
-          />
-          {searchQuery ? (
-            <TouchableOpacity
-              style={styles.resetSearchQuery}
-              onPress={() => setSearchQuery("")}
-            >
-              <XMarkIcon size={14} color={"white"} />
-            </TouchableOpacity>
-          ) : null}
-          <Pressable
-            style={{
-              backgroundColor: hasFilters
-                ? "rgb(0, 122, 255)"
-                : "rgb(229, 228, 226)",
-              justifyContent: "center",
-              alignItems: "center",
-              borderRadius: 10,
-              aspectRatio: 1,
-            }}
-            onPress={handleFilterPress}
-          >
-            <AdjustmentsHorizontalIcon
-              size={30}
-              color={hasFilters ? "white" : "black"}
-            />
-          </Pressable>
-        </View>
-        {(isTextInputFocused || searchQuery) && (
-          <TouchableOpacity
-            style={styles.cancelButton}
-            onPress={handleCancelSearchPress}
-          >
-            <Text style={{ color: "rgb(0, 122, 255)" }}>Cancel</Text>
-          </TouchableOpacity>
-        )}
-      </View>
-    );
   };
 
   const renderSpraywallImages = ({ item, index }) => {
@@ -260,42 +226,13 @@ const ListScreen = ({ navigation }) => {
             justifyContent: "space-between",
             gap: 10,
           }}
-          key={index}
+          key={item.id}
         >
           <Text style={{ fontSize: 30, fontWeight: "bold" }} numberOfLines={2}>
-            Feed
+            {gym.name}
           </Text>
-          {/* <FlatList
-            data={item}
-            renderItem={renderSpraywallImages}
-            keyExtractor={(item) => item.id.toString()}
-            contentContainerStyle={{ gap: 10 }}
-            horizontal
-          /> */}
-          {/* <View
-            style={{ flexDirection: "row", backgroundColor: "blue", flex: 1 }}
-          >
-            {item.map((spraywall, index) => (
-              <Pressable
-                style={{
-                  height: "100%",
-                  aspectRatio: 1,
-                  backgroundColor: index === spraywallIndex ? "black" : null,
-                  padding: 5,
-                  borderRadius: 5,
-                }}
-                key={spraywall.id}
-                onPress={() => dispatch(setSpraywallIndex(index))}
-              >
-                <Image
-                  source={{ uri: spraywall.url }}
-                  style={{ width: "100%", height: "100%", borderRadius: 2 }}
-                />
-              </Pressable>
-            ))}
-          </View> */}
           <FlatList
-            data={item}
+            data={item.spraywalls}
             renderItem={({ item, index }) => (
               <Pressable
                 style={{
@@ -314,7 +251,7 @@ const ListScreen = ({ navigation }) => {
                 />
               </Pressable>
             )}
-            keyExtractor={(item) => item.id} // Generate UUID for each item
+            keyExtractor={(item) => item.id}
             contentContainerStyle={{ gap: 10 }}
             horizontal
           />
@@ -330,21 +267,6 @@ const ListScreen = ({ navigation }) => {
         <BoulderCard boulder={item} />
       </TouchableOpacity>
     );
-  };
-
-  const handleTextInputFocus = () => {
-    setIsTextInputFocused(true);
-  };
-
-  const handleTextInputBlur = () => {
-    setIsTextInputFocused(false);
-  };
-
-  const handleCancelSearchPress = () => {
-    setSearchQuery("");
-    if (isKeyboardVisible) {
-      Keyboard.dismiss();
-    }
   };
 
   const renderItem = ({ item }) => (
@@ -391,44 +313,16 @@ const ListScreen = ({ navigation }) => {
     );
   };
 
-  const [scrollY] = useState(new Animated.Value(0));
-  const [headerHeight] = useState(new Animated.Value(80)); // Initial header height
-  const [triggerScrollY] = useState(1);
-  const [animationInProgress, setAnimationInProgress] = useState(false);
+  const handleScroll = (event) => {
+    const offsetY = event.nativeEvent.contentOffset.y;
+    const threshold = 50; // Change this value to your desired threshold
 
-  const handleScroll = Animated.event(
-    [{ nativeEvent: { contentOffset: { y: scrollY } } }],
-    {
-      useNativeDriver: false,
-      listener: (event) => {
-        const currentScrollY = event.nativeEvent.contentOffset.y;
-        if (!animationInProgress) {
-          if (headerHeight._value === 0 && currentScrollY < triggerScrollY) {
-            setAnimationInProgress(true);
-            Animated.timing(headerHeight, {
-              toValue: 80,
-              duration: 200,
-              useNativeDriver: false,
-            }).start(() => {
-              setAnimationInProgress(false);
-            });
-          } else if (
-            headerHeight._value === 80 &&
-            currentScrollY > triggerScrollY
-          ) {
-            setAnimationInProgress(true);
-            Animated.timing(headerHeight, {
-              toValue: 0,
-              duration: 200,
-              useNativeDriver: false,
-            }).start(() => {
-              setAnimationInProgress(false);
-            });
-          }
-        }
-      },
+    if (offsetY >= threshold && !isHeaderTitleVisible) {
+      setIsHeaderTitleVisible(true);
+    } else if (offsetY < threshold && isHeaderTitleVisible) {
+      setIsHeaderTitleVisible(false);
     }
-  );
+  };
 
   return (
     <SafeAreaView
@@ -437,88 +331,11 @@ const ListScreen = ({ navigation }) => {
         backgroundColor: "white",
       }}
     >
-      {/* <View
-        style={{
-          paddingHorizontal: 20,
-          height: 80,
-          alignItems: "center",
-          flexDirection: "row",
-          gap: 10,
-        }}
-      >
-        <Pressable
-          style={{
-            justifyContent: "center",
-            alignItems: "center",
-            width: "20%",
-            aspectRatio: 1,
-          }}
-          onPress={() => setIsModalSpraywallsVisible(true)}
-        >
-          <Image
-            source={{ uri: spraywalls[spraywallIndex].url }}
-            style={{ width: "100%", height: "100%", borderRadius: 20 }}
-          />
-        </Pressable>
-        <View
-          style={{
-            width: "80%",
-            justifyContent: "center",
-          }}
-        >
-          <Text style={{ fontSize: 28, fontWeight: "bold" }} numberOfLines={2}>
-            {gym.name}
-          </Text>
-        </View>
-      </View>
-      <View style={styles.SearchInputAndCancelContainer}>
-        <View style={styles.SearchInputContainer}>
-          <MagnifyingGlassIcon size={20} color="gray" />
-          <TextInput
-            style={styles.SearchInput}
-            value={searchQuery}
-            // onChange doesn't exist in react native. use onChangeText
-            onChangeText={(value) => setSearchQuery(value)} // in react native, you don't have to do e.target.value
-            placeholder="Search (name, setter, or grade)"
-            onFocus={handleTextInputFocus}
-            onBlur={handleTextInputBlur}
-            autoComplete="off"
-          />
-          {searchQuery ? (
-            <TouchableOpacity
-              style={styles.resetSearchQuery}
-              onPress={() => setSearchQuery("")}
-            >
-              <XMarkIcon size={14} color={"white"} />
-            </TouchableOpacity>
-          ) : null}
-          <Pressable
-            style={{
-              backgroundColor: hasFilters
-                ? "rgb(0, 122, 255)"
-                : "rgb(229, 228, 226)",
-              justifyContent: "center",
-              alignItems: "center",
-              borderRadius: 10,
-              aspectRatio: 1,
-            }}
-            onPress={handleFilterPress}
-          >
-            <AdjustmentsHorizontalIcon
-              size={30}
-              color={hasFilters ? "white" : "black"}
-            />
-          </Pressable>
-        </View>
-        {(isTextInputFocused || searchQuery) && (
-          <TouchableOpacity
-            style={styles.cancelButton}
-            onPress={handleCancelSearchPress}
-          >
-            <Text style={{ color: "rgb(0, 122, 255)" }}>Cancel</Text>
-          </TouchableOpacity>
-        )}
-      </View> */}
+      <SearchInput
+        isSearchVisible={isSearchVisible}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+      />
       <View style={styles.listContainer}>
         {/* List of Boulders */}
         <FlatList
@@ -639,41 +456,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 5, // Required for Android
-  },
-  SearchInputAndCancelContainer: {
-    flexDirection: "row",
-    backgroundColor: "white",
-    paddingHorizontal: 10,
-    marginVertical: 5,
-  },
-  SearchInputContainer: {
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "rgb(229, 228, 226)",
-    paddingHorizontal: 10,
-    borderRadius: 10,
-  },
-  SearchInput: {
-    flex: 1,
-    height: 40,
-    paddingHorizontal: 5,
-    backgroundColor: "rgb(229, 228, 226)",
-    borderRadius: 10,
-  },
-  cancelButton: {
-    justifyContent: "center",
-    alignItems: "center",
-    marginLeft: 10,
-  },
-  resetSearchQuery: {
-    backgroundColor: "gray",
-    width: 20,
-    height: 20,
-    borderRadius: "100%",
-    justifyContent: "center",
-    alignItems: "center",
-    marginRight: 10,
   },
   modalContainer: {
     flex: 1,
