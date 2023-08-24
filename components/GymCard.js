@@ -13,16 +13,37 @@ const GymCard = ({ gym }) => {
 export default GymCard;
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "#FFFBF1",
-    borderWidth: 1,
-    borderColor: "black",
-    justifyContent: "center",
-    padding: 10,
-    borderRadius: 10,
-  },
   textName: {
     fontWeight: "bold",
-    fontSize: 16,
+    fontSize: 18,
+  },
+  container: {
+    height: 75,
+    borderColor: "lightgray",
+    borderWidth: 1,
+    paddingHorizontal: 10,
+    borderRadius: 5,
+    justifyContent: "space-evenly",
+  },
+  setterAndFA: {
+    flexDirection: "row",
+  },
+  boulderIconsContainer: {
+    width: 80,
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 5,
+  },
+  boulderIconsRow: {
+    flexDirection: "row",
+    gap: 5,
+  },
+  boulderRightWrapper: {
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 10,
+  },
+  starsContainer: {
+    flexDirection: "row",
   },
 });

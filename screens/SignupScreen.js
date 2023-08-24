@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SafeAreaView, StyleSheet, Text } from "react-native";
 import CustomInput from "../components/CustomInput";
 import CustomButton from "../components/CustomButton";
@@ -44,6 +44,28 @@ const SignupScreen = ({ navigation }) => {
   const handleLogin = () => {
     navigation.navigate("Login");
   };
+
+  useEffect(() => {
+    if (username.includes(" ")) {
+      console.log("Username cannot contain spaces.");
+    } else if (username !== username.toLowerCase()) {
+      console.log("Username cannot contain capital letters.");
+    }
+  }, [username]);
+
+  // const handleUsernameChange = (newUsername) => {
+  //   // Check for spaces in the username
+  //   if (newUsername.includes(" ")) {
+  //     console.log("Username cannot contain spaces.");
+  //   }
+  //   // Check for capital letters in the username
+  //   else if (newUsername !== newUsername.toLowerCase()) {
+  //     setErrorMessage("Username cannot contain capital letters.");
+  //   } else {
+  //     setErrorMessage("");
+  //   }
+  //   setUsername(newUsername);
+  // };
 
   return (
     <SafeAreaView style={styles.container}>

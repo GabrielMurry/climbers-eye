@@ -4,34 +4,33 @@ import {
   TouchableOpacity,
   Keyboard,
   StyleSheet,
-  Animated,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { MagnifyingGlassIcon, XMarkIcon } from "react-native-heroicons/outline";
 import { TextInput } from "react-native";
-import { PanGestureHandler, State } from "react-native-gesture-handler";
 
 const SearchInput = ({ isSearchVisible, searchQuery, setSearchQuery }) => {
   const [isTextInputFocused, setIsTextInputFocused] = useState(false);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
-  const translateY = new Animated.Value(-50); // Initial position above the screen
+  //   const translateY = new Animated.Value(-50); // Initial position above the screen
 
-  useEffect(() => {
-    if (isSearchVisible) {
-      Animated.timing(translateY, {
-        toValue: 0, // Slide down to position 0
-        duration: 300,
-        useNativeDriver: false,
-      }).start();
-    } else {
-      setSearchQuery("");
-      Animated.timing(translateY, {
-        toValue: -50, // Slide above the screen
-        duration: 300, // Animation duration in milliseconds
-        useNativeDriver: false,
-      }).start();
-    }
-  }, [isSearchVisible]);
+  //   useEffect(() => {
+  //     console.log(isSearchVisible);
+  //     if (isSearchVisible) {
+  //       Animated.timing(translateY, {
+  //         toValue: 0, // Slide down to position 0
+  //         duration: 200,
+  //         useNativeDriver: false,
+  //       }).start();
+  //     } else {
+  //       setSearchQuery("");
+  //       Animated.timing(translateY, {
+  //         toValue: -50, // Slide above the screen
+  //         duration: 200, // Animation duration in milliseconds
+  //         useNativeDriver: false,
+  //       }).start();
+  //     }
+  //   }, [isSearchVisible]);
 
   // Add an event listener to detect changes in keyboard visibility
   useEffect(() => {
@@ -69,58 +68,50 @@ const SearchInput = ({ isSearchVisible, searchQuery, setSearchQuery }) => {
   return (
     <>
       {isSearchVisible ? (
-        <PanGestureHandler
-          onGestureEvent={Animated.event(
-            [{ nativeEvent: { translationY: translateY } }],
-            { useNativeDriver: false }
-          )}
+        <View
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            height: 50,
+            zIndex: 1,
+            backgroundColor: "white",
+          }}
         >
-          <Animated.View
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              right: 0,
-              height: 50,
-              zIndex: 1,
-              backgroundColor: "white",
-              transform: [{ translateY }],
-            }}
-          >
-            <View style={styles.SearchInputAndCancelContainer}>
-              <View style={styles.SearchInputContainer}>
-                <MagnifyingGlassIcon size={20} color="gray" />
-                <TextInput
-                  style={styles.SearchInput}
-                  value={searchQuery}
-                  // onChange doesn't exist in react native. use onChangeText
-                  onChangeText={(value) => setSearchQuery(value)} // in react native, you don't have to do e.target.value
-                  placeholder="Search (name, setter, or grade)"
-                  onFocus={handleTextInputFocus}
-                  onBlur={handleTextInputBlur}
-                  autoComplete="off"
-                  autoFocus={true}
-                />
-                {searchQuery ? (
-                  <TouchableOpacity
-                    style={styles.resetSearchQuery}
-                    onPress={() => setSearchQuery("")}
-                  >
-                    <XMarkIcon size={12} color={"white"} />
-                  </TouchableOpacity>
-                ) : null}
-              </View>
-              {(isTextInputFocused || searchQuery) && (
+          <View style={styles.SearchInputAndCancelContainer}>
+            <View style={styles.SearchInputContainer}>
+              <MagnifyingGlassIcon size={20} color="gray" />
+              <TextInput
+                style={styles.SearchInput}
+                value={searchQuery}
+                // onChange doesn't exist in react native. use onChangeText
+                onChangeText={(value) => setSearchQuery(value)} // in react native, you don't have to do e.target.value
+                placeholder="Search (name, setter, or grade)"
+                onFocus={handleTextInputFocus}
+                onBlur={handleTextInputBlur}
+                autoComplete="off"
+                autoFocus={true}
+              />
+              {searchQuery ? (
                 <TouchableOpacity
-                  style={styles.cancelButton}
-                  onPress={handleCancelSearchPress}
+                  style={styles.resetSearchQuery}
+                  onPress={() => setSearchQuery("")}
                 >
-                  <Text style={{ color: "rgb(0, 122, 255)" }}>Cancel</Text>
+                  <XMarkIcon size={12} color={"white"} />
                 </TouchableOpacity>
-              )}
+              ) : null}
             </View>
-          </Animated.View>
-        </PanGestureHandler>
+            {(isTextInputFocused || searchQuery) && (
+              <TouchableOpacity
+                style={styles.cancelButton}
+                onPress={handleCancelSearchPress}
+              >
+                <Text style={{ color: "gray" }}>Cancel</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+        </View>
       ) : null}
     </>
   );

@@ -16,6 +16,7 @@ const CustomInput = ({
         placeholder={placeholder}
         style={styles.input}
         secureTextEntry={secureTextEntry}
+        autoCapitalize={"none"}
       />
     </View>
   );

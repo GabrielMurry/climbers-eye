@@ -20,10 +20,12 @@ import Buttons from "../components/boulderComponents/Buttons";
 import ImageDisplay from "../components/boulderComponents/ImageDisplay";
 import Titles from "../components/boulderComponents/Titles";
 import { Text } from "react-native";
+import { useActionSheet } from "@expo/react-native-action-sheet";
 
 const THEME_STYLE = "white"; //rgba(245,245,245,255)
 
 const BoulderScreen = ({ route, navigation }) => {
+  const { showActionSheetWithOptions } = useActionSheet();
   const { user } = useSelector((state) => state.userReducer);
 
   const { fromScreen, toScreen } = route.params;
@@ -50,7 +52,11 @@ const BoulderScreen = ({ route, navigation }) => {
         </TouchableOpacity>
       ),
       headerTitle: () => <Text></Text>,
-      headerRight: () => <EllipsisHorizontalIcon size={35} color={"black"} />,
+      headerRight: () => (
+        <TouchableOpacity onPress={handleShowOptionsPressed}>
+          <EllipsisHorizontalIcon size={35} color={"black"} />
+        </TouchableOpacity>
+      ),
       headerStyle: {
         backgroundColor: THEME_STYLE,
       },
@@ -87,6 +93,71 @@ const BoulderScreen = ({ route, navigation }) => {
     }
   };
 
+  const handleShowOptionsPressed = async () => {
+    let options = ["Share", "Report", "Cancel"];
+    let destructiveButtonIndex = -1;
+    let cancelButtonIndex = 2;
+    // if current user is the creator of the boulder, give only them the option to delete
+    if (boulder.setter === user.username) {
+      options = ["Share", "Report", "Delete", "Cancel"];
+      destructiveButtonIndex = 2;
+      cancelButtonIndex = 3;
+    }
+
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+        destructiveButtonIndex,
+      },
+      (selectedIndex) => {
+        switch (selectedIndex) {
+          case 0:
+            console.log("Share");
+            break;
+
+          case 1:
+            console.log("Report");
+            break;
+
+          case destructiveButtonIndex:
+            // Delete
+            deleteBoulder();
+            break;
+
+          case cancelButtonIndex:
+          // Canceled
+        }
+      }
+    );
+  };
+
+  const deleteBoulder = () => {
+    Alert.alert(
+      "Delete Boulder",
+      `Are you sure you want to delete "${boulder.name}"?`,
+      [
+        { text: "Cancel" },
+        {
+          text: "Delete",
+          onPress: async () => {
+            const response = await request(
+              "delete",
+              `delete_boulder/${boulder.id}`
+            );
+            if (response.status !== 200) {
+              console.log(response.status);
+              return;
+            }
+            navigation.goBack();
+          },
+          style: "destructive",
+        },
+      ],
+      { cancelable: false }
+    );
+  };
+
   return (
     <View style={styles.container}>
       <ScrollView>
@@ -102,7 +173,6 @@ const BoulderScreen = ({ route, navigation }) => {
           boulder={boulder}
           setBoulder={setBoulder}
           userID={user.id}
-          username={user.name}
           navigation={navigation}
         />
         {/* date */}

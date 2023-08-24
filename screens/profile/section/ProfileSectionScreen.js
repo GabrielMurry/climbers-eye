@@ -243,7 +243,6 @@ const ProfileSectionScreen = ({ route, navigation }) => {
       <View style={styles.listContainer}>
         {/* List of Boulders */}
         <FlatList
-          contentContainerStyle={styles.bouldersList}
           data={boulders}
           renderItem={renderBoulderCards}
           keyExtractor={(item) => item.id}
@@ -271,9 +270,6 @@ const styles = StyleSheet.create({
     flex: 1,
     rowGap: 10,
     paddingHorizontal: 10,
-  },
-  bouldersList: {
-    rowGap: 10,
   },
   searchContainer: {
     flex: 1,

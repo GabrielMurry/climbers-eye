@@ -103,7 +103,9 @@ const ListScreen = ({ navigation }) => {
             marginRight: 20,
           }}
         >
-          <TouchableOpacity onPress={() => setIsSearchVisible((prev) => !prev)}>
+          <TouchableOpacity
+            onPress={() => setIsSearchVisible(!isSearchVisible)}
+          >
             {isSearchVisible ? (
               <XMarkIcon size={25} color={"black"} />
             ) : (
@@ -192,29 +194,6 @@ const ListScreen = ({ navigation }) => {
     navigation.navigate("Filter");
   };
 
-  const renderSpraywallImages = ({ item, index }) => {
-    if (index === 0) {
-      return (
-        <Pressable
-          style={{
-            height: "100%",
-            aspectRatio: 1,
-            backgroundColor: index === spraywallIndex ? "black" : null,
-            padding: 5,
-            borderRadius: 5,
-          }}
-          key={item.id}
-          onPress={() => dispatch(setSpraywallIndex(index))}
-        >
-          <Image
-            source={{ uri: item.url }}
-            style={{ width: "100%", height: "100%", borderRadius: 2 }}
-          />
-        </Pressable>
-      );
-    }
-  };
-
   const renderBoulderCards = ({ item, index }) => {
     if (index === 0) {
       return (
@@ -238,7 +217,8 @@ const ListScreen = ({ navigation }) => {
                 style={{
                   height: "100%",
                   aspectRatio: 1,
-                  backgroundColor: index === spraywallIndex ? "black" : null,
+                  backgroundColor:
+                    index === spraywallIndex ? "rgba(0,190,146,1)" : null,
                   padding: 5,
                   borderRadius: 5,
                 }}
