@@ -244,6 +244,9 @@ const ListScreen = ({ navigation }) => {
         key={item.id}
         style={{ paddingHorizontal: 10 }}
       >
+        {index === 1 ? (
+          <View style={{ backgroundColor: "lightgray", height: 1 }} />
+        ) : null}
         <BoulderCard boulder={item} />
       </TouchableOpacity>
     );
