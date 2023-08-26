@@ -37,7 +37,6 @@ const ImageDisplay = ({
       style={{
         width: SCREEN_WIDTH,
         height: imageHeight, // SCREEN_HEIGHT * 0.6 or image.height * (SCREEN_WIDTH / image.width)
-        paddingHorizontal: 5,
       }}
       onPress={() => setImageFullScreen(true)}
     >

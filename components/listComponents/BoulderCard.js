@@ -3,6 +3,7 @@ import React from "react";
 import { LinkIcon, StarIcon } from "react-native-heroicons/outline";
 import { FontAwesome } from "@expo/vector-icons";
 import isEqual from "lodash.isequal";
+import { Image } from "react-native";
 
 // We have to optimize the rendering of components - avoid unnecessary re-renders (we will use a form of PureComponent)
 // React.memo wraps the functional component and memoizes its rendering
@@ -24,7 +25,12 @@ const BoulderCard = React.memo(
           </Text>
         </View>
         <View style={styles.boulderIconsContainer}>
-          <View style={styles.boulderIconsRow}>
+          <Image
+            source={{ uri: boulder.url }}
+            style={{ width: "100%", height: "100%" }}
+            resizeMode="contain"
+          />
+          {/* <View style={styles.boulderIconsRow}>
             <FontAwesome
               name="trophy"
               size={16}
@@ -50,7 +56,7 @@ const BoulderCard = React.memo(
               color={boulder.inCircuit ? "blue" : "gray"}
               style={boulder.inCircuit ? { opacity: 1 } : { opacity: 0.5 }}
             />
-          </View>
+          </View> */}
         </View>
         <View style={styles.boulderRightWrapper}>
           <Text>{boulder.grade ? boulder.grade : "Project"}</Text>
