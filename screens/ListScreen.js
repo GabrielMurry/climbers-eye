@@ -72,26 +72,15 @@ const ListScreen = ({ navigation }) => {
     navigation.setOptions({
       headerShadowVisible: false,
       headerLeft: () => (
-        <Pressable
-          style={{
-            backgroundColor: hasFilters ? "rgb(0, 122, 255)" : null,
-            justifyContent: "center",
-            alignItems: "center",
-            borderRadius: 10,
-            aspectRatio: 1,
-            marginLeft: 20,
-          }}
-          onPress={handleFilterPress}
-        >
-          <AdjustmentsHorizontalIcon
-            size={30}
-            color={hasFilters ? "white" : "black"}
-          />
-        </Pressable>
+        <SearchInput
+          isSearchVisible={isSearchVisible}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+        />
       ),
       headerTitle: () => (
         <Text style={{ fontWeight: "bold", textAlign: "center" }}>
-          {isHeaderTitleVisible ? gym.name : ""}
+          {isHeaderTitleVisible && !isSearchVisible ? gym.name : ""}
         </Text>
       ),
       headerRight: () => (
@@ -112,14 +101,33 @@ const ListScreen = ({ navigation }) => {
               <MagnifyingGlassIcon size={25} color={"black"} />
             )}
           </TouchableOpacity>
-          <EllipsisHorizontalIcon size={35} color={"black"} />
+          <Pressable
+            style={{
+              backgroundColor: hasFilters ? "black" : null,
+              justifyContent: "center",
+              alignItems: "center",
+              borderRadius: 5,
+            }}
+            onPress={handleFilterPress}
+          >
+            <AdjustmentsHorizontalIcon
+              size={30}
+              color={hasFilters ? "white" : "black"}
+            />
+          </Pressable>
         </View>
       ),
       headerStyle: {
         backgroundColor: THEME_STYLE,
       },
     });
-  }, [navigation, isHeaderTitleVisible, isSearchVisible]);
+  }, [
+    navigation,
+    isHeaderTitleVisible,
+    isSearchVisible,
+    hasFilters,
+    searchQuery,
+  ]);
 
   const areFiltersEnabled = () => {
     if (
@@ -217,8 +225,7 @@ const ListScreen = ({ navigation }) => {
                 style={{
                   height: "100%",
                   aspectRatio: 1,
-                  backgroundColor:
-                    index === spraywallIndex ? "rgba(0,190,146,1)" : null,
+                  backgroundColor: index === spraywallIndex ? "black" : null,
                   padding: 5,
                   borderRadius: 5,
                 }}
@@ -314,11 +321,6 @@ const ListScreen = ({ navigation }) => {
         backgroundColor: "white",
       }}
     >
-      <SearchInput
-        isSearchVisible={isSearchVisible}
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-      />
       <View style={styles.listContainer}>
         {/* List of Boulders */}
         <FlatList

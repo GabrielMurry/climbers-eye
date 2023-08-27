@@ -85,12 +85,14 @@ const FilterScreen = ({ navigation }) => {
           paddingHorizontal: 10,
         }}
       >
-        <TouchableOpacity
-          style={styles.resetButton}
-          onPress={handleResetFilters}
-        >
-          <Text>Reset Filters</Text>
-        </TouchableOpacity>
+        <View style={styles.resetButtonContainer}>
+          <TouchableOpacity
+            style={styles.resetButton}
+            onPress={handleResetFilters}
+          >
+            <Text>Reset Filters</Text>
+          </TouchableOpacity>
+        </View>
         <View style={styles.sortBox}>
           <View style={styles.rowHeader}>
             <Text style={styles.rowHeaderTitle}>Sort By</Text>
@@ -183,10 +185,10 @@ const styles = StyleSheet.create({
     height: "100%",
     // gap: 10,
   },
-  resetButton: {
-    width: "100%",
-    justifyContent: "center",
+  resetButtonContainer: {
     alignItems: "flex-end",
+  },
+  resetButton: {
     padding: 10,
   },
   sortBox: {

@@ -68,49 +68,27 @@ const SearchInput = ({ isSearchVisible, searchQuery, setSearchQuery }) => {
   return (
     <>
       {isSearchVisible ? (
-        <View
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            right: 0,
-            height: 50,
-            zIndex: 1,
-            backgroundColor: "white",
-          }}
-        >
-          <View style={styles.SearchInputAndCancelContainer}>
-            <View style={styles.SearchInputContainer}>
-              <MagnifyingGlassIcon size={20} color="gray" />
-              <TextInput
-                style={styles.SearchInput}
-                value={searchQuery}
-                // onChange doesn't exist in react native. use onChangeText
-                onChangeText={(value) => setSearchQuery(value)} // in react native, you don't have to do e.target.value
-                placeholder="Search (name, setter, or grade)"
-                onFocus={handleTextInputFocus}
-                onBlur={handleTextInputBlur}
-                autoComplete="off"
-                autoFocus={true}
-              />
-              {searchQuery ? (
-                <TouchableOpacity
-                  style={styles.resetSearchQuery}
-                  onPress={() => setSearchQuery("")}
-                >
-                  <XMarkIcon size={12} color={"white"} />
-                </TouchableOpacity>
-              ) : null}
-            </View>
-            {(isTextInputFocused || searchQuery) && (
-              <TouchableOpacity
-                style={styles.cancelButton}
-                onPress={handleCancelSearchPress}
-              >
-                <Text style={{ color: "gray" }}>Cancel</Text>
-              </TouchableOpacity>
-            )}
-          </View>
+        <View style={styles.SearchInputContainer}>
+          <MagnifyingGlassIcon size={20} color="gray" />
+          <TextInput
+            style={styles.SearchInput}
+            value={searchQuery}
+            // onChange doesn't exist in react native. use onChangeText
+            onChangeText={(value) => setSearchQuery(value)} // in react native, you don't have to do e.target.value
+            placeholder="Search (name, setter, or grade)"
+            onFocus={handleTextInputFocus}
+            onBlur={handleTextInputBlur}
+            autoComplete="off"
+            autoFocus={true}
+          />
+          {searchQuery ? (
+            <TouchableOpacity
+              style={styles.resetSearchQuery}
+              onPress={() => setSearchQuery("")}
+            >
+              <XMarkIcon size={12} color={"white"} />
+            </TouchableOpacity>
+          ) : null}
         </View>
       ) : null}
     </>
@@ -120,23 +98,18 @@ const SearchInput = ({ isSearchVisible, searchQuery, setSearchQuery }) => {
 export default SearchInput;
 
 const styles = StyleSheet.create({
-  SearchInputAndCancelContainer: {
-    flexDirection: "row",
-    backgroundColor: "white",
-    paddingHorizontal: 10,
-    marginVertical: 5,
-  },
   SearchInputContainer: {
-    flex: 1,
+    marginLeft: 20,
+    width: "150%",
+    height: 35,
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "rgb(229, 228, 226)",
     paddingHorizontal: 10,
-    borderRadius: 2,
+    borderRadius: 5,
   },
   SearchInput: {
     flex: 1,
-    height: 40,
     paddingHorizontal: 5,
     backgroundColor: "rgb(229, 228, 226)",
     borderRadius: 10,

@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet } from "react-native";
 import React from "react";
-import { LinkIcon, StarIcon } from "react-native-heroicons/outline";
+import { CheckIcon, LinkIcon, StarIcon } from "react-native-heroicons/outline";
 import { FontAwesome } from "@expo/vector-icons";
 import isEqual from "lodash.isequal";
 import { Image } from "react-native";
@@ -20,16 +20,36 @@ const BoulderCard = React.memo(
             <Text>Setter: {boulder.setter}</Text>
             <Text> FA: {boulder.firstAscent ? boulder.firstAscent : "-"}</Text>
           </View>
-          <Text>
+          {/* <Text>
             {boulder.sends} {boulder.sends === 1 ? "send" : "sends"}
-          </Text>
+          </Text> */}
+          <View style={{ flexDirection: "row", gap: 10 }}>
+            <CheckIcon
+              size={15}
+              color={boulder.isSent ? "green" : "lightgray"}
+            />
+            <FontAwesome
+              name="heart"
+              size={15}
+              color={boulder.isLiked ? "red" : "lightgray"}
+            />
+            <FontAwesome
+              name="bookmark"
+              size={15}
+              color={boulder.isBookmarked ? "gold" : "lightgray"}
+            />
+            <LinkIcon
+              size={15}
+              color={boulder.inCircuit ? "blue" : "lightgray"}
+            />
+          </View>
         </View>
         <View style={styles.boulderIconsContainer}>
-          <Image
+          {/* <Image
             source={{ uri: boulder.url }}
             style={{ width: "100%", height: "100%" }}
             resizeMode="contain"
-          />
+          /> */}
           {/* <View style={styles.boulderIconsRow}>
             <FontAwesome
               name="trophy"

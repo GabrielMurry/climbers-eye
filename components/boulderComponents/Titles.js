@@ -44,6 +44,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
     paddingHorizontal: 20,
     rowGap: 5,
+    // alignItems: "center",
   },
   titleMain: {
     fontWeight: "bold",

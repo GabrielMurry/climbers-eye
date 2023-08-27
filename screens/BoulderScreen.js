@@ -175,6 +175,14 @@ const BoulderScreen = ({ route, navigation }) => {
           userID={user.id}
           navigation={navigation}
         />
+        {/* Note */}
+        <View style={{ paddingHorizontal: 20, marginTop: 20 }}>
+          <Text style={{ color: "gray" }}>Note:</Text>
+        </View>
+        {/* Tags */}
+        <View style={{ paddingHorizontal: 20, marginTop: 20 }}>
+          <Text style={{ color: "gray" }}>Tags:</Text>
+        </View>
         {/* date */}
         <View style={{ paddingHorizontal: 20, marginTop: 20 }}>
           <Text style={{ color: "gray" }}>{boulder.date}</Text>

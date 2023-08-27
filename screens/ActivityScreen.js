@@ -81,7 +81,7 @@ const ActivityScreen = ({ navigation }) => {
         >
           <Text>{item.date}</Text>
           <Text>
-            {item.username === user.name ? "You" : item.username}{" "}
+            {item.username === user.username ? "You" : item.username}{" "}
             <Text style={{ fontWeight: "bold", color: actionColor }}>
               {item.action}
             </Text>{" "}
