@@ -160,7 +160,7 @@ export default function App() {
                   <View
                     style={{
                       borderRadius: 100,
-                      backgroundColor: "rgba(0,190,146,1)",
+                      backgroundColor: "black",
                       padding: 8,
                     }}
                   >
@@ -201,13 +201,7 @@ export default function App() {
             },
           })}
         >
-          <Tab.Screen
-            name="Home"
-            component={ListScreen}
-            // options={{
-            //   headerShown: false,
-            // }}
-          />
+          <Tab.Screen name="Home" component={ListScreen} />
           <Tab.Screen
             name="Map"
             component={MapScreen}

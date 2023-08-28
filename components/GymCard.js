@@ -23,7 +23,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     paddingHorizontal: 10,
     borderRadius: 5,
-    justifyContent: "space-evenly",
+    justifyContent: "center",
+    gap: 10,
   },
   setterAndFA: {
     flexDirection: "row",

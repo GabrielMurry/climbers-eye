@@ -13,14 +13,26 @@ import {
   Pressable,
   SafeAreaView,
   ActivityIndicator,
+  ScrollView,
+  Dimensions,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import FullScreenImage from "./FullScreenImage";
 import { request } from "../api/requestMethods";
 import { useSelector } from "react-redux";
 import CustomInput from "./CustomInput";
 import CustomButton from "./CustomButton";
 import * as Haptics from "expo-haptics";
+
+const TAGS = [
+  { name: "crimp", selected: false },
+  { name: "pinch", selected: false },
+  { name: "endurance", selected: false },
+];
+
+const SCREEN_WIDTH = Dimensions.get("window").width;
+const SCREEN_HEIGHT = Dimensions.get("window").height;
+const SHRINK_SCALE = 0.3;
 
 const ModalEditPreview = ({
   image,
@@ -41,6 +53,13 @@ const ModalEditPreview = ({
   const [imageFullScreen, setImageFullScreen] = useState(false);
   const [isImageLoading, setIsImageLoading] = useState(true);
   const [isConfirmLoading, setIsConfirmLoading] = useState(false);
+  const [tags, setTags] = useState(TAGS);
+
+  const handleTagPress = (index) => {
+    const updatedTags = [...tags];
+    updatedTags[index].selected = !updatedTags[index].selected;
+    setTags(updatedTags);
+  };
 
   const handleConfirm = async () => {
     setIsConfirmLoading(true);
@@ -89,102 +108,141 @@ const ModalEditPreview = ({
       <View style={styles.modalContainer}>
         <SafeAreaView style={styles.modalContent}>
           {/* Add modal content here */}
-          {/* Input Data Section */}
-          <View
-            style={{
-              height: "40%",
-              paddingHorizontal: 10,
-              justifyContent: "center",
-            }}
-          >
-            <Text>Boulder Name</Text>
-            <CustomInput
-              value={name}
-              setValue={(value) => setName(value)}
-              placeholder="Boulder Name"
-              secureTextEntry={false}
-            />
-            <Text>Boulder Description</Text>
-            <CustomInput
-              value={description}
-              setValue={(value) => setDescription(value)}
-              placeholder="Boulder Description"
-              secureTextEntry={false}
-            />
-            <View style={{ marginTop: 10, gap: 10, paddingHorizontal: 40 }}>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
-                <Text style={styles.toggleLabel}>Matching Allowed</Text>
-                <Switch value={isMatching} onValueChange={setIsMatching} />
-              </View>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
-                <Text style={styles.toggleLabel}>Publish</Text>
-                <Switch value={isPublish} onValueChange={setIsPublish} />
-              </View>
-            </View>
-          </View>
           {/* Manipulated Image Section */}
-          <View
-            style={{
-              height: "50%",
-              paddingHorizontal: 10,
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Pressable onPress={() => setImageFullScreen(true)}>
+          <ScrollView>
+            <Pressable
+              style={{
+                width: SCREEN_WIDTH,
+                height: SCREEN_HEIGHT * SHRINK_SCALE,
+                padding: 10,
+              }}
+              onPress={() => setImageFullScreen(true)}
+            >
               <Image
                 source={{ uri: resultImageUri }}
                 style={{
-                  aspectRatio: 1, // Ensures the image maintains its aspect ratio
                   width: "100%",
+                  height: "100%",
                 }}
                 resizeMode="contain"
                 onLoadStart={() => setIsImageLoading(true)}
                 onLoadEnd={() => setIsImageLoading(false)}
               />
+              {isImageLoading ? (
+                <ActivityIndicator
+                  size="large"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    position: "absolute",
+                  }}
+                />
+              ) : null}
             </Pressable>
-            {isImageLoading ? (
-              <ActivityIndicator
-                size="large"
-                style={{ width: "100%", height: "100%", position: "absolute" }}
+            {/* Input Data Section */}
+            <View
+              style={{
+                paddingHorizontal: 10,
+                justifyContent: "center",
+              }}
+            >
+              <Text>Boulder Name</Text>
+              <CustomInput
+                value={name}
+                setValue={(value) => setName(value)}
+                placeholder="Boulder Name"
+                secureTextEntry={false}
               />
-            ) : null}
-          </View>
-          {/* Cancel / Confirm Buttons */}
-          <View
-            style={{
-              height: "10%",
-              paddingHorizontal: 10,
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-evenly",
-            }}
-          >
-            <CustomButton
-              onPress={() => setIsModalVisible(!isModalVisible)}
-              text="Cancel"
-              type="TERTIARY"
-              width="40%"
-            />
-            <CustomButton
-              onPress={handleConfirm}
-              text="Confirm"
-              width="40%"
-              isLoading={isConfirmLoading}
-            />
-          </View>
+              <Text>Boulder Notes</Text>
+              <TextInput
+                value={description}
+                onChangeText={(value) => setDescription(value)}
+                placeholder={"Boulder Notes"}
+                style={{
+                  borderColor: "lightgray",
+                  borderWidth: 1,
+                  borderRadius: 5,
+                  padding: 10,
+                  minHeight: 100, // Adjust the height as needed
+                  textAlignVertical: "top", // Align the text at the top of the input
+                }}
+                multiline={true}
+              />
+              {/* <CustomInput
+              value={description}
+              setValue={(value) => setDescription(value)}
+              placeholder="Boulder Description"
+              secureTextEntry={false}
+            /> */}
+              <View style={{ marginTop: 10, gap: 10, paddingHorizontal: 40 }}>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={styles.toggleLabel}>Matching Allowed</Text>
+                  <Switch value={isMatching} onValueChange={setIsMatching} />
+                </View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={styles.toggleLabel}>Publish</Text>
+                  <Switch value={isPublish} onValueChange={setIsPublish} />
+                </View>
+              </View>
+              <View style={{ marginTop: 10, paddingHorizontal: 10 }}>
+                <Text>Tags</Text>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    gap: 10,
+                  }}
+                >
+                  {tags.map((tag, index) => (
+                    <TouchableOpacity
+                      style={{
+                        padding: 5,
+                        backgroundColor: tag.selected ? "blue" : "lightgray",
+                        borderRadius: 10,
+                      }}
+                      onPress={() => handleTagPress(index)}
+                      key={index}
+                    >
+                      <Text>{tag.name}</Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              </View>
+            </View>
+            {/* Cancel / Confirm Buttons */}
+            <View
+              style={{
+                paddingHorizontal: 10,
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-evenly",
+              }}
+            >
+              <CustomButton
+                onPress={() => setIsModalVisible(!isModalVisible)}
+                text="Cancel"
+                type="TERTIARY"
+                width="40%"
+              />
+              <CustomButton
+                onPress={handleConfirm}
+                text="Confirm"
+                width="40%"
+                isLoading={isConfirmLoading}
+              />
+            </View>
+          </ScrollView>
         </SafeAreaView>
       </View>
       <FullScreenImage

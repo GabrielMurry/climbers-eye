@@ -177,11 +177,11 @@ const BoulderScreen = ({ route, navigation }) => {
         />
         {/* Note */}
         <View style={{ paddingHorizontal: 20, marginTop: 20 }}>
-          <Text style={{ color: "gray" }}>Note:</Text>
+          <Text style={{ color: "gray" }}>Caption, Note, Etc.</Text>
         </View>
         {/* Tags */}
         <View style={{ paddingHorizontal: 20, marginTop: 20 }}>
-          <Text style={{ color: "gray" }}>Tags:</Text>
+          <Text style={{ color: "gray" }}>#crimps #pinch #endurance</Text>
         </View>
         {/* date */}
         <View style={{ paddingHorizontal: 20, marginTop: 20 }}>
