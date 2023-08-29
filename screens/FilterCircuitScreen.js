@@ -10,15 +10,22 @@ import {
   Alert,
   Pressable,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { request } from "../api/requestMethods";
 import { useSelector, useDispatch } from "react-redux";
 import CircuitBottomSheet from "../components/circuitComponents/CircuitBottomSheet";
 import CircuitCard from "../components/circuitComponents/CircuitCard";
 import Swipeable from "react-native-gesture-handler/Swipeable";
-import { PlusIcon } from "react-native-heroicons/outline";
+import {
+  ChevronLeftIcon,
+  EllipsisHorizontalIcon,
+  PlusIcon,
+} from "react-native-heroicons/outline";
 import { removeFilterCircuits, setFilterCircuits } from "../redux/actions";
 import Header from "../components/general/Header";
+import useCustomHeader from "../hooks/useCustomHeader";
+
+const THEME_STYLE = "white";
 
 const FilterCircuitScreen = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -33,6 +40,43 @@ const FilterCircuitScreen = ({ navigation }) => {
   const [circuits, setCircuits] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
   const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
+
+  // useLayoutEffect(() => {
+  //   navigation.setOptions({
+  //     headerLeft: () => (
+  //       <View style={{ flexDirection: "row", alignItems: "center" }}>
+  //         <TouchableOpacity
+  //           style={{ width: 50 }}
+  //           onPress={() => navigation.goBack()}
+  //         >
+  //           <ChevronLeftIcon size={25} color="black" />
+  //         </TouchableOpacity>
+  //         <Text style={{ fontSize: 24 }}>Circuits</Text>
+  //       </View>
+  //     ),
+  //     headerTitle: () => <Text></Text>,
+  //     headerRight: () => (
+  //       <TouchableOpacity>
+  //         <EllipsisHorizontalIcon size={35} color={"black"} />
+  //       </TouchableOpacity>
+  //     ),
+  //     headerStyle: {
+  //       backgroundColor: THEME_STYLE,
+  //     },
+  //     headerShadowVisible: false,
+  //   });
+  // }, [navigation]);
+
+  const headerRight = (
+    <TouchableOpacity>{/* Use your own ellipsis icon */}</TouchableOpacity>
+  );
+
+  // Use the custom hook
+  useCustomHeader({
+    navigation,
+    title: "Circuits",
+    headerRight,
+  });
 
   // for managing opening and closing rows
   let row = [];
@@ -145,7 +189,7 @@ const FilterCircuitScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header navigation={navigation} title={"Circuits"} />
+      {/* <Header navigation={navigation} title={"Circuits"} /> */}
       <View style={styles.flatListContainer}>
         <FlatList
           contentContainerStyle={styles.flatList}

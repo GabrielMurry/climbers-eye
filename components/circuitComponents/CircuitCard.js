@@ -21,10 +21,10 @@ export default CircuitCard;
 const styles = StyleSheet.create({
   container: (height) => ({
     flexDirection: "row",
-    backgroundColor: "#FFFBF1",
+    backgroundColor: "white",
     borderWidth: 1,
     height: height,
-    borderRadius: 10,
+    borderRadius: 5,
     alignItems: "center",
     paddingHorizontal: 10,
   }),

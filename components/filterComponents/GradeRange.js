@@ -51,20 +51,10 @@ export default GradeRange;
 
 const styles = StyleSheet.create({
   sliderContainer: {
-    backgroundColor: "#FFFBF1",
-    borderBottomLeftRadius: 10,
-    borderBottomRightRadius: 10,
-    borderLeftWidth: 1,
-    borderRightWidth: 1,
-    borderBottomWidth: 1,
-    borderColor: "black",
+    backgroundColor: "white",
     padding: 10,
-    // adding shadow to slider box
-    shadowColor: "black",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 5, // Required for Android
+    paddingTop: 20,
+    marginTop: -10,
   },
   sliderWrapper: {
     marginBottom: 16,

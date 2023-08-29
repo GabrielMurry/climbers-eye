@@ -1,6 +1,10 @@
-import { View, Text, SafeAreaView } from "react-native";
+import { View, Text, SafeAreaView, TouchableOpacity } from "react-native";
 import React from "react";
-import { ArrowLeftCircleIcon } from "react-native-heroicons/outline";
+import {
+  ArrowLeftCircleIcon,
+  ChevronLeftIcon,
+  PlusIcon,
+} from "react-native-heroicons/outline";
 
 const Header = ({ navigation, title, color = null, style }) => {
   return (
@@ -11,17 +15,18 @@ const Header = ({ navigation, title, color = null, style }) => {
           width: "90%",
           marginLeft: 5,
           marginTop: 5,
+          alignItems: "center",
         }}
       >
-        <ArrowLeftCircleIcon
-          size={30}
-          color="black"
+        <TouchableOpacity
+          style={{ width: 50 }}
           onPress={() => navigation.goBack()}
-        />
+        >
+          <ChevronLeftIcon size={25} color="black" />
+        </TouchableOpacity>
         <View
           style={{
             alignItems: "center",
-            marginLeft: 20,
             flexDirection: "row",
             gap: 10,
           }}

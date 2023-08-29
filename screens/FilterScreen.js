@@ -22,6 +22,7 @@ import FilterButton from "../components/filterComponents/FilterButton";
 import GradeRange from "../components/filterComponents/GradeRange";
 import filterLists from "../utils/constants/filterListConstants";
 import Header from "../components/general/Header";
+import useCustomHeader from "../hooks/useCustomHeader";
 
 const FilterScreen = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -41,6 +42,12 @@ const FilterScreen = ({ navigation }) => {
 
   const minGrade = boulderGrades[filterMinGradeIndex];
   const maxGrade = boulderGrades[filterMaxGradeIndex];
+
+  // Use the custom hook
+  useCustomHeader({
+    navigation,
+    title: "Search Filters",
+  });
 
   const handleGradeRangePress = () => {
     setShowGradeRange(!showGradeRange);
@@ -77,7 +84,7 @@ const FilterScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Header navigation={navigation} title={"Search Filters"} />
+      {/* <Header navigation={navigation} title={"Search Filters"} /> */}
       <ScrollView
         contentContainerStyle={{
           gap: 10,
@@ -180,7 +187,7 @@ export default FilterScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "rgba(245,245,245,255)",
     width: "100%",
     height: "100%",
     // gap: 10,
@@ -192,46 +199,23 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   sortBox: {
+    backgroundColor: "white",
     width: "100%",
-    backgroundColor: "#FFFBF1",
-    borderWidth: 1,
-    borderColor: "black",
-    borderRadius: 10,
-    // adding shadow to sorting boxes
-    shadowColor: "black",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 5, // Required for Android
   },
   sortBoxGradeRange: (showGradeRange) => ({
     width: "100%",
-    backgroundColor: "#FFFBF1",
-    borderWidth: showGradeRange ? 0 : 1,
-    borderTopWidth: 1,
-    borderLeftWidth: 1,
-    borderRightWidth: 1,
-    borderColor: "black",
-    borderRadius: showGradeRange ? 0 : 10,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-    // adding shadow to sorting boxes
-    shadowColor: "black",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 5, // Required for Android
+    backgroundColor: "white",
   }),
   rowHeaderTitle: {
     fontWeight: "bold",
+    color: "black",
   },
   rowHeader: {
-    backgroundColor: "#CFE6D0",
+    backgroundColor: "rgba(245,245,245,255)",
     width: "100%",
     height: 40,
     justifyContent: "center",
     padding: 10,
-    borderRadius: 10,
   },
   row: {
     flexDirection: "row",

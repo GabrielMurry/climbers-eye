@@ -63,7 +63,7 @@ const Stack = createNativeStackNavigator();
 
 function customHeader(navigation, screenName) {
   let headerLeft = () => (
-    <ArrowLeftCircleIcon
+    <ChevronLeftIcon
       size={30}
       color="black"
       onPress={() => navigation.goBack()}
@@ -90,9 +90,6 @@ function customHeader(navigation, screenName) {
   let animation = "default";
   if (screenName === "Map" || screenName === "Camera") {
     animation = "none";
-  }
-  if (screenName === "Filter") {
-    animation = "";
   }
 
   return {
@@ -396,25 +393,12 @@ export default function App() {
                 headerShown: false,
               }}
             /> */}
-            <Stack.Screen
-              name="Filter"
-              component={FilterScreen}
-              options={{ headerShown: false }}
-            />
+            <Stack.Screen name="Filter" component={FilterScreen} />
             <Stack.Screen
               name="FilterCircuit"
               component={FilterCircuitScreen}
-              options={{
-                headerShown: false,
-              }}
             />
-            <Stack.Screen
-              name="Boulder"
-              component={BoulderScreen}
-              // options={{
-              //   headerShown: false,
-              // }}
-            />
+            <Stack.Screen name="Boulder" component={BoulderScreen} />
             <Stack.Screen
               name="Send"
               component={SendScreen}
