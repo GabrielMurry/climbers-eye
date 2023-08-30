@@ -1,4 +1,12 @@
-import { SafeAreaView, ScrollView } from "react-native";
+import {
+  Modal,
+  Pressable,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React, { useCallback, useLayoutEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { request } from "../../api/requestMethods";
@@ -40,11 +48,13 @@ const ProfileScreen = ({ route, navigation }) => {
       animation: "none",
       headerTitle: () => {},
       headerRight: () => (
-        <EllipsisHorizontalIcon
-          size={35}
-          color={"black"}
-          style={{ marginRight: 20 }}
-        />
+        <TouchableOpacity onPress={() => setIsModalVisible((prev) => !prev)}>
+          <EllipsisHorizontalIcon
+            size={35}
+            color={"black"}
+            style={{ marginRight: 20 }}
+          />
+        </TouchableOpacity>
       ),
     });
   }, [navigation]);
@@ -84,30 +94,108 @@ const ProfileScreen = ({ route, navigation }) => {
     }
   };
 
+  const handleSwitchGymPress = () => {
+    setIsModalVisible(false);
+    navigation.navigate("SwitchGym");
+  };
+  const handleEditProfilePress = () => {
+    setIsModalVisible(false);
+    navigation.navigate("EditProfile");
+  };
+  const handleSettingsPress = () => {
+    setIsModalVisible(false);
+    navigation.navigate("Settings");
+  };
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: THEME_STYLE }}>
       <ScrollView>
-        {/* Header (banner image, headshot image, name, username) */}
         <Header navigation={navigation} />
-        <GymSection
-          setIsModalVisible={setIsModalVisible}
-          navigation={navigation}
-        />
+        <GymSection navigation={navigation} />
         <BouldersSection
           bouldersSectionQuickData={bouldersSectionQuickData}
           navigation={navigation}
         />
         <CircuitsSection circuits={circuits} navigation={navigation} />
-        <AccountSection navigation={navigation} />
-        <ModalSelectGyms
+        {/* <AccountSection navigation={navigation} /> */}
+        {/* <ModalSelectGyms
           isModalVisible={isModalVisible}
           setIsModalVisible={setIsModalVisible}
           spraywalls={spraywalls}
           spraywallIndex={spraywallIndex}
-        />
+        /> */}
       </ScrollView>
+      <Modal
+        visible={isModalVisible}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setIsModalVisible(false)}
+      >
+        {/* Add modal content here */}
+        <Pressable
+          style={{ backgroundColor: "rgba(0, 0, 0, 0.5)", flex: 1 }}
+          onPress={() => setIsModalVisible(false)}
+        >
+          <View
+            style={{
+              backgroundColor: "white",
+              width: "100%",
+              position: "absolute",
+              bottom: 0,
+              paddingBottom: 35,
+            }}
+          >
+            <Pressable
+              style={{
+                justifyContent: "center",
+                padding: 20,
+              }}
+              onPress={handleSwitchGymPress}
+            >
+              <Text>Switch Gym</Text>
+            </Pressable>
+            <Pressable
+              style={{
+                justifyContent: "center",
+                padding: 20,
+              }}
+              onPress={handleEditProfilePress}
+            >
+              <Text>Edit Profile</Text>
+            </Pressable>
+            <Pressable
+              style={{
+                justifyContent: "center",
+                padding: 20,
+              }}
+              onPress={handleSettingsPress}
+            >
+              <Text>Settings</Text>
+            </Pressable>
+            <Pressable
+              style={{
+                justifyContent: "center",
+                padding: 20,
+              }}
+              onPress={() => setIsModalVisible(false)}
+            >
+              <Text style={{ color: "gray" }}>Cancel</Text>
+            </Pressable>
+          </View>
+        </Pressable>
+      </Modal>
     </SafeAreaView>
   );
 };
 
 export default ProfileScreen;
+
+const styles = StyleSheet.create({
+  modalContainer: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContent: {
+    flex: 1,
+  },
+});

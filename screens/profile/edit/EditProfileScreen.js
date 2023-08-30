@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setHeadshotImage } from "../../../redux/actions";
 import { request } from "../../../api/requestMethods";
 import * as ImagePicker from "expo-image-picker";
+import useCustomHeader from "../../../hooks/useCustomHeader";
 
 const EditProfileScreen = ({ navigation, route }) => {
   const { user, headshotImage } = useSelector((state) => state.userReducer);
@@ -35,6 +36,12 @@ const EditProfileScreen = ({ navigation, route }) => {
     }
   };
 
+  useCustomHeader({
+    backgroundColor: "rgba(245,245,245,255)",
+    navigation,
+    title: "Edit Profile",
+  });
+
   return (
     <SafeAreaView
       style={{
@@ -42,7 +49,7 @@ const EditProfileScreen = ({ navigation, route }) => {
         backgroundColor: "rgba(245,245,245,255)",
       }}
     >
-      <Header navigation={navigation} title={"Edit Profile"} />
+      {/* <Header navigation={navigation} title={"Edit Profile"} /> */}
       {/* profile settings */}
       <View style={{ paddingHorizontal: 10 }}>
         {/* profile images */}

@@ -45,8 +45,9 @@ const FilterScreen = ({ navigation }) => {
 
   // Use the custom hook
   useCustomHeader({
+    backgroundColor: "rgba(245,245,245,255)",
     navigation,
-    title: "Search Filters",
+    title: "Filters",
   });
 
   const handleGradeRangePress = () => {
@@ -84,7 +85,6 @@ const FilterScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      {/* <Header navigation={navigation} title={"Search Filters"} /> */}
       <ScrollView
         contentContainerStyle={{
           gap: 10,
@@ -177,6 +177,7 @@ const FilterScreen = ({ navigation }) => {
             />
           ))}
         </View>
+        <View style={{ height: 50 }} />
       </ScrollView>
     </View>
   );
@@ -211,11 +212,13 @@ const styles = StyleSheet.create({
     color: "black",
   },
   rowHeader: {
-    backgroundColor: "rgba(245,245,245,255)",
+    backgroundColor: "white",
     width: "100%",
     height: 40,
     justifyContent: "center",
     padding: 10,
+    borderBottomWidth: 1,
+    borderColor: "rgba(245,245,245,255)",
   },
   row: {
     flexDirection: "row",

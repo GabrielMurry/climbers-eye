@@ -26,6 +26,7 @@ import { useSelector } from "react-redux";
 import { useFocusEffect } from "@react-navigation/native";
 import { boulderGrades } from "../../../utils/constants/boulderConstants";
 import Header from "../../../components/general/Header";
+import useCustomHeader from "../../../hooks/useCustomHeader";
 
 const ProfileSectionScreen = ({ route, navigation }) => {
   const { section } = route.params;
@@ -52,6 +53,12 @@ const ProfileSectionScreen = ({ route, navigation }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [title, setTitle] = useState("");
   const [color, setColor] = useState("");
+
+  useCustomHeader({
+    backgroundColor: "rgba(245, 245, 245, 255)",
+    navigation,
+    title: title,
+  });
 
   // Add an event listener to detect changes in keyboard visibility
   useEffect(() => {
@@ -186,12 +193,6 @@ const ProfileSectionScreen = ({ route, navigation }) => {
 
   return (
     <View style={{ flex: 1 }}>
-      <Header
-        navigation={navigation}
-        title={title}
-        color={color}
-        style={{ marginBottom: 10 }}
-      />
       <View style={styles.SearchInputAndCancelContainer}>
         <View style={styles.SearchInputContainer}>
           <MagnifyingGlassIcon size={20} color="gray" />

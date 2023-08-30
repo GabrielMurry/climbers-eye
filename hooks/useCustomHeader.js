@@ -4,7 +4,12 @@ import { ChevronLeftIcon } from "react-native-heroicons/outline";
 
 const THEME_STYLE = "white";
 
-const useCustomHeader = ({ navigation, title = "", headerRight = <></> }) => {
+const useCustomHeader = ({
+  navigation,
+  title = "",
+  headerRight = <></>,
+  backgroundColor = null,
+}) => {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerLeft: () => (
@@ -21,7 +26,7 @@ const useCustomHeader = ({ navigation, title = "", headerRight = <></> }) => {
       headerTitle: () => <Text></Text>,
       headerRight: () => headerRight,
       headerStyle: {
-        backgroundColor: THEME_STYLE,
+        backgroundColor: backgroundColor ?? THEME_STYLE,
       },
       headerShadowVisible: false,
     });

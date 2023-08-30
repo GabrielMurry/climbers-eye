@@ -58,6 +58,7 @@ import ActivityScreen from "./screens/ActivityScreen";
 import EditProfileScreen from "./screens/profile/edit/EditProfileScreen";
 import EditNameScreen from "./screens/profile/edit/EditNameScreen";
 import { StatusBar } from "react-native";
+import SwitchGymScreen from "./screens/profile/edit/SwitchGymScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -356,9 +357,6 @@ export default function App() {
             <Stack.Screen
               name="ProfileSection"
               component={ProfileSectionScreen}
-              options={{
-                headerShown: false,
-              }}
             />
             <Stack.Screen
               name="Settings"
@@ -367,13 +365,7 @@ export default function App() {
                 headerShown: false,
               }}
             />
-            <Stack.Screen
-              name="EditProfile"
-              component={EditProfileScreen}
-              options={{
-                headerShown: false,
-              }}
-            />
+            <Stack.Screen name="EditProfile" component={EditProfileScreen} />
             <Stack.Screen
               name="EditName"
               component={EditNameScreen}
@@ -417,6 +409,10 @@ export default function App() {
               options={({ navigation }) =>
                 customHeader(navigation, "BoulderStats")
               }
+            />
+            <Stack.Screen
+              name="SwitchGym"
+              component={SwitchGymScreen}
             />
           </Stack.Navigator>
         </NavigationContainer>

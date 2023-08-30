@@ -9,7 +9,7 @@ import { Image } from "react-native";
 
 const width = Dimensions.get("window").width;
 
-const GymSection = ({ setIsModalVisible }) => {
+const GymSection = ({ navigation }) => {
   const dispatch = useDispatch();
   const { gym } = useSelector((state) => state.gymReducer);
   const { spraywalls, spraywallIndex } = useSelector(
@@ -69,7 +69,7 @@ const GymSection = ({ setIsModalVisible }) => {
         >
           {/* section title */}
           <Text style={{ fontWeight: "bold", fontSize: 18 }}>{gym.name}</Text>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={{
               marginLeft: 10,
               backgroundColor: "lightgray",
@@ -82,7 +82,7 @@ const GymSection = ({ setIsModalVisible }) => {
             onPress={() => setIsModalVisible(true)}
           >
             <ArrowsRightLeftIcon color={"black"} size={20} />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
         <Carousel
           loop={false}
