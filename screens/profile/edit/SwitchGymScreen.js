@@ -36,8 +36,13 @@ const SwitchGymScreen = ({ navigation }) => {
     }
   };
 
-  const renderCards = ({ item }) => {
-    return <GymCard gymCard={item} />;
+  const updateUserGym = async (item) => {
+    const data = { gym: item.id };
+    const response = request("put", `update_user_gym/${user.id}`, data);
+    if (response.status !== 200) {
+      console.log(response.status);
+      return;
+    }
   };
 
   const handleGymCardPress = (item) => {
@@ -45,6 +50,7 @@ const SwitchGymScreen = ({ navigation }) => {
     const { spraywalls, ...gymWithoutSpraywalls } = item;
     dispatch(setGym(gymWithoutSpraywalls));
     dispatch(setSpraywalls(item.spraywalls));
+    updateUserGym(item);
   };
 
   const renderItem = ({ item, index }) => (

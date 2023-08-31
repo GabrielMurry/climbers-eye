@@ -24,23 +24,23 @@ const BoulderCard = React.memo(
             {boulder.sends} {boulder.sends === 1 ? "send" : "sends"}
           </Text> */}
           <View style={{ flexDirection: "row", gap: 10 }}>
-            <CheckIcon
+            <LinkIcon
               size={15}
-              color={boulder.isSent ? "green" : "lightgray"}
-            />
-            <FontAwesome
-              name="heart"
-              size={15}
-              color={boulder.isLiked ? "red" : "lightgray"}
+              color={boulder.inCircuit ? "blue" : "lightgray"}
             />
             <FontAwesome
               name="bookmark"
               size={15}
               color={boulder.isBookmarked ? "gold" : "lightgray"}
             />
-            <LinkIcon
+            <FontAwesome
+              name="heart"
               size={15}
-              color={boulder.inCircuit ? "blue" : "lightgray"}
+              color={boulder.isLiked ? "red" : "lightgray"}
+            />
+            <CheckIcon
+              size={15}
+              color={boulder.isSent ? "green" : "lightgray"}
             />
           </View>
         </View>

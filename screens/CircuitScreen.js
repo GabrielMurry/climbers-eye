@@ -13,7 +13,6 @@ import {
 import React, { useCallback, useEffect, useState } from "react";
 import { request } from "../api/requestMethods";
 import { useSelector } from "react-redux";
-import CircuitBottomSheet from "../components/circuitComponents/CircuitBottomSheet";
 import CircuitCard from "../components/circuitComponents/CircuitCard";
 import Swipeable from "react-native-gesture-handler/Swipeable";
 import { PlusIcon } from "react-native-heroicons/outline";
@@ -197,22 +196,6 @@ const CircuitScreen = ({ route, navigation }) => {
           ListEmptyComponent={renderEmptyList}
         />
       </View>
-      {/* <TouchableOpacity
-        style={styles.addNewCircuitButton}
-        onPress={handleAddNewCircuitPressed}
-      >
-        <PlusIcon size={30} color={"rgb(0, 122, 255)"} />
-      </TouchableOpacity> */}
-      {/* DELETEEEEEE */}
-      {bottomSheetVisible ? (
-        <CircuitBottomSheet
-          setBottomSheetVisible={setBottomSheetVisible}
-          circuits={circuits}
-          setCircuits={setCircuits}
-          userID={user.id}
-          spraywallID={spraywalls[spraywallIndex].id}
-        />
-      ) : null}
     </SafeAreaView>
   );
 };

@@ -38,6 +38,7 @@ const ProfileScreen = ({ route, navigation }) => {
   ]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [circuits, setCircuits] = useState([]);
+  const [isHeaderTitleVisible, setIsHeaderTitleVisible] = useState(false);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -46,7 +47,11 @@ const ProfileScreen = ({ route, navigation }) => {
       },
       headerShadowVisible: false,
       animation: "none",
-      headerTitle: () => {},
+      headerTitle: () => (
+        <Text style={{ fontWeight: "bold", textAlign: "center" }}>
+          {isHeaderTitleVisible ? user.username : ""}
+        </Text>
+      ),
       headerRight: () => (
         <TouchableOpacity onPress={() => setIsModalVisible((prev) => !prev)}>
           <EllipsisHorizontalIcon
@@ -57,7 +62,7 @@ const ProfileScreen = ({ route, navigation }) => {
         </TouchableOpacity>
       ),
     });
-  }, [navigation]);
+  }, [navigation, isHeaderTitleVisible]);
 
   useFocusEffect(
     useCallback(() => {
@@ -107,9 +112,20 @@ const ProfileScreen = ({ route, navigation }) => {
     navigation.navigate("Settings");
   };
 
+  const handleScroll = (event) => {
+    const offsetY = event.nativeEvent.contentOffset.y;
+    const threshold = 50; // Change this value to your desired threshold
+
+    if (offsetY >= threshold && !isHeaderTitleVisible) {
+      setIsHeaderTitleVisible(true);
+    } else if (offsetY < threshold && isHeaderTitleVisible) {
+      setIsHeaderTitleVisible(false);
+    }
+  };
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: THEME_STYLE }}>
-      <ScrollView>
+      <ScrollView onScroll={handleScroll} scrollEventThrottle={16}>
         <Header navigation={navigation} />
         <GymSection navigation={navigation} />
         <BouldersSection

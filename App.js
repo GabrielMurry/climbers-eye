@@ -221,9 +221,6 @@ export default function App() {
           <Tab.Screen
             name="Activity"
             component={ActivityScreen}
-            options={{
-              headerShown: false,
-            }}
           />
           <Tab.Screen name="Profile" component={ProfileScreen} />
         </Tab.Navigator>

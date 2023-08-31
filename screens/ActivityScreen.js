@@ -4,24 +4,33 @@ import {
   SafeAreaView,
   TouchableOpacity,
   FlatList,
+  Pressable,
 } from "react-native";
-import React, { useCallback, useEffect, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useState,
+} from "react";
 import { request } from "../api/requestMethods";
 import { useSelector } from "react-redux";
 import Header from "../components/general/Header";
 import { useFocusEffect } from "@react-navigation/native";
 import { RefreshControl } from "react-native";
+import useCustomHeader from "../hooks/useCustomHeader";
+import { EllipsisHorizontalIcon } from "react-native-heroicons/outline";
+
+const THEME_STYLE = "white";
 
 const ActivityScreen = ({ navigation }) => {
   const activityAction = {
     published: "orange",
-    sent: "green",
+    sent: "green", // check
     repeated: "s",
-    liked: "red",
-    bookmarked: "gold",
-    added: "blue",
-    created: "purple",
-    deleted: "black",
+    liked: "red", // check
+    bookmarked: "gold", // check
+    added: "blue", // check
+    created: "purple", // check
   };
 
   const { user } = useSelector((state) => state.userReducer);
@@ -32,7 +41,32 @@ const ActivityScreen = ({ navigation }) => {
   const [noMoreData, setNoMoreData] = useState(false);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false); // Add this state
+  const [isHeaderTitleVisible, setIsHeaderTitleVisible] = useState(false);
   const itemsPerPage = 10; // Number of items per page
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerShadowVisible: false,
+      headerLeft: () => {},
+      headerTitle: () => (
+        <Text style={{ fontWeight: "bold", textAlign: "center" }}>
+          {isHeaderTitleVisible ? "Activity" : ""}
+        </Text>
+      ),
+      headerRight: () => (
+        <TouchableOpacity>
+          <EllipsisHorizontalIcon
+            size={35}
+            color={"black"}
+            style={{ marginRight: 20 }}
+          />
+        </TouchableOpacity>
+      ),
+      headerStyle: {
+        backgroundColor: THEME_STYLE,
+      },
+    });
+  }, [navigation, isHeaderTitleVisible]);
 
   useEffect(() => {
     fetchActivityData();
@@ -125,16 +159,31 @@ const ActivityScreen = ({ navigation }) => {
     }
   };
 
+  const handleScroll = (event) => {
+    const offsetY = event.nativeEvent.contentOffset.y;
+    const threshold = 50; // Change this value to your desired threshold
+
+    if (offsetY >= threshold && !isHeaderTitleVisible) {
+      setIsHeaderTitleVisible(true);
+    } else if (offsetY < threshold && isHeaderTitleVisible) {
+      setIsHeaderTitleVisible(false);
+    }
+  };
+
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
       <View
         style={{
-          height: 75,
-          justifyContent: "center",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          paddingVertical: 10,
           paddingHorizontal: 20,
+          height: 100,
         }}
       >
-        <Text style={{ fontSize: 28, fontWeight: "bold" }}>Activity</Text>
+        <View style={{ width: "75%" }}>
+          <Text style={{ fontSize: 30, fontWeight: "bold" }}>Activity</Text>
+        </View>
       </View>
       <View style={{ flex: 1 }}>
         <FlatList
@@ -150,6 +199,7 @@ const ActivityScreen = ({ navigation }) => {
             // Add this prop for pull-to-refresh
             <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
           }
+          onScroll={handleScroll}
         />
       </View>
     </SafeAreaView>

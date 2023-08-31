@@ -13,7 +13,6 @@ import {
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import { request } from "../api/requestMethods";
 import { useSelector, useDispatch } from "react-redux";
-import CircuitBottomSheet from "../components/circuitComponents/CircuitBottomSheet";
 import CircuitCard from "../components/circuitComponents/CircuitCard";
 import Swipeable from "react-native-gesture-handler/Swipeable";
 import {

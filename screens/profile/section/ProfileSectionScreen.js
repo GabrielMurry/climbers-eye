@@ -55,7 +55,6 @@ const ProfileSectionScreen = ({ route, navigation }) => {
   const [color, setColor] = useState("");
 
   useCustomHeader({
-    backgroundColor: "rgba(245, 245, 245, 255)",
     navigation,
     title: title,
   });
@@ -192,7 +191,7 @@ const ProfileSectionScreen = ({ route, navigation }) => {
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: "white" }}>
       <View style={styles.SearchInputAndCancelContainer}>
         <View style={styles.SearchInputContainer}>
           <MagnifyingGlassIcon size={20} color="gray" />

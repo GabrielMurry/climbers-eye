@@ -340,23 +340,6 @@ const ListScreen = ({ navigation }) => {
           keyboardShouldPersistTaps="handled" // click on search bar cancel buttons when Keyboard is visible (or click on boulder cards)
         />
       </View>
-      {/* {hasNoBoulders ? (
-        <View
-          style={{
-            flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
-            position: "absolute",
-            top: 0,
-            bottom: 0,
-            left: 0,
-            right: 0,
-            pointerEvents: "none",
-          }}
-        >
-          <Text>No boulders in this spray wall</Text>
-        </View>
-      ) : null} */}
       <Modal
         visible={isModalSpraywallsVisible}
         transparent={true}

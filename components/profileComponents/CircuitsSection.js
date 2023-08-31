@@ -86,6 +86,7 @@ const CircuitsSection = ({ circuits, navigation }) => {
               alignItems: "center",
               flexDirection: "row",
             }}
+            onPress={() => navigation.navigate("AddNewCircuit")}
           >
             <View style={{ width: 30 }}>
               <PlusIcon color={"black"} size={20} />
