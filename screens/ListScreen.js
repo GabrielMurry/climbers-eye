@@ -65,6 +65,7 @@ const ListScreen = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isHeaderTitleVisible, setIsHeaderTitleVisible] = useState(false);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
+  const [hasNoBoulders, setHasNoBoulders] = useState(false);
 
   const flatListRef = useRef(null);
 
@@ -159,6 +160,7 @@ const ListScreen = ({ navigation }) => {
       filterStatus,
       searchQuery,
       spraywallIndex,
+      spraywalls,
     ])
   );
 
@@ -177,6 +179,9 @@ const ListScreen = ({ navigation }) => {
       return;
     }
     if (response.data) {
+      if (response.data.length === 0) {
+        response.data.push("empty");
+      }
       setBoulders([
         { id: "spraywalls", spraywalls: spraywalls },
         ...response.data,
@@ -203,6 +208,20 @@ const ListScreen = ({ navigation }) => {
   };
 
   const renderBoulderCards = ({ item, index }) => {
+    if (item === "empty") {
+      return (
+        <View
+          key={item}
+          style={{
+            height: "100%",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Text>No boulders in this spray wall</Text>
+        </View>
+      );
+    }
     if (index === 0) {
       return (
         <View
@@ -289,20 +308,6 @@ const ListScreen = ({ navigation }) => {
     </View>
   );
 
-  const renderEmptyComponent = () => {
-    return (
-      <View
-        style={{
-          height: "100%",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        {isLoading ? <ActivityIndicator /> : <Text>No Boulders Found</Text>}
-      </View>
-    );
-  };
-
   const handleScroll = (event) => {
     const offsetY = event.nativeEvent.contentOffset.y;
     const threshold = 50; // Change this value to your desired threshold
@@ -330,12 +335,28 @@ const ListScreen = ({ navigation }) => {
           keyExtractor={(item) => item.id}
           initialNumToRender={8} // Render the number of items that are initially visible on the screen
           windowSize={2} // Render an additional number of items to improve scrolling performance
-          ListEmptyComponent={renderEmptyComponent}
           onScroll={handleScroll}
           scrollEventThrottle={16}
           keyboardShouldPersistTaps="handled" // click on search bar cancel buttons when Keyboard is visible (or click on boulder cards)
         />
       </View>
+      {/* {hasNoBoulders ? (
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            position: "absolute",
+            top: 0,
+            bottom: 0,
+            left: 0,
+            right: 0,
+            pointerEvents: "none",
+          }}
+        >
+          <Text>No boulders in this spray wall</Text>
+        </View>
+      ) : null} */}
       <Modal
         visible={isModalSpraywallsVisible}
         transparent={true}

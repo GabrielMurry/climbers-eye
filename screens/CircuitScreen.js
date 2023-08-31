@@ -10,15 +10,17 @@ import {
   Alert,
   Pressable,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { request } from "../api/requestMethods";
 import { useSelector } from "react-redux";
 import CircuitBottomSheet from "../components/circuitComponents/CircuitBottomSheet";
 import CircuitCard from "../components/circuitComponents/CircuitCard";
 import Swipeable from "react-native-gesture-handler/Swipeable";
 import { PlusIcon } from "react-native-heroicons/outline";
+import useCustomHeader from "../hooks/useCustomHeader";
+import { useFocusEffect } from "@react-navigation/native";
 
-const CircuitScreen = ({ route }) => {
+const CircuitScreen = ({ route, navigation }) => {
   const { boulder } = route.params;
   const { user } = useSelector((state) => state.userReducer);
   const { spraywalls, spraywallIndex } = useSelector(
@@ -34,9 +36,23 @@ const CircuitScreen = ({ route }) => {
   let row = [];
   let prevOpenedRow;
 
-  useEffect(() => {
-    fetchCircuitData();
-  }, []);
+  const headerRight = (
+    <TouchableOpacity onPress={() => navigation.navigate("AddNewCircuit")}>
+      <PlusIcon size={25} color={"black"} />
+    </TouchableOpacity>
+  );
+
+  useCustomHeader({
+    navigation,
+    title: "Add to Circuit",
+    headerRight,
+  });
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchCircuitData();
+    }, [])
+  );
 
   fetchCircuitData = async () => {
     const response = await request(
@@ -50,10 +66,6 @@ const CircuitScreen = ({ route }) => {
     if (response.data) {
       setCircuits(response.data);
     }
-  };
-
-  const handleAddNewCircuitPressed = () => {
-    setBottomSheetVisible(true);
   };
 
   const closeRow = (index) => {
@@ -166,9 +178,15 @@ const CircuitScreen = ({ route }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.titleContainer}>
-        <Text style={styles.titleText}>Add to Circuit</Text>
-      </View>
+      {/* <TouchableOpacity
+        style={{
+          alignItems: "flex-end",
+          paddingHorizontal: 20,
+        }}
+        onPress={() => navigation.navigate("AddNewCircuit")}
+      >
+        <Text>Add New Circuit</Text>
+      </TouchableOpacity> */}
       <View style={styles.flatListContainer}>
         <FlatList
           contentContainerStyle={styles.flatList}
@@ -179,12 +197,13 @@ const CircuitScreen = ({ route }) => {
           ListEmptyComponent={renderEmptyList}
         />
       </View>
-      <TouchableOpacity
+      {/* <TouchableOpacity
         style={styles.addNewCircuitButton}
         onPress={handleAddNewCircuitPressed}
       >
         <PlusIcon size={30} color={"rgb(0, 122, 255)"} />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
+      {/* DELETEEEEEE */}
       {bottomSheetVisible ? (
         <CircuitBottomSheet
           setBottomSheetVisible={setBottomSheetVisible}
@@ -204,7 +223,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
-    alignItems: "center",
   },
   titleContainer: {
     padding: 10,

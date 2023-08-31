@@ -59,6 +59,7 @@ import EditProfileScreen from "./screens/profile/edit/EditProfileScreen";
 import EditNameScreen from "./screens/profile/edit/EditNameScreen";
 import { StatusBar } from "react-native";
 import SwitchGymScreen from "./screens/profile/edit/SwitchGymScreen";
+import AddNewCircuitScreen from "./screens/AddNewCircuitScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -398,10 +399,10 @@ export default function App() {
                 headerShown: false,
               }}
             />
+            <Stack.Screen name="Circuit" component={CircuitScreen} />
             <Stack.Screen
-              name="Circuit"
-              component={CircuitScreen}
-              options={({ navigation }) => customHeader(navigation, "Circuit")}
+              name="AddNewCircuit"
+              component={AddNewCircuitScreen}
             />
             <Stack.Screen
               name="BoulderStats"
@@ -410,10 +411,7 @@ export default function App() {
                 customHeader(navigation, "BoulderStats")
               }
             />
-            <Stack.Screen
-              name="SwitchGym"
-              component={SwitchGymScreen}
-            />
+            <Stack.Screen name="SwitchGym" component={SwitchGymScreen} />
           </Stack.Navigator>
         </NavigationContainer>
       </Provider>

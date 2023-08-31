@@ -5,6 +5,7 @@ import {
   BackHandler,
   TouchableOpacity,
   ScrollView,
+  Alert,
 } from "react-native";
 import React, { useCallback, useLayoutEffect, useState } from "react";
 import FullScreenImage from "../components/FullScreenImage";

@@ -216,12 +216,10 @@ const ProfileSectionScreen = ({ route, navigation }) => {
           ) : null}
           <Pressable
             style={{
-              backgroundColor: hasFilters
-                ? "rgb(0, 122, 255)"
-                : "rgb(229, 228, 226)",
+              backgroundColor: hasFilters ? "black" : "rgb(229, 228, 226)",
               justifyContent: "center",
               alignItems: "center",
-              borderRadius: 10,
+              borderRadius: 5,
               aspectRatio: 1,
             }}
             onPress={handleFilterPress}

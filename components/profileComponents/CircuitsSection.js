@@ -1,6 +1,10 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
-import { ChevronRightIcon, LinkIcon } from "react-native-heroicons/outline";
+import {
+  ChevronRightIcon,
+  LinkIcon,
+  PlusIcon,
+} from "react-native-heroicons/outline";
 
 const CircuitsSection = ({ circuits, navigation }) => {
   return (
@@ -29,57 +33,79 @@ const CircuitsSection = ({ circuits, navigation }) => {
           <Text style={{ fontWeight: "bold", fontSize: 18 }}>Circuits</Text>
         </View>
         <View style={{ paddingLeft: 30 }}>
-          {circuits.length > 0 ? (
-            circuits.map((circuit, index) => (
-              <TouchableOpacity
-                key={circuit.id}
+          {circuits.map((circuit, index) => (
+            <TouchableOpacity
+              key={circuit.id}
+              style={{
+                borderBottomWidth: 1,
+                borderColor: "lightgray",
+                height: 60,
+                alignItems: "center",
+                flexDirection: "row",
+              }}
+              onPress={() =>
+                navigation.navigate("ProfileSection", {
+                  section: "Circuits",
+                  circuit: circuit,
+                })
+              }
+            >
+              <View style={{ width: 30 }}>
+                <LinkIcon color={circuit.color} size={20} />
+              </View>
+              <View
                 style={{
-                  borderBottomWidth: index === circuits.length - 1 ? 0 : 1,
-                  borderColor: "lightgray",
-                  height: 60,
-                  alignItems: "center",
-                  flexDirection: "row",
+                  flex: 1,
                 }}
-                onPress={() =>
-                  navigation.navigate("ProfileSection", {
-                    section: "Circuits",
-                    circuit: circuit,
-                  })
-                }
               >
-                <View style={{ width: 30 }}>
-                  <LinkIcon color={circuit.color} size={20} />
-                </View>
-                <View
-                  style={{
-                    flex: 1,
-                  }}
-                >
-                  <Text style={{ fontSize: 16 }}>{circuit.name}</Text>
-                </View>
-                <View
-                  style={{
-                    width: 75,
-                    alignItems: "center",
-                  }}
-                >
-                  <Text style={{ fontSize: 16 }}>
-                    {circuit.boulderData.length}
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    width: 50,
-                    alignItems: "center",
-                  }}
-                >
-                  <ChevronRightIcon color={"black"} size={20} />
-                </View>
-              </TouchableOpacity>
-            ))
-          ) : (
-            <View style={{ height: 60 }} />
-          )}
+                <Text style={{ fontSize: 16 }}>{circuit.name}</Text>
+              </View>
+              <View
+                style={{
+                  width: 75,
+                  alignItems: "center",
+                }}
+              >
+                <Text style={{ fontSize: 16 }}>
+                  {circuit.boulderData.length}
+                </Text>
+              </View>
+              <View
+                style={{
+                  width: 50,
+                  alignItems: "center",
+                }}
+              >
+                <ChevronRightIcon color={"black"} size={20} />
+              </View>
+            </TouchableOpacity>
+          ))}
+          <TouchableOpacity
+            style={{
+              height: 60,
+              alignItems: "center",
+              flexDirection: "row",
+            }}
+          >
+            <View style={{ width: 30 }}>
+              <PlusIcon color={"black"} size={20} />
+            </View>
+            <View
+              style={{
+                flex: 1,
+              }}
+            >
+              <Text style={{ fontSize: 16 }}>Create a New Circuit</Text>
+            </View>
+            <View
+              style={{
+                width: 50,
+                alignItems: "center",
+              }}
+            >
+              <ChevronRightIcon color={"black"} size={20} />
+            </View>
+          </TouchableOpacity>
         </View>
       </View>
     </View>

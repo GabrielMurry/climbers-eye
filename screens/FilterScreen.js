@@ -43,7 +43,6 @@ const FilterScreen = ({ navigation }) => {
   const minGrade = boulderGrades[filterMinGradeIndex];
   const maxGrade = boulderGrades[filterMaxGradeIndex];
 
-  // Use the custom hook
   useCustomHeader({
     backgroundColor: "rgba(245,245,245,255)",
     navigation,

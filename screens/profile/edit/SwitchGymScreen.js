@@ -3,10 +3,13 @@ import React, { useEffect, useState } from "react";
 import useCustomHeader from "../../../hooks/useCustomHeader";
 import GymCard from "../../../components/profileComponents/GymCard";
 import { FlatList } from "react-native";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { request } from "../../../api/requestMethods";
+import { setGym, setSpraywalls } from "../../../redux/actions";
+import { CheckIcon } from "react-native-heroicons/outline";
 
 const SwitchGymScreen = ({ navigation }) => {
+  const dispatch = useDispatch();
   useCustomHeader({
     backgroundColor: "rgba(245,245,245,255)",
     navigation,
@@ -14,6 +17,7 @@ const SwitchGymScreen = ({ navigation }) => {
   });
 
   const { user } = useSelector((state) => state.userReducer);
+  const { gym } = useSelector((state) => state.gymReducer);
 
   const [data, setData] = useState([]);
 
@@ -36,9 +40,16 @@ const SwitchGymScreen = ({ navigation }) => {
     return <GymCard gymCard={item} />;
   };
 
+  const handleGymCardPress = (item) => {
+    // Create a copy of the gym object without 'spraywalls' property
+    const { spraywalls, ...gymWithoutSpraywalls } = item;
+    dispatch(setGym(gymWithoutSpraywalls));
+    dispatch(setSpraywalls(item.spraywalls));
+  };
+
   const renderItem = ({ item, index }) => (
     <TouchableOpacity
-      onPress={() => console.log(item.id)}
+      onPress={() => handleGymCardPress(item)}
       style={{
         backgroundColor: "white",
         borderTopLeftRadius: index === 0 ? 10 : 0,
@@ -51,10 +62,13 @@ const SwitchGymScreen = ({ navigation }) => {
         style={{
           padding: 20,
           gap: 10,
+          flexDirection: "row",
+          justifyContent: "space-between",
         }}
       >
-        <Text>{item.name}</Text>
-        <Text>{item.location}</Text>
+        <Text style={{ fontWeight: "bold" }}>{item.name}</Text>
+        {/* <Text>{item.location}</Text> */}
+        {item.id === gym.id ? <CheckIcon size={17} color={"green"} /> : null}
       </View>
       {/* item separator */}
       {index !== data.length - 1 ? (
@@ -74,15 +88,8 @@ const SwitchGymScreen = ({ navigation }) => {
       style={{
         padding: 10,
         backgroundColor: "rgba(245,245,245,255)",
-        gap: 20,
       }}
     >
-      <View style={{ gap: 10 }}>
-        <Text>Current Gym</Text>
-        <View
-          style={{ height: 50, backgroundColor: "white", borderRadius: 10 }}
-        ></View>
-      </View>
       <View style={{ gap: 10 }}>
         <Text>My Gyms</Text>
         {/* {data.map((gym, index) => (
@@ -103,6 +110,7 @@ const SwitchGymScreen = ({ navigation }) => {
           data={data}
           renderItem={renderItem}
           keyExtractor={(item) => item.id}
+          contentContainerStyle={{ height: "100%" }}
         />
       </View>
     </View>
