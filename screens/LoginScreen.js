@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
   StyleSheet,
@@ -25,6 +25,7 @@ const LoginScreen = ({ navigation }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [hasError, setHasError] = useState(false);
 
   const handleLogin = async () => {
     setIsLoading(true);
@@ -32,6 +33,7 @@ const LoginScreen = ({ navigation }) => {
     const response = await request("post", "login/", data);
     if (response.status !== 200) {
       console.log(response.status);
+      setHasError(true);
       setIsLoading(false);
       return;
     }
@@ -59,6 +61,12 @@ const LoginScreen = ({ navigation }) => {
     navigation.navigate("Signup");
   };
 
+  useEffect(() => {
+    if (hasError) {
+      setHasError(false);
+    }
+  }, [username, password]);
+
   return (
     <SafeAreaView style={styles.container}>
       <View
@@ -75,6 +83,7 @@ const LoginScreen = ({ navigation }) => {
         placeholder="Username"
         secureTextEntry={false}
         width="90%"
+        autoCapitalize="none"
       />
       <CustomInput
         value={password}
@@ -89,6 +98,13 @@ const LoginScreen = ({ navigation }) => {
         isLoading={isLoading}
         width="90%"
       />
+      {hasError ? (
+        <View style={{ marginTop: 10 }}>
+          <Text style={{ color: "red" }}>
+            Username or password is incorrect.
+          </Text>
+        </View>
+      ) : null}
       <CustomButton
         onPress={handleForgotPassword}
         text="Forgot password?"
@@ -110,6 +126,7 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: "center",
     alignItems: "center",
+    gap: 5,
   },
   logo: {
     // width: "70%",

@@ -2,28 +2,17 @@ import {
   View,
   Text,
   StyleSheet,
-  TextInput,
   TouchableOpacity,
   FlatList,
   Pressable,
-  Keyboard,
   Image,
-  ActivityIndicator,
   SafeAreaView,
-  Animated,
   Dimensions,
   Modal,
 } from "react-native";
-import React, {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { useCallback, useLayoutEffect, useRef, useState } from "react";
 import {
   AdjustmentsHorizontalIcon,
-  EllipsisHorizontalIcon,
   MagnifyingGlassIcon,
   XMarkIcon,
 } from "react-native-heroicons/outline";
@@ -180,7 +169,7 @@ const ListScreen = ({ navigation }) => {
     }
     if (response.data) {
       if (response.data.length === 0) {
-        response.data.push("empty");
+        response.data.push({ id: "empty" });
       }
       setBoulders([
         { id: "spraywalls", spraywalls: spraywalls },
@@ -208,17 +197,17 @@ const ListScreen = ({ navigation }) => {
   };
 
   const renderBoulderCards = ({ item, index }) => {
-    if (item === "empty") {
+    if (item.id === "empty") {
       return (
         <View
-          key={item}
+          key={item.id}
           style={{
             height: "100%",
             justifyContent: "center",
             alignItems: "center",
           }}
         >
-          <Text>No boulders in this spray wall</Text>
+          <Text>No boulders found</Text>
         </View>
       );
     }

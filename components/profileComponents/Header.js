@@ -9,6 +9,11 @@ const Header = ({ navigation }) => {
 
   const [imageFullScreen, setImageFullScreen] = useState(false);
 
+  const handleImagePress = () => {
+    if (!headshotImage.url) return;
+    setImageFullScreen(true);
+  };
+
   return (
     <View
       style={{
@@ -33,7 +38,7 @@ const Header = ({ navigation }) => {
           alignItems: "center",
           backgroundColor: "white",
         }}
-        onPress={() => setImageFullScreen(true)}
+        onPress={handleImagePress}
       >
         {headshotImage.url ? (
           <Image

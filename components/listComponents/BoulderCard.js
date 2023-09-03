@@ -44,40 +44,12 @@ const BoulderCard = React.memo(
             />
           </View>
         </View>
-        <View style={styles.boulderIconsContainer}>
-          {/* <Image
-            source={{ uri: boulder.url }}
-            style={{ width: "100%", height: "100%" }}
-            resizeMode="contain"
-          /> */}
-          {/* <View style={styles.boulderIconsRow}>
-            <FontAwesome
-              name="trophy"
-              size={16}
-              color={boulder.isSent ? "green" : "gray"}
-              style={boulder.isSent ? { opacity: 1 } : { opacity: 0.25 }}
-            />
-            <FontAwesome
-              name="heart"
-              size={16}
-              color={boulder.isLiked ? "red" : "gray"}
-              style={boulder.isLiked ? { opacity: 1 } : { opacity: 0.25 }}
-            />
+        {boulder.publish ? null : (
+          <View style={{ justifyContent: "center" }}>
+            <Text style={{ color: "red", fontWeight: "bold" }}>Draft</Text>
           </View>
-          <View style={styles.boulderIconsRow}>
-            <FontAwesome
-              name="bookmark"
-              size={16}
-              color={boulder.isBookmarked ? "gold" : "gray"}
-              style={boulder.isBookmarked ? { opacity: 1 } : { opacity: 0.25 }}
-            />
-            <LinkIcon
-              size={16}
-              color={boulder.inCircuit ? "blue" : "gray"}
-              style={boulder.inCircuit ? { opacity: 1 } : { opacity: 0.5 }}
-            />
-          </View> */}
-        </View>
+        )}
+        <View style={styles.boulderIconsContainer}></View>
         <View style={styles.boulderRightWrapper}>
           <Text>{boulder.grade ? boulder.grade : "Project"}</Text>
           <View style={styles.starsContainer}>

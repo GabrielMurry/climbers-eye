@@ -84,6 +84,8 @@ const BoulderScreen = ({ route, navigation }) => {
   // Use the custom hook
   useCustomHeader({
     navigation,
+    fromScreen: fromScreen,
+    toScreen: toScreen,
     title: "",
     headerRight,
   });

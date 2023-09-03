@@ -5,6 +5,17 @@ import { StarIcon } from "react-native-heroicons/outline";
 const Titles = ({ boulder }) => {
   return (
     <View style={styles.container}>
+      {boulder.publish ? null : (
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <View style={{ backgroundColor: "red", flex: 1, height: 1 }} />
+          <Text
+            style={{ color: "red", fontWeight: "bold", paddingHorizontal: 10 }}
+          >
+            Draft
+          </Text>
+          <View style={{ backgroundColor: "red", flex: 1, height: 1 }} />
+        </View>
+      )}
       <Text style={styles.titleMain}>{boulder.name}</Text>
       <Text style={styles.titleSecondary}>
         {boulder.grade ?? "Project"}{" "}
@@ -13,18 +24,18 @@ const Titles = ({ boulder }) => {
             {" "}
             <StarIcon
               size={20}
-              fill={boulder.quality >= 1 ? "gold" : "black"}
-              color={boulder.quality >= 1 ? "gold" : "black"}
+              fill={boulder.quality >= 1 ? "gold" : "lightgray"}
+              color={boulder.quality >= 1 ? "gold" : "lightgray"}
             />
             <StarIcon
               size={20}
-              fill={boulder.quality >= 2 ? "gold" : "black"}
-              color={boulder.quality >= 2 ? "gold" : "black"}
+              fill={boulder.quality >= 2 ? "gold" : "lightgray"}
+              color={boulder.quality >= 2 ? "gold" : "lightgray"}
             />
             <StarIcon
               size={20}
-              fill={boulder.quality === 3 ? "gold" : "black"}
-              color={boulder.quality === 3 ? "gold" : "black"}
+              fill={boulder.quality === 3 ? "gold" : "lightgray"}
+              color={boulder.quality === 3 ? "gold" : "lightgray"}
             />{" "}
           </>
         ) : (

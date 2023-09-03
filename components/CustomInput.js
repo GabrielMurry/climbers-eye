@@ -7,33 +7,31 @@ const CustomInput = ({
   placeholder,
   secureTextEntry,
   width = "100%",
+  error = false,
+  autoCapitalize = "sentences",
 }) => {
   return (
-    <View style={[styles.container, { width: width }]}>
-      <TextInput
-        value={value}
-        onChangeText={setValue}
-        placeholder={placeholder}
-        style={styles.input}
-        secureTextEntry={secureTextEntry}
-        autoCapitalize={"none"}
-      />
-    </View>
+    <TextInput
+      value={value}
+      onChangeText={setValue}
+      placeholder={placeholder}
+      style={[styles.input(error), { width: width }]}
+      secureTextEntry={secureTextEntry}
+      autoCapitalize={autoCapitalize}
+    />
   );
 };
 
 export default CustomInput;
 
 const styles = StyleSheet.create({
-  container: {
+  input: (error) => ({
     backgroundColor: "white",
-    borderColor: "#e8e8e8",
+    borderColor: error ? "red" : "#e8e8e8",
     borderWidth: 1,
     borderRadius: 5,
     height: 50,
     padding: 10,
-    marginVertical: 5,
     justifyContent: "center",
-  },
-  input: {},
+  }),
 });

@@ -33,7 +33,7 @@ const SignupScreen = ({ navigation }) => {
       // in dispatch, we enter the action "setUserID" along with the "userID" value (doing this for username also)
       dispatch(setUser(response.data.user));
     }
-    navigation.navigate("Map");
+    navigation.navigate("Tabs", { screen: "Map" });
     setIsLoading(false);
   };
 
@@ -76,6 +76,7 @@ const SignupScreen = ({ navigation }) => {
         placeholder="Username"
         secureTextEntry={false}
         width="90%"
+        autoCapitalize="none"
       />
       <CustomInput
         value={email}
@@ -132,6 +133,7 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: "center",
     alignItems: "center",
+    gap: 5,
   },
   title: {
     fontSize: 24,

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -19,10 +19,11 @@ import { useSelector } from "react-redux";
 import { boulderGrades } from "../utils/constants/boulderConstants";
 import * as Haptics from "expo-haptics";
 import Header from "../components/general/Header";
+import useCustomHeader from "../hooks/useCustomHeader";
 
 const options = {
-  attempts: [],
-  difficulty: boulderGrades,
+  attempts: ["-"],
+  difficulty: ["-", ...boulderGrades],
 };
 
 for (let i = 1; i <= 100; i++) {
@@ -33,14 +34,21 @@ const SendScreen = ({ route, navigation }) => {
   const { user } = useSelector((state) => state.userReducer);
   const { boulder } = route.params;
 
-  const [selectedAttempts, setSelectedAttempts] = useState(1);
+  const [selectedAttempts, setSelectedAttempts] = useState("-");
   const [selectedDifficulty, setSelectedDifficulty] = useState(
-    boulder.grade ?? "?"
+    boulder.grade ?? "-"
   );
   const [qualityCount, setQualityCount] = useState(3);
   const [showAttemptsPicker, setShowAttemptsPicker] = useState(false);
   const [showDifficultyPicker, setShowDifficultyPicker] = useState(false);
   const [notes, setNotes] = useState("");
+  const [errors, setErrors] = useState({ attempts: false, difficulty: false });
+
+  useCustomHeader({
+    backgroundColor: "rgba(245,245,245,255)",
+    navigation,
+    title: "Log Ascent",
+  });
 
   const fadeAnim = useState(new Animated.Value(0))[0];
 
@@ -69,8 +77,14 @@ const SendScreen = ({ route, navigation }) => {
   };
 
   handleSubmit = async () => {
-    if (selectedDifficulty === "?") {
+    if (selectedAttempts === "-") {
+      console.log("MUST SELECT YOUR ATTEMPTS");
+      setErrors((prev) => ({ ...prev, attempts: true }));
+      return;
+    }
+    if (selectedDifficulty === "-") {
       console.log("MUST SELECT A DIFFICULTY");
+      setErrors((prev) => ({ ...prev, difficulty: true }));
       return;
     }
     const data = {
@@ -90,6 +104,15 @@ const SendScreen = ({ route, navigation }) => {
     navigation.goBack();
   };
 
+  useEffect(() => {
+    if (errors.attempts) {
+      setErrors((prev) => ({ ...prev, attempts: false }));
+    }
+    if (errors.difficulty) {
+      setErrors((prev) => ({ ...prev, difficulty: false }));
+    }
+  }, [selectedAttempts, selectedDifficulty]);
+
   const handleVibrate = () => {
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
   };
@@ -99,8 +122,8 @@ const SendScreen = ({ route, navigation }) => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
-      <Header navigation={navigation} title={"Send"} />
+    <SafeAreaView style={{ flex: 1, backgroundColor: "rgba(245,245,245,255)" }}>
+      {/* <Header navigation={navigation} title={"Send"} /> */}
       <TouchableWithoutFeedback onPress={dismissKeyboard}>
         <View style={styles.container}>
           <View style={styles.row}>
@@ -108,16 +131,28 @@ const SendScreen = ({ route, navigation }) => {
             <Text style={styles.info}>{boulder.name}</Text>
           </View>
           <View style={styles.row}>
-            <Text style={styles.label}>User:</Text>
+            <Text style={styles.label}>Username:</Text>
             <Text style={styles.info}>{user.username}</Text>
           </View>
           <View style={styles.row}>
             <Text style={styles.label}>Date:</Text>
             <Text style={styles.info}>{new Date().toLocaleString()}</Text>
           </View>
-          <TouchableOpacity style={styles.row} onPress={toggleAttemptsPicker}>
+          <TouchableOpacity
+            style={[
+              styles.row,
+              {
+                backgroundColor: "white",
+                borderColor: "red",
+                borderWidth: errors.attempts ? 1 : 0,
+              },
+            ]}
+            onPress={toggleAttemptsPicker}
+          >
             <Text style={styles.label}>Attempts:</Text>
-            <Text style={styles.info}>{selectedAttempts}</Text>
+            <View style={styles.info}>
+              <Text>{selectedAttempts}</Text>
+            </View>
           </TouchableOpacity>
           {showAttemptsPicker && (
             <Animated.View
@@ -134,7 +169,17 @@ const SendScreen = ({ route, navigation }) => {
               </Picker>
             </Animated.View>
           )}
-          <TouchableOpacity style={styles.row} onPress={toggleDifficultyPicker}>
+          <TouchableOpacity
+            style={[
+              styles.row,
+              {
+                backgroundColor: "white",
+                borderColor: "red",
+                borderWidth: errors.difficulty ? 1 : 0,
+              },
+            ]}
+            onPress={toggleDifficultyPicker}
+          >
             <Text style={styles.label}>Difficulty:</Text>
             <Text style={styles.info}>{selectedDifficulty}</Text>
           </TouchableOpacity>
@@ -153,30 +198,30 @@ const SendScreen = ({ route, navigation }) => {
               </Picker>
             </Animated.View>
           )}
-          <View style={styles.row}>
+          <View style={[styles.row, { backgroundColor: "white" }]}>
             <Text style={styles.label}>Quality:</Text>
             <View style={styles.info}>
               <StarIcon
                 size={35}
-                fill={qualityCount >= 1 ? "gold" : "black"}
-                color={qualityCount >= 1 ? "gold" : "black"}
+                fill={qualityCount >= 1 ? "gold" : "lightgray"}
+                color={qualityCount >= 1 ? "gold" : "lightgray"}
                 onPress={() => setQualityCount(1)}
               />
               <StarIcon
                 size={35}
-                fill={qualityCount >= 2 ? "gold" : "black"}
-                color={qualityCount >= 2 ? "gold" : "black"}
+                fill={qualityCount >= 2 ? "gold" : "lightgray"}
+                color={qualityCount >= 2 ? "gold" : "lightgray"}
                 onPress={() => setQualityCount(2)}
               />
               <StarIcon
                 size={35}
-                fill={qualityCount === 3 ? "gold" : "black"}
-                color={qualityCount === 3 ? "gold" : "black"}
+                fill={qualityCount === 3 ? "gold" : "lightgray"}
+                color={qualityCount === 3 ? "gold" : "lightgray"}
                 onPress={() => setQualityCount(3)}
               />
             </View>
           </View>
-          <View style={styles.row}>
+          <View style={[styles.row, { backgroundColor: "white" }]}>
             <Text style={styles.label}>Notes:</Text>
             <TextInput
               style={styles.notesInput}
@@ -198,13 +243,13 @@ const SendScreen = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    padding: 20,
+    gap: 5,
+    paddingHorizontal: 10,
   },
   row: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 20,
+    padding: 10,
   },
   label: {
     flex: 1,

@@ -73,8 +73,6 @@ const ActivityScreen = ({ navigation }) => {
   }, [currentPage]);
 
   const fetchActivityData = async () => {
-    console.log("test");
-    console.log(currentPage);
     const response = await request(
       "get",
       `user_activity/${user.id}/${gym.id}?page=${currentPage}`

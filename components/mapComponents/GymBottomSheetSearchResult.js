@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   bottomSheetAddGymButton: {
-    backgroundColor: "blue",
+    backgroundColor: "black",
     width: 25,
     height: 25,
     justifyContent: "center",

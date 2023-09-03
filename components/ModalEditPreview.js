@@ -23,6 +23,7 @@ import { useSelector } from "react-redux";
 import CustomInput from "./CustomInput";
 import CustomButton from "./CustomButton";
 import * as Haptics from "expo-haptics";
+import { ChevronLeftIcon } from "react-native-heroicons/outline";
 
 const TAGS = [
   { name: "crimp", selected: false },
@@ -49,11 +50,12 @@ const ModalEditPreview = ({
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [isMatching, setIsMatching] = useState(true);
-  const [isPublish, setIsPublish] = useState(true);
+  const [isFeetFollowHands, setIsFeetFollowHands] = useState(true);
+  const [isKickboardOn, setIsKickboardOn] = useState(false);
   const [imageFullScreen, setImageFullScreen] = useState(false);
   const [isImageLoading, setIsImageLoading] = useState(true);
-  const [isConfirmLoading, setIsConfirmLoading] = useState(false);
   const [tags, setTags] = useState(TAGS);
+  const [error, setError] = useState(false);
 
   const handleTagPress = (index) => {
     const updatedTags = [...tags];
@@ -61,13 +63,18 @@ const ModalEditPreview = ({
     setTags(updatedTags);
   };
 
-  const handleConfirm = async () => {
-    setIsConfirmLoading(true);
+  const handleConfirm = async ({ publish }) => {
+    if (name === "") {
+      setError(true);
+      return;
+    }
     data = {
       name,
       description,
       matching: isMatching,
-      publish: isPublish,
+      publish,
+      feet_follow_hands: isFeetFollowHands,
+      kickboard_on: isKickboardOn,
       image_data: resultImageUri.split(",")[1], // using the default image has complete base64 as image.uri --> remove the 'data:image/png;base64' in the beginning of string
       image_width: image.width,
       image_height: image.height,
@@ -79,7 +86,6 @@ const ModalEditPreview = ({
     );
     if (response.status !== 200) {
       console.log(response.status);
-      setIsConfirmLoading(false);
       return;
     }
     if (response.data) {
@@ -89,7 +95,6 @@ const ModalEditPreview = ({
         fromScreen: "EditBoulder",
         toScreen: "Home",
       });
-      setIsConfirmLoading(false);
     }
     setIsModalVisible(!isModalVisible);
   };
@@ -97,6 +102,12 @@ const ModalEditPreview = ({
   const handleVibrate = () => {
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
   };
+
+  useEffect(() => {
+    if (error) {
+      setError(false);
+    }
+  }, [name]);
 
   return (
     <Modal
@@ -109,6 +120,22 @@ const ModalEditPreview = ({
         <SafeAreaView style={styles.modalContent}>
           {/* Add modal content here */}
           {/* Manipulated Image Section */}
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              paddingHorizontal: 20,
+              paddingBottom: 5,
+            }}
+          >
+            <TouchableOpacity
+              style={{ width: 50 }}
+              onPress={() => setIsModalVisible(!isModalVisible)}
+            >
+              <ChevronLeftIcon size={25} color="black" />
+            </TouchableOpacity>
+            <Text style={{ fontSize: 24 }}>Publish</Text>
+          </View>
           <ScrollView>
             <Pressable
               style={{
@@ -144,22 +171,23 @@ const ModalEditPreview = ({
               style={{
                 paddingHorizontal: 10,
                 justifyContent: "center",
+                gap: 10,
               }}
             >
-              <Text>Boulder Name</Text>
               <CustomInput
                 value={name}
                 setValue={(value) => setName(value)}
                 placeholder="Boulder Name"
                 secureTextEntry={false}
+                error={error}
               />
-              <Text>Boulder Notes</Text>
               <TextInput
                 value={description}
                 onChangeText={(value) => setDescription(value)}
-                placeholder={"Boulder Notes"}
+                placeholder={"Boulder Description (optional)"}
+                keyboardType="default" // twitter???
                 style={{
-                  borderColor: "lightgray",
+                  borderColor: "#e8e8e8",
                   borderWidth: 1,
                   borderRadius: 5,
                   padding: 10,
@@ -168,81 +196,70 @@ const ModalEditPreview = ({
                 }}
                 multiline={true}
               />
-              {/* <CustomInput
-              value={description}
-              setValue={(value) => setDescription(value)}
-              placeholder="Boulder Description"
-              secureTextEntry={false}
-            /> */}
-              <View style={{ marginTop: 10, gap: 10, paddingHorizontal: 40 }}>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                >
-                  <Text style={styles.toggleLabel}>Matching Allowed</Text>
-                  <Switch value={isMatching} onValueChange={setIsMatching} />
-                </View>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                >
-                  <Text style={styles.toggleLabel}>Publish</Text>
-                  <Switch value={isPublish} onValueChange={setIsPublish} />
-                </View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  paddingHorizontal: 30,
+                }}
+              >
+                <Text style={styles.toggleLabel}>Matching Allowed</Text>
+                <Switch value={isMatching} onValueChange={setIsMatching} />
               </View>
-              <View style={{ marginTop: 10, paddingHorizontal: 10 }}>
-                <Text>Tags</Text>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    gap: 10,
-                  }}
-                >
-                  {tags.map((tag, index) => (
-                    <TouchableOpacity
-                      style={{
-                        padding: 5,
-                        backgroundColor: tag.selected ? "blue" : "lightgray",
-                        borderRadius: 10,
-                      }}
-                      onPress={() => handleTagPress(index)}
-                      key={index}
-                    >
-                      <Text>{tag.name}</Text>
-                    </TouchableOpacity>
-                  ))}
-                </View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  paddingHorizontal: 30,
+                }}
+              >
+                <Text style={styles.toggleLabel}>Feet Follow Hands</Text>
+                <Switch
+                  value={isFeetFollowHands}
+                  onValueChange={setIsFeetFollowHands}
+                />
               </View>
-            </View>
-            {/* Cancel / Confirm Buttons */}
-            <View
-              style={{
-                paddingHorizontal: 10,
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-evenly",
-              }}
-            >
-              <CustomButton
-                onPress={() => setIsModalVisible(!isModalVisible)}
-                text="Cancel"
-                type="TERTIARY"
-                width="40%"
-              />
-              <CustomButton
-                onPress={handleConfirm}
-                text="Confirm"
-                width="40%"
-                isLoading={isConfirmLoading}
-              />
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  paddingHorizontal: 30,
+                }}
+              >
+                <Text style={styles.toggleLabel}>
+                  All Kickboard Footholds Allowed
+                </Text>
+                <Switch
+                  value={isKickboardOn}
+                  onValueChange={setIsKickboardOn}
+                />
+              </View>
             </View>
           </ScrollView>
+          {/* Drafts / Publish Buttons */}
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-evenly",
+            }}
+          >
+            <CustomButton
+              onPress={() => handleConfirm({ publish: false })}
+              text="Drafts"
+              type="TERTIARY"
+              width="45%"
+              bgColor={"rgba(245, 245, 245, 255)"}
+            />
+            <CustomButton
+              onPress={() => handleConfirm({ publish: true })}
+              text="Publish"
+              width="45%"
+            />
+          </View>
         </SafeAreaView>
       </View>
       <FullScreenImage

@@ -106,13 +106,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "rgb(229, 228, 226)",
     paddingHorizontal: 10,
-    borderRadius: 5,
+    borderRadius: 10,
   },
   SearchInput: {
     flex: 1,
     paddingHorizontal: 5,
     backgroundColor: "rgb(229, 228, 226)",
-    borderRadius: 10,
   },
   cancelButton: {
     justifyContent: "center",

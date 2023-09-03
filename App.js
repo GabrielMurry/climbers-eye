@@ -218,10 +218,7 @@ export default function App() {
               },
             })}
           />
-          <Tab.Screen
-            name="Activity"
-            component={ActivityScreen}
-          />
+          <Tab.Screen name="Activity" component={ActivityScreen} />
           <Tab.Screen name="Profile" component={ProfileScreen} />
         </Tab.Navigator>
         {/* Render the modal */}
@@ -389,13 +386,7 @@ export default function App() {
               component={FilterCircuitScreen}
             />
             <Stack.Screen name="Boulder" component={BoulderScreen} />
-            <Stack.Screen
-              name="Send"
-              component={SendScreen}
-              options={{
-                headerShown: false,
-              }}
-            />
+            <Stack.Screen name="Send" component={SendScreen} />
             <Stack.Screen name="Circuit" component={CircuitScreen} />
             <Stack.Screen
               name="AddNewCircuit"
