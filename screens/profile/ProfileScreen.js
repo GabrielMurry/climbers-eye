@@ -19,6 +19,7 @@ import GymSection from "../../components/profileComponents/GymSection";
 import AccountSection from "../../components/profileComponents/AccountSection";
 import { Text } from "react-native";
 import { EllipsisHorizontalIcon } from "react-native-heroicons/outline";
+import ModalOptions from "../../components/ModalOptions";
 
 const THEME_STYLE = "white";
 
@@ -123,6 +124,13 @@ const ProfileScreen = ({ route, navigation }) => {
     }
   };
 
+  const optionsData = [
+    { title: "Switch Gym", onPress: handleSwitchGymPress },
+    { title: "Edit Profile", onPress: handleEditProfilePress },
+    { title: "Settings", onPress: handleSettingsPress },
+    { title: "Cancel", onPress: () => setIsModalVisible(false) },
+  ];
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: THEME_STYLE }}>
       <ScrollView onScroll={handleScroll} scrollEventThrottle={16}>
@@ -141,65 +149,11 @@ const ProfileScreen = ({ route, navigation }) => {
           spraywallIndex={spraywallIndex}
         /> */}
       </ScrollView>
-      <Modal
-        visible={isModalVisible}
-        transparent={true}
-        animationType="fade"
-        onRequestClose={() => setIsModalVisible(false)}
-      >
-        {/* Add modal content here */}
-        <Pressable
-          style={{ backgroundColor: "rgba(0, 0, 0, 0.5)", flex: 1 }}
-          onPress={() => setIsModalVisible(false)}
-        >
-          <View
-            style={{
-              backgroundColor: "white",
-              width: "100%",
-              position: "absolute",
-              bottom: 0,
-              paddingBottom: 35,
-            }}
-          >
-            <Pressable
-              style={{
-                justifyContent: "center",
-                padding: 20,
-              }}
-              onPress={handleSwitchGymPress}
-            >
-              <Text>Switch Gym</Text>
-            </Pressable>
-            <Pressable
-              style={{
-                justifyContent: "center",
-                padding: 20,
-              }}
-              onPress={handleEditProfilePress}
-            >
-              <Text>Edit Profile</Text>
-            </Pressable>
-            <Pressable
-              style={{
-                justifyContent: "center",
-                padding: 20,
-              }}
-              onPress={handleSettingsPress}
-            >
-              <Text>Settings</Text>
-            </Pressable>
-            <Pressable
-              style={{
-                justifyContent: "center",
-                padding: 20,
-              }}
-              onPress={() => setIsModalVisible(false)}
-            >
-              <Text style={{ color: "gray" }}>Cancel</Text>
-            </Pressable>
-          </View>
-        </Pressable>
-      </Modal>
+      <ModalOptions
+        isModalVisible={isModalVisible}
+        setIsModalVisible={setIsModalVisible}
+        optionsData={optionsData}
+      />
     </SafeAreaView>
   );
 };

@@ -1,21 +1,15 @@
 import {
   View,
   StyleSheet,
-  SafeAreaView,
-  BackHandler,
   TouchableOpacity,
   ScrollView,
   Alert,
 } from "react-native";
-import React, { useCallback, useLayoutEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import FullScreenImage from "../components/FullScreenImage";
 import { request } from "../api/requestMethods";
-import { FontAwesome } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
-import {
-  ChevronLeftIcon,
-  EllipsisHorizontalIcon,
-} from "react-native-heroicons/outline";
+import { EllipsisHorizontalIcon } from "react-native-heroicons/outline";
 import { useSelector } from "react-redux";
 import Buttons from "../components/boulderComponents/Buttons";
 import ImageDisplay from "../components/boulderComponents/ImageDisplay";
@@ -23,6 +17,8 @@ import Titles from "../components/boulderComponents/Titles";
 import { Text } from "react-native";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import useCustomHeader from "../hooks/useCustomHeader";
+import ModalOptions from "../components/ModalOptions";
+import Notes from "../components/boulderComponents/Notes";
 
 const THEME_STYLE = "white"; //rgba(245,245,245,255)
 
@@ -35,48 +31,11 @@ const BoulderScreen = ({ route, navigation }) => {
   const [boulder, setBoulder] = useState(route.params.boulder);
   const [imageFullScreen, setImageFullScreen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
-  const handleShowOptionsPressed = async () => {
-    let options = ["Share", "Report", "Cancel"];
-    let destructiveButtonIndex = -1;
-    let cancelButtonIndex = 2;
-    // if current user is the creator of the boulder, give only them the option to delete
-    if (boulder.setter === user.username) {
-      options = ["Share", "Report", "Delete", "Cancel"];
-      destructiveButtonIndex = 2;
-      cancelButtonIndex = 3;
-    }
-
-    showActionSheetWithOptions(
-      {
-        options,
-        cancelButtonIndex,
-        destructiveButtonIndex,
-      },
-      (selectedIndex) => {
-        switch (selectedIndex) {
-          case 0:
-            console.log("Share");
-            break;
-
-          case 1:
-            console.log("Report");
-            break;
-
-          case destructiveButtonIndex:
-            // Delete
-            deleteBoulder();
-            break;
-
-          case cancelButtonIndex:
-          // Canceled
-        }
-      }
-    );
-  };
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [optionsData, setOptionsData] = useState([]);
 
   const headerRight = (
-    <TouchableOpacity onPress={handleShowOptionsPressed}>
+    <TouchableOpacity onPress={() => setIsModalVisible(true)}>
       <EllipsisHorizontalIcon size={35} color={"black"} />
     </TouchableOpacity>
   );
@@ -89,36 +48,6 @@ const BoulderScreen = ({ route, navigation }) => {
     title: "",
     headerRight,
   });
-
-  // useLayoutEffect(() => {
-  //   navigation.setOptions({
-  //     gestureEnabled: fromScreen === "EditBoulder" ? false : true,
-  //     headerLeft: () => (
-  //       <TouchableOpacity
-  //         style={{ width: 50 }}
-  //         onPress={() => {
-  //           if (toScreen === "ProfileSection") {
-  //             navigation.goBack();
-  //           } else {
-  //             navigation.navigate(toScreen);
-  //           }
-  //         }}
-  //       >
-  //         <ChevronLeftIcon size={25} color="black" />
-  //       </TouchableOpacity>
-  //     ),
-  //     headerTitle: () => <Text></Text>,
-  //     headerRight: () => (
-  //       <TouchableOpacity onPress={handleShowOptionsPressed}>
-  //         <EllipsisHorizontalIcon size={35} color={"black"} />
-  //       </TouchableOpacity>
-  //     ),
-  //     headerStyle: {
-  //       backgroundColor: THEME_STYLE,
-  //     },
-  //     headerShadowVisible: false,
-  //   });
-  // }, [navigation, boulder]);
 
   // This event will be triggered when the screen gains focus (i.e., when you navigate back to it).
   useFocusEffect(
@@ -176,6 +105,38 @@ const BoulderScreen = ({ route, navigation }) => {
     );
   };
 
+  useEffect(() => {
+    const createOptionsData = () => {
+      // start with commonOptions
+      const commonOptions = [
+        { title: "Share", onPress: "" },
+        { title: "Report", onPress: "" },
+        {
+          title: "Cancel",
+          onPress: () => setIsModalVisible(false),
+          color: "gray",
+        },
+      ];
+      // if your boulder is a draft, provide option to publish boulder
+      if (!boulder.publish) {
+        commonOptions.unshift({ title: "Publish Boulder", onPress: "" });
+      }
+      // if the boulder is yours, provide option to delete boulder
+      if (boulder.setter === user.username) {
+        const optionsData = [
+          ...commonOptions.slice(0, -1), // Remove the last item ("Cancel")
+          { title: "Delete", onPress: deleteBoulder, color: "red" },
+          commonOptions[commonOptions.length - 1], // Add back the last item ("Cancel")
+        ];
+        return optionsData;
+      }
+
+      return commonOptions;
+    };
+
+    setOptionsData(createOptionsData());
+  }, []);
+
   return (
     <View style={styles.container}>
       <ScrollView>
@@ -186,25 +147,13 @@ const BoulderScreen = ({ route, navigation }) => {
           setIsLoading={setIsLoading}
         />
         <Titles boulder={boulder} />
-        {/* Buttons */}
         <Buttons
           boulder={boulder}
           setBoulder={setBoulder}
           userID={user.id}
           navigation={navigation}
         />
-        {/* Note */}
-        <View style={{ paddingHorizontal: 20, marginTop: 20 }}>
-          <Text style={{ color: "gray" }}>Caption, Note, Etc.</Text>
-        </View>
-        {/* Tags */}
-        <View style={{ paddingHorizontal: 20, marginTop: 20 }}>
-          <Text style={{ color: "gray" }}>#crimps #pinch #endurance</Text>
-        </View>
-        {/* date */}
-        <View style={{ paddingHorizontal: 20, marginTop: 20 }}>
-          <Text style={{ color: "gray" }}>{boulder.date}</Text>
-        </View>
+        <Notes boulder={boulder} />
         {/* separator line */}
         <View style={{ paddingHorizontal: 20 }}>
           <View
@@ -219,6 +168,11 @@ const BoulderScreen = ({ route, navigation }) => {
         {/* empty view cushion */}
         <View style={{ height: 50 }} />
       </ScrollView>
+      <ModalOptions
+        isModalVisible={isModalVisible}
+        setIsModalVisible={setIsModalVisible}
+        optionsData={optionsData}
+      />
       <FullScreenImage
         imageFullScreen={imageFullScreen}
         url={boulder.url}

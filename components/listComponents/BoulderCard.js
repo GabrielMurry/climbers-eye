@@ -20,9 +20,6 @@ const BoulderCard = React.memo(
             <Text>Setter: {boulder.setter}</Text>
             <Text> FA: {boulder.firstAscent ? boulder.firstAscent : "-"}</Text>
           </View>
-          {/* <Text>
-            {boulder.sends} {boulder.sends === 1 ? "send" : "sends"}
-          </Text> */}
           <View style={{ flexDirection: "row", gap: 10 }}>
             <LinkIcon
               size={15}
@@ -55,21 +52,18 @@ const BoulderCard = React.memo(
           <View style={styles.starsContainer}>
             <StarIcon
               size={15}
-              fill={boulder.quality >= 1 ? "gold" : "black"}
-              color={boulder.quality >= 1 ? "gold" : "black"}
-              style={boulder.quality ? { opacity: 1 } : { opacity: 0.4 }}
+              fill={boulder.quality >= 1 ? "gold" : "lightgray"}
+              color={boulder.quality >= 1 ? "gold" : "lightgray"}
             />
             <StarIcon
               size={15}
-              fill={boulder.quality >= 2 ? "gold" : "black"}
-              color={boulder.quality >= 2 ? "gold" : "black"}
-              style={boulder.quality ? { opacity: 1 } : { opacity: 0.4 }}
+              fill={boulder.quality >= 2 ? "gold" : "lightgray"}
+              color={boulder.quality >= 2 ? "gold" : "lightgray"}
             />
             <StarIcon
               size={15}
-              fill={boulder.quality === 3 ? "gold" : "black"}
-              color={boulder.quality === 3 ? "gold" : "black"}
-              style={boulder.quality ? { opacity: 1 } : { opacity: 0.4 }}
+              fill={boulder.quality === 3 ? "gold" : "lightgray"}
+              color={boulder.quality === 3 ? "gold" : "lightgray"}
             />
           </View>
         </View>

@@ -3,11 +3,13 @@ import React from "react";
 import {
   BookmarkIcon,
   ChartPieIcon,
+  CheckIcon,
   ChevronRightIcon,
   HeartIcon,
   PencilIcon,
   TrophyIcon,
 } from "react-native-heroicons/outline";
+import { FontAwesome } from "@expo/vector-icons";
 
 const BouldersSection = ({ bouldersSectionQuickData, navigation }) => {
   const iconFocused = (title) => {
@@ -15,7 +17,7 @@ const BouldersSection = ({ bouldersSectionQuickData, navigation }) => {
       case "Statistics":
         return <ChartPieIcon color={"black"} size={20} />;
       case "Logbook":
-        return <TrophyIcon color={"black"} size={20} />;
+        return <CheckIcon color={"black"} size={20} />;
       case "Likes":
         return <HeartIcon color={"black"} size={20} />;
       case "Bookmarks":
