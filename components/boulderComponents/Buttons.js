@@ -1,4 +1,4 @@
-import { View, StyleSheet, TouchableOpacity, Alert } from "react-native";
+import { View, StyleSheet, TouchableOpacity, Alert, Text } from "react-native";
 import React from "react";
 import { CheckIcon, LinkIcon } from "react-native-heroicons/outline";
 import { FontAwesome } from "@expo/vector-icons";
@@ -77,30 +77,59 @@ const Buttons = ({ boulder, setBoulder, userID, username, navigation }) => {
       >
         <FontAwesome name="book" size={24} color="black" />
       </TouchableOpacity> */}
-      <TouchableOpacity style={styles.button} onPress={handleCircuitPressed}>
-        <LinkIcon size={25} color={boulder.inCircuit ? "blue" : "lightgray"} />
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={handleBookmarkPressed}>
-        {boulder.isBookmarked ? (
-          <FontAwesome name="bookmark" size={22} color="gold" />
-        ) : (
-          <FontAwesome name="bookmark-o" size={22} color="lightgray" />
-        )}
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={handleLikePressed}>
-        {boulder.isLiked ? (
-          <FontAwesome name="heart" size={22} color="red" />
-        ) : (
-          <FontAwesome name="heart-o" size={22} color="lightgray" />
-        )}
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={handleSentBoulderPressed}
+      {/* <View style={{ flex: 1, alignItems: "flex-start" }}></View>
+      <View
+        style={{
+          flexDirection: "row",
+          flex: 1,
+          justifyContent: "space-between",
+        }}
+      > */}
+      <View style={{ flex: 1, justifyContent: "center" }}>
+        <Text style={{ fontWeight: "bold" }}>{boulder.setter}</Text>
+      </View>
+      <View
+        style={{
+          flexDirection: "row",
+          flex: 1,
+          justifyContent: "space-between",
+        }}
       >
-        <CheckIcon size={25} color={boulder.isSent ? "green" : "lightgray"} />
-      </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={handleBoulderStatsPressed}
+        >
+          <FontAwesome name="book" size={24} color="black" />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={handleCircuitPressed}>
+          <LinkIcon
+            size={25}
+            color={boulder.inCircuit ? "blue" : "lightgray"}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={handleBookmarkPressed}>
+          {boulder.isBookmarked ? (
+            <FontAwesome name="bookmark" size={22} color="gold" />
+          ) : (
+            <FontAwesome name="bookmark-o" size={22} color="lightgray" />
+          )}
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={handleLikePressed}>
+          {boulder.isLiked ? (
+            <FontAwesome name="heart" size={22} color="red" />
+          ) : (
+            <FontAwesome name="heart-o" size={22} color="lightgray" />
+          )}
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={handleSentBoulderPressed}
+        >
+          <CheckIcon size={25} color={boulder.isSent ? "green" : "lightgray"} />
+        </TouchableOpacity>
+      </View>
     </View>
+    // </View>
   );
 };
 
@@ -108,9 +137,10 @@ export default Buttons;
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 40,
+    flex: 1,
     justifyContent: "space-between",
     flexDirection: "row",
+    paddingHorizontal: 20,
     marginTop: 20,
   },
   buttonsRow: {

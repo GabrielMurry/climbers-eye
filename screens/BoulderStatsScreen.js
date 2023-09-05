@@ -7,8 +7,9 @@ import {
 } from "../utils/constants/boulderConstants";
 import BoulderPieChart from "../components/boulderStatsComponents/BoulderPieChart";
 import BoulderBarChart from "../components/boulderStatsComponents/BoulderBarChart";
+import useCustomHeader from "../hooks/useCustomHeader";
 
-const BoulderStatsScreen = ({ route }) => {
+const BoulderStatsScreen = ({ route, navigation }) => {
   const { boulder } = route.params;
 
   const [boulderBarChartData, setBoulderBarChartData] = useState(
@@ -18,6 +19,11 @@ const BoulderStatsScreen = ({ route }) => {
   const [boulderPieChartData, setBoulderPieChartData] = useState(
     boulderPieChartDataTemplate
   );
+
+  useCustomHeader({
+    navigation,
+    title: "Statistics",
+  });
 
   useEffect(() => {
     fetchBoulderStats();

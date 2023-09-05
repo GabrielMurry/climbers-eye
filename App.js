@@ -392,13 +392,7 @@ export default function App() {
               name="AddNewCircuit"
               component={AddNewCircuitScreen}
             />
-            <Stack.Screen
-              name="BoulderStats"
-              component={BoulderStatsScreen}
-              options={({ navigation }) =>
-                customHeader(navigation, "BoulderStats")
-              }
-            />
+            <Stack.Screen name="BoulderStats" component={BoulderStatsScreen} />
             <Stack.Screen name="SwitchGym" component={SwitchGymScreen} />
           </Stack.Navigator>
         </NavigationContainer>

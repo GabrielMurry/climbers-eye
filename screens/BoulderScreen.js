@@ -140,19 +140,53 @@ const BoulderScreen = ({ route, navigation }) => {
   return (
     <View style={styles.container}>
       <ScrollView>
+        <Titles boulder={boulder} />
         <ImageDisplay
           image={boulder}
           setImageFullScreen={setImageFullScreen}
           isLoading={isLoading}
           setIsLoading={setIsLoading}
         />
-        <Titles boulder={boulder} />
+        {/* <Text>Setter: {boulder.setter}</Text> */}
+
         <Buttons
           boulder={boulder}
           setBoulder={setBoulder}
           userID={user.id}
           navigation={navigation}
         />
+        <View
+          style={{
+            paddingHorizontal: 20,
+            flexDirection: "row",
+            justifyContent: "space-between",
+            marginTop: 20,
+          }}
+        >
+          {/* Matching */}
+          <View style={{}}>
+            <Text style={{ color: "black" }}>
+              • {boulder.matching ? "Matching Allowed" : "No Matching"}
+            </Text>
+          </View>
+          {/* Feet Follow Hands */}
+          <View style={{}}>
+            <Text style={{ color: "black" }}>
+              •{" "}
+              {boulder.feetFollowHands ? "Feet Follow Hands" : "Feet Anywhere"}
+            </Text>
+          </View>
+          {/* Kickboard On */}
+          <View style={{}}>
+            <Text
+              style={{
+                color: "black",
+              }}
+            >
+              • {boulder.kickboardOn ? "Kickboard On" : "Kickboard Off"}
+            </Text>
+          </View>
+        </View>
         <Notes boulder={boulder} />
         {/* separator line */}
         <View style={{ paddingHorizontal: 20 }}>

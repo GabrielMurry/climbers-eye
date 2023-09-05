@@ -17,7 +17,7 @@ const Titles = ({ boulder }) => {
         </View>
       )}
       <Text style={styles.titleMain}>{boulder.name}</Text>
-      <Text style={styles.titleSecondary}>
+      {/* <Text style={styles.titleSecondary}>
         {boulder.grade ?? "Project"}{" "}
         {boulder.quality ? (
           <>
@@ -41,9 +41,7 @@ const Titles = ({ boulder }) => {
         ) : (
           "Unrated"
         )}
-      </Text>
-      <Text style={styles.titleThird}>Setter: {boulder.setter}</Text>
-      <Text style={styles.titleThird}>FA: {boulder.firstAscent ?? "-"}</Text>
+      </Text> */}
     </View>
   );
 };
@@ -52,10 +50,10 @@ export default Titles;
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 5,
     paddingHorizontal: 20,
+    paddingBottom: 10,
     rowGap: 5,
-    // alignItems: "center",
+    alignItems: "center",
   },
   titleMain: {
     fontWeight: "bold",
