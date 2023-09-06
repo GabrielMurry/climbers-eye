@@ -21,23 +21,23 @@ const BoulderCard = React.memo(
             <Text> FA: {boulder.firstAscent ? boulder.firstAscent : "-"}</Text>
           </View>
           <View style={{ flexDirection: "row", gap: 10 }}>
-            <LinkIcon
+            <CheckIcon
               size={15}
-              color={boulder.inCircuit ? "blue" : "lightgray"}
-            />
-            <FontAwesome
-              name="bookmark"
-              size={15}
-              color={boulder.isBookmarked ? "gold" : "lightgray"}
+              color={boulder.isSent ? "green" : "lightgray"}
             />
             <FontAwesome
               name="heart"
               size={15}
               color={boulder.isLiked ? "red" : "lightgray"}
             />
-            <CheckIcon
+            <FontAwesome
+              name="bookmark"
               size={15}
-              color={boulder.isSent ? "green" : "lightgray"}
+              color={boulder.isBookmarked ? "gold" : "lightgray"}
+            />
+            <LinkIcon
+              size={15}
+              color={boulder.inCircuit ? "blue" : "lightgray"}
             />
           </View>
         </View>

@@ -9,16 +9,26 @@ import React, { useCallback, useEffect, useState } from "react";
 import FullScreenImage from "../components/FullScreenImage";
 import { request } from "../api/requestMethods";
 import { useFocusEffect } from "@react-navigation/native";
-import { EllipsisHorizontalIcon } from "react-native-heroicons/outline";
+import {
+  ArrowLongRightIcon,
+  ArrowSmallRightIcon,
+  CheckIcon,
+  EllipsisHorizontalIcon,
+} from "react-native-heroicons/outline";
 import { useSelector } from "react-redux";
-import Buttons from "../components/boulderComponents/Buttons";
 import ImageDisplay from "../components/boulderComponents/ImageDisplay";
 import Titles from "../components/boulderComponents/Titles";
 import { Text } from "react-native";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import useCustomHeader from "../hooks/useCustomHeader";
 import ModalOptions from "../components/ModalOptions";
-import Notes from "../components/boulderComponents/Notes";
+import InfoRow1 from "../components/boulderComponents/InfoRow1";
+import InfoRow2 from "../components/boulderComponents/InfoRow2";
+import InfoRow3 from "../components/boulderComponents/InfoRow3";
+import InfoRow4 from "../components/boulderComponents/InfoRow4";
+import InfoRow5 from "../components/boulderComponents/InfoRow5";
+import InfoRow6 from "../components/boulderComponents/InfoRow6";
+import DraftNotif from "../components/boulderComponents/DraftNotif";
 
 const THEME_STYLE = "white"; //rgba(245,245,245,255)
 
@@ -147,47 +157,18 @@ const BoulderScreen = ({ route, navigation }) => {
           isLoading={isLoading}
           setIsLoading={setIsLoading}
         />
-        {/* <Text>Setter: {boulder.setter}</Text> */}
-
-        <Buttons
+        <DraftNotif boulder={boulder} />
+        <InfoRow1
           boulder={boulder}
           setBoulder={setBoulder}
           userID={user.id}
           navigation={navigation}
         />
-        <View
-          style={{
-            paddingHorizontal: 20,
-            flexDirection: "row",
-            justifyContent: "space-between",
-            marginTop: 20,
-          }}
-        >
-          {/* Matching */}
-          <View style={{}}>
-            <Text style={{ color: "black" }}>
-              • {boulder.matching ? "Matching Allowed" : "No Matching"}
-            </Text>
-          </View>
-          {/* Feet Follow Hands */}
-          <View style={{}}>
-            <Text style={{ color: "black" }}>
-              •{" "}
-              {boulder.feetFollowHands ? "Feet Follow Hands" : "Feet Anywhere"}
-            </Text>
-          </View>
-          {/* Kickboard On */}
-          <View style={{}}>
-            <Text
-              style={{
-                color: "black",
-              }}
-            >
-              • {boulder.kickboardOn ? "Kickboard On" : "Kickboard Off"}
-            </Text>
-          </View>
-        </View>
-        <Notes boulder={boulder} />
+        <InfoRow2 boulder={boulder} navigation={navigation} />
+        <InfoRow3 boulder={boulder} />
+        <InfoRow4 boulder={boulder} />
+        <InfoRow5 boulder={boulder} />
+        <InfoRow6 boulder={boulder} />
         {/* separator line */}
         <View style={{ paddingHorizontal: 20 }}>
           <View

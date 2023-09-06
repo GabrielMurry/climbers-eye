@@ -1,11 +1,11 @@
 import { View, StyleSheet, TouchableOpacity, Alert, Text } from "react-native";
 import React from "react";
-import { CheckIcon, LinkIcon } from "react-native-heroicons/outline";
+import { CheckIcon, LinkIcon, StarIcon } from "react-native-heroicons/outline";
 import { FontAwesome } from "@expo/vector-icons";
 import { request } from "../../api/requestMethods";
 import * as Haptics from "expo-haptics";
 
-const Buttons = ({ boulder, setBoulder, userID, username, navigation }) => {
+const InfoRow1 = ({ boulder, setBoulder, userID, username, navigation }) => {
   const handleLikePressed = async () => {
     const optimisticUpdate = () => {
       setBoulder({ ...boulder, isLiked: !boulder.isLiked });
@@ -46,17 +46,8 @@ const Buttons = ({ boulder, setBoulder, userID, username, navigation }) => {
     }
   };
 
-  const handleSentBoulderPressed = () => {
-    navigation.navigate("Send", { boulder: boulder });
-  };
-
   const handleCircuitPressed = () => {
     navigation.navigate("Circuit", { boulder: boulder });
-  };
-
-  const handleBoulderStatsPressed = () => {
-    // setIsStatsVisible((prev) => !prev);
-    navigation.navigate("BoulderStats", { boulder: boulder });
   };
 
   const handleVibrate = () => {
@@ -65,47 +56,28 @@ const Buttons = ({ boulder, setBoulder, userID, username, navigation }) => {
 
   return (
     <View style={styles.container}>
-      {/* <TouchableOpacity
-        style={styles.button}
-        onPress={handleShowOptionsPressed}
-      >
-        <SimpleLineIcons name="options" size={24} color="black" />
-      </TouchableOpacity> */}
-      {/* <TouchableOpacity
-        style={styles.button}
-        onPress={handleBoulderStatsPressed}
-      >
-        <FontAwesome name="book" size={24} color="black" />
-      </TouchableOpacity> */}
-      {/* <View style={{ flex: 1, alignItems: "flex-start" }}></View>
       <View
         style={{
-          flexDirection: "row",
           flex: 1,
-          justifyContent: "space-between",
+          alignItems: "flex-start",
+          justifyContent: "center",
         }}
-      > */}
-      <View style={{ flex: 1, justifyContent: "center" }}>
+      >
         <Text style={{ fontWeight: "bold" }}>{boulder.setter}</Text>
       </View>
       <View
         style={{
           flexDirection: "row",
-          flex: 1,
+          flex: 0.6,
           justifyContent: "space-between",
         }}
       >
-        <TouchableOpacity
-          style={styles.button}
-          onPress={handleBoulderStatsPressed}
-        >
-          <FontAwesome name="book" size={24} color="black" />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={handleCircuitPressed}>
-          <LinkIcon
-            size={25}
-            color={boulder.inCircuit ? "blue" : "lightgray"}
-          />
+        <TouchableOpacity style={styles.button} onPress={handleLikePressed}>
+          {boulder.isLiked ? (
+            <FontAwesome name="heart" size={22} color="red" />
+          ) : (
+            <FontAwesome name="heart-o" size={22} color="lightgray" />
+          )}
         </TouchableOpacity>
         <TouchableOpacity style={styles.button} onPress={handleBookmarkPressed}>
           {boulder.isBookmarked ? (
@@ -114,18 +86,11 @@ const Buttons = ({ boulder, setBoulder, userID, username, navigation }) => {
             <FontAwesome name="bookmark-o" size={22} color="lightgray" />
           )}
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={handleLikePressed}>
-          {boulder.isLiked ? (
-            <FontAwesome name="heart" size={22} color="red" />
-          ) : (
-            <FontAwesome name="heart-o" size={22} color="lightgray" />
-          )}
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={handleSentBoulderPressed}
-        >
-          <CheckIcon size={25} color={boulder.isSent ? "green" : "lightgray"} />
+        <TouchableOpacity style={styles.button} onPress={handleCircuitPressed}>
+          <LinkIcon
+            size={25}
+            color={boulder.inCircuit ? "blue" : "lightgray"}
+          />
         </TouchableOpacity>
       </View>
     </View>
@@ -133,7 +98,7 @@ const Buttons = ({ boulder, setBoulder, userID, username, navigation }) => {
   );
 };
 
-export default Buttons;
+export default InfoRow1;
 
 const styles = StyleSheet.create({
   container: {
@@ -141,7 +106,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     flexDirection: "row",
     paddingHorizontal: 20,
-    marginTop: 20,
+    height: 50,
   },
   buttonsRow: {
     flexDirection: "row",
