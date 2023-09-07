@@ -13,7 +13,7 @@ import {
   SafeAreaView,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
-import { StarIcon } from "react-native-heroicons/outline";
+import { ArrowLongRightIcon, StarIcon } from "react-native-heroicons/outline";
 import { request } from "../api/requestMethods";
 import { useSelector } from "react-redux";
 import { boulderGrades } from "../utils/constants/boulderConstants";
@@ -95,7 +95,11 @@ const SendScreen = ({ route, navigation }) => {
       person: user.id,
       boulder: boulder.id,
     };
-    const response = await request("post", `sent_boulder/${boulder.id}`, data);
+    const response = await request(
+      "post",
+      `sent_boulder/${user.id}/${boulder.id}`,
+      data
+    );
     if (response.status !== 200) {
       console.log(response.status);
       return;
@@ -121,119 +125,132 @@ const SendScreen = ({ route, navigation }) => {
     Keyboard.dismiss();
   };
 
+  console.log(boulder.userSendsCount);
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "rgba(245,245,245,255)" }}>
       {/* <Header navigation={navigation} title={"Send"} /> */}
       <TouchableWithoutFeedback onPress={dismissKeyboard}>
         <View style={styles.container}>
-          <View style={styles.row}>
-            <Text style={styles.label}>Boulder:</Text>
-            <Text style={styles.info}>{boulder.name}</Text>
-          </View>
-          <View style={styles.row}>
-            <Text style={styles.label}>Username:</Text>
-            <Text style={styles.info}>{user.username}</Text>
-          </View>
-          <View style={styles.row}>
-            <Text style={styles.label}>Date:</Text>
-            <Text style={styles.info}>{new Date().toLocaleString()}</Text>
-          </View>
-          <TouchableOpacity
-            style={[
-              styles.row,
-              {
-                backgroundColor: "white",
-                borderColor: "red",
-                borderWidth: errors.attempts ? 1 : 0,
-              },
-            ]}
-            onPress={toggleAttemptsPicker}
-          >
-            <Text style={styles.label}>Attempts:</Text>
-            <View style={styles.info}>
-              <Text>{selectedAttempts}</Text>
+          <View style={{ gap: 5 }}>
+            <View style={styles.row}>
+              <Text style={styles.label}>Boulder:</Text>
+              <Text style={styles.info}>{boulder.name}</Text>
             </View>
-          </TouchableOpacity>
-          {showAttemptsPicker && (
-            <Animated.View
-              style={[styles.pickerContainer, { opacity: fadeAnim }]}
+            <View style={styles.row}>
+              <Text style={styles.label}>Username:</Text>
+              <Text style={styles.info}>{user.username}</Text>
+            </View>
+            <View style={styles.row}>
+              <Text style={styles.label}>Date:</Text>
+              <Text style={styles.info}>{new Date().toLocaleString()}</Text>
+            </View>
+            <View style={styles.row}>
+              <Text style={styles.label}>Your Ascents:</Text>
+              <Text style={styles.info}>{boulder.userSendsCount}</Text>
+            </View>
+            <TouchableOpacity
+              style={[
+                styles.row,
+                {
+                  backgroundColor: "white",
+                  borderColor: "red",
+                  borderWidth: errors.attempts ? 1 : 0,
+                },
+              ]}
+              onPress={toggleAttemptsPicker}
             >
-              <Picker
-                selectedValue={selectedAttempts}
-                onValueChange={(value) => {
-                  setSelectedAttempts(value);
-                  toggleAttemptsPicker();
-                }}
+              <Text style={styles.label}>Attempts:</Text>
+              <View style={styles.info}>
+                <Text>{selectedAttempts}</Text>
+              </View>
+            </TouchableOpacity>
+            {showAttemptsPicker && (
+              <Animated.View
+                style={[styles.pickerContainer, { opacity: fadeAnim }]}
               >
-                {renderPickerItems("attempts")}
-              </Picker>
-            </Animated.View>
-          )}
-          <TouchableOpacity
-            style={[
-              styles.row,
-              {
-                backgroundColor: "white",
-                borderColor: "red",
-                borderWidth: errors.difficulty ? 1 : 0,
-              },
-            ]}
-            onPress={toggleDifficultyPicker}
-          >
-            <Text style={styles.label}>Difficulty:</Text>
-            <Text style={styles.info}>{selectedDifficulty}</Text>
-          </TouchableOpacity>
-          {showDifficultyPicker && (
-            <Animated.View
-              style={[styles.pickerContainer, { opacity: fadeAnim }]}
+                <Picker
+                  selectedValue={selectedAttempts}
+                  onValueChange={(value) => {
+                    setSelectedAttempts(value);
+                    toggleAttemptsPicker();
+                  }}
+                >
+                  {renderPickerItems("attempts")}
+                </Picker>
+              </Animated.View>
+            )}
+            <TouchableOpacity
+              style={[
+                styles.row,
+                {
+                  backgroundColor: "white",
+                  borderColor: "red",
+                  borderWidth: errors.difficulty ? 1 : 0,
+                },
+              ]}
+              onPress={toggleDifficultyPicker}
             >
-              <Picker
-                selectedValue={selectedDifficulty}
-                onValueChange={(value) => {
-                  setSelectedDifficulty(value);
-                  toggleDifficultyPicker();
-                }}
+              <Text style={styles.label}>Difficulty:</Text>
+              <Text style={styles.info}>{selectedDifficulty}</Text>
+            </TouchableOpacity>
+            {showDifficultyPicker && (
+              <Animated.View
+                style={[styles.pickerContainer, { opacity: fadeAnim }]}
               >
-                {renderPickerItems("difficulty")}
-              </Picker>
-            </Animated.View>
-          )}
-          <View style={[styles.row, { backgroundColor: "white" }]}>
-            <Text style={styles.label}>Quality:</Text>
-            <View style={styles.info}>
-              <StarIcon
-                size={35}
-                fill={qualityCount >= 1 ? "gold" : "lightgray"}
-                color={qualityCount >= 1 ? "gold" : "lightgray"}
-                onPress={() => setQualityCount(1)}
-              />
-              <StarIcon
-                size={35}
-                fill={qualityCount >= 2 ? "gold" : "lightgray"}
-                color={qualityCount >= 2 ? "gold" : "lightgray"}
-                onPress={() => setQualityCount(2)}
-              />
-              <StarIcon
-                size={35}
-                fill={qualityCount === 3 ? "gold" : "lightgray"}
-                color={qualityCount === 3 ? "gold" : "lightgray"}
-                onPress={() => setQualityCount(3)}
+                <Picker
+                  selectedValue={selectedDifficulty}
+                  onValueChange={(value) => {
+                    setSelectedDifficulty(value);
+                    toggleDifficultyPicker();
+                  }}
+                >
+                  {renderPickerItems("difficulty")}
+                </Picker>
+              </Animated.View>
+            )}
+            <View style={[styles.row, { backgroundColor: "white" }]}>
+              <Text style={styles.label}>Quality:</Text>
+              <View style={styles.info}>
+                <StarIcon
+                  size={35}
+                  fill={qualityCount >= 1 ? "gold" : "lightgray"}
+                  color={qualityCount >= 1 ? "gold" : "lightgray"}
+                  onPress={() => setQualityCount(1)}
+                />
+                <StarIcon
+                  size={35}
+                  fill={qualityCount >= 2 ? "gold" : "lightgray"}
+                  color={qualityCount >= 2 ? "gold" : "lightgray"}
+                  onPress={() => setQualityCount(2)}
+                />
+                <StarIcon
+                  size={35}
+                  fill={qualityCount === 3 ? "gold" : "lightgray"}
+                  color={qualityCount === 3 ? "gold" : "lightgray"}
+                  onPress={() => setQualityCount(3)}
+                />
+              </View>
+            </View>
+            <View style={[styles.row, { backgroundColor: "white" }]}>
+              <Text style={styles.label}>Notes:</Text>
+              <TextInput
+                style={styles.notesInput}
+                multiline={true}
+                placeholder="Enter notes..."
+                value={notes}
+                onChangeText={setNotes}
               />
             </View>
           </View>
-          <View style={[styles.row, { backgroundColor: "white" }]}>
-            <Text style={styles.label}>Notes:</Text>
-            <TextInput
-              style={styles.notesInput}
-              multiline={true}
-              placeholder="Enter notes..."
-              value={notes}
-              onChangeText={setNotes}
-            />
+          <View>
+            <TouchableOpacity
+              style={styles.submitButton}
+              onPress={handleSubmit}
+            >
+              <Text style={styles.submitButtonText}>Submit</Text>
+            </TouchableOpacity>
           </View>
-          <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-            <Text style={styles.submitButtonText}>Submit</Text>
-          </TouchableOpacity>
         </View>
       </TouchableWithoutFeedback>
     </SafeAreaView>
@@ -243,8 +260,8 @@ const SendScreen = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    gap: 5,
     paddingHorizontal: 10,
+    justifyContent: "space-between",
   },
   row: {
     flexDirection: "row",
@@ -280,7 +297,7 @@ const styles = StyleSheet.create({
   },
   notesInput: {
     flex: 2,
-    height: 100,
+    height: 75,
     backgroundColor: "#fff",
     borderRadius: 5,
     borderColor: "lightgray",

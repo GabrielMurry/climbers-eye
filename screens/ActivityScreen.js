@@ -26,7 +26,7 @@ const ActivityScreen = ({ navigation }) => {
   const activityAction = {
     published: "orange",
     sent: "green", // check
-    repeated: "s",
+    repeated: "deeppink", // check
     liked: "red", // check
     bookmarked: "gold", // check
     added: "blue", // check

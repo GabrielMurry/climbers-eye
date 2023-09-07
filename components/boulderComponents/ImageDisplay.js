@@ -14,7 +14,7 @@ const THEME_STYLE = "black";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const SCREEN_HEIGHT = Dimensions.get("window").height;
-const SHRINK_SCALE = 0.7;
+const SHRINK_SCALE = 0.6;
 
 const ImageDisplay = ({
   image,
@@ -25,8 +25,10 @@ const ImageDisplay = ({
   const [imageHeight, setImageHeight] = useState();
 
   useEffect(() => {
-    if (SCREEN_HEIGHT * 0.7 > image.height * (SCREEN_WIDTH / image.width)) {
-      setImageHeight(image.height * (SCREEN_WIDTH / image.width));
+    const scaledHeight = image.height * (SCREEN_WIDTH / image.width);
+    // basically setting a maximum height requirement. If scaled height is above that req, then we shrink the image height some more
+    if (scaledHeight < SCREEN_HEIGHT * 0.7) {
+      setImageHeight(scaledHeight);
     } else {
       setImageHeight(SCREEN_HEIGHT * SHRINK_SCALE);
     }

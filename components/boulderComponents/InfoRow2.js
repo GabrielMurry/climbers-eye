@@ -21,24 +21,32 @@ const InfoRow2 = ({ boulder, navigation }) => {
         alignItems: "center",
       }}
     >
+      <View style={{ flex: 1 }}>
+        <TouchableOpacity
+          onPress={handleBoulderStatsPressed}
+          style={{
+            width: 50,
+            height: 35,
+            borderRadius: 5,
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "rgba(235, 235, 235, 255)",
+          }}
+        >
+          <FontAwesome name="book" size={24} color="black" />
+        </TouchableOpacity>
+      </View>
       <TouchableOpacity
-        onPress={handleBoulderStatsPressed}
         style={{
-          flex: 1,
-          justifyContent: "center",
-        }}
-      >
-        <FontAwesome name="book" size={24} color="black" />
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={{
-          borderRadius: 10,
+          borderRadius: 5,
           flex: 0.6,
           justifyContent: "space-evenly",
           height: 35,
           flexDirection: "row",
           alignItems: "center",
-          backgroundColor: boulder.isSent ? "green" : "lightgray",
+          backgroundColor: boulder.isSent
+            ? "green"
+            : "rgba(235, 235, 235, 255)",
         }}
         onPress={handleSentBoulderPressed}
       >
