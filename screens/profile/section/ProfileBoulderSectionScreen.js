@@ -28,7 +28,7 @@ import { boulderGrades } from "../../../utils/constants/boulderConstants";
 import Header from "../../../components/general/Header";
 import useCustomHeader from "../../../hooks/useCustomHeader";
 
-const ProfileSectionScreen = ({ route, navigation }) => {
+const ProfileBoulderSectionScreen = ({ route, navigation }) => {
   const { section } = route.params;
   const { user } = useSelector((state) => state.userReducer);
   const { gym } = useSelector((state) => state.gymReducer);
@@ -142,8 +142,8 @@ const ProfileSectionScreen = ({ route, navigation }) => {
     (item) => {
       navigation.navigate("Boulder", {
         boulder: item,
-        fromScreen: "ProfileSection",
-        toScreen: "ProfileSection",
+        fromScreen: "ProfileBoulderSection",
+        toScreen: "ProfileBoulderSection",
       });
     },
     [navigation]
@@ -255,7 +255,7 @@ const ProfileSectionScreen = ({ route, navigation }) => {
   );
 };
 
-export default ProfileSectionScreen;
+export default ProfileBoulderSectionScreen;
 
 const styles = StyleSheet.create({
   titleText: {

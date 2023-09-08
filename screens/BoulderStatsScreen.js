@@ -24,7 +24,7 @@ const BoulderStatsScreen = ({ route, navigation }) => {
 
   useCustomHeader({
     navigation,
-    title: "Statistics",
+    title: "Boulder Statistics",
   });
 
   useEffect(() => {
@@ -45,8 +45,6 @@ const BoulderStatsScreen = ({ route, navigation }) => {
       setIsProject(response.data.isProject);
     }
   };
-
-  console.log(boulder);
 
   return (
     <View

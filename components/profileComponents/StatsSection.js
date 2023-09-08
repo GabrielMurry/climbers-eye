@@ -1,27 +1,21 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
 import {
-  BookmarkIcon,
-  ChartPieIcon,
-  CheckIcon,
+  BoltIcon,
+  CalendarDaysIcon,
   ChevronRightIcon,
-  HeartIcon,
-  PencilIcon,
   TrophyIcon,
 } from "react-native-heroicons/outline";
-import { FontAwesome } from "@expo/vector-icons";
 
-const BouldersSection = ({ bouldersSectionQuickData, navigation }) => {
+const StatsSection = ({ statsSectionQuickData, navigation }) => {
   const iconFocused = (title) => {
     switch (title) {
-      case "Logbook":
-        return <CheckIcon color={"black"} size={20} />;
-      case "Likes":
-        return <HeartIcon color={"black"} size={20} />;
-      case "Bookmarks":
-        return <BookmarkIcon color={"black"} size={20} />;
-      case "Creations":
-        return <PencilIcon color={"black"} size={20} />;
+      case "Sessions":
+        return <CalendarDaysIcon color={"black"} size={20} />;
+      case "Top Grade":
+        return <TrophyIcon color={"black"} size={20} />;
+      case "Flashes":
+        return <BoltIcon color={"black"} size={20} />;
     }
   };
 
@@ -48,22 +42,22 @@ const BouldersSection = ({ bouldersSectionQuickData, navigation }) => {
           }}
         >
           {/* section title */}
-          <Text style={{ fontWeight: "bold", fontSize: 18 }}>Boulders</Text>
+          <Text style={{ fontWeight: "bold", fontSize: 18 }}>Statistics</Text>
         </View>
         <View style={{ paddingLeft: 30 }}>
-          {bouldersSectionQuickData.map((section, index) => (
+          {statsSectionQuickData.map((section, index) => (
             <TouchableOpacity
               key={section.title}
               style={{
                 borderBottomWidth:
-                  index === bouldersSectionQuickData.length - 1 ? 0 : 1,
+                  index === statsSectionQuickData.length - 1 ? 0 : 1,
                 borderColor: "lightgray",
                 height: 60,
                 alignItems: "center",
                 flexDirection: "row",
               }}
               onPress={() =>
-                navigation.navigate("ProfileBoulderSection", {
+                navigation.navigate("ProfileStatsSection", {
                   section: section.title,
                 })
               }
@@ -96,4 +90,4 @@ const BouldersSection = ({ bouldersSectionQuickData, navigation }) => {
   );
 };
 
-export default BouldersSection;
+export default StatsSection;

@@ -11,19 +11,18 @@ import React, { useCallback, useLayoutEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { request } from "../../api/requestMethods";
 import Header from "../../components/profileComponents/Header";
-import ModalSelectGyms from "../../components/profileComponents/ModalSelectGyms";
 import { useFocusEffect } from "@react-navigation/native";
 import BouldersSection from "../../components/profileComponents/BouldersSection";
 import CircuitsSection from "../../components/profileComponents/CircuitsSection";
 import GymSection from "../../components/profileComponents/GymSection";
-import AccountSection from "../../components/profileComponents/AccountSection";
 import { Text } from "react-native";
 import { EllipsisHorizontalIcon } from "react-native-heroicons/outline";
 import ModalOptions from "../../components/ModalOptions";
+import StatsSection from "../../components/profileComponents/StatsSection";
 
 const THEME_STYLE = "white";
 
-const ProfileScreen = ({ route, navigation }) => {
+const ProfileScreen = ({ navigation }) => {
   const { gym } = useSelector((state) => state.gymReducer);
   const { spraywalls, spraywallIndex } = useSelector(
     (state) => state.spraywallReducer
@@ -31,12 +30,17 @@ const ProfileScreen = ({ route, navigation }) => {
   const { user } = useSelector((state) => state.userReducer);
 
   const [bouldersSectionQuickData, setBouldersSectionQuickData] = useState([
-    { title: "Statistics", data: 0 },
     { title: "Logbook", data: 0 },
     { title: "Likes", data: 0 },
     { title: "Bookmarks", data: 0 },
     { title: "Creations", data: 0 },
   ]);
+  const [statsSectionQuickData, setStatsSectionQuickData] = useState([
+    { title: "Sessions", data: 0 },
+    { title: "Top Grade", data: "-" },
+    { title: "Flashes", data: 0 },
+  ]);
+
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [circuits, setCircuits] = useState([]);
   const [isHeaderTitleVisible, setIsHeaderTitleVisible] = useState(false);
@@ -83,6 +87,7 @@ const ProfileScreen = ({ route, navigation }) => {
     }
     if (response.data) {
       setBouldersSectionQuickData(response.data.bouldersSectionQuickData);
+      setStatsSectionQuickData(response.data.statsSectionQuickData);
     }
   };
 
@@ -133,22 +138,21 @@ const ProfileScreen = ({ route, navigation }) => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: THEME_STYLE }}>
+      {/* screen */}
       <ScrollView onScroll={handleScroll} scrollEventThrottle={16}>
         <Header navigation={navigation} />
         <GymSection navigation={navigation} />
+        <StatsSection
+          statsSectionQuickData={statsSectionQuickData}
+          navigation={navigation}
+        />
         <BouldersSection
           bouldersSectionQuickData={bouldersSectionQuickData}
           navigation={navigation}
         />
         <CircuitsSection circuits={circuits} navigation={navigation} />
-        {/* <AccountSection navigation={navigation} /> */}
-        {/* <ModalSelectGyms
-          isModalVisible={isModalVisible}
-          setIsModalVisible={setIsModalVisible}
-          spraywalls={spraywalls}
-          spraywallIndex={spraywallIndex}
-        /> */}
       </ScrollView>
+      {/* modal */}
       <ModalOptions
         isModalVisible={isModalVisible}
         setIsModalVisible={setIsModalVisible}

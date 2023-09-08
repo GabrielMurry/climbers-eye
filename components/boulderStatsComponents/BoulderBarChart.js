@@ -9,7 +9,7 @@ import {
 
 const screenWidth = Dimensions.get("window").width;
 
-const BoulderBarChart = ({ boulderBarChartData, isProject }) => {
+const BoulderBarChart = ({ boulderBarChartData, isProject = false }) => {
   return (
     <View style={{ marginLeft: 10 }}>
       <VictoryChart

@@ -49,7 +49,6 @@ import EditGymScreen from "./screens/EditGymScreen";
 import AddNewSprayWallScreen from "./screens/AddNewSprayWallScreen";
 import EditSprayWallScreen from "./screens/EditSprayWallScreen";
 import EditScreen from "./screens/EditScreen";
-import ProfileSectionScreen from "./screens/profile/section/ProfileSectionScreen";
 import SettingsScreen from "./screens/profile/edit/SettingsScreen";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Text, View } from "react-native";
@@ -60,6 +59,8 @@ import EditNameScreen from "./screens/profile/edit/EditNameScreen";
 import { StatusBar } from "react-native";
 import SwitchGymScreen from "./screens/profile/edit/SwitchGymScreen";
 import AddNewCircuitScreen from "./screens/AddNewCircuitScreen";
+import ProfileBoulderSectionScreen from "./screens/profile/section/ProfileBoulderSectionScreen";
+import ProfileStatsSectionScreen from "./screens/profile/section/ProfileStatsSectionScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -350,8 +351,12 @@ export default function App() {
               }}
             /> */}
             <Stack.Screen
-              name="ProfileSection"
-              component={ProfileSectionScreen}
+              name="ProfileBoulderSection"
+              component={ProfileBoulderSectionScreen}
+            />
+            <Stack.Screen
+              name="ProfileStatsSection"
+              component={ProfileStatsSectionScreen}
             />
             <Stack.Screen
               name="Settings"
