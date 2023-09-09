@@ -13,6 +13,8 @@ import {
 import React, { useCallback, useLayoutEffect, useRef, useState } from "react";
 import {
   AdjustmentsHorizontalIcon,
+  ChevronLeftIcon,
+  EllipsisHorizontalIcon,
   MagnifyingGlassIcon,
   XMarkIcon,
 } from "react-native-heroicons/outline";
@@ -66,6 +68,7 @@ const ListScreen = ({ navigation }) => {
           isSearchVisible={isSearchVisible}
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
+          isOwner={true}
         />
       ),
       headerTitle: () => (
@@ -91,7 +94,7 @@ const ListScreen = ({ navigation }) => {
               <MagnifyingGlassIcon size={25} color={"black"} />
             )}
           </TouchableOpacity>
-          <Pressable
+          <TouchableOpacity
             style={{
               backgroundColor: hasFilters ? "black" : null,
               justifyContent: "center",
@@ -104,7 +107,10 @@ const ListScreen = ({ navigation }) => {
               size={30}
               color={hasFilters ? "white" : "black"}
             />
-          </Pressable>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate("EditGym")}>
+            <EllipsisHorizontalIcon size={35} color={"black"} />
+          </TouchableOpacity>
         </View>
       ),
       headerStyle: {

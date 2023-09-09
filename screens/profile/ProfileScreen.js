@@ -142,12 +142,12 @@ const ProfileScreen = ({ navigation }) => {
       <ScrollView onScroll={handleScroll} scrollEventThrottle={16}>
         <Header navigation={navigation} />
         <GymSection navigation={navigation} />
-        <StatsSection
-          statsSectionQuickData={statsSectionQuickData}
-          navigation={navigation}
-        />
         <BouldersSection
           bouldersSectionQuickData={bouldersSectionQuickData}
+          navigation={navigation}
+        />
+        <StatsSection
+          statsSectionQuickData={statsSectionQuickData}
           navigation={navigation}
         />
         <CircuitsSection circuits={circuits} navigation={navigation} />

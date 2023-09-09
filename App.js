@@ -1,6 +1,5 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import HomeScreen from "./screens/HomeScreen";
 import BoulderScreen from "./screens/BoulderScreen";
 import ListScreen from "./screens/ListScreen";
 import {

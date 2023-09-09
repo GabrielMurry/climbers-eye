@@ -9,28 +9,14 @@ import React, { useEffect, useState } from "react";
 import { MagnifyingGlassIcon, XMarkIcon } from "react-native-heroicons/outline";
 import { TextInput } from "react-native";
 
-const SearchInput = ({ isSearchVisible, searchQuery, setSearchQuery }) => {
+const SearchInput = ({
+  isSearchVisible,
+  searchQuery,
+  setSearchQuery,
+  isOwner,
+}) => {
   const [isTextInputFocused, setIsTextInputFocused] = useState(false);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
-  //   const translateY = new Animated.Value(-50); // Initial position above the screen
-
-  //   useEffect(() => {
-  //     console.log(isSearchVisible);
-  //     if (isSearchVisible) {
-  //       Animated.timing(translateY, {
-  //         toValue: 0, // Slide down to position 0
-  //         duration: 200,
-  //         useNativeDriver: false,
-  //       }).start();
-  //     } else {
-  //       setSearchQuery("");
-  //       Animated.timing(translateY, {
-  //         toValue: -50, // Slide above the screen
-  //         duration: 200, // Animation duration in milliseconds
-  //         useNativeDriver: false,
-  //       }).start();
-  //     }
-  //   }, [isSearchVisible]);
 
   // Add an event listener to detect changes in keyboard visibility
   useEffect(() => {
@@ -68,7 +54,12 @@ const SearchInput = ({ isSearchVisible, searchQuery, setSearchQuery }) => {
   return (
     <>
       {isSearchVisible ? (
-        <View style={styles.SearchInputContainer}>
+        <View
+          style={[
+            styles.SearchInputContainer,
+            { width: isOwner ? "125%" : "150%" },
+          ]}
+        >
           <MagnifyingGlassIcon size={20} color="gray" />
           <TextInput
             style={styles.SearchInput}
@@ -100,7 +91,6 @@ export default SearchInput;
 const styles = StyleSheet.create({
   SearchInputContainer: {
     marginLeft: 20,
-    width: "150%",
     height: 35,
     flexDirection: "row",
     alignItems: "center",
