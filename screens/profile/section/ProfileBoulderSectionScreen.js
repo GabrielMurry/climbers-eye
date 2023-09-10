@@ -1,7 +1,6 @@
 import {
   View,
   Text,
-  SafeAreaView,
   StyleSheet,
   FlatList,
   Pressable,
@@ -13,25 +12,23 @@ import {
 import React, { useCallback, useEffect, useState } from "react";
 import {
   AdjustmentsHorizontalIcon,
-  ArrowLeftCircleIcon,
-  Cog8ToothIcon,
   MagnifyingGlassIcon,
-  PlusIcon,
-  UserIcon,
   XMarkIcon,
 } from "react-native-heroicons/outline";
 import BoulderCard from "../../../components/listComponents/BoulderCard";
 import { request } from "../../../api/requestMethods";
 import { useSelector } from "react-redux";
 import { useFocusEffect } from "@react-navigation/native";
-import { boulderGrades } from "../../../utils/constants/boulderConstants";
+import {
+  boulderBarChartDataTemplate,
+  boulderGrades,
+} from "../../../utils/constants/boulderConstants";
 import Header from "../../../components/general/Header";
 import useCustomHeader from "../../../hooks/useCustomHeader";
 
 const ProfileBoulderSectionScreen = ({ route, navigation }) => {
   const { section } = route.params;
   const { user } = useSelector((state) => state.userReducer);
-  const { gym } = useSelector((state) => state.gymReducer);
   const {
     spraywalls,
     spraywallIndex,
@@ -45,14 +42,14 @@ const ProfileBoulderSectionScreen = ({ route, navigation }) => {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [boulders, setBoulders] = useState([]);
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isHeaderTitleVisible, setIsHeaderTitleVisible] = useState(false);
   const [isTextInputFocused, setIsTextInputFocused] = useState(false);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const [hasFilters, setHasFilters] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [title, setTitle] = useState("");
-  const [color, setColor] = useState("");
+  const [boulderBarChartData, setBoulderBarChartData] = useState(
+    boulderBarChartDataTemplate
+  );
 
   useCustomHeader({
     navigation,
@@ -85,7 +82,6 @@ const ProfileBoulderSectionScreen = ({ route, navigation }) => {
       if (section === "Circuits") {
         setBoulders(route.params.circuit.boulderData);
         setTitle(route.params.circuit.name);
-        setColor(route.params.circuit.color);
       } else {
         fetchLogbookData();
         setHasFilters(areFiltersEnabled);

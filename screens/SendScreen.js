@@ -125,8 +125,6 @@ const SendScreen = ({ route, navigation }) => {
     Keyboard.dismiss();
   };
 
-  console.log(boulder.userSendsCount);
-
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "rgba(245,245,245,255)" }}>
       {/* <Header navigation={navigation} title={"Send"} /> */}
@@ -260,7 +258,7 @@ const SendScreen = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 10,
+    padding: 10,
     justifyContent: "space-between",
   },
   row: {

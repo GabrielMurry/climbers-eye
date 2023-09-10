@@ -86,7 +86,10 @@ const ListScreen = ({ navigation }) => {
           }}
         >
           <TouchableOpacity
-            onPress={() => setIsSearchVisible(!isSearchVisible)}
+            onPress={() => {
+              setIsSearchVisible(!isSearchVisible);
+              setSearchQuery("");
+            }}
           >
             {isSearchVisible ? (
               <XMarkIcon size={25} color={"black"} />

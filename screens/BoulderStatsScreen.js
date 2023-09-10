@@ -18,9 +18,9 @@ const BoulderStatsScreen = ({ route, navigation }) => {
     boulderBarChartDataTemplate
   );
   const [isProject, setIsProject] = useState(true);
-  const [boulderPieChartData, setBoulderPieChartData] = useState(
-    boulderPieChartDataTemplate
-  );
+  // const [boulderPieChartData, setBoulderPieChartData] = useState(
+  //   boulderPieChartDataTemplate
+  // );
 
   useCustomHeader({
     navigation,
@@ -39,9 +39,9 @@ const BoulderStatsScreen = ({ route, navigation }) => {
     }
     if (response.data) {
       setBoulderBarChartData(response.data.bouldersBarChartData);
-      if (response.data.bouldersPieChartData) {
-        setBoulderPieChartData(response.data.bouldersPieChartData);
-      }
+      // if (response.data.bouldersPieChartData) {
+      //   setBoulderPieChartData(response.data.bouldersPieChartData);
+      // }
       setIsProject(response.data.isProject);
     }
   };
@@ -53,7 +53,7 @@ const BoulderStatsScreen = ({ route, navigation }) => {
         backgroundColor: "white",
       }}
     >
-      <View style={{ paddingHorizontal: 10 }}>
+      <View style={{ padding: 10 }}>
         <View style={styles.row}>
           <Text style={styles.label}>Boulder:</Text>
           <Text style={styles.info}>{boulder.name}</Text>
@@ -77,10 +77,7 @@ const BoulderStatsScreen = ({ route, navigation }) => {
           <Text style={styles.info}>{boulder.date}</Text>
         </View>
       </View>
-      <BoulderBarChart
-        boulderBarChartData={boulderBarChartData}
-        isProject={isProject}
-      />
+      <BoulderBarChart data={boulderBarChartData} isProject={isProject} />
       {/* {boulderPieChartData ? (
         <BoulderPieChart boulderPieChartData={boulderPieChartData} />
       ) : null} */}

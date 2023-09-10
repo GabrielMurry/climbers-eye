@@ -86,6 +86,7 @@ const BoulderScreen = ({ route, navigation }) => {
         isBookmarked: response.data.isBookmarked,
         inCircuit: response.data.inCircuit,
         userSendsCount: response.data.userSendsCount,
+        sends: response.data.sends,
       });
     }
   };

@@ -9,7 +9,7 @@ import {
 
 const screenWidth = Dimensions.get("window").width;
 
-const BoulderBarChart = ({ boulderBarChartData, isProject = false }) => {
+const BoulderBarChart = ({ data, isProject = false }) => {
   return (
     <View style={{ marginLeft: 10 }}>
       <VictoryChart
@@ -24,6 +24,7 @@ const BoulderBarChart = ({ boulderBarChartData, isProject = false }) => {
             style={{
               tickLabels: { fontSize: 12 }, // Adjust the fontSize value for the y-axis tick labels
             }}
+            tickValues={data.map((grade) => grade.y)}
           />
         ) : null}
         <VictoryAxis
@@ -39,7 +40,7 @@ const BoulderBarChart = ({ boulderBarChartData, isProject = false }) => {
             // labels: { fill: "black" },
           }}
           barWidth={8}
-          data={boulderBarChartData}
+          data={data}
         />
       </VictoryChart>
     </View>
