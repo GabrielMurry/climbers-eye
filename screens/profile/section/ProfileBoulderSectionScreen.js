@@ -25,6 +25,8 @@ import {
 } from "../../../utils/constants/boulderConstants";
 import Header from "../../../components/general/Header";
 import useCustomHeader from "../../../hooks/useCustomHeader";
+import BoulderBarChart from "../../../components/boulderStatsComponents/BoulderBarChart";
+import SessionTitle from "../../../components/profileComponents/SessionTitle";
 
 const ProfileBoulderSectionScreen = ({ route, navigation }) => {
   const { section } = route.params;
@@ -50,6 +52,7 @@ const ProfileBoulderSectionScreen = ({ route, navigation }) => {
   const [boulderBarChartData, setBoulderBarChartData] = useState(
     boulderBarChartDataTemplate
   );
+  const [formattedSendDates, setFormattedSendDates] = useState([]);
 
   useCustomHeader({
     navigation,
@@ -113,7 +116,12 @@ const ProfileBoulderSectionScreen = ({ route, navigation }) => {
       return;
     }
     if (response.data) {
-      setBoulders(response.data);
+      if (section === "Logbook") {
+        setBoulders([{ id: "chart" }, ...response.data.section]);
+        setBoulderBarChartData(response.data.bouldersBarChartData);
+      } else {
+        setBoulders(response.data.section);
+      }
       setIsLoading(false);
     }
   };
@@ -149,11 +157,22 @@ const ProfileBoulderSectionScreen = ({ route, navigation }) => {
     navigation.navigate("Filter");
   };
 
-  const renderBoulderCards = ({ item }) => {
+  const renderBoulderCards = ({ item, index }) => {
+    if (item.id === "chart") {
+      return (
+        <View style={{ marginTop: -20 }}>
+          <BoulderBarChart data={boulderBarChartData} />
+        </View>
+      );
+    }
     return (
-      <TouchableOpacity onPress={() => navigateToBoulderScreen(item)}>
-        <BoulderCard boulder={item} />
-      </TouchableOpacity>
+      <>
+        {/* session title for log booked boulders (ascended boulders) */}
+        <SessionTitle item={item} index={index} boulders={boulders} />
+        <TouchableOpacity onPress={() => navigateToBoulderScreen(item)}>
+          <BoulderCard boulder={item} />
+        </TouchableOpacity>
+      </>
     );
   };
 
@@ -239,7 +258,7 @@ const ProfileBoulderSectionScreen = ({ route, navigation }) => {
         <FlatList
           data={boulders}
           renderItem={renderBoulderCards}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item.uuid || item.id}
           initialNumToRender={8} // Render the number of items that are initially visible on the screen
           windowSize={2} // Render an additional number of items to improve scrolling performance
           ListFooterComponent={<View style={{ height: 50 }} />}
@@ -262,8 +281,7 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     flex: 1,
-    rowGap: 10,
-    paddingHorizontal: 10,
+    padding: 10,
   },
   searchContainer: {
     flex: 1,
@@ -311,7 +329,7 @@ const styles = StyleSheet.create({
   SearchInputAndCancelContainer: {
     flexDirection: "row",
     paddingHorizontal: 10,
-    marginVertical: 5,
+    marginTop: 5,
   },
   SearchInputContainer: {
     flex: 1,

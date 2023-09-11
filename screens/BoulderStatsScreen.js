@@ -51,31 +51,30 @@ const BoulderStatsScreen = ({ route, navigation }) => {
       style={{
         flex: 1,
         backgroundColor: "white",
+        padding: 10,
       }}
     >
-      <View style={{ padding: 10 }}>
-        <View style={styles.row}>
-          <Text style={styles.label}>Boulder:</Text>
-          <Text style={styles.info}>{boulder.name}</Text>
-        </View>
-        <View style={styles.row}>
-          <Text style={styles.label}>Setter:</Text>
-          <Text style={styles.info}>{boulder.setter}</Text>
-        </View>
-        <View style={styles.row}>
-          <Text style={styles.label}>First Ascent:</Text>
-          <Text style={styles.info}>
-            {boulder.firstAscent ? boulder.firstAscent : "-"}
-          </Text>
-        </View>
-        <View style={styles.row}>
-          <Text style={styles.label}>Total Sends:</Text>
-          <Text style={styles.info}>{boulder.sends}</Text>
-        </View>
-        <View style={styles.row}>
-          <Text style={styles.label}>Published:</Text>
-          <Text style={styles.info}>{boulder.date}</Text>
-        </View>
+      <View style={styles.row}>
+        <Text style={styles.label}>Boulder:</Text>
+        <Text style={styles.info}>{boulder.name}</Text>
+      </View>
+      <View style={styles.row}>
+        <Text style={styles.label}>Setter:</Text>
+        <Text style={styles.info}>{boulder.setter}</Text>
+      </View>
+      <View style={styles.row}>
+        <Text style={styles.label}>First Ascent:</Text>
+        <Text style={styles.info}>
+          {boulder.firstAscent ? boulder.firstAscent : "-"}
+        </Text>
+      </View>
+      <View style={styles.row}>
+        <Text style={styles.label}>Total Sends:</Text>
+        <Text style={styles.info}>{boulder.sends}</Text>
+      </View>
+      <View style={styles.row}>
+        <Text style={styles.label}>Published:</Text>
+        <Text style={styles.info}>{boulder.date}</Text>
       </View>
       <BoulderBarChart data={boulderBarChartData} isProject={isProject} />
       {/* {boulderPieChartData ? (

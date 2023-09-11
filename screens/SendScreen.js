@@ -127,7 +127,6 @@ const SendScreen = ({ route, navigation }) => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "rgba(245,245,245,255)" }}>
-      {/* <Header navigation={navigation} title={"Send"} /> */}
       <TouchableWithoutFeedback onPress={dismissKeyboard}>
         <View style={styles.container}>
           <View style={{ gap: 5 }}>
