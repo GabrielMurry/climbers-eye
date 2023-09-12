@@ -119,8 +119,8 @@ const BoulderScreen = ({ route, navigation }) => {
 
   useEffect(() => {
     const createOptionsData = () => {
-      // start with commonOptions
-      const commonOptions = [
+      // start with options
+      const options = [
         { title: "Share", onPress: "" },
         { title: "Report", onPress: "" },
         {
@@ -129,21 +129,32 @@ const BoulderScreen = ({ route, navigation }) => {
           color: "gray",
         },
       ];
-      // if your boulder is a draft, provide option to publish boulder
+      // If your boulder is not published, add option to publish boulder
       if (!boulder.publish) {
-        commonOptions.unshift({ title: "Publish Boulder", onPress: "" });
+        options.unshift({ title: "Publish Boulder", onPress: "" });
       }
-      // if the boulder is yours, provide option to delete boulder
+      // If you logged an ascent of a boulder give option to remove logged ascent
+      if (boulder.isSent) {
+        const removeLoggedAscentOption = {
+          title: "Remove Logged Ascent",
+          onPress: "",
+          color: "red",
+        };
+        const cancelOptionIndex = options.length - 1;
+        options.splice(cancelOptionIndex, 0, removeLoggedAscentOption);
+      }
+      // If you are the setter of a boulder, give option to delete boulder
       if (boulder.setter === user.username) {
-        const optionsData = [
-          ...commonOptions.slice(0, -1), // Remove the last item ("Cancel")
-          { title: "Delete", onPress: deleteBoulder, color: "red" },
-          commonOptions[commonOptions.length - 1], // Add back the last item ("Cancel")
-        ];
-        return optionsData;
+        const deleteBoulderOption = {
+          title: "Delete Boulder",
+          onPress: deleteBoulder,
+          color: "red",
+        };
+        const cancelOptionIndex = options.length - 1;
+        options.splice(cancelOptionIndex, 0, deleteBoulderOption);
       }
 
-      return commonOptions;
+      return options;
     };
 
     setOptionsData(createOptionsData());

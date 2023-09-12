@@ -159,11 +159,7 @@ const ProfileBoulderSectionScreen = ({ route, navigation }) => {
 
   const renderBoulderCards = ({ item, index }) => {
     if (item.id === "chart") {
-      return (
-        <View style={{ marginTop: -20 }}>
-          <BoulderBarChart data={boulderBarChartData} />
-        </View>
-      );
+      return <BoulderBarChart data={boulderBarChartData} />;
     }
     return (
       <>

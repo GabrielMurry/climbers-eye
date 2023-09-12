@@ -44,7 +44,7 @@ const CircuitsSection = ({ circuits, navigation }) => {
                 flexDirection: "row",
               }}
               onPress={() =>
-                navigation.navigate("ProfileSection", {
+                navigation.navigate("ProfileBoulderSection", {
                   section: "Circuits",
                   circuit: circuit,
                 })

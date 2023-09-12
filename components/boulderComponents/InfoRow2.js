@@ -56,7 +56,7 @@ const InfoRow2 = ({ boulder, navigation }) => {
             fontWeight: "bold",
           }}
         >
-          {boulder.isSent ? "Repeat" : "Send"}
+          {boulder.isSent ? "Repeat" : "Log Send"}
         </Text>
         <ArrowLongRightIcon
           size={25}

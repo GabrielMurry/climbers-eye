@@ -63,8 +63,8 @@ const AddNewCircuitScreen = ({ navigation }) => {
   });
 
   return (
-    <View style={{ padding: 20, gap: 10, backgroundColor: "white", flex: 1 }}>
-      <View>
+    <View style={{ padding: 20, gap: 15, backgroundColor: "white", flex: 1 }}>
+      <View style={styles.row}>
         <Text>Circuit Name</Text>
         <CustomInput
           value={newCircuitName}
@@ -73,7 +73,7 @@ const AddNewCircuitScreen = ({ navigation }) => {
           secureTextEntry={false}
         />
       </View>
-      <View>
+      <View style={styles.row}>
         <Text>Circuit Description</Text>
         <CustomInput
           value={newCircuitDescription}
@@ -82,71 +82,74 @@ const AddNewCircuitScreen = ({ navigation }) => {
           secureTextEntry={false}
         />
       </View>
-      <View style={styles.colorSwatchContainer}>
-        <Pressable
-          style={styles.colorSwatchButton("green")}
-          onPress={() => setNewCircuitColor("green")}
-        >
-          {newCircuitColor === "green" ? (
-            <View style={styles.selectedSwatchIndicator} />
-          ) : null}
-        </Pressable>
-        <Pressable
-          style={styles.colorSwatchButton("blue")}
-          onPress={() => setNewCircuitColor("blue")}
-        >
-          {newCircuitColor === "blue" ? (
-            <View style={styles.selectedSwatchIndicator} />
-          ) : null}
-        </Pressable>
-        <Pressable
-          style={styles.colorSwatchButton("yellow")}
-          onPress={() => setNewCircuitColor("yellow")}
-        >
-          {newCircuitColor === "yellow" ? (
-            <View style={styles.selectedSwatchIndicator} />
-          ) : null}
-        </Pressable>
-        <Pressable
-          style={styles.colorSwatchButton("pink")}
-          onPress={() => setNewCircuitColor("pink")}
-        >
-          {newCircuitColor === "pink" ? (
-            <View style={styles.selectedSwatchIndicator} />
-          ) : null}
-        </Pressable>
-        <Pressable
-          style={styles.colorSwatchButton("orange")}
-          onPress={() => setNewCircuitColor("orange")}
-        >
-          {newCircuitColor === "orange" ? (
-            <View style={styles.selectedSwatchIndicator} />
-          ) : null}
-        </Pressable>
-        <Pressable
-          style={styles.colorSwatchButton("red")}
-          onPress={() => setNewCircuitColor("red")}
-        >
-          {newCircuitColor === "red" ? (
-            <View style={styles.selectedSwatchIndicator} />
-          ) : null}
-        </Pressable>
-        <Pressable
-          style={styles.colorSwatchButton("purple")}
-          onPress={() => setNewCircuitColor("purple")}
-        >
-          {newCircuitColor === "purple" ? (
-            <View style={styles.selectedSwatchIndicator} />
-          ) : null}
-        </Pressable>
-        <Pressable
-          style={styles.colorSwatchButton("black")}
-          onPress={() => setNewCircuitColor("black")}
-        >
-          {newCircuitColor === "black" ? (
-            <View style={styles.selectedSwatchIndicator} />
-          ) : null}
-        </Pressable>
+      <View style={styles.row}>
+        <Text>Circuit Color</Text>
+        <View style={styles.colorSwatchContainer}>
+          <Pressable
+            style={styles.colorSwatchButton("green")}
+            onPress={() => setNewCircuitColor("green")}
+          >
+            {newCircuitColor === "green" ? (
+              <View style={styles.selectedSwatchIndicator} />
+            ) : null}
+          </Pressable>
+          <Pressable
+            style={styles.colorSwatchButton("blue")}
+            onPress={() => setNewCircuitColor("blue")}
+          >
+            {newCircuitColor === "blue" ? (
+              <View style={styles.selectedSwatchIndicator} />
+            ) : null}
+          </Pressable>
+          <Pressable
+            style={styles.colorSwatchButton("yellow")}
+            onPress={() => setNewCircuitColor("yellow")}
+          >
+            {newCircuitColor === "yellow" ? (
+              <View style={styles.selectedSwatchIndicator} />
+            ) : null}
+          </Pressable>
+          <Pressable
+            style={styles.colorSwatchButton("pink")}
+            onPress={() => setNewCircuitColor("pink")}
+          >
+            {newCircuitColor === "pink" ? (
+              <View style={styles.selectedSwatchIndicator} />
+            ) : null}
+          </Pressable>
+          <Pressable
+            style={styles.colorSwatchButton("orange")}
+            onPress={() => setNewCircuitColor("orange")}
+          >
+            {newCircuitColor === "orange" ? (
+              <View style={styles.selectedSwatchIndicator} />
+            ) : null}
+          </Pressable>
+          <Pressable
+            style={styles.colorSwatchButton("red")}
+            onPress={() => setNewCircuitColor("red")}
+          >
+            {newCircuitColor === "red" ? (
+              <View style={styles.selectedSwatchIndicator} />
+            ) : null}
+          </Pressable>
+          <Pressable
+            style={styles.colorSwatchButton("purple")}
+            onPress={() => setNewCircuitColor("purple")}
+          >
+            {newCircuitColor === "purple" ? (
+              <View style={styles.selectedSwatchIndicator} />
+            ) : null}
+          </Pressable>
+          <Pressable
+            style={styles.colorSwatchButton("black")}
+            onPress={() => setNewCircuitColor("black")}
+          >
+            {newCircuitColor === "black" ? (
+              <View style={styles.selectedSwatchIndicator} />
+            ) : null}
+          </Pressable>
+        </View>
       </View>
       <View style={styles.privateCircuitContainer}>
         <Text style={styles.privateCircuitText}>Private Circuit</Text>
@@ -233,9 +236,12 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     width: "100%",
+    marginTop: 5,
   },
   privateCircuitText: {
     fontSize: 16,
-    fontWeight: "bold",
+  },
+  row: {
+    gap: 5,
   },
 });

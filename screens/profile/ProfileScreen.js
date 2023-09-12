@@ -36,7 +36,6 @@ const ProfileScreen = ({ navigation }) => {
     { title: "Creations", data: 0 },
   ]);
   const [statsSectionQuickData, setStatsSectionQuickData] = useState([
-    { title: "Sessions", data: 0 },
     { title: "Top Grade", data: "-" },
     { title: "Flashes", data: 0 },
   ]);

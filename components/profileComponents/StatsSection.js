@@ -10,8 +10,6 @@ import {
 const StatsSection = ({ statsSectionQuickData, navigation }) => {
   const iconFocused = (title) => {
     switch (title) {
-      case "Sessions":
-        return <CalendarDaysIcon color={"black"} size={20} />;
       case "Top Grade":
         return <TrophyIcon color={"black"} size={20} />;
       case "Flashes":
