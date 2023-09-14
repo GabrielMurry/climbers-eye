@@ -2,7 +2,6 @@ import {
   View,
   Text,
   SafeAreaView,
-  TextInput,
   FlatList,
   TouchableOpacity,
   StyleSheet,
@@ -10,7 +9,7 @@ import {
   Alert,
   Pressable,
 } from "react-native";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { request } from "../api/requestMethods";
 import { useSelector } from "react-redux";
 import CircuitCard from "../components/circuitComponents/CircuitCard";
@@ -29,7 +28,6 @@ const CircuitScreen = ({ route, navigation }) => {
   const CIRCUIT_ITEM_HEIGHT = 45;
 
   const [circuits, setCircuits] = useState([]);
-  const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
 
   // for managing opening and closing rows
   let row = [];

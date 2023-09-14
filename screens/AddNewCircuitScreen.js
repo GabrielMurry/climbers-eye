@@ -42,7 +42,6 @@ const AddNewCircuitScreen = ({ navigation }) => {
       return;
     }
     if (response.data) {
-      // setCircuits([...circuits, response.data]);
       navigation.goBack();
     }
   };

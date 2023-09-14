@@ -1,11 +1,4 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  SafeAreaView,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Camera, CameraType } from "expo-camera";
 import { manipulateAsync, SaveFormat } from "expo-image-manipulator";

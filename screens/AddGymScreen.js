@@ -9,18 +9,14 @@ import {
   SafeAreaView,
   Alert,
   Image,
-  Button,
   ActivityIndicator,
 } from "react-native";
 import { CameraIcon, PhotoIcon } from "react-native-heroicons/outline";
 import { request } from "../api/requestMethods";
 import * as ImagePicker from "expo-image-picker";
-import { useSelector, useDispatch } from "react-redux";
-
-const imageScaleDownFactor = 16;
+import { useSelector } from "react-redux";
 
 const AddGymScreen = ({ route, navigation }) => {
-  const dispatch = useDispatch();
   const { user } = useSelector((state) => state.userReducer);
 
   const [isCommercialGym, setIsCommercialGym] = useState(true);

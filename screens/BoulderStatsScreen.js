@@ -73,6 +73,10 @@ const BoulderStatsScreen = ({ route, navigation }) => {
         <Text style={styles.info}>{boulder.sends}</Text>
       </View>
       <View style={styles.row}>
+        <Text style={styles.label}>Your Sends:</Text>
+        <Text style={styles.info}>{boulder.userSendsCount}</Text>
+      </View>
+      <View style={styles.row}>
         <Text style={styles.label}>Published:</Text>
         <Text style={styles.info}>{boulder.date}</Text>
       </View>

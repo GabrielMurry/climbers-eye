@@ -19,7 +19,6 @@ import ReactNativeZoomableView from "@openspacelabs/react-native-zoomable-view/s
 import ItemEditBar from "../components/ItemEditBar";
 import BrushSize from "../components/BrushSize";
 import ModalEditPreview from "../components/ModalEditPreview";
-import axios from "../api/axios";
 import { captureRef } from "react-native-view-shot";
 import { useFocusEffect } from "@react-navigation/native";
 import { request } from "../api/requestMethods";

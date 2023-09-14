@@ -180,7 +180,8 @@ const BoulderScreen = ({ route, navigation }) => {
         <InfoRow2 boulder={boulder} navigation={navigation} />
         <InfoRow3 boulder={boulder} />
         <InfoRow4 boulder={boulder} />
-        <InfoRow5 boulder={boulder} />
+        {/* Tags? */}
+        {/* <InfoRow5 boulder={boulder} /> */}
         <InfoRow6 boulder={boulder} />
         {/* separator line */}
         <View style={{ paddingHorizontal: 20 }}>
