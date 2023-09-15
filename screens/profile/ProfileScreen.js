@@ -1,12 +1,4 @@
-import {
-  Modal,
-  Pressable,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { SafeAreaView, ScrollView, TouchableOpacity } from "react-native";
 import React, { useCallback, useLayoutEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { request } from "../../api/requestMethods";
@@ -162,13 +154,3 @@ const ProfileScreen = ({ navigation }) => {
 };
 
 export default ProfileScreen;
-
-const styles = StyleSheet.create({
-  modalContainer: {
-    flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-  },
-  modalContent: {
-    flex: 1,
-  },
-});
