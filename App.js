@@ -298,22 +298,11 @@ export default function App() {
               component={AddGymScreen}
               options={({ navigation }) => customHeader(navigation, "AddGym")}
             />
-            <Stack.Screen
-              name="EditGym"
-              component={EditGymScreen}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="Edit"
-              component={EditScreen}
-              options={({ navigation }) => customHeader(navigation, "Edit")}
-            />
+            <Stack.Screen name="EditGym" component={EditGymScreen} />
+            <Stack.Screen name="Edit" component={EditScreen} />
             <Stack.Screen
               name="AddNewSprayWall"
               component={AddNewSprayWallScreen}
-              options={({ navigation }) =>
-                customHeader(navigation, "AddNewSprayWall")
-              }
             />
             <Stack.Screen
               name="EditSprayWall"

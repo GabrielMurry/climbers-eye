@@ -4,24 +4,18 @@ import SettingsButton from "../components/editGymComponents/SettingsButton";
 import { useSelector, useDispatch } from "react-redux";
 import { setSpraywalls } from "../redux/actions";
 import { request } from "../api/requestMethods";
+import useCustomHeader from "../hooks/useCustomHeader";
 
 const EditSprayWallScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
   const { spraywalls } = useSelector((state) => state.spraywallReducer);
   const index = route?.params?.index;
 
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerTitle: () => (
-        <Text style={{ fontWeight: "bold", fontSize: 16 }}>
-          {spraywalls[index].name}
-        </Text>
-      ),
-      headerStyle: {
-        backgroundColor: "rgba(245,245,245,255)", // Set your desired color here
-      },
-    });
-  }, [navigation, spraywalls]);
+  useCustomHeader({
+    backgroundColor: "rgba(245,245,245,255)",
+    navigation,
+    title: spraywalls[index].name,
+  });
 
   const handleEditItemPressed = (item) => {
     navigation.navigate("Edit", { item });

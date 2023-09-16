@@ -124,7 +124,7 @@ const ProfileScreen = ({ navigation }) => {
     { title: "Switch Gym", onPress: handleSwitchGymPress },
     { title: "Edit Profile", onPress: handleEditProfilePress },
     { title: "Settings", onPress: handleSettingsPress },
-    { title: "Cancel", onPress: () => setIsModalVisible(false) },
+    { title: "Cancel", onPress: () => setIsModalVisible(false), color: "gray" },
   ];
 
   return (

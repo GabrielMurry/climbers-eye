@@ -14,6 +14,7 @@ import { CameraIcon, PhotoIcon } from "react-native-heroicons/outline";
 import { request } from "../api/requestMethods";
 import { useSelector, useDispatch } from "react-redux";
 import { setSpraywalls } from "../redux/actions";
+import useCustomHeader from "../hooks/useCustomHeader";
 
 const AddNewSprayWallScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
@@ -26,6 +27,12 @@ const AddNewSprayWallScreen = ({ navigation, route }) => {
   });
   const [isDisabled, setIsDisabled] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+
+  useCustomHeader({
+    backgroundColor: "rgba(245,245,245,255)",
+    navigation,
+    title: "Add New Spray Wall",
+  });
 
   useEffect(() => {
     if (route?.params?.image) {
@@ -85,7 +92,7 @@ const AddNewSprayWallScreen = ({ navigation, route }) => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "rgba(245,245,245,255)" }}>
       <View style={styles.addNewSprayWallContainer}>
         <View style={styles.inputAndAddContainer}>
           <Text style={styles.label}>Spray Wall Name:</Text>
@@ -102,7 +109,6 @@ const AddNewSprayWallScreen = ({ navigation, route }) => {
               style={{
                 width: "100%",
                 height: "100%",
-                flexDirection: "row",
                 justifyContent: "center",
               }}
             >
@@ -113,7 +119,13 @@ const AddNewSprayWallScreen = ({ navigation, route }) => {
                 }}
                 resizeMode="contain"
               />
-              <View style={{ justifyContent: "space-evenly", padding: 10 }}>
+              <View
+                style={{
+                  justifyContent: "space-evenly",
+                  padding: 10,
+                  flexDirection: "row",
+                }}
+              >
                 <TouchableOpacity
                   style={{
                     width: 60,

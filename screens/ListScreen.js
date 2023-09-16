@@ -27,6 +27,7 @@ import { setSpraywallIndex } from "../redux/actions";
 import Carousel from "react-native-reanimated-carousel";
 import { BlurView } from "expo-blur";
 import SearchInput from "../components/listComponents/SearchInput";
+import ModalOptions from "../components/ModalOptions";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const THEME_STYLE = "white";
@@ -49,8 +50,6 @@ const ListScreen = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [boulders, setBoulders] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isModalSpraywallsVisible, setIsModalSpraywallsVisible] =
-    useState(false);
   const [isHeaderImageVisible, setIsHeaderImageVisible] = useState(false);
   const [hasFilters, setHasFilters] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -111,7 +110,7 @@ const ListScreen = ({ navigation }) => {
               color={hasFilters ? "white" : "black"}
             />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate("EditGym")}>
+          <TouchableOpacity onPress={() => setIsModalVisible(true)}>
             <EllipsisHorizontalIcon size={35} color={"black"} />
           </TouchableOpacity>
         </View>
@@ -317,6 +316,16 @@ const ListScreen = ({ navigation }) => {
     }
   };
 
+  const handleEditGymPress = () => {
+    setIsModalVisible(false);
+    navigation.navigate("EditGym");
+  };
+
+  const optionsData = [
+    { title: "Edit Gym", onPress: handleEditGymPress },
+    { title: "Cancel", onPress: () => setIsModalVisible(false), color: "gray" },
+  ];
+
   return (
     <SafeAreaView
       style={{
@@ -338,51 +347,11 @@ const ListScreen = ({ navigation }) => {
           keyboardShouldPersistTaps="handled" // click on search bar cancel buttons when Keyboard is visible (or click on boulder cards)
         />
       </View>
-      <Modal
-        visible={isModalSpraywallsVisible}
-        transparent={true}
-        animationType="fade"
-        onRequestClose={() => setIsModalSpraywallsVisible(false)}
-      >
-        <View style={styles.modalContainer} activeOpacity={1}>
-          <BlurView style={styles.modalContent} intensity={25}>
-            <Pressable
-              style={{ flex: 1 }}
-              onPress={() => setIsModalSpraywallsVisible(false)}
-            />
-            {/* Add modal content here */}
-            <View style={styles.displayContainer}>
-              <View
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  backgroundColor: "white",
-                  borderRadius: 20,
-                  justifyContent: "space-evenly",
-                  alignItems: "center",
-                }}
-              >
-                <Carousel
-                  loop={false}
-                  width={SCREEN_WIDTH}
-                  height={SCREEN_WIDTH - 125}
-                  data={spraywalls}
-                  defaultIndex={spraywallIndex}
-                  keyExtractor={(item) => item.id}
-                  scrollAnimationDuration={250}
-                  onSnapToItem={(index) => dispatch(setSpraywallIndex(index))}
-                  renderItem={renderItem}
-                  mode="parallax"
-                  modeConfig={{
-                    parallaxScrollingScale: 0.9,
-                    parallaxScrollingOffset: 50,
-                  }}
-                />
-              </View>
-            </View>
-          </BlurView>
-        </View>
-      </Modal>
+      <ModalOptions
+        isModalVisible={isModalVisible}
+        setIsModalVisible={setIsModalVisible}
+        optionsData={optionsData}
+      />
     </SafeAreaView>
   );
 };

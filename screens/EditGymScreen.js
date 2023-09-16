@@ -5,6 +5,7 @@ import SettingsButton from "../components/editGymComponents/SettingsButton";
 import { setGym, setSpraywalls } from "../redux/actions";
 import { request } from "../api/requestMethods";
 import Header from "../components/general/Header";
+import useCustomHeader from "../hooks/useCustomHeader";
 
 const EditGymScreen = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -57,6 +58,12 @@ const EditGymScreen = ({ navigation }) => {
     );
   };
 
+  useCustomHeader({
+    backgroundColor: "rgba(245,245,245,255)",
+    navigation,
+    title: "Edit Gym",
+  });
+
   return (
     <View
       style={{
@@ -64,7 +71,6 @@ const EditGymScreen = ({ navigation }) => {
         backgroundColor: "rgba(245,245,245,255)",
       }}
     >
-      <Header navigation={navigation} title={"Gym Settings"} />
       {/* gym settings */}
       <View style={{ paddingHorizontal: 10 }}>
         <View

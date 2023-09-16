@@ -7,6 +7,7 @@ import {
   SprayWallName,
   SprayWallImage,
 } from "../components/editGymComponents/Display";
+import useCustomHeader from "../hooks/useCustomHeader";
 
 const EditScreen = ({ navigation, route }) => {
   const { item } = route?.params;
@@ -24,16 +25,11 @@ const EditScreen = ({ navigation, route }) => {
     }
   }, [route]);
 
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerTitle: () => (
-        <Text style={{ fontWeight: "bold", fontSize: 16 }}>{item.title}</Text>
-      ),
-      headerStyle: {
-        backgroundColor: "rgba(245,245,245,255)",
-      },
-    });
-  }, [navigation]);
+  useCustomHeader({
+    backgroundColor: "rgba(245,245,245,255)",
+    navigation,
+    title: item.title,
+  });
 
   return (
     <View
