@@ -3,7 +3,6 @@ import {
   SET_USER,
   SET_GYM,
   SET_SPRAYWALLS,
-  UPDATE_SPRAYWALL,
   SET_SPRAYWALL_INDEX,
   SET_HEADSHOT_IMAGE,
   SET_FILTER_SORT_BY,
@@ -54,11 +53,6 @@ export function spraywallReducer(state = initialState, action) {
   switch (action.type) {
     case SET_SPRAYWALLS:
       return { ...state, spraywalls: action.payload };
-    case UPDATE_SPRAYWALL:
-      const { index, spraywall } = action.payload;
-      const updatedSpraywalls = [...state.spraywalls];
-      updatedSpraywalls[index] = { ...updatedSpraywalls[index], ...spraywall };
-      return { ...state, spraywallArray: updatedSpraywalls };
     case SET_SPRAYWALL_INDEX:
       return { ...state, spraywallIndex: action.payload };
     case SET_FILTER_SORT_BY:

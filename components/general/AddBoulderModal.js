@@ -75,72 +75,98 @@ const AddBoulderModal = ({ isVisible, onClose, navigation }) => {
         <BlurView style={styles.modalContent} intensity={25}>
           {/* Add modal content here */}
           <View style={styles.displayContainer}>
+            {/* title */}
+            <View
+              style={{
+                height: "10%",
+                justifyContent: "center",
+              }}
+            >
+              <Text style={{ fontSize: 24, fontWeight: "bold" }}>
+                Add Boulder
+              </Text>
+            </View>
+            {/* image */}
             <View
               style={{
                 width: "100%",
-                height: "100%",
-                backgroundColor: "white",
-                borderRadius: 20,
-                justifyContent: "space-evenly",
-                alignItems: "center",
+                height: "65%",
+                padding: 10,
               }}
             >
-              <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-                Add Boulder
-              </Text>
-              <View
+              <Image
+                source={{ uri: spraywalls[spraywallIndex].url }}
+                style={{ width: "100%", height: "100%", borderRadius: 20 }}
+                resizeMode="contain"
+              />
+            </View>
+            {/* buttons */}
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-evenly",
+                width: "100%",
+                height: "25%",
+              }}
+            >
+              <TouchableOpacity
                 style={{
-                  flexDirection: "row",
+                  height: "80%",
+                  aspectRatio: 1,
+                  backgroundColor: "rgba(30, 144, 255, 1)",
+                  borderRadius: 10,
+                  justifyContent: "center",
                   alignItems: "center",
                   gap: 10,
                 }}
+                onPress={handleCameraPressed}
               >
-                <TouchableOpacity
-                  style={{
-                    width: 100,
-                    height: 100,
-                    backgroundColor: "rgba(30, 144, 255, 1)",
-                    borderRadius: 20,
-                    justifyContent: "center",
-                    alignItems: "center",
-                    gap: 10,
-                  }}
-                  onPress={handleCameraPressed}
+                <CameraIcon size={25} color={"white"} />
+                <Text
+                  style={{ color: "white", fontSize: 12, fontWeight: "bold" }}
                 >
-                  <CameraIcon size={25} color={"white"} />
-                  <Text style={{ color: "white" }}>Camera</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={{
-                    width: 100,
-                    height: 100,
-                    backgroundColor: "rgba(30, 144, 255, 1)",
-                    borderRadius: 20,
-                    justifyContent: "center",
-                    alignItems: "center",
-                    gap: 10,
-                  }}
-                  onPress={handleDefaultImagePressed}
+                  Camera
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  height: "90%",
+                  aspectRatio: 1,
+                  backgroundColor: "rgba(30, 144, 255, 1)",
+                  borderRadius: 10,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  gap: 10,
+                }}
+                onPress={handleDefaultImagePressed}
+              >
+                <PhotoIcon size={25} color={"white"} />
+                <Text
+                  style={{ color: "white", fontSize: 12, fontWeight: "bold" }}
                 >
-                  <PhotoIcon size={25} color={"white"} />
-                  <Text style={{ color: "white" }}>Default Image</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={{
-                    width: 100,
-                    height: 100,
-                    backgroundColor: "rgba(30, 144, 255, 1)",
-                    borderRadius: 20,
-                    justifyContent: "center",
-                    alignItems: "center",
-                    gap: 10,
-                  }}
-                  onPress={handleUploadImagePressed}
+                  Default Image
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  height: "80%",
+                  aspectRatio: 1,
+                  backgroundColor: "rgba(30, 144, 255, 1)",
+                  borderRadius: 10,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  gap: 10,
+                }}
+                onPress={handleUploadImagePressed}
+              >
+                <ArrowUpOnSquareIcon size={25} color={"white"} />
+                <Text
+                  style={{ color: "white", fontSize: 12, fontWeight: "bold" }}
                 >
-                  <ArrowUpOnSquareIcon size={25} color={"white"} />
-                  <Text style={{ color: "white" }}>Upload</Text>
-                </TouchableOpacity>
-              </View>
+                  Upload
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
         </BlurView>
@@ -158,15 +184,18 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     flex: 1,
+    paddingHorizontal: 20,
+    alignItems: "center",
   },
   displayContainer: {
     width: "100%",
-    height: 225,
-    alignItems: "flex-end",
+    height: 450,
+    backgroundColor: "white",
+    alignItems: "center",
     justifyContent: "flex-end",
-    paddingHorizontal: 20,
+    padding: 10,
+    borderRadius: 10,
     // paddingBottom: 35,
-    flexDirection: "row",
     position: "absolute", //Here is the trick
     bottom: 90, //Here is the trick
   },

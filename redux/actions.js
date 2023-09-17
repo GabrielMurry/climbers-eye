@@ -1,7 +1,6 @@
 export const SET_USER = "SET_USER";
 export const SET_GYM = "SET_GYM";
 export const SET_SPRAYWALLS = "SET_SPRAYWALLS";
-export const UPDATE_SPRAYWALL = "UPDATE_SPRAYWALL";
 export const SET_SPRAYWALL_INDEX = "SET_SPRAYWALL_INDEX";
 export const SET_HEADSHOT_IMAGE = "SET_HEADSHOT_IMAGE";
 export const SET_FILTER_SORT_BY = "SET_FILTER_SORT_BY";
@@ -33,14 +32,6 @@ export const setSpraywalls = (spraywalls) => (dispatch) => {
     payload: spraywalls,
   });
 };
-
-export const updateSpraywall =
-  (spraywallIndex, updatedSpraywall) => (dispatch) => {
-    dispatch({
-      type: UPDATE_SPRAYWALL,
-      payload: { index: spraywallIndex, spraywall: updatedSpraywall },
-    });
-  };
 
 export const setSpraywallIndex = (spraywallIndex) => (dispatch) => {
   dispatch({

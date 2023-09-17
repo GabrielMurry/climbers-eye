@@ -2,7 +2,7 @@ import { View, Text, Alert } from "react-native";
 import React, { useLayoutEffect } from "react";
 import SettingsButton from "../components/editGymComponents/SettingsButton";
 import { useSelector, useDispatch } from "react-redux";
-import { setSpraywalls } from "../redux/actions";
+import { setSpraywalls, setSpraywallIndex } from "../redux/actions";
 import { request } from "../api/requestMethods";
 import useCustomHeader from "../hooks/useCustomHeader";
 
@@ -54,6 +54,7 @@ const EditSprayWallScreen = ({ navigation, route }) => {
               return;
             }
             navigation.goBack();
+            dispatch(setSpraywallIndex(0));
             dispatch(setSpraywalls(response.data.spraywalls));
           },
           style: "destructive",
