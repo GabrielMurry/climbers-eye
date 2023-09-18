@@ -7,11 +7,17 @@ import { setHeadshotImage } from "../../../redux/actions";
 import { request } from "../../../api/requestMethods";
 import * as ImagePicker from "expo-image-picker";
 import useCustomHeader from "../../../hooks/useCustomHeader";
+import ModalOptions from "../../../components/ModalOptions";
 
 const EditProfileScreen = ({ navigation, route }) => {
+  const dispatch = useDispatch();
   const { user, headshotImage } = useSelector((state) => state.userReducer);
 
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [optionsData, setOptionsData] = useState([]);
+
   const handleUploadImage = async () => {
+    setIsModalVisible(false);
     try {
       const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -42,6 +48,39 @@ const EditProfileScreen = ({ navigation, route }) => {
     title: "Edit Profile",
   });
 
+  const removeHeadshotPhoto = () => {
+    dispatch(setHeadshotImage({}));
+    setIsModalVisible(false);
+  };
+
+  useEffect(() => {
+    const createOptionsData = () => {
+      // start with options
+      const options = [
+        { title: "Choose From Library", onPress: handleUploadImage },
+        {
+          title: "Cancel",
+          onPress: () => setIsModalVisible(false),
+          color: "gray",
+        },
+      ];
+      // If you are the setter of a boulder, give option to delete boulder
+      if (headshotImage.url) {
+        const removeHeadshotOption = {
+          title: "Remove Photo",
+          onPress: removeHeadshotPhoto,
+          color: "red",
+        };
+        const cancelOptionIndex = options.length - 1;
+        options.splice(cancelOptionIndex, 0, removeHeadshotOption);
+      }
+
+      return options;
+    };
+
+    setOptionsData(createOptionsData());
+  }, [headshotImage]);
+
   return (
     <SafeAreaView
       style={{
@@ -52,7 +91,6 @@ const EditProfileScreen = ({ navigation, route }) => {
       {/* <Header navigation={navigation} title={"Edit Profile"} /> */}
       {/* profile settings */}
       <View style={{ paddingHorizontal: 10 }}>
-        {/* profile images */}
         <View
           style={{
             paddingHorizontal: 15,
@@ -65,7 +103,7 @@ const EditProfileScreen = ({ navigation, route }) => {
         <View style={{ backgroundColor: "white", borderRadius: 5 }}>
           <SettingsButton
             imageUrl={headshotImage.url ? headshotImage.url : "default"}
-            onPress={handleUploadImage}
+            onPress={() => setIsModalVisible(true)}
           />
           <SettingsButton
             title={"Name"}
@@ -78,7 +116,7 @@ const EditProfileScreen = ({ navigation, route }) => {
           />
           <SettingsButton title={"Email"} placeHolder={user?.email} />
         </View>
-        {/* delete gym */}
+        {/* delete profile */}
         <View
           style={{
             paddingHorizontal: 15,
@@ -101,6 +139,11 @@ const EditProfileScreen = ({ navigation, route }) => {
           />
         </View>
       </View>
+      <ModalOptions
+        isModalVisible={isModalVisible}
+        setIsModalVisible={setIsModalVisible}
+        optionsData={optionsData}
+      />
     </SafeAreaView>
   );
 };

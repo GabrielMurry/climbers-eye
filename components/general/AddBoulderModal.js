@@ -96,7 +96,7 @@ const AddBoulderModal = ({ isVisible, onClose, navigation }) => {
             >
               <Image
                 source={{ uri: spraywalls[spraywallIndex].url }}
-                style={{ width: "100%", height: "100%", borderRadius: 20 }}
+                style={{ width: "100%", height: "100%" }}
                 resizeMode="contain"
               />
             </View>
@@ -112,7 +112,7 @@ const AddBoulderModal = ({ isVisible, onClose, navigation }) => {
             >
               <TouchableOpacity
                 style={{
-                  height: "80%",
+                  height: "75%",
                   aspectRatio: 1,
                   backgroundColor: "rgba(30, 144, 255, 1)",
                   borderRadius: 10,
@@ -150,7 +150,7 @@ const AddBoulderModal = ({ isVisible, onClose, navigation }) => {
               </TouchableOpacity>
               <TouchableOpacity
                 style={{
-                  height: "80%",
+                  height: "75%",
                   aspectRatio: 1,
                   backgroundColor: "rgba(30, 144, 255, 1)",
                   borderRadius: 10,

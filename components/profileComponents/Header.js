@@ -24,10 +24,11 @@ const Header = ({ navigation }) => {
         height: 100,
       }}
     >
-      <View style={{ width: "75%" }}>
+      <View style={{ width: "75%", gap: 5 }}>
         <Text style={{ fontSize: 30, fontWeight: "bold" }}>
           {user?.username}
         </Text>
+        <Text>{user?.name}</Text>
       </View>
       <Pressable
         style={{
