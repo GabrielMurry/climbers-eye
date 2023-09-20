@@ -11,7 +11,7 @@ const screenWidth = Dimensions.get("window").width;
 
 const BoulderBarChart = ({ data, isProject = false }) => {
   return (
-    <View style={{ marginTop: -35, marginBottom: -20 }}>
+    <View style={{ marginTop: -35 }}>
       <VictoryChart
         theme={VictoryTheme.material}
         height={400}

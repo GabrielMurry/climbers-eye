@@ -3,18 +3,12 @@ import {
   Text,
   StyleSheet,
   FlatList,
-  Pressable,
   TouchableOpacity,
-  TextInput,
   ActivityIndicator,
   Keyboard,
+  SectionList,
 } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
-import {
-  AdjustmentsHorizontalIcon,
-  MagnifyingGlassIcon,
-  XMarkIcon,
-} from "react-native-heroicons/outline";
 import BoulderCard from "../../../components/listComponents/BoulderCard";
 import { request } from "../../../api/requestMethods";
 import { useSelector } from "react-redux";
@@ -23,36 +17,22 @@ import {
   boulderBarChartDataTemplate,
   boulderGrades,
 } from "../../../utils/constants/boulderConstants";
-import Header from "../../../components/general/Header";
 import useCustomHeader from "../../../hooks/useCustomHeader";
 import BoulderBarChart from "../../../components/boulderStatsComponents/BoulderBarChart";
-import SessionTitle from "../../../components/profileComponents/SessionTitle";
 
 const ProfileBoulderSectionScreen = ({ route, navigation }) => {
   const { section } = route.params;
   const { user } = useSelector((state) => state.userReducer);
-  const {
-    spraywalls,
-    spraywallIndex,
-    filterMinGradeIndex,
-    filterMaxGradeIndex,
-    filterSortBy,
-    filterCircuits,
-    filterClimbType,
-    filterStatus,
-  } = useSelector((state) => state.spraywallReducer);
+  const { spraywalls, spraywallIndex } = useSelector(
+    (state) => state.spraywallReducer
+  );
 
-  const [searchQuery, setSearchQuery] = useState("");
   const [boulders, setBoulders] = useState([]);
-  const [isTextInputFocused, setIsTextInputFocused] = useState(false);
-  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
-  const [hasFilters, setHasFilters] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [title, setTitle] = useState("");
   const [boulderBarChartData, setBoulderBarChartData] = useState(
     boulderBarChartDataTemplate
   );
-  const [formattedSendDates, setFormattedSendDates] = useState([]);
 
   useCustomHeader({
     navigation,
@@ -80,36 +60,21 @@ const ProfileBoulderSectionScreen = ({ route, navigation }) => {
   // This event will be triggered when the screen gains focus (i.e., when you navigate back to it).
   useFocusEffect(
     useCallback(() => {
-      // reset search query and fetch all data upon every new focus on screen - a boulder may have been updated
-      // setSearchQuery("");
       if (section === "Circuits") {
         setBoulders(route.params.circuit.boulderData);
         setTitle(route.params.circuit.name);
       } else {
         fetchLogbookData();
-        setHasFilters(areFiltersEnabled);
         setTitle(section);
       }
-    }, [
-      filterMinGradeIndex,
-      filterMaxGradeIndex,
-      filterSortBy,
-      filterCircuits,
-      filterClimbType,
-      filterStatus,
-      searchQuery,
-    ])
+    }, [])
   );
 
   const fetchLogbookData = async () => {
     setIsLoading(true);
-    // extract only the id property from each object in the filterCircuits array
-    // serialize the array into a string representation, such as JSON or comma-separated values.
-    const circuitIds = filterCircuits.map((circuit) => circuit.id);
-    const encodedCircuitIds = encodeURIComponent(JSON.stringify(circuitIds));
     const response = await request(
       "get",
-      `logbook_list/${spraywalls[spraywallIndex].id}/${user.id}?section=${section}&search=${searchQuery}&minGradeIndex=${filterMinGradeIndex}&maxGradeIndex=${filterMaxGradeIndex}&sortBy=${filterSortBy}&circuits=${encodedCircuitIds}&climbType=${filterClimbType}&status=${filterStatus}`
+      `profile_boulder_section_list/${spraywalls[spraywallIndex].id}/${user.id}?section=${section}`
     );
     if (response.status !== 200) {
       console.log(response.status);
@@ -117,27 +82,13 @@ const ProfileBoulderSectionScreen = ({ route, navigation }) => {
     }
     if (response.data) {
       if (section === "Logbook") {
-        setBoulders([{ id: "chart" }, ...response.data.section]);
+        setBoulders(response.data.section);
         setBoulderBarChartData(response.data.bouldersBarChartData);
       } else {
         setBoulders(response.data.section);
       }
       setIsLoading(false);
     }
-  };
-
-  const areFiltersEnabled = () => {
-    if (
-      filterMinGradeIndex !== 0 ||
-      filterMaxGradeIndex !== boulderGrades.length - 1 ||
-      filterSortBy !== "popular" ||
-      filterCircuits.length !== 0 ||
-      filterClimbType !== "boulder" ||
-      filterStatus !== "all"
-    ) {
-      return true;
-    }
-    return false;
   };
 
   // Optimization --> use the React.useCallback hook to memoize the navigation function and prevent unnecessary re-creation of the function on every render.
@@ -153,18 +104,9 @@ const ProfileBoulderSectionScreen = ({ route, navigation }) => {
     [navigation]
   );
 
-  const handleFilterPress = () => {
-    navigation.navigate("Filter");
-  };
-
   const renderBoulderCards = ({ item, index }) => {
-    if (item.id === "chart") {
-      return <BoulderBarChart data={boulderBarChartData} />;
-    }
     return (
       <>
-        {/* session title for log booked boulders (ascended boulders) */}
-        <SessionTitle item={item} index={index} boulders={boulders} />
         <TouchableOpacity onPress={() => navigateToBoulderScreen(item)}>
           <BoulderCard boulder={item} />
         </TouchableOpacity>
@@ -172,19 +114,26 @@ const ProfileBoulderSectionScreen = ({ route, navigation }) => {
     );
   };
 
-  const handleTextInputFocus = () => {
-    setIsTextInputFocused(true);
+  const renderSectionHeader = ({ section }) => {
+    return (
+      <View
+        style={{
+          backgroundColor: "rgba(235, 235, 235, 1)",
+          height: 35,
+          paddingHorizontal: 10,
+          alignItems: "center",
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
+      >
+        <Text>Session {section.title}</Text>
+        <Text style={{ fontSize: 12 }}>{section.date}</Text>
+      </View>
+    );
   };
 
-  const handleTextInputBlur = () => {
-    setIsTextInputFocused(false);
-  };
-
-  const handleCancelSearchPress = () => {
-    setSearchQuery("");
-    if (isKeyboardVisible) {
-      Keyboard.dismiss();
-    }
+  const renderHeaderChart = () => {
+    return <BoulderBarChart data={boulderBarChartData} />;
   };
 
   const renderEmptyComponent = () => {
@@ -201,66 +150,35 @@ const ProfileBoulderSectionScreen = ({ route, navigation }) => {
     );
   };
 
+  const renderFooterComponent = () => {
+    return <View style={{ height: 50 }} />;
+  };
+
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
-      <View style={styles.SearchInputAndCancelContainer}>
-        <View style={styles.SearchInputContainer}>
-          <MagnifyingGlassIcon size={20} color="gray" />
-          <TextInput
-            style={styles.SearchInput}
-            value={searchQuery}
-            // onChange doesn't exist in react native. use onChangeText
-            onChangeText={(value) => setSearchQuery(value)} // in react native, you don't have to do e.target.value
-            placeholder="Search (name, setter, or grade)"
-            onFocus={handleTextInputFocus}
-            onBlur={handleTextInputBlur}
-            autoComplete="off"
-          />
-          {searchQuery ? (
-            <TouchableOpacity
-              style={styles.resetSearchQuery}
-              onPress={() => setSearchQuery("")}
-            >
-              <XMarkIcon size={12} color={"white"} />
-            </TouchableOpacity>
-          ) : null}
-          <Pressable
-            style={{
-              backgroundColor: hasFilters ? "black" : "rgb(229, 228, 226)",
-              justifyContent: "center",
-              alignItems: "center",
-              borderRadius: 5,
-              aspectRatio: 1,
-            }}
-            onPress={handleFilterPress}
-          >
-            <AdjustmentsHorizontalIcon
-              size={30}
-              color={hasFilters ? "white" : "black"}
-            />
-          </Pressable>
-        </View>
-        {(isTextInputFocused || searchQuery) && (
-          <TouchableOpacity
-            style={styles.cancelButton}
-            onPress={handleCancelSearchPress}
-          >
-            <Text style={{ color: "rgb(0, 122, 255)" }}>Cancel</Text>
-          </TouchableOpacity>
-        )}
-      </View>
       <View style={styles.listContainer}>
         {/* List of Boulders */}
-        <FlatList
-          data={boulders}
-          renderItem={renderBoulderCards}
-          keyExtractor={(item) => item.uuid || item.id}
-          initialNumToRender={8} // Render the number of items that are initially visible on the screen
-          windowSize={2} // Render an additional number of items to improve scrolling performance
-          ListFooterComponent={<View style={{ height: 50 }} />}
-          ListEmptyComponent={renderEmptyComponent}
-          keyboardShouldPersistTaps="handled" // click on search bar cancel buttons when Keyboard is visible (or click on boulder cards)
-        />
+        {section === "Logbook" ? (
+          <SectionList
+            sections={boulders}
+            keyExtractor={(item) => item.uuid || item.id}
+            renderItem={renderBoulderCards}
+            renderSectionHeader={renderSectionHeader}
+            ListHeaderComponent={renderHeaderChart}
+            ListFooterComponent={renderFooterComponent}
+          />
+        ) : (
+          <FlatList
+            data={boulders}
+            renderItem={renderBoulderCards}
+            keyExtractor={(item) => item.uuid || item.id}
+            initialNumToRender={8} // Render the number of items that are initially visible on the screen
+            windowSize={2} // Render an additional number of items to improve scrolling performance
+            ListFooterComponent={renderFooterComponent}
+            ListEmptyComponent={renderEmptyComponent}
+            keyboardShouldPersistTaps="handled" // click on search bar cancel buttons when Keyboard is visible (or click on boulder cards)
+          />
+        )}
       </View>
     </View>
   );
@@ -294,20 +212,6 @@ const styles = StyleSheet.create({
     height: "100%",
     paddingHorizontal: 5,
   },
-  filterButton: (hasFilters) => ({
-    padding: 15,
-    backgroundColor: hasFilters ? "rgb(0, 122, 255)" : "white",
-    borderRadius: "100%",
-    position: "absolute",
-    bottom: 35,
-    left: 20,
-    // adding shadow to add new circuit button
-    shadowColor: "black",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 5, // Required for Android
-  }),
   addNewBoulderButton: {
     padding: 15,
     backgroundColor: "white",
