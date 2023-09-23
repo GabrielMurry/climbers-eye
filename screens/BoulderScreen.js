@@ -76,18 +76,7 @@ const BoulderScreen = ({ route, navigation }) => {
       console.log(response.status);
     }
     if (response.data) {
-      setBoulder({
-        ...boulder,
-        grade: response.data.grade,
-        quality: response.data.quality,
-        firstAscent: response.data.firstAscent,
-        isSent: response.data.isSent,
-        isLiked: response.data.isLiked,
-        isBookmarked: response.data.isBookmarked,
-        inCircuit: response.data.inCircuit,
-        userSendsCount: response.data.userSendsCount,
-        sends: response.data.sends,
-      });
+      setBoulder(response.data);
     }
   };
 

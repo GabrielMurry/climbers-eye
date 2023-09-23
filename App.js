@@ -5,13 +5,9 @@ import ListScreen from "./screens/ListScreen";
 import {
   UserIcon,
   MapPinIcon,
-  ArrowLeftCircleIcon,
   HomeIcon,
   Square3Stack3DIcon,
   PlusIcon,
-  PhotoIcon,
-  CameraIcon,
-  ArrowUpOnSquareIcon,
   ChevronLeftIcon,
 } from "react-native-heroicons/outline";
 import {
@@ -19,7 +15,6 @@ import {
   MapPinIcon as MapPinIconSolid,
   HomeIcon as HomeIconSolid,
   Square3Stack3DIcon as Square3Stack3DIconSolid,
-  PlusIcon as PlusIconSolid,
 } from "react-native-heroicons/solid";
 import LoginScreen from "./screens/LoginScreen";
 import SignupScreen from "./screens/SignupScreen";
@@ -33,8 +28,6 @@ import ForgotPasswordScreen from "./screens/ForgotPasswordScreen";
 import ResetPasswordScreen from "./screens/ResetPasswordScreen";
 import SubmitCodeScreen from "./screens/SubmitCodeScreen";
 import { useEffect, useState } from "react";
-import fetchCsrfToken from "./api/configToken";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import SendScreen from "./screens/SendScreen";
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 import { Provider } from "react-redux";
@@ -48,7 +41,6 @@ import EditGymScreen from "./screens/EditGymScreen";
 import AddNewSprayWallScreen from "./screens/AddNewSprayWallScreen";
 import EditSprayWallScreen from "./screens/EditSprayWallScreen";
 import EditScreen from "./screens/EditScreen";
-import SettingsScreen from "./screens/profile/edit/SettingsScreen";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Text, View } from "react-native";
 import AddBoulderModal from "./components/general/AddBoulderModal";
@@ -60,6 +52,8 @@ import SwitchGymScreen from "./screens/profile/edit/SwitchGymScreen";
 import AddNewCircuitScreen from "./screens/AddNewCircuitScreen";
 import ProfileBoulderSectionScreen from "./screens/profile/section/ProfileBoulderSectionScreen";
 import ProfileStatsSectionScreen from "./screens/profile/section/ProfileStatsSectionScreen";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { request } from "./api/requestMethods";
 
 const Stack = createNativeStackNavigator();
 
@@ -104,17 +98,30 @@ function customHeader(navigation, screenName) {
 }
 
 export default function App() {
-  // Retrieve csrf token from django on app mount and store token
-  useEffect(() => {
-    const fetchAndStoreCsrfToken = async () => {
-      const csrfToken = await fetchCsrfToken();
-      if (csrfToken) {
-        await AsyncStorage.setItem("csrfToken", csrfToken);
-        console.log("CSRF token stored:", csrfToken);
+  const clearAsyncStorage = async () => {
+    try {
+      const keys = await AsyncStorage.getAllKeys();
+      if (keys.length > 0) {
+        // If there are keys, clear AsyncStorage
+        await AsyncStorage.clear();
+        console.log("AsyncStorage cleared successfully.");
+      } else {
+        console.log("AsyncStorage is already empty.");
       }
-    };
-
-    fetchAndStoreCsrfToken();
+    } catch (error) {
+      console.error("Error clearing AsyncStorage:", error);
+    }
+  };
+  const getTempCsrfToken = async () => {
+    const response = await request("get", "temp_csrf_token/");
+    if (response.status !== 200) {
+      console.log(response.status);
+      return;
+    }
+  };
+  useEffect(() => {
+    clearAsyncStorage();
+    getTempCsrfToken();
   }, []);
 
   const Tab = createBottomTabNavigator();
@@ -345,13 +352,6 @@ export default function App() {
             <Stack.Screen
               name="ProfileStatsSection"
               component={ProfileStatsSectionScreen}
-            />
-            <Stack.Screen
-              name="Settings"
-              component={SettingsScreen}
-              options={{
-                headerShown: false,
-              }}
             />
             <Stack.Screen name="EditProfile" component={EditProfileScreen} />
             <Stack.Screen

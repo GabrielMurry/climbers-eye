@@ -15,11 +15,11 @@ import StatsSection from "../../components/profileComponents/StatsSection";
 const THEME_STYLE = "white";
 
 const ProfileScreen = ({ navigation }) => {
+  const { user } = useSelector((state) => state.userReducer);
   const { gym } = useSelector((state) => state.gymReducer);
   const { spraywalls, spraywallIndex } = useSelector(
     (state) => state.spraywallReducer
   );
-  const { user } = useSelector((state) => state.userReducer);
 
   const [bouldersSectionQuickData, setBouldersSectionQuickData] = useState([
     { title: "Logbook", data: 0 },
@@ -104,9 +104,18 @@ const ProfileScreen = ({ navigation }) => {
     setIsModalVisible(false);
     navigation.navigate("EditProfile");
   };
-  const handleSettingsPress = () => {
+  const handleLogoutPress = async () => {
     setIsModalVisible(false);
-    navigation.navigate("Settings");
+    // const username = user.username;
+    // const email = user.email;
+    // const data = { username, email };
+    const response = await request("post", "logout/", {});
+    if (response.status !== 200) {
+      console.log(response.status);
+      return;
+    } else {
+      navigation.navigate("Login");
+    }
   };
 
   const handleScroll = (event) => {
@@ -123,7 +132,7 @@ const ProfileScreen = ({ navigation }) => {
   const optionsData = [
     { title: "Switch Gym", onPress: handleSwitchGymPress },
     { title: "Edit Profile", onPress: handleEditProfilePress },
-    { title: "Settings", onPress: handleSettingsPress },
+    { title: "Log out", onPress: handleLogoutPress, color: "red" },
     { title: "Cancel", onPress: () => setIsModalVisible(false), color: "gray" },
   ];
 
