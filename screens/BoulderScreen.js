@@ -9,16 +9,10 @@ import React, { useCallback, useEffect, useState } from "react";
 import FullScreenImage from "../components/FullScreenImage";
 import { request } from "../api/requestMethods";
 import { useFocusEffect } from "@react-navigation/native";
-import {
-  ArrowLongRightIcon,
-  ArrowSmallRightIcon,
-  CheckIcon,
-  EllipsisHorizontalIcon,
-} from "react-native-heroicons/outline";
+import { EllipsisHorizontalIcon } from "react-native-heroicons/outline";
 import { useSelector } from "react-redux";
 import ImageDisplay from "../components/boulderComponents/ImageDisplay";
 import Titles from "../components/boulderComponents/Titles";
-import { Text } from "react-native";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import useCustomHeader from "../hooks/useCustomHeader";
 import ModalOptions from "../components/ModalOptions";

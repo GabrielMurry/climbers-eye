@@ -21,16 +21,16 @@ const ProfileScreen = ({ navigation }) => {
     (state) => state.spraywallReducer
   );
 
-  const [bouldersSectionQuickData, setBouldersSectionQuickData] = useState([
-    { title: "Logbook", data: 0 },
-    { title: "Likes", data: 0 },
-    { title: "Bookmarks", data: 0 },
-    { title: "Creations", data: 0 },
-  ]);
-  const [statsSectionQuickData, setStatsSectionQuickData] = useState([
-    { title: "Top Grade", data: "-" },
-    { title: "Flashes", data: 0 },
-  ]);
+  const [bouldersSectionQuickData, setBouldersSectionQuickData] = useState({
+    Logbook: 0,
+    Likes: 0,
+    Bookmarks: 0,
+    Creations: 0,
+  });
+  const [statsSectionQuickData, setStatsSectionQuickData] = useState({
+    "Top Grade": "-",
+    Flashes: 0,
+  });
 
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [circuits, setCircuits] = useState([]);
@@ -106,9 +106,6 @@ const ProfileScreen = ({ navigation }) => {
   };
   const handleLogoutPress = async () => {
     setIsModalVisible(false);
-    // const username = user.username;
-    // const email = user.email;
-    // const data = { username, email };
     const response = await request("post", "logout/", {});
     if (response.status !== 200) {
       console.log(response.status);

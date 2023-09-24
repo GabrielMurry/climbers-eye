@@ -7,22 +7,18 @@ const request = async (method, endpoint, data = null) => {
     // grab csrf token from storage
     const csrfToken = await AsyncStorage.getItem("csrfToken");
     console.log(method, endpoint);
-    console.log("------");
-    console.log(csrfToken);
-    console.log("------");
     // attach csrf token to request header
+    // Including the actual CSRF token in GET requests is generally not a common practice and is not required for CSRF protection.
+    // The primary purpose of CSRF tokens is to protect against unauthorized state-changing requests, which are typically made using POST, PUT, DELETE, or similar HTTP methods.
     axios.defaults.headers.common["X-CSRFToken"] = csrfToken;
     // request method to backend endpoint with or without data
     const response = await axios[method](`/${endpoint}`, data);
     // receive new csrf token - put in storage
     if (response.data.csrfToken) {
-      console.log("++++++");
       await AsyncStorage.setItem("csrfToken", response.data.csrfToken);
-      console.log(response.data.csrfToken);
-      console.log("++++++");
     }
-    // return status and data. If no data, null as data
-    return { status: response.status, data: response.data.data ?? null };
+    // return response object containing our status and data (data may be null)
+    return response;
   } catch (error) {
     return { status: `${method} error at ${endpoint}: ${error}`, data: null };
   }
