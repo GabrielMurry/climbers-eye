@@ -57,46 +57,6 @@ import { request } from "./api/requestMethods";
 
 const Stack = createNativeStackNavigator();
 
-function customHeader(navigation, screenName) {
-  let headerLeft = () => (
-    <ChevronLeftIcon
-      size={30}
-      color="black"
-      onPress={() => navigation.goBack()}
-    />
-  );
-  if (screenName === "Map") headerLeft = () => "";
-  if (screenName === "Home") {
-    headerLeft = () => (
-      <MapPinIcon
-        size={30}
-        color="black"
-        onPress={() => navigation.navigate("Map")}
-      />
-    );
-  }
-  let headerRight = () => (
-    <UserIcon
-      size={30}
-      color="black"
-      onPress={() => navigation.navigate("Profile")}
-    />
-  );
-
-  let animation = "default";
-  if (screenName === "Map" || screenName === "Camera") {
-    animation = "none";
-  }
-
-  return {
-    headerLeft,
-    headerRight,
-    title: "",
-    headerShadowVisible: false,
-    animation,
-  };
-}
-
 export default function App() {
   const clearAsyncStorage = async () => {
     try {
@@ -295,16 +255,7 @@ export default function App() {
                 animation: "none",
               }}
             />
-            {/* <Stack.Screen
-              name="Map"
-              component={MapScreen}
-              options={({ navigation }) => customHeader(navigation, "Map")}
-            /> */}
-            <Stack.Screen
-              name="AddGym"
-              component={AddGymScreen}
-              options={({ navigation }) => customHeader(navigation, "AddGym")}
-            />
+            <Stack.Screen name="AddGym" component={AddGymScreen} />
             <Stack.Screen name="EditGym" component={EditGymScreen} />
             <Stack.Screen name="Edit" component={EditScreen} />
             <Stack.Screen
@@ -314,37 +265,18 @@ export default function App() {
             <Stack.Screen
               name="EditSprayWall"
               component={EditSprayWallScreen}
-              options={({ navigation }) =>
-                customHeader(navigation, "EditSprayWall")
-              }
             />
-            <Stack.Screen
-              name="Camera"
-              component={CameraScreen}
-              options={({ navigation }) => customHeader(navigation, "Camera")}
-            />
+            <Stack.Screen name="Camera" component={CameraScreen} />
             <Stack.Screen
               name="Tabs"
               options={{
                 headerShown: false,
+                gestureEnabled: false, // Disable gestures for tab screens
               }}
             >
               {({ navigation }) => <Tabs navigation={navigation} />}
             </Stack.Screen>
-            <Stack.Screen
-              name="EditBoulder"
-              component={EditBoulderScreen}
-              options={({ navigation }) =>
-                customHeader(navigation, "EditBoulder")
-              }
-            />
-            {/* <Stack.Screen
-              name="Profile"
-              component={ProfileScreen}
-              options={{
-                headerShown: false,
-              }}
-            /> */}
+            <Stack.Screen name="EditBoulder" component={EditBoulderScreen} />
             <Stack.Screen
               name="ProfileBoulderSection"
               component={ProfileBoulderSectionScreen}
@@ -354,25 +286,8 @@ export default function App() {
               component={ProfileStatsSectionScreen}
             />
             <Stack.Screen name="EditProfile" component={EditProfileScreen} />
-            <Stack.Screen
-              name="EditName"
-              component={EditNameScreen}
-              options={({ navigation }) => customHeader(navigation, "EditName")}
-            />
-            <Stack.Screen
-              name="CropImage"
-              component={CropImageScreen}
-              options={({ navigation }) =>
-                customHeader(navigation, "CropImage")
-              }
-            />
-            {/* <Stack.Screen
-              name="List"
-              component={ListScreen}
-              options={{
-                headerShown: false,
-              }}
-            /> */}
+            <Stack.Screen name="EditName" component={EditNameScreen} />
+            <Stack.Screen name="CropImage" component={CropImageScreen} />
             <Stack.Screen name="Filter" component={FilterScreen} />
             <Stack.Screen
               name="FilterCircuit"

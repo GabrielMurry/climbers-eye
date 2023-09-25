@@ -1,15 +1,12 @@
 import { View, Text, TouchableOpacity } from "react-native";
-import React, { useEffect } from "react";
+import React from "react";
 import {
   BookmarkIcon,
-  ChartPieIcon,
   CheckIcon,
   ChevronRightIcon,
   HeartIcon,
   PencilIcon,
-  TrophyIcon,
 } from "react-native-heroicons/outline";
-import { FontAwesome } from "@expo/vector-icons";
 
 const BouldersSection = ({ bouldersSectionQuickData, navigation }) => {
   const iconFocused = (title) => {
@@ -27,46 +24,45 @@ const BouldersSection = ({ bouldersSectionQuickData, navigation }) => {
 
   const renderBouldersSectionQuickData = () => {
     // must turn section quick data from an object to an array, but grab each entries' key and value
-    return Object.entries(bouldersSectionQuickData).map(
-      ([key, value], index, array) => (
-        <TouchableOpacity
-          key={key}
+    return bouldersSectionQuickData.map((item, index) => (
+      <TouchableOpacity
+        key={item.section}
+        style={{
+          borderBottomWidth:
+            index === bouldersSectionQuickData.length - 1 ? 0 : 1,
+          borderColor: "lightgray",
+          height: 60,
+          alignItems: "center",
+          flexDirection: "row",
+        }}
+        onPress={() =>
+          navigation.navigate("ProfileBoulderSection", {
+            section: item.section,
+          })
+        }
+      >
+        <View style={{ width: 30 }}>{iconFocused(item.section)}</View>
+        <View style={{ flex: 1 }}>
+          <Text style={{ fontSize: 16 }}>{item.section}</Text>
+        </View>
+        <View
           style={{
-            borderBottomWidth: index === array.length - 1 ? 0 : 1,
-            borderColor: "lightgray",
-            height: 60,
+            width: 75,
             alignItems: "center",
-            flexDirection: "row",
           }}
-          onPress={() =>
-            navigation.navigate("ProfileBoulderSection", {
-              section: key,
-            })
-          }
         >
-          <View style={{ width: 30 }}>{iconFocused(key)}</View>
-          <View style={{ flex: 1 }}>
-            <Text style={{ fontSize: 16 }}>{key}</Text>
-          </View>
-          <View
-            style={{
-              width: 75,
-              alignItems: "center",
-            }}
-          >
-            <Text style={{ fontSize: 16 }}>{value}</Text>
-          </View>
-          <View
-            style={{
-              width: 50,
-              alignItems: "center",
-            }}
-          >
-            <ChevronRightIcon color={"black"} size={20} />
-          </View>
-        </TouchableOpacity>
-      )
-    );
+          <Text style={{ fontSize: 16 }}>{item.data}</Text>
+        </View>
+        <View
+          style={{
+            width: 50,
+            alignItems: "center",
+          }}
+        >
+          <ChevronRightIcon color={"black"} size={20} />
+        </View>
+      </TouchableOpacity>
+    ));
   };
 
   return (

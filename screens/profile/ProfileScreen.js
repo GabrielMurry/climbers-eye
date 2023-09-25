@@ -21,16 +21,16 @@ const ProfileScreen = ({ navigation }) => {
     (state) => state.spraywallReducer
   );
 
-  const [bouldersSectionQuickData, setBouldersSectionQuickData] = useState({
-    Logbook: 0,
-    Likes: 0,
-    Bookmarks: 0,
-    Creations: 0,
-  });
-  const [statsSectionQuickData, setStatsSectionQuickData] = useState({
-    "Top Grade": "-",
-    Flashes: 0,
-  });
+  const [bouldersSectionQuickData, setBouldersSectionQuickData] = useState([
+    { section: "Logbook", data: 0 },
+    { section: "Likes", data: 0 },
+    { section: "Bookmarks", data: 0 },
+    { section: "Creations", data: 0 },
+  ]);
+  const [statsSectionQuickData, setStatsSectionQuickData] = useState([
+    { section: "Top Grade", data: 0 },
+    { section: "Flashes", data: 0 },
+  ]);
 
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [circuits, setCircuits] = useState([]);

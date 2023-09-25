@@ -15,6 +15,7 @@ import { CameraIcon, PhotoIcon } from "react-native-heroicons/outline";
 import { request } from "../api/requestMethods";
 import * as ImagePicker from "expo-image-picker";
 import { useSelector } from "react-redux";
+import useCustomHeader from "../hooks/useCustomHeader";
 
 const AddGymScreen = ({ route, navigation }) => {
   const { user } = useSelector((state) => state.userReducer);
@@ -29,6 +30,11 @@ const AddGymScreen = ({ route, navigation }) => {
   });
   const [sprayWallName, setSprayWallName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  useCustomHeader({
+    navigation,
+    title: "Add New Gym",
+  });
 
   useEffect(() => {
     if (route?.params?.image) {
@@ -102,9 +108,8 @@ const AddGymScreen = ({ route, navigation }) => {
         backgroundColor: "white",
       }}
     >
-      <View style={{ flex: 1, paddingHorizontal: 20 }}>
+      <View style={{ flex: 1, paddingHorizontal: 20, paddingVertical: 10 }}>
         <View style={styles.addNewGymContainer}>
-          <Text style={styles.title}>Add New Gym</Text>
           <View style={styles.typeContainer}>
             <Text style={styles.label}>Select Gym Type:</Text>
             <View style={styles.switchesContainer}>

@@ -44,7 +44,6 @@ const BoulderScreen = ({ route, navigation }) => {
     </TouchableOpacity>
   );
 
-  // Use the custom hook
   useCustomHeader({
     navigation,
     fromScreen: fromScreen,
