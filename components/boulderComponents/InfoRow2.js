@@ -4,12 +4,16 @@ import { ArrowLongRightIcon, CheckIcon } from "react-native-heroicons/outline";
 import { FontAwesome } from "@expo/vector-icons";
 
 const InfoRow2 = ({ boulder, navigation }) => {
-  const handleBoulderStatsPressed = () => {
+  const handleBoulderStatsPress = () => {
     navigation.navigate("BoulderStats", { boulder: boulder });
   };
 
-  const handleSentBoulderPressed = () => {
+  const handleSentBoulderPress = () => {
     navigation.navigate("Send", { boulder: boulder });
+  };
+
+  const handleUserSendsCountPress = () => {
+    navigation.navigate("BoulderUserSends", { boulder: boulder });
   };
 
   return (
@@ -21,9 +25,9 @@ const InfoRow2 = ({ boulder, navigation }) => {
         alignItems: "center",
       }}
     >
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, flexDirection: "row", gap: 10 }}>
         <TouchableOpacity
-          onPress={handleBoulderStatsPressed}
+          onPress={handleBoulderStatsPress}
           style={{
             width: 50,
             height: 35,
@@ -35,6 +39,21 @@ const InfoRow2 = ({ boulder, navigation }) => {
         >
           <FontAwesome name="book" size={24} color="black" />
         </TouchableOpacity>
+        {boulder.userSendsCount > 0 ? (
+          <TouchableOpacity
+            onPress={handleUserSendsCountPress}
+            style={{
+              width: 50,
+              height: 35,
+              borderRadius: 5,
+              justifyContent: "center",
+              alignItems: "center",
+              backgroundColor: "rgba(235, 235, 235, 255)",
+            }}
+          >
+            <Text style={{ fontWeight: "bold" }}>{boulder.userSendsCount}</Text>
+          </TouchableOpacity>
+        ) : null}
       </View>
       <TouchableOpacity
         style={{
@@ -48,7 +67,7 @@ const InfoRow2 = ({ boulder, navigation }) => {
             ? "green"
             : "rgba(235, 235, 235, 255)",
         }}
-        onPress={handleSentBoulderPressed}
+        onPress={handleSentBoulderPress}
       >
         <Text
           style={{

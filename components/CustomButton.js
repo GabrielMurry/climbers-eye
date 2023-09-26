@@ -10,15 +10,18 @@ const CustomButton = ({
   fgColor,
   width = "100%",
   isLoading,
+  disabled = false,
 }) => {
   return (
     <Pressable
       style={[
         styles.container,
         styles[`container_${type}`],
-        bgColor ? { backgroundColor: bgColor } : {},
+        bgColor ? { backgroundColor: bgColor } : null,
         { width: width },
+        disabled ? { opacity: 0.5 } : null,
       ]}
+      disabled={disabled}
       onPress={onPress}
     >
       {isLoading ? (

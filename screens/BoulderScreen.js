@@ -99,12 +99,17 @@ const BoulderScreen = ({ route, navigation }) => {
     );
   };
 
+  const handleReportPress = () => {
+    setIsModalVisible(false);
+    navigation.navigate("ReportBoulder");
+  };
+
   useEffect(() => {
     const createOptionsData = () => {
       // start with options
       const options = [
         { title: "Share", onPress: "" },
-        { title: "Report", onPress: "" },
+        { title: "Report", onPress: handleReportPress },
         {
           title: "Cancel",
           onPress: () => setIsModalVisible(false),

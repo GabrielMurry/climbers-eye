@@ -54,6 +54,8 @@ import ProfileBoulderSectionScreen from "./screens/profile/section/ProfileBoulde
 import ProfileStatsSectionScreen from "./screens/profile/section/ProfileStatsSectionScreen";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { request } from "./api/requestMethods";
+import ReportBoulderScreen from "./screens/ReportBoulderScreen";
+import BoulderUserSendsScreen from "./screens/BoulderUserSendsScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -302,6 +304,14 @@ export default function App() {
             />
             <Stack.Screen name="BoulderStats" component={BoulderStatsScreen} />
             <Stack.Screen name="SwitchGym" component={SwitchGymScreen} />
+            <Stack.Screen
+              name="ReportBoulder"
+              component={ReportBoulderScreen}
+            />
+            <Stack.Screen
+              name="BoulderUserSends"
+              component={BoulderUserSendsScreen}
+            />
           </Stack.Navigator>
         </NavigationContainer>
       </Provider>
