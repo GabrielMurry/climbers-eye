@@ -21,7 +21,6 @@ import { boulderGrades } from "../utils/constants/boulderConstants";
 import FilterButton from "../components/filterComponents/FilterButton";
 import GradeRange from "../components/filterComponents/GradeRange";
 import filterLists from "../utils/constants/filterListConstants";
-import Header from "../components/general/Header";
 import useCustomHeader from "../hooks/useCustomHeader";
 
 const FilterScreen = ({ navigation }) => {

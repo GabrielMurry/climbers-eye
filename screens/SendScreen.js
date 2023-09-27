@@ -18,7 +18,6 @@ import { request } from "../api/requestMethods";
 import { useSelector } from "react-redux";
 import { boulderGrades } from "../utils/constants/boulderConstants";
 import * as Haptics from "expo-haptics";
-import Header from "../components/general/Header";
 import useCustomHeader from "../hooks/useCustomHeader";
 
 const options = {

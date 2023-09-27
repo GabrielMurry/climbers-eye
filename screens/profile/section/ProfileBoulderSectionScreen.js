@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import BoulderCard from "../../../components/listComponents/BoulderCard";
+import LogbookBoulderCard from "../../../components/profileComponents/LogbookBoulderCard";
 import { request } from "../../../api/requestMethods";
 import { useSelector } from "react-redux";
 import { useFocusEffect } from "@react-navigation/native";
@@ -104,11 +105,21 @@ const ProfileBoulderSectionScreen = ({ route, navigation }) => {
     [navigation]
   );
 
-  const renderBoulderCards = ({ item, index }) => {
+  const renderBoulderCards = ({ item }) => {
     return (
       <>
         <TouchableOpacity onPress={() => navigateToBoulderScreen(item)}>
           <BoulderCard boulder={item} />
+        </TouchableOpacity>
+      </>
+    );
+  };
+
+  const renderLogbookBoulderCards = ({ item }) => {
+    return (
+      <>
+        <TouchableOpacity onPress={() => navigateToBoulderScreen(item)}>
+          <LogbookBoulderCard boulder={item} />
         </TouchableOpacity>
       </>
     );
@@ -162,7 +173,7 @@ const ProfileBoulderSectionScreen = ({ route, navigation }) => {
           <SectionList
             sections={boulders}
             keyExtractor={(item) => item.uuid || item.id}
-            renderItem={renderBoulderCards}
+            renderItem={renderLogbookBoulderCards}
             renderSectionHeader={renderSectionHeader}
             ListHeaderComponent={renderHeaderChart}
             ListFooterComponent={renderFooterComponent}

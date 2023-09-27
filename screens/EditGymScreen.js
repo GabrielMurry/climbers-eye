@@ -4,7 +4,6 @@ import { useSelector, useDispatch } from "react-redux";
 import SettingsButton from "../components/editGymComponents/SettingsButton";
 import { setGym, setSpraywalls } from "../redux/actions";
 import { request } from "../api/requestMethods";
-import Header from "../components/general/Header";
 import useCustomHeader from "../hooks/useCustomHeader";
 
 const EditGymScreen = ({ navigation }) => {

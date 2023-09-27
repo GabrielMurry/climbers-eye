@@ -14,10 +14,7 @@ import React, {
 } from "react";
 import { request } from "../api/requestMethods";
 import { useSelector } from "react-redux";
-import Header from "../components/general/Header";
-import { useFocusEffect } from "@react-navigation/native";
 import { RefreshControl } from "react-native";
-import useCustomHeader from "../hooks/useCustomHeader";
 import { EllipsisHorizontalIcon } from "react-native-heroicons/outline";
 
 const THEME_STYLE = "white";
@@ -176,7 +173,7 @@ const ActivityScreen = ({ navigation }) => {
           justifyContent: "space-between",
           paddingVertical: 10,
           paddingHorizontal: 20,
-          height: 100,
+          height: 75,
         }}
       >
         <View style={{ width: "75%" }}>

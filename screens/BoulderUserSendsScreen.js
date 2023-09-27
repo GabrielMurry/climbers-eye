@@ -1,5 +1,5 @@
-import { View, Text } from "react-native";
-import React from "react";
+import { View, Text, FlatList } from "react-native";
+import React, { useState } from "react";
 import useCustomHeader from "../hooks/useCustomHeader";
 
 const BoulderUserSendsScreen = ({ navigation, route }) => {
@@ -8,6 +8,25 @@ const BoulderUserSendsScreen = ({ navigation, route }) => {
     navigation,
     title: "Your Sends",
   });
+
+  const [data, setData] = useState(boulder.userSendsData);
+
+  const renderUserSend = ({ item }) => (
+    <View
+      style={{
+        borderBottomWidth: 1,
+        borderColor: "lightgray",
+        paddingVertical: 10,
+      }}
+    >
+      <Text>{item.date}</Text>
+      <Text>Attempts: {item.attempts}</Text>
+      <Text>Grade: {item.grade}</Text>
+      <Text>Quality: {item.quality}</Text>
+      <Text>Notes: {item.notes}</Text>
+    </View>
+  );
+
   return (
     <View
       style={{
@@ -17,7 +36,11 @@ const BoulderUserSendsScreen = ({ navigation, route }) => {
         paddingVertical: 10,
       }}
     >
-      <Text>BoulderUserSendsScreen</Text>
+      <FlatList
+        data={data}
+        renderItem={renderUserSend}
+        keyExtractor={(item) => item.id}
+      />
     </View>
   );
 };

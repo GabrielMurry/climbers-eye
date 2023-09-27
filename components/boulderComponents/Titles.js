@@ -8,7 +8,7 @@ const Titles = ({ boulder }) => {
       <Text style={styles.titleMain}>{boulder.name}</Text>
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <Text style={{ fontSize: 18 }}>
-          {boulder.grade ?? "Project"}{" "}
+          {boulder.grade ? boulder.grade : "Project"}{" "}
           {boulder.quality ? (
             <>
               {" "}

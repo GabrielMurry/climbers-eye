@@ -1,14 +1,5 @@
-import {
-  View,
-  Pressable,
-  ActivityIndicator,
-  StyleSheet,
-  Image,
-  Dimensions,
-  SafeAreaView,
-} from "react-native";
+import { Pressable, Image, Dimensions } from "react-native";
 import React, { useEffect, useState } from "react";
-import Header from "../general/Header";
 
 const THEME_STYLE = "black";
 
