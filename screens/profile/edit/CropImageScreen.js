@@ -106,6 +106,11 @@ const CropImageScreen = ({ route, navigation }) => {
     navigation.goBack();
   };
 
+  const handleTransform = (item) => {
+    console.log(zoomRef.current.offsetX);
+    console.log(item);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.cropSquare} />
@@ -116,6 +121,7 @@ const CropImageScreen = ({ route, navigation }) => {
         visualTouchFeedbackEnabled={false}
         panBoundaryPadding={200}
         ref={zoomRef}
+        onTransform={handleTransform}
       >
         <Image
           source={{ uri: imageUri }}

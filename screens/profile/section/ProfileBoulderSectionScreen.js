@@ -20,6 +20,8 @@ import {
 } from "../../../utils/constants/boulderConstants";
 import useCustomHeader from "../../../hooks/useCustomHeader";
 import BoulderBarChart from "../../../components/boulderStatsComponents/BoulderBarChart";
+import { EllipsisHorizontalIcon } from "react-native-heroicons/outline";
+import ModalOptions from "../../../components/ModalOptions";
 
 const ProfileBoulderSectionScreen = ({ route, navigation }) => {
   const { section } = route.params;
@@ -34,10 +36,27 @@ const ProfileBoulderSectionScreen = ({ route, navigation }) => {
   const [boulderBarChartData, setBoulderBarChartData] = useState(
     boulderBarChartDataTemplate
   );
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const optionsData = [
+    { title: "Delete Circuit", onPress: "", color: "red" },
+    {
+      title: "Cancel",
+      onPress: () => setIsModalVisible(false),
+      color: "gray",
+    },
+  ];
+
+  const headerRight = (
+    <TouchableOpacity onPress={() => setIsModalVisible(true)}>
+      <EllipsisHorizontalIcon size={35} color={"black"} />
+    </TouchableOpacity>
+  );
 
   useCustomHeader({
     navigation,
     title: title,
+    headerRight: section === "Circuits" ? headerRight : null,
   });
 
   // Add an event listener to detect changes in keyboard visibility
@@ -191,6 +210,11 @@ const ProfileBoulderSectionScreen = ({ route, navigation }) => {
           />
         )}
       </View>
+      <ModalOptions
+        isModalVisible={isModalVisible}
+        setIsModalVisible={setIsModalVisible}
+        optionsData={optionsData}
+      />
     </View>
   );
 };
