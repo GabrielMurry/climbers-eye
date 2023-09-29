@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   Keyboard,
   SectionList,
+  Alert,
 } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import BoulderCard from "../../../components/listComponents/BoulderCard";
@@ -38,8 +39,36 @@ const ProfileBoulderSectionScreen = ({ route, navigation }) => {
   );
   const [isModalVisible, setIsModalVisible] = useState(false);
 
+  const deleteCircuitPress = () => {
+    Alert.alert(
+      "Delete Circuit",
+      `Are you sure you want to delete "${route.params.circuit.name}"?`,
+      [
+        {
+          text: "Cancel",
+        },
+        {
+          text: "Delete",
+          onPress: async () => {
+            const response = await request(
+              "delete",
+              `delete_circuit/${user.id}/${spraywalls[spraywallIndex].id}/${route.params.circuit.id}`
+            );
+            if (response.status !== 200) {
+              console.log(response.status);
+              return;
+            }
+            navigation.goBack();
+          },
+          style: "destructive",
+        },
+      ],
+      { cancelable: false }
+    );
+  };
+
   const optionsData = [
-    { title: "Delete Circuit", onPress: "", color: "red" },
+    { title: "Delete Circuit", onPress: deleteCircuitPress, color: "red" },
     {
       title: "Cancel",
       onPress: () => setIsModalVisible(false),
@@ -81,6 +110,7 @@ const ProfileBoulderSectionScreen = ({ route, navigation }) => {
   useFocusEffect(
     useCallback(() => {
       if (section === "Circuits") {
+        console.log(route.params.circuit);
         setBoulders(route.params.circuit.boulderData);
         setTitle(route.params.circuit.name);
       } else {

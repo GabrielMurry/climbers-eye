@@ -5,12 +5,14 @@ import {
   StyleSheet,
   Switch,
   TouchableOpacity,
+  SafeAreaView,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import useCustomHeader from "../hooks/useCustomHeader";
 import CustomInput from "../components/CustomInput";
 import { request } from "../api/requestMethods";
 import { useSelector } from "react-redux";
+import CustomButton from "../components/CustomButton";
 
 const AddNewCircuitScreen = ({ navigation }) => {
   const { user } = useSelector((state) => state.userReducer);
@@ -22,8 +24,9 @@ const AddNewCircuitScreen = ({ navigation }) => {
   const [newCircuitDescription, setNewCircuitDescription] = useState("");
   const [newCircuitColor, setNewCircuitColor] = useState("green");
   const [isNewCircuitPrivate, setIsNewCircuitPrivate] = useState(false);
+  const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
 
-  const handleConfirmNewCircuit = async () => {
+  const handleAddNewCircuitPress = async () => {
     const data = {
       name: newCircuitName,
       description: newCircuitDescription,
@@ -46,118 +49,137 @@ const AddNewCircuitScreen = ({ navigation }) => {
     }
   };
 
-  const headerRight = (
-    <TouchableOpacity
-      style={{ width: 50, alignItems: "flex-end" }}
-      onPress={handleConfirmNewCircuit}
-    >
-      <Text style={{ fontSize: 16 }}>Save</Text>
-    </TouchableOpacity>
-  );
-
   useCustomHeader({
     navigation,
     title: "Add New Circuit",
-    headerRight,
   });
 
+  useEffect(() => {
+    if (newCircuitName !== "") {
+      setIsSubmitDisabled(false);
+    } else {
+      setIsSubmitDisabled(true);
+    }
+  }, [newCircuitName]);
+
   return (
-    <View style={{ padding: 20, gap: 15, backgroundColor: "white", flex: 1 }}>
-      <View style={styles.row}>
-        <Text>Circuit Name</Text>
-        <CustomInput
-          value={newCircuitName}
-          setValue={(value) => setNewCircuitName(value)}
-          placeholder="Circuit Name"
-          secureTextEntry={false}
-        />
-      </View>
-      <View style={styles.row}>
-        <Text>Circuit Description</Text>
-        <CustomInput
-          value={newCircuitDescription}
-          setValue={(value) => setNewCircuitDescription(value)}
-          placeholder="Circuit Description"
-          secureTextEntry={false}
-        />
-      </View>
-      <View style={styles.row}>
-        <Text>Circuit Color</Text>
-        <View style={styles.colorSwatchContainer}>
-          <Pressable
-            style={styles.colorSwatchButton("green")}
-            onPress={() => setNewCircuitColor("green")}
-          >
-            {newCircuitColor === "green" ? (
-              <View style={styles.selectedSwatchIndicator} />
-            ) : null}
-          </Pressable>
-          <Pressable
-            style={styles.colorSwatchButton("blue")}
-            onPress={() => setNewCircuitColor("blue")}
-          >
-            {newCircuitColor === "blue" ? (
-              <View style={styles.selectedSwatchIndicator} />
-            ) : null}
-          </Pressable>
-          <Pressable
-            style={styles.colorSwatchButton("yellow")}
-            onPress={() => setNewCircuitColor("yellow")}
-          >
-            {newCircuitColor === "yellow" ? (
-              <View style={styles.selectedSwatchIndicator} />
-            ) : null}
-          </Pressable>
-          <Pressable
-            style={styles.colorSwatchButton("pink")}
-            onPress={() => setNewCircuitColor("pink")}
-          >
-            {newCircuitColor === "pink" ? (
-              <View style={styles.selectedSwatchIndicator} />
-            ) : null}
-          </Pressable>
-          <Pressable
-            style={styles.colorSwatchButton("orange")}
-            onPress={() => setNewCircuitColor("orange")}
-          >
-            {newCircuitColor === "orange" ? (
-              <View style={styles.selectedSwatchIndicator} />
-            ) : null}
-          </Pressable>
-          <Pressable
-            style={styles.colorSwatchButton("red")}
-            onPress={() => setNewCircuitColor("red")}
-          >
-            {newCircuitColor === "red" ? (
-              <View style={styles.selectedSwatchIndicator} />
-            ) : null}
-          </Pressable>
-          <Pressable
-            style={styles.colorSwatchButton("purple")}
-            onPress={() => setNewCircuitColor("purple")}
-          >
-            {newCircuitColor === "purple" ? (
-              <View style={styles.selectedSwatchIndicator} />
-            ) : null}
-          </Pressable>
-          <Pressable
-            style={styles.colorSwatchButton("black")}
-            onPress={() => setNewCircuitColor("black")}
-          >
-            {newCircuitColor === "black" ? (
-              <View style={styles.selectedSwatchIndicator} />
-            ) : null}
-          </Pressable>
+    <SafeAreaView
+      style={{
+        backgroundColor: "white",
+        flex: 1,
+      }}
+    >
+      <View
+        style={{
+          paddingHorizontal: 20,
+          paddingVertical: 10,
+          justifyContent: "space-between",
+          flex: 1,
+        }}
+      >
+        <View style={{ gap: 10 }}>
+          <View style={styles.row}>
+            <Text>Circuit Name</Text>
+            <CustomInput
+              value={newCircuitName}
+              setValue={(value) => setNewCircuitName(value)}
+              placeholder="Circuit Name"
+              secureTextEntry={false}
+            />
+          </View>
+          <View style={styles.row}>
+            <Text>Circuit Description</Text>
+            <CustomInput
+              value={newCircuitDescription}
+              setValue={(value) => setNewCircuitDescription(value)}
+              placeholder="Circuit Description"
+              secureTextEntry={false}
+            />
+          </View>
+          <View style={styles.row}>
+            <Text>Circuit Color</Text>
+            <View style={styles.colorSwatchContainer}>
+              <Pressable
+                style={styles.colorSwatchButton("green")}
+                onPress={() => setNewCircuitColor("green")}
+              >
+                {newCircuitColor === "green" ? (
+                  <View style={styles.selectedSwatchIndicator} />
+                ) : null}
+              </Pressable>
+              <Pressable
+                style={styles.colorSwatchButton("blue")}
+                onPress={() => setNewCircuitColor("blue")}
+              >
+                {newCircuitColor === "blue" ? (
+                  <View style={styles.selectedSwatchIndicator} />
+                ) : null}
+              </Pressable>
+              <Pressable
+                style={styles.colorSwatchButton("yellow")}
+                onPress={() => setNewCircuitColor("yellow")}
+              >
+                {newCircuitColor === "yellow" ? (
+                  <View style={styles.selectedSwatchIndicator} />
+                ) : null}
+              </Pressable>
+              <Pressable
+                style={styles.colorSwatchButton("pink")}
+                onPress={() => setNewCircuitColor("pink")}
+              >
+                {newCircuitColor === "pink" ? (
+                  <View style={styles.selectedSwatchIndicator} />
+                ) : null}
+              </Pressable>
+              <Pressable
+                style={styles.colorSwatchButton("orange")}
+                onPress={() => setNewCircuitColor("orange")}
+              >
+                {newCircuitColor === "orange" ? (
+                  <View style={styles.selectedSwatchIndicator} />
+                ) : null}
+              </Pressable>
+              <Pressable
+                style={styles.colorSwatchButton("red")}
+                onPress={() => setNewCircuitColor("red")}
+              >
+                {newCircuitColor === "red" ? (
+                  <View style={styles.selectedSwatchIndicator} />
+                ) : null}
+              </Pressable>
+              <Pressable
+                style={styles.colorSwatchButton("purple")}
+                onPress={() => setNewCircuitColor("purple")}
+              >
+                {newCircuitColor === "purple" ? (
+                  <View style={styles.selectedSwatchIndicator} />
+                ) : null}
+              </Pressable>
+              <Pressable
+                style={styles.colorSwatchButton("black")}
+                onPress={() => setNewCircuitColor("black")}
+              >
+                {newCircuitColor === "black" ? (
+                  <View style={styles.selectedSwatchIndicator} />
+                ) : null}
+              </Pressable>
+            </View>
+          </View>
+          <View style={styles.privateCircuitContainer}>
+            <Text style={styles.privateCircuitText}>Private Circuit</Text>
+            <Switch
+              value={isNewCircuitPrivate}
+              onValueChange={() => setIsNewCircuitPrivate(!isNewCircuitPrivate)}
+            />
+          </View>
         </View>
-      </View>
-      <View style={styles.privateCircuitContainer}>
-        <Text style={styles.privateCircuitText}>Private Circuit</Text>
-        <Switch
-          value={isNewCircuitPrivate}
-          onValueChange={() => setIsNewCircuitPrivate(!isNewCircuitPrivate)}
+        <CustomButton
+          onPress={handleAddNewCircuitPress}
+          text="Add"
+          disabled={isSubmitDisabled}
         />
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
