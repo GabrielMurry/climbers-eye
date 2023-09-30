@@ -7,25 +7,20 @@ import React, {
   useRef,
   useState,
 } from "react";
-import MapView from "react-native-maps";
-import {
-  ArrowLeftCircleIcon,
-  MagnifyingGlassIcon,
-  XMarkIcon,
-} from "react-native-heroicons/outline";
+import { ArrowLeftCircleIcon } from "react-native-heroicons/outline";
 import { useDispatch, useSelector } from "react-redux";
 import Geocoder from "react-native-geocoding";
 import { GOOGLE_MAPS_GEOCODER_API_KEY } from "@env";
 import { request } from "../api/requestMethods";
 import GymCard from "../components/GymCard";
-import BottomSheet, { BottomSheetTextInput } from "@gorhom/bottom-sheet";
+import BottomSheet from "@gorhom/bottom-sheet";
 import { setGym, setSpraywalls } from "../redux/actions";
 import FullScreenImage from "../components/FullScreenImage";
-import GymMapMarker from "../components/mapComponents/GymMapMarker";
 import GymInfoBottomSheet from "../components/mapComponents/GymInfoBottomSheet";
-import { Text } from "react-native";
 import GymBottomSheetSearchResult from "../components/mapComponents/GymBottomSheetSearchResult";
 import GymBottomSheetSearchEmpty from "../components/mapComponents/GymBottomSheetSearchEmpty";
+import MapSearchQuery from "../components/mapComponents/MapSearchQuery";
+import Map from "../components/mapComponents/Map";
 
 // Initialize the module (needs to be done only once)
 Geocoder.init(GOOGLE_MAPS_GEOCODER_API_KEY); // use a valid API key
@@ -39,7 +34,6 @@ const MapScreen = ({ navigation }) => {
   const [gymMarker, setGymMarker] = useState(null);
   const [isLoadingConfirmGym, setIsLoadingConfirmGym] = useState(false);
   const [isLoadingGymInfo, setIsLoadingGymInfo] = useState(false);
-  const [isTextInputFocused, setIsTextInputFocused] = useState(false);
   const [imageFullScreen, setImageFullScreen] = useState(false);
 
   const mapRef = useRef(null);
@@ -174,14 +168,6 @@ const MapScreen = ({ navigation }) => {
     []
   );
 
-  const handleTextInputFocus = () => {
-    setIsTextInputFocused(true);
-  };
-
-  const handleTextInputBlur = () => {
-    setIsTextInputFocused(false);
-  };
-
   const handleCancelSearchPress = () => {
     // bug in bottom-sheet pkg - can't dismiss keyboard and snap to index at same time
     setTimeout(() => {
@@ -200,24 +186,12 @@ const MapScreen = ({ navigation }) => {
   return (
     <View style={styles.mapContainer}>
       {/* map view */}
-      <MapView
-        ref={mapRef}
-        initialRegion={{
-          latitude: 38.575764,
-          longitude: -121.478851,
-          latitudeDelta: 0.05, // zoom scale
-          longitudeDelta: 0.05,
-        }}
-        style={{ flex: 1 }}
-      >
-        {gymMarker && (
-          <GymMapMarker
-            gymMarker={gymMarker}
-            handleConfirmMyGymPress={handleConfirmMyGymPress}
-            isLoadingConfirmGym={isLoadingConfirmGym}
-          />
-        )}
-      </MapView>
+      <Map
+        mapRef={mapRef}
+        gymMarker={gymMarker}
+        handleConfirmMyGymPress={handleConfirmMyGymPress}
+        isLoadingConfirmGym={isLoadingConfirmGym}
+      />
       {/* bottom sheet */}
       <BottomSheet
         ref={bottomSheetRef}
@@ -230,7 +204,7 @@ const MapScreen = ({ navigation }) => {
       >
         <View style={styles.bottomSheet}>
           {gymMarker ? (
-            // bottom sheet of selected gym - gym's info shown
+            // bottom sheet of selected gym - gym's info shown (map search query is not. Press 'x' to cancel the gym marker and remove gym info in replace of the map search query)
             <GymInfoBottomSheet
               gymMarker={gymMarker}
               isLoadingGymInfo={isLoadingGymInfo}
@@ -242,36 +216,11 @@ const MapScreen = ({ navigation }) => {
           ) : (
             // bottom sheet search query
             <>
-              <View style={styles.bottomSheetSearchInputAndCancelContainer}>
-                <View style={styles.bottomSheetSearchInputContainer}>
-                  <MagnifyingGlassIcon size={20} color="gray" />
-                  <BottomSheetTextInput
-                    style={styles.bottomSheetSearchInput}
-                    value={searchQuery}
-                    // onChange doesn't exist in react native. use onChangeText
-                    onChangeText={(value) => setSearchQuery(value)} // in react native, you don't have to do e.target.value
-                    placeholder="Search Gyms or Home Walls"
-                    onFocus={handleTextInputFocus}
-                    onBlur={handleTextInputBlur}
-                  />
-                  {searchQuery ? (
-                    <TouchableOpacity
-                      style={styles.resetSearchQuery}
-                      onPress={() => setSearchQuery("")}
-                    >
-                      <XMarkIcon size={12} color={"white"} />
-                    </TouchableOpacity>
-                  ) : null}
-                </View>
-                {(isTextInputFocused || searchQuery) && (
-                  <TouchableOpacity
-                    style={styles.cancelButton}
-                    onPress={handleCancelSearchPress}
-                  >
-                    <Text style={{ color: "rgb(0, 122, 255)" }}>Cancel</Text>
-                  </TouchableOpacity>
-                )}
-              </View>
+              <MapSearchQuery
+                searchQuery={searchQuery}
+                setSearchQuery={setSearchQuery}
+                handleCancelSearchPress={handleCancelSearchPress}
+              />
               {searchQuery ? (
                 <GymBottomSheetSearchResult
                   navigation={navigation}
@@ -312,36 +261,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 20,
     gap: 10,
-  },
-  bottomSheetSearchInputAndCancelContainer: {
-    flexDirection: "row",
-  },
-  bottomSheetSearchInputContainer: {
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "rgb(229, 228, 226)",
-    paddingHorizontal: 10,
-    borderRadius: 10,
-  },
-  bottomSheetSearchInput: {
-    flex: 1,
-    height: 35,
-    paddingHorizontal: 5,
-    backgroundColor: "rgb(229, 228, 226)",
-    borderRadius: 10,
-  },
-  cancelButton: {
-    justifyContent: "center",
-    alignItems: "center",
-    marginLeft: 10,
-  },
-  resetSearchQuery: {
-    backgroundColor: "gray",
-    width: 18,
-    height: 18,
-    borderRadius: "100%",
-    justifyContent: "center",
-    alignItems: "center",
   },
 });
