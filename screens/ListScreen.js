@@ -50,12 +50,9 @@ const ListScreen = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [boulders, setBoulders] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isHeaderImageVisible, setIsHeaderImageVisible] = useState(false);
   const [hasFilters, setHasFilters] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [isHeaderTitleVisible, setIsHeaderTitleVisible] = useState(false);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
-  const [hasNoBoulders, setHasNoBoulders] = useState(false);
 
   const flatListRef = useRef(null);
 
@@ -145,7 +142,6 @@ const ListScreen = ({ navigation }) => {
   useFocusEffect(
     useCallback(() => {
       // reset search query and fetch all data upon every new focus on screen - a boulder may have been updated
-      // setSearchQuery("");
       fetchAllData();
       setHasFilters(areFiltersEnabled);
     }, [
@@ -162,7 +158,6 @@ const ListScreen = ({ navigation }) => {
   );
 
   const fetchAllData = async () => {
-    setIsLoading(true);
     // extract only the id property from each object in the filterCircuits array
     // serialize the array into a string representation, such as JSON or comma-separated values.
     const circuitIds = filterCircuits.map((circuit) => circuit.id);
@@ -183,7 +178,6 @@ const ListScreen = ({ navigation }) => {
         { id: "spraywalls", spraywalls: spraywalls },
         ...response.data,
       ]);
-      setIsLoading(false);
     }
   };
 

@@ -17,10 +17,9 @@ import BottomSheet from "@gorhom/bottom-sheet";
 import { setGym, setSpraywalls } from "../redux/actions";
 import FullScreenImage from "../components/FullScreenImage";
 import GymInfoBottomSheet from "../components/mapComponents/GymInfoBottomSheet";
-import GymBottomSheetSearchResult from "../components/mapComponents/GymBottomSheetSearchResult";
-import GymBottomSheetSearchEmpty from "../components/mapComponents/GymBottomSheetSearchEmpty";
 import MapSearchQuery from "../components/mapComponents/MapSearchQuery";
 import Map from "../components/mapComponents/Map";
+import MapSearchResults from "../components/mapComponents/MapSearchResults";
 
 // Initialize the module (needs to be done only once)
 Geocoder.init(GOOGLE_MAPS_GEOCODER_API_KEY); // use a valid API key
@@ -221,15 +220,12 @@ const MapScreen = ({ navigation }) => {
                 setSearchQuery={setSearchQuery}
                 handleCancelSearchPress={handleCancelSearchPress}
               />
-              {searchQuery ? (
-                <GymBottomSheetSearchResult
-                  navigation={navigation}
-                  gyms={gyms}
-                  renderItem={renderItem}
-                />
-              ) : (
-                <GymBottomSheetSearchEmpty />
-              )}
+              <MapSearchResults
+                searchQuery={searchQuery}
+                navigation={navigation}
+                gyms={gyms}
+                renderItem={renderItem}
+              />
             </>
           )}
         </View>
