@@ -74,7 +74,7 @@ const BoulderStatsScreen = ({ route, navigation }) => {
       </View>
       <View style={styles.row}>
         <Text style={styles.label}>Your Sends:</Text>
-        <Text style={styles.info}>{boulder.userSendsCount}</Text>
+        <Text style={styles.info}>{boulder.userSendsData.length}</Text>
       </View>
       <View style={styles.row}>
         <Text style={styles.label}>Published:</Text>

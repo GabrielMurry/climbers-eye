@@ -19,6 +19,7 @@ import { useSelector } from "react-redux";
 import { boulderGrades } from "../utils/constants/boulderConstants";
 import * as Haptics from "expo-haptics";
 import useCustomHeader from "../hooks/useCustomHeader";
+import CustomButton from "../components/CustomButton";
 
 const options = {
   attempts: ["-"],
@@ -42,6 +43,7 @@ const SendScreen = ({ route, navigation }) => {
   const [showDifficultyPicker, setShowDifficultyPicker] = useState(false);
   const [notes, setNotes] = useState("");
   const [errors, setErrors] = useState({ attempts: false, difficulty: false });
+  const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
 
   useCustomHeader({
     backgroundColor: "rgba(245,245,245,255)",
@@ -75,17 +77,15 @@ const SendScreen = ({ route, navigation }) => {
     }).start();
   };
 
+  useEffect(() => {
+    if (selectedAttempts !== "-" && selectedDifficulty !== "-") {
+      setIsSubmitDisabled(false);
+    } else {
+      setIsSubmitDisabled(true);
+    }
+  }, [selectedAttempts, selectedDifficulty]);
+
   handleSubmit = async () => {
-    if (selectedAttempts === "-") {
-      console.log("MUST SELECT YOUR ATTEMPTS");
-      setErrors((prev) => ({ ...prev, attempts: true }));
-      return;
-    }
-    if (selectedDifficulty === "-") {
-      console.log("MUST SELECT A DIFFICULTY");
-      setErrors((prev) => ({ ...prev, difficulty: true }));
-      return;
-    }
     const data = {
       attempts: selectedAttempts,
       grade: selectedDifficulty,
@@ -106,15 +106,6 @@ const SendScreen = ({ route, navigation }) => {
     handleVibrate();
     navigation.goBack();
   };
-
-  useEffect(() => {
-    if (errors.attempts) {
-      setErrors((prev) => ({ ...prev, attempts: false }));
-    }
-    if (errors.difficulty) {
-      setErrors((prev) => ({ ...prev, difficulty: false }));
-    }
-  }, [selectedAttempts, selectedDifficulty]);
 
   const handleVibrate = () => {
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
@@ -143,17 +134,10 @@ const SendScreen = ({ route, navigation }) => {
             </View>
             <View style={styles.row}>
               <Text style={styles.label}>Your Ascents:</Text>
-              <Text style={styles.info}>{boulder.userSendsCount}</Text>
+              <Text style={styles.info}>{boulder.userSendsData.length}</Text>
             </View>
             <TouchableOpacity
-              style={[
-                styles.row,
-                {
-                  backgroundColor: "white",
-                  borderColor: "red",
-                  borderWidth: errors.attempts ? 1 : 0,
-                },
-              ]}
+              style={[styles.row, { backgroundColor: "white" }]}
               onPress={toggleAttemptsPicker}
             >
               <Text style={styles.label}>Attempts:</Text>
@@ -177,14 +161,7 @@ const SendScreen = ({ route, navigation }) => {
               </Animated.View>
             )}
             <TouchableOpacity
-              style={[
-                styles.row,
-                {
-                  backgroundColor: "white",
-                  borderColor: "red",
-                  borderWidth: errors.difficulty ? 1 : 0,
-                },
-              ]}
+              style={[styles.row, { backgroundColor: "white" }]}
               onPress={toggleDifficultyPicker}
             >
               <Text style={styles.label}>Difficulty:</Text>
@@ -239,14 +216,11 @@ const SendScreen = ({ route, navigation }) => {
               />
             </View>
           </View>
-          <View>
-            <TouchableOpacity
-              style={styles.submitButton}
-              onPress={handleSubmit}
-            >
-              <Text style={styles.submitButtonText}>Submit</Text>
-            </TouchableOpacity>
-          </View>
+          <CustomButton
+            onPress={handleSubmit}
+            text="Submit"
+            disabled={isSubmitDisabled}
+          />
         </View>
       </TouchableWithoutFeedback>
     </SafeAreaView>
