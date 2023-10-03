@@ -3,10 +3,8 @@ import {
   Text,
   Switch,
   TextInput,
-  FlatList,
   TouchableOpacity,
   Image,
-  Button,
   StyleSheet,
   SafeAreaView,
   ActivityIndicator,
@@ -14,18 +12,11 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { PlusIcon } from "react-native-heroicons/outline";
 import { request } from "../../api/requestMethods";
-import {
-  setUser,
-  setGym,
-  setSpraywalls,
-  setHeadshotImage,
-  setBannerImage,
-  updateSpraywall,
-} from "../../redux/actions";
+import { setGym, setSpraywalls } from "../../redux/actions";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import * as ImagePicker from "expo-image-picker";
+import EditData from "../EditData";
 
 export const GymType = () => {
   const dispatch = useDispatch();
@@ -66,67 +57,78 @@ export const GymType = () => {
     <SafeAreaView
       style={{
         flex: 1,
-        justifyContent: "space-between",
       }}
     >
-      <View style={{ gap: 10 }}>
-        <Text>
-          Choosing "Commerical Gym" requires an address of the gym. "Home Gym"
-          remains private.
-        </Text>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-            width: "95%",
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 16,
-            }}
-          >
-            Commercial Gym
-          </Text>
-          <Switch
-            value={isCommercialGym}
-            onValueChange={() => setIsCommercialGym(!isCommercialGym)}
+      <View
+        style={{
+          paddingHorizontal: 20,
+          paddingVertical: 10,
+          flex: 1,
+          justifyContent: "space-between",
+        }}
+      >
+        <View>
+          <View style={{ gap: 10 }}>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                width: "95%",
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 16,
+                }}
+              >
+                Commercial Gym
+              </Text>
+              <Switch
+                value={isCommercialGym}
+                onValueChange={() => setIsCommercialGym(!isCommercialGym)}
+              />
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                width: "95%",
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 16,
+                }}
+              >
+                Non-Commercial Gym (Home)
+              </Text>
+              <Switch
+                value={!isCommercialGym}
+                onValueChange={() => setIsCommercialGym(!isCommercialGym)}
+              />
+            </View>
+          </View>
+          <EditData
+            description={
+              'Choosing "Commercial Gym" requires an address of the gym. "Home Gym" remains private.'
+            }
           />
         </View>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-            width: "95%",
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 16,
-            }}
+        <View>
+          <TouchableOpacity
+            style={[styles.button, isDisabled && styles.disabledButton]}
+            disabled={isDisabled}
+            onPress={handleSave}
           >
-            Non-Commercial Gym (Home)
-          </Text>
-          <Switch
-            value={!isCommercialGym}
-            onValueChange={() => setIsCommercialGym(!isCommercialGym)}
-          />
+            {isLoading ? (
+              <ActivityIndicator />
+            ) : (
+              <Text style={{ color: "white", fontWeight: "bold" }}>Save</Text>
+            )}
+          </TouchableOpacity>
         </View>
-      </View>
-      <View>
-        <TouchableOpacity
-          style={[styles.button, isDisabled && styles.disabledButton]}
-          disabled={isDisabled}
-          onPress={handleSave}
-        >
-          {isLoading ? (
-            <ActivityIndicator />
-          ) : (
-            <Text style={{ color: "white", fontWeight: "bold" }}>Save</Text>
-          )}
-        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
@@ -138,6 +140,8 @@ export const GymName = () => {
   const [newGymName, setNewGymName] = useState(gym.name);
   const [isDisabled, setIsDisabled] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+
+  const CHAR_LIMIT = 50;
 
   useEffect(() => {
     if (newGymName !== gym.name) {
@@ -167,36 +171,35 @@ export const GymName = () => {
     <SafeAreaView
       style={{
         flex: 1,
-        justifyContent: "space-between",
       }}
     >
-      <View style={{ gap: 10 }}>
-        <Text>Gym Name</Text>
-        <TextInput
-          style={{
-            borderWidth: 1,
-            borderColor: "#ccc",
-            borderRadius: 5,
-            paddingVertical: 10,
-            paddingHorizontal: 20,
-            fontSize: 16,
-          }}
-          value={newGymName}
-          onChangeText={(text) => setNewGymName(text)}
+      <View
+        style={{
+          paddingHorizontal: 20,
+          paddingVertical: 10,
+          flex: 1,
+          justifyContent: "space-between",
+        }}
+      >
+        <EditData
+          text={newGymName}
+          setText={setNewGymName}
+          description={"Gym name to be displayed to all users."}
+          charLimit={CHAR_LIMIT}
         />
-      </View>
-      <View>
-        <TouchableOpacity
-          style={[styles.button, isDisabled && styles.disabledButton]}
-          disabled={isDisabled}
-          onPress={handleSave}
-        >
-          {isLoading ? (
-            <ActivityIndicator />
-          ) : (
-            <Text style={{ color: "white", fontWeight: "bold" }}>Save</Text>
-          )}
-        </TouchableOpacity>
+        <View>
+          <TouchableOpacity
+            style={[styles.button, isDisabled && styles.disabledButton]}
+            disabled={isDisabled}
+            onPress={handleSave}
+          >
+            {isLoading ? (
+              <ActivityIndicator />
+            ) : (
+              <Text style={{ color: "white", fontWeight: "bold" }}>Save</Text>
+            )}
+          </TouchableOpacity>
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -208,6 +211,8 @@ export const GymLocation = () => {
   const [newGymLocation, setNewGymLocation] = useState(gym.location);
   const [isDisabled, setIsDisabled] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+
+  const CHAR_LIMIT = 100;
 
   useEffect(() => {
     if (newGymLocation !== gym.location) {
@@ -237,36 +242,35 @@ export const GymLocation = () => {
     <SafeAreaView
       style={{
         flex: 1,
-        justifyContent: "space-between",
       }}
     >
-      <View style={{ gap: 10 }}>
-        <Text>Gym Location (required for commercial gyms)</Text>
-        <TextInput
-          style={{
-            borderWidth: 1,
-            borderColor: "#ccc",
-            borderRadius: 5,
-            paddingVertical: 10,
-            paddingHorizontal: 20,
-            fontSize: 16,
-          }}
-          value={newGymLocation}
-          onChangeText={(text) => setNewGymLocation(text)}
+      <View
+        style={{
+          paddingHorizontal: 20,
+          paddingVertical: 10,
+          flex: 1,
+          justifyContent: "space-between",
+        }}
+      >
+        <EditData
+          text={newGymLocation}
+          setText={setNewGymLocation}
+          description={"Gym location (address) to be displayed to all users."}
+          charLimit={CHAR_LIMIT}
         />
-      </View>
-      <View>
-        <TouchableOpacity
-          style={[styles.button, isDisabled && styles.disabledButton]}
-          disabled={isDisabled}
-          onPress={handleSave}
-        >
-          {isLoading ? (
-            <ActivityIndicator />
-          ) : (
-            <Text style={{ color: "white", fontWeight: "bold" }}>Save</Text>
-          )}
-        </TouchableOpacity>
+        <View>
+          <TouchableOpacity
+            style={[styles.button, isDisabled && styles.disabledButton]}
+            disabled={isDisabled}
+            onPress={handleSave}
+          >
+            {isLoading ? (
+              <ActivityIndicator />
+            ) : (
+              <Text style={{ color: "white", fontWeight: "bold" }}>Save</Text>
+            )}
+          </TouchableOpacity>
+        </View>
       </View>
     </SafeAreaView>
   );

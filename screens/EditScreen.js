@@ -33,7 +33,10 @@ const EditScreen = ({ navigation, route }) => {
 
   return (
     <View
-      style={{ padding: 10, flex: 1, backgroundColor: "rgba(245,245,245,255)" }}
+      style={{
+        flex: 1,
+        backgroundColor: "rgba(245,245,245,255)",
+      }}
     >
       {item.title === "Gym Type" ? (
         <GymType />

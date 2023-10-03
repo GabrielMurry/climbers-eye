@@ -11,14 +11,14 @@ import { SafeAreaView } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { request } from "../../../api/requestMethods";
 import { setUser } from "../../../redux/actions";
-import { CheckIcon } from "react-native-heroicons/outline";
+import EditData from "../../../components/EditData";
 
 const CHAR_LIMIT = 30;
 
 const EditNameScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.userReducer);
-  const [newName, setNewName] = useState(user?.name);
+  const [newName, setNewName] = useState(user?.name ? user.name : "");
   const [isDisabled, setIsDisabled] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -96,27 +96,19 @@ const EditNameScreen = ({ navigation }) => {
         backgroundColor: "rgba(245,245,245,255)",
       }}
     >
-      <View style={{ padding: 10, gap: 10 }}>
-        <TextInput
-          style={{
-            borderWidth: 1,
-            borderColor: "#ccc",
-            borderRadius: 5,
-            paddingVertical: 10,
-            paddingHorizontal: 20,
-            fontSize: 16,
-          }}
-          maxLength={CHAR_LIMIT}
-          placeholder={newName}
-          value={newName}
-          onChangeText={(text) => setNewName(text)}
+      <View
+        style={{
+          paddingHorizontal: 20,
+          paddingVertical: 10,
+          flex: 1,
+        }}
+      >
+        <EditData
+          text={newName}
+          setText={setNewName}
+          description={"Nickname to be displayed to all users."}
+          charLimit={CHAR_LIMIT}
         />
-        <Text style={{ color: "gray" }}>
-          {newName?.length ? newName.length : 0}/{CHAR_LIMIT}
-        </Text>
-        <Text style={{ color: "gray" }}>
-          Nickname to be displayed to all users.
-        </Text>
       </View>
     </SafeAreaView>
   );
