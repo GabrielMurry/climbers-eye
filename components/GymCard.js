@@ -18,33 +18,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   container: {
-    height: 75,
+    marginLeft: 20,
+    paddingVertical: 10,
     borderColor: "lightgray",
-    borderWidth: 1,
-    paddingHorizontal: 10,
-    borderRadius: 5,
-    justifyContent: "center",
-    gap: 10,
-  },
-  setterAndFA: {
-    flexDirection: "row",
-  },
-  boulderIconsContainer: {
-    width: 80,
-    justifyContent: "center",
-    alignItems: "center",
-    gap: 5,
-  },
-  boulderIconsRow: {
-    flexDirection: "row",
-    gap: 5,
-  },
-  boulderRightWrapper: {
-    justifyContent: "center",
-    alignItems: "center",
-    gap: 10,
-  },
-  starsContainer: {
-    flexDirection: "row",
+    borderBottomWidth: 1,
   },
 });

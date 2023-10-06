@@ -58,6 +58,7 @@ export default MapSearchQuery;
 const styles = StyleSheet.create({
   bottomSheetSearchInputAndCancelContainer: {
     flexDirection: "row",
+    paddingHorizontal: 20,
   },
   bottomSheetSearchInputContainer: {
     flex: 1,

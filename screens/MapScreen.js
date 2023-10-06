@@ -158,15 +158,6 @@ const MapScreen = ({ navigation }) => {
     }
   };
 
-  const renderItem = useCallback(
-    ({ item }) => (
-      <TouchableOpacity onPress={() => handleGymCardPress(item)}>
-        <GymCard gym={item} />
-      </TouchableOpacity>
-    ),
-    []
-  );
-
   const handleCancelSearchPress = () => {
     // bug in bottom-sheet pkg - can't dismiss keyboard and snap to index at same time
     setTimeout(() => {
@@ -181,6 +172,12 @@ const MapScreen = ({ navigation }) => {
     setSearchQuery("");
     bottomSheetRef.current?.snapToIndex(1);
   };
+
+  useEffect(() => {
+    if (gymMarker) {
+      console.log(gymMarker);
+    }
+  }, [gymMarker]);
 
   return (
     <View style={styles.mapContainer}>
@@ -224,7 +221,7 @@ const MapScreen = ({ navigation }) => {
                 searchQuery={searchQuery}
                 navigation={navigation}
                 gyms={gyms}
-                renderItem={renderItem}
+                handleGymCardPress={handleGymCardPress}
               />
             </>
           )}
@@ -232,11 +229,9 @@ const MapScreen = ({ navigation }) => {
       </BottomSheet>
       <FullScreenImage
         imageFullScreen={imageFullScreen}
-        uri={gymMarker?.spraywallImageUri}
-        image={{
-          width: gymMarker?.spraywallImageWidth,
-          height: gymMarker?.spraywallImageHeight,
-        }}
+        url={gymMarker ? gymMarker.spraywalls[0].url : null}
+        width={gymMarker ? gymMarker.spraywalls[0].width : null}
+        height={gymMarker ? gymMarker.spraywalls[0].height : null}
         onRequestClose={() => setImageFullScreen(false)}
       />
     </View>
@@ -255,7 +250,6 @@ const styles = StyleSheet.create({
   bottomSheet: {
     flex: 1,
     alignItems: "center",
-    paddingHorizontal: 20,
     gap: 10,
   },
 });

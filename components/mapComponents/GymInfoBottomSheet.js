@@ -86,6 +86,7 @@ const styles = StyleSheet.create({
   bottomSheetGymContainer: {
     width: "100%",
     gap: 20,
+    paddingHorizontal: 20,
   },
   bottomSheetGym: {
     width: "80%",

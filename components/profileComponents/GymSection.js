@@ -69,20 +69,6 @@ const GymSection = ({ navigation }) => {
         >
           {/* section title */}
           <Text style={{ fontWeight: "bold", fontSize: 18 }}>{gym.name}</Text>
-          {/* <TouchableOpacity
-            style={{
-              marginLeft: 10,
-              backgroundColor: "lightgray",
-              justifyContent: "center",
-              alignItems: "center",
-              borderRadius: 100,
-              width: 25,
-              height: 25,
-            }}
-            onPress={() => setIsModalVisible(true)}
-          >
-            <ArrowsRightLeftIcon color={"black"} size={20} />
-          </TouchableOpacity> */}
         </View>
         <Carousel
           loop={false}

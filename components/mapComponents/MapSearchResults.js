@@ -3,14 +3,19 @@ import React from "react";
 import GymBottomSheetSearchResult from "./GymBottomSheetSearchResult";
 import GymBottomSheetSearchEmpty from "./GymBottomSheetSearchEmpty";
 
-const MapSearchResults = ({ searchQuery, navigation, gyms, renderItem }) => {
+const MapSearchResults = ({
+  searchQuery,
+  navigation,
+  gyms,
+  handleGymCardPress,
+}) => {
   return (
     <>
       {searchQuery ? (
         <GymBottomSheetSearchResult
           navigation={navigation}
           gyms={gyms}
-          renderItem={renderItem}
+          handleGymCardPress={handleGymCardPress}
         />
       ) : (
         <GymBottomSheetSearchEmpty />

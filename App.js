@@ -56,6 +56,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { request } from "./api/requestMethods";
 import ReportBoulderScreen from "./screens/ReportBoulderScreen";
 import BoulderUserSendsScreen from "./screens/BoulderUserSendsScreen";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 const Stack = createNativeStackNavigator();
 
@@ -202,119 +203,124 @@ export default function App() {
 
   return (
     // ReactNativeActionSheet uses React context to allow your components to invoke the menu
-    <ActionSheetProvider>
-      <Provider store={store}>
-        <NavigationContainer>
-          <StatusBar barStyle={"dark-content"} />
-          {/* Preload the images before rendering any screen */}
-          <Stack.Navigator>
-            {/* Screens */}
-            <Stack.Screen
-              name="Login"
-              component={LoginScreen}
-              options={{
-                headerShown: false,
-                animation: "none",
-              }}
-            />
-            <Stack.Screen
-              name="ForgotPassword"
-              component={ForgotPasswordScreen}
-              options={{
-                headerShown: false,
-                animation: "none",
-              }}
-            />
-            <Stack.Screen
-              name="SubmitCode"
-              component={SubmitCodeScreen}
-              options={{
-                headerShown: false,
-                animation: "none",
-              }}
-            />
-            <Stack.Screen
-              name="ResetPassword"
-              component={ResetPasswordScreen}
-              options={{
-                headerShown: false,
-                animation: "none",
-              }}
-            />
-            <Stack.Screen
-              name="Signup"
-              component={SignupScreen}
-              options={{
-                headerShown: false,
-                animation: "none",
-              }}
-            />
-            <Stack.Screen
-              name="ConfirmEmail"
-              component={ConfirmEmailScreen}
-              options={{
-                headerShown: false,
-                animation: "none",
-              }}
-            />
-            <Stack.Screen name="AddGym" component={AddGymScreen} />
-            <Stack.Screen name="EditGym" component={EditGymScreen} />
-            <Stack.Screen name="Edit" component={EditScreen} />
-            <Stack.Screen
-              name="AddNewSprayWall"
-              component={AddNewSprayWallScreen}
-            />
-            <Stack.Screen
-              name="EditSprayWall"
-              component={EditSprayWallScreen}
-            />
-            <Stack.Screen name="Camera" component={CameraScreen} />
-            <Stack.Screen
-              name="Tabs"
-              options={{
-                headerShown: false,
-                gestureEnabled: false, // Disable gestures for tab screens
-              }}
-            >
-              {({ navigation }) => <Tabs navigation={navigation} />}
-            </Stack.Screen>
-            <Stack.Screen name="EditBoulder" component={EditBoulderScreen} />
-            <Stack.Screen
-              name="ProfileBoulderSection"
-              component={ProfileBoulderSectionScreen}
-            />
-            <Stack.Screen
-              name="ProfileStatsSection"
-              component={ProfileStatsSectionScreen}
-            />
-            <Stack.Screen name="EditProfile" component={EditProfileScreen} />
-            <Stack.Screen name="EditName" component={EditNameScreen} />
-            <Stack.Screen name="CropImage" component={CropImageScreen} />
-            <Stack.Screen name="Filter" component={FilterScreen} />
-            <Stack.Screen
-              name="FilterCircuit"
-              component={FilterCircuitScreen}
-            />
-            <Stack.Screen name="Boulder" component={BoulderScreen} />
-            <Stack.Screen name="Send" component={SendScreen} />
-            <Stack.Screen name="Circuit" component={CircuitScreen} />
-            <Stack.Screen
-              name="AddNewCircuit"
-              component={AddNewCircuitScreen}
-            />
-            <Stack.Screen name="BoulderStats" component={BoulderStatsScreen} />
-            <Stack.Screen name="SwitchGym" component={SwitchGymScreen} />
-            <Stack.Screen
-              name="ReportBoulder"
-              component={ReportBoulderScreen}
-            />
-            <Stack.Screen
-              name="BoulderUserSends"
-              component={BoulderUserSendsScreen}
-            />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </Provider>
-    </ActionSheetProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <ActionSheetProvider>
+        <Provider store={store}>
+          <NavigationContainer>
+            <StatusBar barStyle={"dark-content"} />
+            {/* Preload the images before rendering any screen */}
+            <Stack.Navigator>
+              {/* Screens */}
+              <Stack.Screen
+                name="Login"
+                component={LoginScreen}
+                options={{
+                  headerShown: false,
+                  animation: "none",
+                }}
+              />
+              <Stack.Screen
+                name="ForgotPassword"
+                component={ForgotPasswordScreen}
+                options={{
+                  headerShown: false,
+                  animation: "none",
+                }}
+              />
+              <Stack.Screen
+                name="SubmitCode"
+                component={SubmitCodeScreen}
+                options={{
+                  headerShown: false,
+                  animation: "none",
+                }}
+              />
+              <Stack.Screen
+                name="ResetPassword"
+                component={ResetPasswordScreen}
+                options={{
+                  headerShown: false,
+                  animation: "none",
+                }}
+              />
+              <Stack.Screen
+                name="Signup"
+                component={SignupScreen}
+                options={{
+                  headerShown: false,
+                  animation: "none",
+                }}
+              />
+              <Stack.Screen
+                name="ConfirmEmail"
+                component={ConfirmEmailScreen}
+                options={{
+                  headerShown: false,
+                  animation: "none",
+                }}
+              />
+              <Stack.Screen name="AddGym" component={AddGymScreen} />
+              <Stack.Screen name="EditGym" component={EditGymScreen} />
+              <Stack.Screen name="Edit" component={EditScreen} />
+              <Stack.Screen
+                name="AddNewSprayWall"
+                component={AddNewSprayWallScreen}
+              />
+              <Stack.Screen
+                name="EditSprayWall"
+                component={EditSprayWallScreen}
+              />
+              <Stack.Screen name="Camera" component={CameraScreen} />
+              <Stack.Screen
+                name="Tabs"
+                options={{
+                  headerShown: false,
+                  gestureEnabled: false, // Disable gestures for tab screens
+                }}
+              >
+                {({ navigation }) => <Tabs navigation={navigation} />}
+              </Stack.Screen>
+              <Stack.Screen name="EditBoulder" component={EditBoulderScreen} />
+              <Stack.Screen
+                name="ProfileBoulderSection"
+                component={ProfileBoulderSectionScreen}
+              />
+              <Stack.Screen
+                name="ProfileStatsSection"
+                component={ProfileStatsSectionScreen}
+              />
+              <Stack.Screen name="EditProfile" component={EditProfileScreen} />
+              <Stack.Screen name="EditName" component={EditNameScreen} />
+              <Stack.Screen name="CropImage" component={CropImageScreen} />
+              <Stack.Screen name="Filter" component={FilterScreen} />
+              <Stack.Screen
+                name="FilterCircuit"
+                component={FilterCircuitScreen}
+              />
+              <Stack.Screen name="Boulder" component={BoulderScreen} />
+              <Stack.Screen name="Send" component={SendScreen} />
+              <Stack.Screen name="Circuit" component={CircuitScreen} />
+              <Stack.Screen
+                name="AddNewCircuit"
+                component={AddNewCircuitScreen}
+              />
+              <Stack.Screen
+                name="BoulderStats"
+                component={BoulderStatsScreen}
+              />
+              <Stack.Screen name="SwitchGym" component={SwitchGymScreen} />
+              <Stack.Screen
+                name="ReportBoulder"
+                component={ReportBoulderScreen}
+              />
+              <Stack.Screen
+                name="BoulderUserSends"
+                component={BoulderUserSendsScreen}
+              />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </Provider>
+      </ActionSheetProvider>
+    </GestureHandlerRootView>
   );
 }
