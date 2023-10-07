@@ -13,7 +13,6 @@ import { EllipsisHorizontalIcon } from "react-native-heroicons/outline";
 import { useSelector } from "react-redux";
 import ImageDisplay from "../components/boulderComponents/ImageDisplay";
 import Titles from "../components/boulderComponents/Titles";
-import { useActionSheet } from "@expo/react-native-action-sheet";
 import useCustomHeader from "../hooks/useCustomHeader";
 import ModalOptions from "../components/ModalOptions";
 import InfoRow1 from "../components/boulderComponents/InfoRow1";
@@ -27,7 +26,6 @@ import DraftNotif from "../components/boulderComponents/DraftNotif";
 const THEME_STYLE = "white"; //rgba(245,245,245,255)
 
 const BoulderScreen = ({ route, navigation }) => {
-  const { showActionSheetWithOptions } = useActionSheet();
   const { user } = useSelector((state) => state.userReducer);
 
   const { fromScreen, toScreen } = route.params;

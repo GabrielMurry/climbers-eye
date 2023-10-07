@@ -2,6 +2,7 @@ import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
 import { ArrowLongRightIcon, CheckIcon } from "react-native-heroicons/outline";
 import { FontAwesome } from "@expo/vector-icons";
+import { colors } from "../../utils/styles";
 
 const InfoRow2 = ({ boulder, navigation }) => {
   const handleBoulderStatsPress = () => {
@@ -66,7 +67,7 @@ const InfoRow2 = ({ boulder, navigation }) => {
           flexDirection: "row",
           alignItems: "center",
           backgroundColor: boulder.isSent
-            ? "green"
+            ? colors.primary
             : "rgba(235, 235, 235, 255)",
         }}
         onPress={handleSentBoulderPress}

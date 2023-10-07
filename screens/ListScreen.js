@@ -28,6 +28,7 @@ import Carousel from "react-native-reanimated-carousel";
 import { BlurView } from "expo-blur";
 import SearchInput from "../components/listComponents/SearchInput";
 import ModalOptions from "../components/ModalOptions";
+import { colors } from "../utils/styles";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const THEME_STYLE = "white";
@@ -235,16 +236,36 @@ const ListScreen = ({ navigation }) => {
                 style={{
                   height: "100%",
                   aspectRatio: 1,
-                  backgroundColor: index === spraywallIndex ? "black" : null,
                   padding: 5,
-                  borderRadius: 5,
+                  justifyContent: "center",
+                  alignItems: "center",
                 }}
                 key={item.id}
                 onPress={() => dispatch(setSpraywallIndex(index))}
               >
+                <View
+                  style={{
+                    height: "110%",
+                    aspectRatio: 1,
+                    backgroundColor: "black",
+                    position: "absolute",
+                    borderRadius: 2,
+                    backgroundColor: colors.primaryLight,
+                    borderWidth: 2,
+                    borderColor:
+                      index === spraywallIndex
+                        ? colors.primary
+                        : colors.primaryLight,
+                  }}
+                />
                 <Image
                   source={{ uri: item.url }}
-                  style={{ width: "100%", height: "100%", borderRadius: 2 }}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    borderRadius: 2,
+                    opacity: index === spraywallIndex ? 1 : 0.8,
+                  }}
                 />
               </Pressable>
             )}

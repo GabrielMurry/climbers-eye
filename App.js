@@ -57,6 +57,7 @@ import { request } from "./api/requestMethods";
 import ReportBoulderScreen from "./screens/ReportBoulderScreen";
 import BoulderUserSendsScreen from "./screens/BoulderUserSendsScreen";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { colors } from "./utils/styles";
 
 const Stack = createNativeStackNavigator();
 
@@ -129,11 +130,13 @@ export default function App() {
                   <View
                     style={{
                       borderRadius: 100,
-                      backgroundColor: "black",
+                      borderWidth: 1,
+                      borderColor: colors.primary,
+                      backgroundColor: colors.primaryLight,
                       padding: 8,
                     }}
                   >
-                    <PlusIcon size={size} color={"white"} />
+                    <PlusIcon size={size} color={colors.primary} />
                   </View>
                 );
               } else if (route.name === "Activity") {

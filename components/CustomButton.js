@@ -1,4 +1,9 @@
-import { Text, StyleSheet, Pressable, ActivityIndicator } from "react-native";
+import {
+  Text,
+  StyleSheet,
+  ActivityIndicator,
+  TouchableOpacity,
+} from "react-native";
 import React from "react";
 
 // if no type specified, default to PRIMARY
@@ -13,7 +18,7 @@ const CustomButton = ({
   disabled = false,
 }) => {
   return (
-    <Pressable
+    <TouchableOpacity
       style={[
         styles.container,
         styles[`container_${type}`],
@@ -43,7 +48,7 @@ const CustomButton = ({
           {text}
         </Text>
       )}
-    </Pressable>
+    </TouchableOpacity>
   );
 };
 

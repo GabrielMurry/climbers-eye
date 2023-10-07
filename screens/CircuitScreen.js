@@ -175,15 +175,6 @@ const CircuitScreen = ({ route, navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* <TouchableOpacity
-        style={{
-          alignItems: "flex-end",
-          paddingHorizontal: 20,
-        }}
-        onPress={() => navigation.navigate("AddNewCircuit")}
-      >
-        <Text>Add New Circuit</Text>
-      </TouchableOpacity> */}
       <View style={styles.flatListContainer}>
         <FlatList
           contentContainerStyle={styles.flatList}

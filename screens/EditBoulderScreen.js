@@ -22,6 +22,7 @@ import ModalEditPreview from "../components/ModalEditPreview";
 import { captureRef } from "react-native-view-shot";
 import { useFocusEffect } from "@react-navigation/native";
 import { request } from "../api/requestMethods";
+import { colors } from "../utils/styles";
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -64,7 +65,7 @@ const EditBoulderScreen = ({ route, navigation }) => {
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Text
             style={{
-              color: "rgb(0,122, 255)",
+              color: "black",
               fontWeight: "bold",
               fontSize: 16,
             }}
@@ -77,7 +78,7 @@ const EditBoulderScreen = ({ route, navigation }) => {
         <TouchableOpacity onPress={handleDonePress}>
           <Text
             style={{
-              color: "rgb(0,122, 255)",
+              color: colors.primary,
               fontWeight: "bold",
               fontSize: 16,
             }}

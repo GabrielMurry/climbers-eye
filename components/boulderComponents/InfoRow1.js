@@ -1,11 +1,11 @@
 import { View, StyleSheet, TouchableOpacity, Alert, Text } from "react-native";
 import React from "react";
-import { CheckIcon, LinkIcon, StarIcon } from "react-native-heroicons/outline";
+import { LinkIcon } from "react-native-heroicons/outline";
 import { FontAwesome } from "@expo/vector-icons";
 import { request } from "../../api/requestMethods";
 import * as Haptics from "expo-haptics";
 
-const InfoRow1 = ({ boulder, setBoulder, userID, username, navigation }) => {
+const InfoRow1 = ({ boulder, setBoulder, userID, navigation }) => {
   const handleLikePressed = async () => {
     const optimisticUpdate = () => {
       setBoulder({ ...boulder, isLiked: !boulder.isLiked });

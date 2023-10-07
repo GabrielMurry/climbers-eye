@@ -15,6 +15,7 @@ import {
 } from "react-native-heroicons/outline";
 import * as ImagePicker from "expo-image-picker";
 import { useSelector } from "react-redux";
+import { colors } from "../../utils/styles";
 
 const AddBoulderModal = ({ isVisible, onClose, navigation }) => {
   const { spraywalls, spraywallIndex } = useSelector(
@@ -110,11 +111,12 @@ const AddBoulderModal = ({ isVisible, onClose, navigation }) => {
                 height: "25%",
               }}
             >
+              {/* camera */}
               <TouchableOpacity
                 style={{
-                  height: "75%",
+                  height: "90%",
                   aspectRatio: 1,
-                  backgroundColor: "rgba(30, 144, 255, 1)",
+                  backgroundColor: colors.primaryLight,
                   borderRadius: 10,
                   justifyContent: "center",
                   alignItems: "center",
@@ -122,18 +124,25 @@ const AddBoulderModal = ({ isVisible, onClose, navigation }) => {
                 }}
                 onPress={handleCameraPressed}
               >
-                <CameraIcon size={25} color={"white"} />
+                <CameraIcon size={25} color={colors.primary} />
                 <Text
-                  style={{ color: "white", fontSize: 12, fontWeight: "bold" }}
+                  style={{
+                    color: colors.primary,
+                    fontSize: 12,
+                    fontWeight: "bold",
+                  }}
                 >
                   Camera
                 </Text>
               </TouchableOpacity>
+              {/* default image */}
               <TouchableOpacity
                 style={{
                   height: "90%",
                   aspectRatio: 1,
-                  backgroundColor: "rgba(30, 144, 255, 1)",
+                  borderWidth: 1,
+                  borderColor: colors.primary,
+                  backgroundColor: colors.primaryLight,
                   borderRadius: 10,
                   justifyContent: "center",
                   alignItems: "center",
@@ -141,18 +150,23 @@ const AddBoulderModal = ({ isVisible, onClose, navigation }) => {
                 }}
                 onPress={handleDefaultImagePressed}
               >
-                <PhotoIcon size={25} color={"white"} />
+                <PhotoIcon size={25} color={colors.primary} />
                 <Text
-                  style={{ color: "white", fontSize: 12, fontWeight: "bold" }}
+                  style={{
+                    color: colors.primary,
+                    fontSize: 12,
+                    fontWeight: "bold",
+                  }}
                 >
                   Default Image
                 </Text>
               </TouchableOpacity>
+              {/* upload */}
               <TouchableOpacity
                 style={{
-                  height: "75%",
+                  height: "90%",
                   aspectRatio: 1,
-                  backgroundColor: "rgba(30, 144, 255, 1)",
+                  backgroundColor: colors.primaryLight,
                   borderRadius: 10,
                   justifyContent: "center",
                   alignItems: "center",
@@ -160,9 +174,13 @@ const AddBoulderModal = ({ isVisible, onClose, navigation }) => {
                 }}
                 onPress={handleUploadImagePressed}
               >
-                <ArrowUpOnSquareIcon size={25} color={"white"} />
+                <ArrowUpOnSquareIcon size={25} color={colors.primary} />
                 <Text
-                  style={{ color: "white", fontSize: 12, fontWeight: "bold" }}
+                  style={{
+                    color: colors.primary,
+                    fontSize: 12,
+                    fontWeight: "bold",
+                  }}
                 >
                   Upload
                 </Text>

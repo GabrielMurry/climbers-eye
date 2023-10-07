@@ -5,10 +5,7 @@ import {
   Image,
   TouchableOpacity,
   StyleSheet,
-  Alert,
   TextInput,
-  KeyboardAvoidingView,
-  Platform,
   Switch,
   Pressable,
   SafeAreaView,
@@ -24,6 +21,7 @@ import CustomInput from "./CustomInput";
 import CustomButton from "./CustomButton";
 import * as Haptics from "expo-haptics";
 import { ChevronLeftIcon } from "react-native-heroicons/outline";
+import { colors } from "../utils/styles";
 
 const TAGS = [
   { name: "crimp", selected: false },
@@ -37,7 +35,6 @@ const SHRINK_SCALE = 0.3;
 
 const ModalEditPreview = ({
   image,
-  imageScaleDownFactor,
   isModalVisible,
   setIsModalVisible,
   navigation,
@@ -56,6 +53,7 @@ const ModalEditPreview = ({
   const [isImageLoading, setIsImageLoading] = useState(true);
   const [tags, setTags] = useState(TAGS);
   const [error, setError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleTagPress = (index) => {
     const updatedTags = [...tags];
@@ -79,6 +77,7 @@ const ModalEditPreview = ({
       image_width: image.width,
       image_height: image.height,
     };
+    setIsLoading(true);
     const response = await request(
       "post",
       `add_boulder/${spraywalls[spraywallIndex].id}/${user.id}`,
@@ -86,6 +85,7 @@ const ModalEditPreview = ({
     );
     if (response.status !== 200) {
       console.log(response.status);
+      setIsLoading(false);
       return;
     }
     if (response.data) {
@@ -253,11 +253,14 @@ const ModalEditPreview = ({
               type="TERTIARY"
               width="45%"
               bgColor={"rgba(245, 245, 245, 255)"}
+              disabled={isLoading}
             />
             <CustomButton
               onPress={() => handleConfirm({ publish: true })}
               text="Publish"
               width="45%"
+              bgColor={colors.primary}
+              disabled={isLoading}
             />
           </View>
         </SafeAreaView>

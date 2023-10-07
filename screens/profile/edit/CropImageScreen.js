@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
   View,
   Image,
@@ -6,7 +6,6 @@ import {
   Text,
   TouchableOpacity,
   Dimensions,
-  ActivityIndicator,
 } from "react-native";
 import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,6 +14,7 @@ import { setHeadshotImage } from "../../../redux/actions";
 import { request } from "../../../api/requestMethods";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
+const SCREEN_HEIGHT = Dimensions.get("window").height;
 
 const CropImageScreen = ({ route, navigation }) => {
   const dispatch = useDispatch();
@@ -65,6 +65,7 @@ const CropImageScreen = ({ route, navigation }) => {
   }, [navigation]);
 
   const handleDonePress = async () => {
+    // wow!
     // transform info
     const cropScale = width / SCREEN_WIDTH;
 
@@ -106,6 +107,21 @@ const CropImageScreen = ({ route, navigation }) => {
     navigation.goBack();
   };
 
+  const [contentHeight, setContentHeight] = useState(0);
+
+  console.log(height * (SCREEN_WIDTH / width));
+
+  const handleTransform = (eventObj) => {
+    // wow!
+    const a = height * (SCREEN_WIDTH / width);
+    const b = eventObj.originalHeight - SCREEN_WIDTH;
+    const c = a + b;
+    const diff = eventObj.originalHeight - eventObj.originalWidth;
+    const d = diff - diff / eventObj.zoomLevel;
+    const e = c - d;
+    setContentHeight(e);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.cropSquare} />
@@ -114,8 +130,10 @@ const CropImageScreen = ({ route, navigation }) => {
         minZoom={1}
         initialZoom={1}
         visualTouchFeedbackEnabled={false}
-        panBoundaryPadding={200}
+        panBoundaryPadding={0}
         ref={zoomRef}
+        contentHeight={contentHeight}
+        onTransform={handleTransform}
       >
         <Image
           source={{ uri: imageUri }}
