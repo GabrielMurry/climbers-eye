@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import ReactNativeZoomableView from "@openspacelabs/react-native-zoomable-view/src/ReactNativeZoomableView";
 import { setHeadshotImage } from "../../../redux/actions";
 import { request } from "../../../api/requestMethods";
+import { colors } from "../../../utils/styles";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const SCREEN_HEIGHT = Dimensions.get("window").height;
@@ -19,7 +20,10 @@ const SCREEN_HEIGHT = Dimensions.get("window").height;
 const CropImageScreen = ({ route, navigation }) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.userReducer);
-  const { imageUri, width, height } = route.params;
+  const { imageUri, width, height, isPortrait } = route.params;
+
+  const [contentHeight, setContentHeight] = useState(0);
+  const [contentWidth, setContentWidth] = useState(0);
 
   const zoomRef = useRef();
 
@@ -39,7 +43,7 @@ const CropImageScreen = ({ route, navigation }) => {
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Text
             style={{
-              color: "rgb(0,122, 255)",
+              color: "black",
               fontWeight: "bold",
               fontSize: 16,
             }}
@@ -52,7 +56,7 @@ const CropImageScreen = ({ route, navigation }) => {
         <TouchableOpacity onPress={handleDonePress}>
           <Text
             style={{
-              color: "rgb(0,122, 255)",
+              color: colors.primary,
               fontWeight: "bold",
               fontSize: 16,
             }}
@@ -107,18 +111,15 @@ const CropImageScreen = ({ route, navigation }) => {
     navigation.goBack();
   };
 
-  const [contentHeight, setContentHeight] = useState(0);
-
-  console.log(height * (SCREEN_WIDTH / width));
-
   const handleTransform = (eventObj) => {
     // wow!
-    const a = height * (SCREEN_WIDTH / width);
-    const b = eventObj.originalHeight - SCREEN_WIDTH;
-    const c = a + b;
-    const diff = eventObj.originalHeight - eventObj.originalWidth;
-    const d = diff - diff / eventObj.zoomLevel;
-    const e = c - d;
+    // changing content height dynamically (only for change in zoom level)
+    let a = isPortrait ? height * (SCREEN_WIDTH / width) : SCREEN_WIDTH;
+    let b = eventObj.originalHeight - SCREEN_WIDTH;
+    let c = a + b;
+    let diff = eventObj.originalHeight - eventObj.originalWidth;
+    let d = diff - diff / eventObj.zoomLevel;
+    let e = c - d;
     setContentHeight(e);
   };
 
@@ -133,11 +134,17 @@ const CropImageScreen = ({ route, navigation }) => {
         panBoundaryPadding={0}
         ref={zoomRef}
         contentHeight={contentHeight}
+        contentWidth={
+          isPortrait ? SCREEN_WIDTH : width * (SCREEN_WIDTH / height)
+        }
         onTransform={handleTransform}
       >
         <Image
           source={{ uri: imageUri }}
-          style={styles.image(SCREEN_WIDTH, height * (SCREEN_WIDTH / width))}
+          style={{
+            width: isPortrait ? SCREEN_WIDTH : width * (SCREEN_WIDTH / height),
+            height: isPortrait ? height * (SCREEN_WIDTH / width) : SCREEN_WIDTH,
+          }}
         />
       </ReactNativeZoomableView>
     </View>

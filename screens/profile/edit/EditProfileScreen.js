@@ -30,10 +30,12 @@ const EditProfileScreen = ({ navigation, route }) => {
         let width = result.assets[0].width;
         let height = result.assets[0].height;
         let imageUri = "data:image/png;base64," + result.assets[0].base64;
+        let isPortrait = height > width ? true : false;
         navigation.navigate("CropImage", {
           imageUri: imageUri,
           width: width,
           height: height,
+          isPortrait: isPortrait,
         });
       }
     } catch (error) {
