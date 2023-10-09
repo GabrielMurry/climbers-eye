@@ -7,16 +7,11 @@ import {
   Pressable,
   Image,
   SafeAreaView,
-  Dimensions,
-  Modal,
 } from "react-native";
-import React, { useCallback, useLayoutEffect, useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import {
   AdjustmentsHorizontalIcon,
-  ChevronLeftIcon,
   EllipsisHorizontalIcon,
-  MagnifyingGlassIcon,
-  XMarkIcon,
 } from "react-native-heroicons/outline";
 import BoulderCard from "../components/listComponents/BoulderCard";
 import { request } from "../api/requestMethods";
@@ -24,13 +19,10 @@ import { useFocusEffect } from "@react-navigation/native";
 import { useSelector, useDispatch } from "react-redux";
 import { boulderGrades } from "../utils/constants/boulderConstants";
 import { setSpraywallIndex } from "../redux/actions";
-import Carousel from "react-native-reanimated-carousel";
-import { BlurView } from "expo-blur";
 import SearchInput from "../components/listComponents/SearchInput";
 import ModalOptions from "../components/ModalOptions";
 import { colors } from "../utils/styles";
 
-const SCREEN_WIDTH = Dimensions.get("window").width;
 const THEME_STYLE = "white";
 
 const ListScreen = ({ navigation }) => {
@@ -53,77 +45,8 @@ const ListScreen = ({ navigation }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [hasFilters, setHasFilters] = useState(false);
   const [isHeaderTitleVisible, setIsHeaderTitleVisible] = useState(false);
-  const [isSearchVisible, setIsSearchVisible] = useState(false);
 
   const flatListRef = useRef(null);
-
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerShadowVisible: false,
-      headerLeft: () => (
-        <SearchInput
-          isSearchVisible={isSearchVisible}
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-          isOwner={true}
-        />
-      ),
-      headerTitle: () => (
-        <Text style={{ fontWeight: "bold", textAlign: "center" }}>
-          {isHeaderTitleVisible && !isSearchVisible ? gym.name : ""}
-        </Text>
-      ),
-      headerRight: () => (
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            gap: 10,
-            marginRight: 20,
-          }}
-        >
-          <TouchableOpacity
-            onPress={() => {
-              setIsSearchVisible(!isSearchVisible);
-              setSearchQuery("");
-            }}
-          >
-            {isSearchVisible ? (
-              <XMarkIcon size={25} color={"black"} />
-            ) : (
-              <MagnifyingGlassIcon size={25} color={"black"} />
-            )}
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{
-              backgroundColor: hasFilters ? "black" : null,
-              justifyContent: "center",
-              alignItems: "center",
-              borderRadius: 5,
-            }}
-            onPress={handleFilterPress}
-          >
-            <AdjustmentsHorizontalIcon
-              size={30}
-              color={hasFilters ? "white" : "black"}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => setIsModalVisible(true)}>
-            <EllipsisHorizontalIcon size={35} color={"black"} />
-          </TouchableOpacity>
-        </View>
-      ),
-      headerStyle: {
-        backgroundColor: THEME_STYLE,
-      },
-    });
-  }, [
-    navigation,
-    isHeaderTitleVisible,
-    isSearchVisible,
-    hasFilters,
-    searchQuery,
-  ]);
 
   const areFiltersEnabled = () => {
     if (
@@ -220,15 +143,32 @@ const ListScreen = ({ navigation }) => {
           style={{
             paddingHorizontal: 20,
             paddingVertical: 10,
-            height: 150,
+            height: 200,
             justifyContent: "space-between",
             gap: 10,
           }}
           key={item.id}
         >
-          <Text style={{ fontSize: 30, fontWeight: "bold" }} numberOfLines={2}>
-            {gym.name}
-          </Text>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 30,
+                fontWeight: "bold",
+                width: "90%",
+              }}
+              numberOfLines={1}
+            >
+              {gym.name}
+            </Text>
+            <TouchableOpacity onPress={() => setIsModalVisible(true)}>
+              <EllipsisHorizontalIcon size={35} color={"black"} />
+            </TouchableOpacity>
+          </View>
           <FlatList
             data={item.spraywalls}
             renderItem={({ item, index }) => (
@@ -273,6 +213,27 @@ const ListScreen = ({ navigation }) => {
             contentContainerStyle={{ gap: 10 }}
             horizontal
           />
+          <View style={{ flexDirection: "row", gap: 10 }}>
+            <SearchInput
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+            />
+            <TouchableOpacity
+              style={{
+                backgroundColor: hasFilters ? colors.primary : null,
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: 5,
+                aspectRatio: 1,
+              }}
+              onPress={handleFilterPress}
+            >
+              <AdjustmentsHorizontalIcon
+                size={30}
+                color={hasFilters ? "white" : "black"}
+              />
+            </TouchableOpacity>
+          </View>
         </View>
       );
     }
@@ -289,36 +250,6 @@ const ListScreen = ({ navigation }) => {
       </TouchableOpacity>
     );
   };
-
-  const renderItem = ({ item }) => (
-    <View style={{ flex: 1 }} key={item.id}>
-      <Image
-        source={{ uri: item.url }}
-        style={{
-          width: "100%",
-          height: "100%",
-          borderRadius: 10,
-        }}
-      />
-      <View
-        style={{
-          position: "absolute",
-          backgroundColor: "rgba(0, 0, 0, 0.75)",
-          width: 100,
-          height: 50,
-          justifyContent: "center",
-          alignItems: "center",
-          borderTopLeftRadius: 10,
-          borderBottomRightRadius: 10,
-          width: "50%",
-        }}
-      >
-        <Text style={{ color: "white", fontWeight: "bold", fontSize: 20 }}>
-          {item.name}
-        </Text>
-      </View>
-    </View>
-  );
 
   const handleScroll = (event) => {
     const offsetY = event.nativeEvent.contentOffset.y;

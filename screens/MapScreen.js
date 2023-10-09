@@ -20,6 +20,7 @@ import GymInfoBottomSheet from "../components/mapComponents/GymInfoBottomSheet";
 import MapSearchQuery from "../components/mapComponents/MapSearchQuery";
 import Map from "../components/mapComponents/Map";
 import MapSearchResults from "../components/mapComponents/MapSearchResults";
+import { updateUserGym } from "../utils/functions";
 
 // Initialize the module (needs to be done only once)
 Geocoder.init(GOOGLE_MAPS_GEOCODER_API_KEY); // use a valid API key
@@ -142,7 +143,6 @@ const MapScreen = ({ navigation }) => {
   };
 
   const handleConfirmMyGymPress = async (gymID) => {
-    console.log(user.id);
     setIsLoadingConfirmGym(true);
     const response = await request("put", `choose_gym/${user.id}/${gymID}`);
     if (response.status !== 200) {
@@ -151,8 +151,12 @@ const MapScreen = ({ navigation }) => {
       return;
     }
     if (response.data) {
-      dispatch(setGym(response.data.gym));
-      dispatch(setSpraywalls(response.data.spraywalls));
+      updateUserGym({
+        gym: response.data.gym,
+        spraywalls: response.data.spraywalls,
+        user: user,
+        dispatch: dispatch,
+      });
       setIsLoadingConfirmGym(false);
       navigation.navigate("Home");
     }
@@ -172,12 +176,6 @@ const MapScreen = ({ navigation }) => {
     setSearchQuery("");
     bottomSheetRef.current?.snapToIndex(1);
   };
-
-  useEffect(() => {
-    if (gymMarker) {
-      console.log(gymMarker);
-    }
-  }, [gymMarker]);
 
   return (
     <View style={styles.mapContainer}>

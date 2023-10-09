@@ -110,7 +110,6 @@ const ProfileBoulderSectionScreen = ({ route, navigation }) => {
   useFocusEffect(
     useCallback(() => {
       if (section === "Circuits") {
-        console.log(route.params.circuit);
         setBoulders(route.params.circuit.boulderData);
         setTitle(route.params.circuit.name);
       } else {

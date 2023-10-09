@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { request } from "../../../api/requestMethods";
 import { setGym, setSpraywalls } from "../../../redux/actions";
 import { CheckIcon } from "react-native-heroicons/outline";
+import { updateUserGym } from "../../../utils/functions";
 
 const SwitchGymScreen = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -36,21 +37,15 @@ const SwitchGymScreen = ({ navigation }) => {
     }
   };
 
-  const updateUserGym = async (item) => {
-    const data = { gym: item.id };
-    const response = request("put", `update_user_gym/${user.id}`, data);
-    if (response.status !== 200) {
-      console.log(response.status);
-      return;
-    }
-  };
-
   const handleGymCardPress = (item) => {
-    // Create a copy of the gym object without 'spraywalls' property
+    // Separating the gym and that gym's spraywalls for dispatch - Create a copy of the gym object without 'spraywalls' property
     const { spraywalls, ...gymWithoutSpraywalls } = item;
-    dispatch(setGym(gymWithoutSpraywalls));
-    dispatch(setSpraywalls(item.spraywalls));
-    updateUserGym(item);
+    updateUserGym({
+      gym: gymWithoutSpraywalls,
+      spraywalls: spraywalls,
+      user: user,
+      dispatch: dispatch,
+    });
   };
 
   const renderItem = ({ item, index }) => (
@@ -98,20 +93,6 @@ const SwitchGymScreen = ({ navigation }) => {
     >
       <View style={{ gap: 10 }}>
         <Text>My Gyms</Text>
-        {/* {data.map((gym, index) => (
-          <View
-            key={gym.id}
-            style={{
-              backgroundColor: "white",
-              padding: 20,
-            }}
-          >
-            <View style={{ height: "100%", flex: 1, backgroundColor: "blue" }}>
-              <Text>{gym.name}</Text>
-              <Text>{gym.location}</Text>
-            </View>
-          </View>
-        ))} */}
         <FlatList
           data={data}
           renderItem={renderItem}

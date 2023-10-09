@@ -64,7 +64,7 @@ const ProfileScreen = ({ navigation }) => {
     useCallback(() => {
       fetchProfileQuickData();
       fetchCircuits();
-    }, [gym, spraywallIndex])
+    }, [gym, spraywalls, spraywallIndex])
   );
 
   const fetchProfileQuickData = async () => {

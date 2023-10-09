@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { request } from "../../../api/requestMethods";
 import { setUser } from "../../../redux/actions";
 import EditData from "../../../components/EditData";
+import { colors } from "../../../utils/styles";
 
 const CHAR_LIMIT = 30;
 
@@ -46,7 +47,7 @@ const EditNameScreen = ({ navigation }) => {
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Text
             style={{
-              color: "rgb(0,122, 255)",
+              color: "black",
               fontWeight: "bold",
               fontSize: 16,
             }}
@@ -59,7 +60,7 @@ const EditNameScreen = ({ navigation }) => {
         <TouchableOpacity disabled={isDisabled} onPress={handleSavePress}>
           <Text
             style={{
-              color: isDisabled ? "#CCC" : "rgb(0,122, 255)",
+              color: isDisabled ? "#CCC" : colors.primary,
               fontWeight: "bold",
               fontSize: 16,
             }}

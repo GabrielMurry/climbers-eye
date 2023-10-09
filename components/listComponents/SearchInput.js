@@ -9,13 +9,7 @@ import React, { useEffect, useState } from "react";
 import { MagnifyingGlassIcon, XMarkIcon } from "react-native-heroicons/outline";
 import { TextInput } from "react-native";
 
-const SearchInput = ({
-  isSearchVisible,
-  searchQuery,
-  setSearchQuery,
-  isOwner,
-}) => {
-  const [isTextInputFocused, setIsTextInputFocused] = useState(false);
+const SearchInput = ({ searchQuery, setSearchQuery }) => {
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
   // Add an event listener to detect changes in keyboard visibility
@@ -36,14 +30,6 @@ const SearchInput = ({
     };
   }, []);
 
-  const handleTextInputFocus = () => {
-    setIsTextInputFocused(true);
-  };
-
-  const handleTextInputBlur = () => {
-    setIsTextInputFocused(false);
-  };
-
   const handleCancelSearchPress = () => {
     setSearchQuery("");
     if (isKeyboardVisible) {
@@ -52,37 +38,25 @@ const SearchInput = ({
   };
 
   return (
-    <>
-      {isSearchVisible ? (
-        <View
-          style={[
-            styles.SearchInputContainer,
-            { width: isOwner ? "125%" : "150%" },
-          ]}
+    <View style={styles.SearchInputContainer}>
+      <MagnifyingGlassIcon size={20} color="gray" />
+      <TextInput
+        style={styles.SearchInput}
+        value={searchQuery}
+        // onChange doesn't exist in react native. use onChangeText
+        onChangeText={(value) => setSearchQuery(value)} // in react native, you don't have to do e.target.value
+        placeholder="Search (name, setter, or grade)"
+        autoComplete="off"
+      />
+      {searchQuery ? (
+        <TouchableOpacity
+          style={styles.resetSearchQuery}
+          onPress={() => setSearchQuery("")}
         >
-          <MagnifyingGlassIcon size={20} color="gray" />
-          <TextInput
-            style={styles.SearchInput}
-            value={searchQuery}
-            // onChange doesn't exist in react native. use onChangeText
-            onChangeText={(value) => setSearchQuery(value)} // in react native, you don't have to do e.target.value
-            placeholder="Search (name, setter, or grade)"
-            onFocus={handleTextInputFocus}
-            onBlur={handleTextInputBlur}
-            autoComplete="off"
-            autoFocus={true}
-          />
-          {searchQuery ? (
-            <TouchableOpacity
-              style={styles.resetSearchQuery}
-              onPress={() => setSearchQuery("")}
-            >
-              <XMarkIcon size={12} color={"white"} />
-            </TouchableOpacity>
-          ) : null}
-        </View>
+          <XMarkIcon size={12} color={"white"} />
+        </TouchableOpacity>
       ) : null}
-    </>
+    </View>
   );
 };
 
@@ -90,13 +64,13 @@ export default SearchInput;
 
 const styles = StyleSheet.create({
   SearchInputContainer: {
-    marginLeft: 20,
     height: 35,
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "rgb(229, 228, 226)",
     paddingHorizontal: 10,
-    borderRadius: 10,
+    borderRadius: 5,
+    flex: 1,
   },
   SearchInput: {
     flex: 1,
