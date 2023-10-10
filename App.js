@@ -1,25 +1,7 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import BoulderScreen from "./screens/BoulderScreen";
-import ListScreen from "./screens/ListScreen";
-import {
-  UserIcon,
-  MapPinIcon,
-  HomeIcon,
-  Square3Stack3DIcon,
-  PlusIcon,
-  ChevronLeftIcon,
-} from "react-native-heroicons/outline";
-import {
-  UserIcon as UserIconSolid,
-  MapPinIcon as MapPinIconSolid,
-  HomeIcon as HomeIconSolid,
-  Square3Stack3DIcon as Square3Stack3DIconSolid,
-} from "react-native-heroicons/solid";
 import LoginScreen from "./screens/LoginScreen";
 import SignupScreen from "./screens/SignupScreen";
-import MapScreen from "./screens/MapScreen";
-import ProfileScreen from "./screens/profile/ProfileScreen";
 import AddGymScreen from "./screens/AddGymScreen";
 import EditBoulderScreen from "./screens/EditBoulderScreen";
 import CameraScreen from "./screens/CameraScreen";
@@ -27,7 +9,7 @@ import ConfirmEmailScreen from "./screens/ConfirmEmailScreen";
 import ForgotPasswordScreen from "./screens/ForgotPasswordScreen";
 import ResetPasswordScreen from "./screens/ResetPasswordScreen";
 import SubmitCodeScreen from "./screens/SubmitCodeScreen";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import SendScreen from "./screens/SendScreen";
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 import { Provider } from "react-redux";
@@ -41,174 +23,24 @@ import EditGymScreen from "./screens/EditGymScreen";
 import AddNewSprayWallScreen from "./screens/AddNewSprayWallScreen";
 import EditSprayWallScreen from "./screens/EditSprayWallScreen";
 import EditScreen from "./screens/EditScreen";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Text, View } from "react-native";
-import AddBoulderModal from "./components/general/AddBoulderModal";
-import ActivityScreen from "./screens/ActivityScreen";
 import EditProfileScreen from "./screens/profile/edit/EditProfileScreen";
 import EditNameScreen from "./screens/profile/edit/EditNameScreen";
 import { StatusBar } from "react-native";
 import SwitchGymScreen from "./screens/profile/edit/SwitchGymScreen";
 import AddNewCircuitScreen from "./screens/AddNewCircuitScreen";
-import ProfileBoulderSectionScreen from "./screens/profile/section/ProfileBoulderSectionScreen";
-import ProfileStatsSectionScreen from "./screens/profile/section/ProfileStatsSectionScreen";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { request } from "./api/requestMethods";
 import ReportBoulderScreen from "./screens/ReportBoulderScreen";
 import BoulderUserSendsScreen from "./screens/BoulderUserSendsScreen";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { colors } from "./utils/styles";
+import Tabs from "./navigation/Tabs";
+import { clearAsyncStorage, getTempCsrfToken } from "./utils/initializeAuth";
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-  const clearAsyncStorage = async () => {
-    try {
-      const keys = await AsyncStorage.getAllKeys();
-      if (keys.length > 0) {
-        // If there are keys, clear AsyncStorage
-        await AsyncStorage.clear();
-        console.log("AsyncStorage cleared successfully.");
-      } else {
-        console.log("AsyncStorage is already empty.");
-      }
-    } catch (error) {
-      console.error("Error clearing AsyncStorage:", error);
-    }
-  };
-  const getTempCsrfToken = async () => {
-    const response = await request("get", "temp_csrf_token/");
-    if (response.status !== 200) {
-      console.log(response.status);
-      return;
-    }
-  };
   useEffect(() => {
     clearAsyncStorage();
     getTempCsrfToken();
   }, []);
-
-  const Tab = createBottomTabNavigator();
-
-  function Tabs({ navigation }) {
-    const [modalVisible, setModalVisible] = useState(false);
-
-    const toggleModal = () => {
-      setModalVisible(!modalVisible);
-    };
-
-    const ModalTabScreen = () => (
-      <View>
-        <Text>Modal Tab Screen</Text>
-      </View>
-    );
-
-    return (
-      <>
-        <Tab.Navigator
-          screenOptions={({ route }) => ({
-            tabBarStyle: {
-              borderTopWidth: 0,
-            },
-            tabBarIcon: ({ color, size, focused }) => {
-              // Set the appropriate icon based on the route name and focused state
-              let iconSource;
-              if (route.name === "Home") {
-                iconSource = focused ? (
-                  <HomeIconSolid size={size} color={"black"} />
-                ) : (
-                  <HomeIcon size={size} color={"black"} />
-                );
-              } else if (route.name === "Map") {
-                iconSource = focused ? (
-                  <MapPinIconSolid size={size} color={"black"} />
-                ) : (
-                  <MapPinIcon size={size} color={"black"} />
-                );
-              } else if (route.name === "AddBoulder") {
-                iconSource = (
-                  <View
-                    style={{
-                      borderRadius: 100,
-                      borderWidth: 1,
-                      borderColor: colors.primary,
-                      backgroundColor: colors.primaryLight,
-                      padding: 8,
-                    }}
-                  >
-                    <PlusIcon size={size} color={colors.primary} />
-                  </View>
-                );
-              } else if (route.name === "Activity") {
-                iconSource = focused ? (
-                  <Square3Stack3DIconSolid size={size} color={"black"} />
-                ) : (
-                  <Square3Stack3DIcon size={size} color={"black"} />
-                );
-              } else if (route.name === "Profile") {
-                iconSource = focused ? (
-                  <UserIconSolid size={size} color={"black"} />
-                ) : (
-                  <UserIcon size={size} color={"black"} />
-                );
-              }
-
-              return iconSource;
-            },
-            tabBarLabel: ({ focused, color }) => {
-              // Set the label text and style based on the focused state
-              const labelColor = focused
-                ? "rgba(0, 0, 0, 1)"
-                : "rgba(0, 0, 0, 0.5)"; // Change these colors as desired
-
-              if (route.name === "AddBoulder") {
-                return;
-              }
-
-              return (
-                <Text style={{ color: labelColor, fontSize: 10 }}>
-                  {route.name}
-                </Text>
-              );
-            },
-          })}
-        >
-          <Tab.Screen
-            name="Home"
-            component={ListScreen}
-            options={{
-              headerShown: false,
-            }}
-          />
-          <Tab.Screen
-            name="Map"
-            component={MapScreen}
-            options={{
-              headerShown: false,
-            }}
-          />
-          <Tab.Screen
-            name="AddBoulder"
-            component={ModalTabScreen}
-            listeners={({ navigation }) => ({
-              tabPress: (e) => {
-                e.preventDefault(); // Prevent default tab behavior
-                toggleModal(); // Show the modal
-              },
-            })}
-          />
-          <Tab.Screen name="Activity" component={ActivityScreen} />
-          <Tab.Screen name="Profile" component={ProfileScreen} />
-        </Tab.Navigator>
-        {/* Render the modal */}
-        <AddBoulderModal
-          isVisible={modalVisible}
-          onClose={toggleModal}
-          navigation={navigation}
-        />
-      </>
-    );
-  }
 
   return (
     // ReactNativeActionSheet uses React context to allow your components to invoke the menu
@@ -290,14 +122,6 @@ export default function App() {
                 {({ navigation }) => <Tabs navigation={navigation} />}
               </Stack.Screen>
               <Stack.Screen name="EditBoulder" component={EditBoulderScreen} />
-              <Stack.Screen
-                name="ProfileBoulderSection"
-                component={ProfileBoulderSectionScreen}
-              />
-              <Stack.Screen
-                name="ProfileStatsSection"
-                component={ProfileStatsSectionScreen}
-              />
               <Stack.Screen name="EditProfile" component={EditProfileScreen} />
               <Stack.Screen name="EditName" component={EditNameScreen} />
               <Stack.Screen name="CropImage" component={CropImageScreen} />
@@ -306,7 +130,6 @@ export default function App() {
                 name="FilterCircuit"
                 component={FilterCircuitScreen}
               />
-              <Stack.Screen name="Boulder" component={BoulderScreen} />
               <Stack.Screen name="Send" component={SendScreen} />
               <Stack.Screen name="Circuit" component={CircuitScreen} />
               <Stack.Screen

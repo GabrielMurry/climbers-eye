@@ -17,6 +17,7 @@ import {
   setSpraywalls,
   setHeadshotImage,
 } from "../redux/actions";
+import Svg, { Image } from "react-native-svg";
 
 const LoginScreen = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -75,7 +76,15 @@ const LoginScreen = ({ navigation }) => {
           height: height * 0.25,
         }}
       >
-        <Text style={styles.logo}>SPRAY</Text>
+        {/* <Text style={styles.logo}>SPRAY</Text> */}
+        {/* <Image source={logoImage} /> */}
+        <Svg width={204} height={60} viewBox="0 0 204 60" fill="none">
+          <Image
+            href={require("../assets/ClimbersEyeLogo.svg")}
+            width="100%"
+            height="100%"
+          />
+        </Svg>
       </View>
       <CustomInput
         value={username}
