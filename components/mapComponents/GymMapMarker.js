@@ -6,6 +6,7 @@ import {
   View,
 } from "react-native";
 import { Callout, Marker } from "react-native-maps";
+import { colors } from "../../utils/styles";
 
 const GymMapMarker = ({
   gymMarker,
@@ -68,7 +69,7 @@ const styles = StyleSheet.create({
     color: "gray",
   },
   okButton: {
-    backgroundColor: "blue",
+    backgroundColor: colors.primary,
     paddingVertical: 15,
     paddingHorizontal: 15,
     borderRadius: 5,

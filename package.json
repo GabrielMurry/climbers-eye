@@ -1,6 +1,7 @@
 {
-  "name": "spray",
+  "name": "climberseye",
   "version": "1.0.0",
+  "description": "Easily build, share, and track boulders on a spray wall at any climbing gym.",
   "scripts": {
     "start": "expo start --dev-client",
     "android": "expo run:android",

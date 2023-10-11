@@ -17,7 +17,7 @@ import {
   setSpraywalls,
   setHeadshotImage,
 } from "../redux/actions";
-import SVGImg from "../assets/ClimbersEyeLogoShapes.svg";
+import SVGImg from "../assets/ClimbersEyeLogoShapesTest3.svg";
 import { colors } from "../utils/styles";
 import {
   ArrowLongRightIcon,
@@ -104,7 +104,7 @@ const LoginScreen = ({ navigation }) => {
         style={{
           width: "100%",
           alignItems: "center",
-          flex: 1,
+          flex: 2,
           justifyContent: "center",
           gap: 25,
         }}

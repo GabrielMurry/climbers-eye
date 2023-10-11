@@ -7,6 +7,7 @@ import {
   View,
 } from "react-native";
 import { XMarkIcon } from "react-native-heroicons/outline";
+import { colors } from "../../utils/styles";
 
 const GymInfoBottomSheet = ({
   gymMarker,
@@ -124,7 +125,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   bottomSheetConfirmGymButton: {
-    backgroundColor: "blue",
+    backgroundColor: colors.primary,
     width: 75,
     height: 75,
     borderRadius: 10,

@@ -1,11 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { SafeAreaView, StyleSheet, Text } from "react-native";
+import {
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import CustomInput from "../components/CustomInput";
 import CustomButton from "../components/CustomButton";
 import SocialSignInButtons from "../components/SocialSignInButtons";
 import { request } from "../api/requestMethods";
 import { useDispatch } from "react-redux";
 import { setUser } from "../redux/actions";
+import SVGImg from "../assets/ClimbersEyeLogoShapesTest3.svg";
+import { colors } from "../utils/styles";
 
 const SignupScreen = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -69,42 +77,62 @@ const SignupScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Create Account</Text>
-      <CustomInput
-        value={username}
-        setValue={(value) => setUsername(value)}
-        placeholder="Username"
-        secureTextEntry={false}
-        width="90%"
-        autoCapitalize="none"
-      />
-      <CustomInput
-        value={email}
-        setValue={setEmail}
-        placeholder="Email"
-        secureTextEntry={false}
-        width="90%"
-      />
-      <CustomInput
-        value={password}
-        setValue={setPassword}
-        placeholder="Password"
-        secureTextEntry={true}
-        width="90%"
-      />
-      <CustomInput
-        value={passwordRepeat}
-        setValue={setPasswordRepeat}
-        placeholder="Re-Enter Password"
-        secureTextEntry={true}
-        width="90%"
-      />
-      <CustomButton
-        onPress={handleCreateAccount}
-        text="Create Account"
-        isLoading={isLoading}
-        width="90%"
-      />
+      <View
+        style={{
+          width: "100%",
+          flex: 1,
+          justifyContent: "center",
+          paddingHorizontal: 20,
+        }}
+      >
+        <Text style={{ fontSize: 45, fontWeight: "bold" }}>Create Account</Text>
+        <SVGImg width={"100%"} height={50} />
+      </View>
+      <View
+        style={{
+          width: "100%",
+          alignItems: "center",
+          flex: 2,
+          justifyContent: "center",
+          gap: 10,
+        }}
+      >
+        <CustomInput
+          value={username}
+          setValue={(value) => setUsername(value)}
+          placeholder="Username"
+          secureTextEntry={false}
+          width="90%"
+          autoCapitalize="none"
+        />
+        <CustomInput
+          value={email}
+          setValue={setEmail}
+          placeholder="Email"
+          secureTextEntry={false}
+          width="90%"
+        />
+        <CustomInput
+          value={password}
+          setValue={setPassword}
+          placeholder="Password"
+          secureTextEntry={true}
+          width="90%"
+        />
+        <CustomInput
+          value={passwordRepeat}
+          setValue={setPasswordRepeat}
+          placeholder="Re-Enter Password"
+          secureTextEntry={true}
+          width="90%"
+        />
+        <CustomButton
+          onPress={handleCreateAccount}
+          text="Create Account"
+          isLoading={isLoading}
+          width="90%"
+        />
+      </View>
 
       <Text style={styles.text}>
         By registering, you confirm that you accept our{" "}
@@ -117,23 +145,41 @@ const SignupScreen = ({ navigation }) => {
         </Text>
       </Text>
 
-      <SocialSignInButtons />
-
-      <CustomButton
-        onPress={handleLogin}
-        text="Already have an account? Login"
-        type="TERTIARY"
-        width="90%"
-      />
+      {/* <SocialSignInButtons /> */}
+      <View
+        style={{
+          width: "100%",
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "flex-end",
+        }}
+      >
+        <View
+          style={{
+            height: 50,
+            alignItems: "center",
+            flexDirection: "row",
+          }}
+        >
+          <Text style={{ color: "gray", fontWeight: "bold" }}>
+            Already have an account?{" "}
+          </Text>
+          <TouchableOpacity onPress={handleLogin}>
+            <Text style={{ color: colors.primary, fontWeight: "bold" }}>
+              Login
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: "center",
+    backgroundColor: "white",
+    flex: 1,
     alignItems: "center",
-    gap: 5,
   },
   title: {
     fontSize: 24,
