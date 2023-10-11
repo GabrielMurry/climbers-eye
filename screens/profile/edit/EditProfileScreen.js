@@ -89,7 +89,6 @@ const EditProfileScreen = ({ navigation, route }) => {
         backgroundColor: "rgba(245,245,245,255)",
       }}
     >
-      {/* <Header navigation={navigation} title={"Edit Profile"} /> */}
       {/* profile settings */}
       <View style={{ paddingHorizontal: 10 }}>
         <View

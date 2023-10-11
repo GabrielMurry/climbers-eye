@@ -8,6 +8,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { MagnifyingGlassIcon, XMarkIcon } from "react-native-heroicons/outline";
 import { TextInput } from "react-native";
+import { colors } from "../../utils/styles";
 
 const SearchInput = ({ searchQuery, setSearchQuery }) => {
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
@@ -67,7 +68,7 @@ const styles = StyleSheet.create({
     height: 35,
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "rgb(229, 228, 226)",
+    backgroundColor: colors.textInputLight,
     paddingHorizontal: 10,
     borderRadius: 5,
     flex: 1,
@@ -75,7 +76,7 @@ const styles = StyleSheet.create({
   SearchInput: {
     flex: 1,
     paddingHorizontal: 5,
-    backgroundColor: "rgb(229, 228, 226)",
+    // backgroundColor: colors.textInputBG,
   },
   cancelButton: {
     justifyContent: "center",

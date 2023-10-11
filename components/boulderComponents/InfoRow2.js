@@ -1,6 +1,6 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
-import { ArrowLongRightIcon, CheckIcon } from "react-native-heroicons/outline";
+import { ArrowLongRightIcon } from "react-native-heroicons/outline";
 import { FontAwesome } from "@expo/vector-icons";
 import { colors } from "../../utils/styles";
 

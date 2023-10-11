@@ -3,8 +3,10 @@ import {
   StyleSheet,
   ActivityIndicator,
   TouchableOpacity,
+  View,
 } from "react-native";
 import React from "react";
+import { ArrowLongRightIcon } from "react-native-heroicons/outline";
 
 // if no type specified, default to PRIMARY
 const CustomButton = ({
@@ -16,6 +18,7 @@ const CustomButton = ({
   width = "100%",
   isLoading,
   disabled = false,
+  icon = null,
 }) => {
   return (
     <TouchableOpacity
@@ -38,15 +41,24 @@ const CustomButton = ({
           ]}
         />
       ) : (
-        <Text
-          style={[
-            styles.text,
-            styles[`text_${type}`],
-            fgColor ? { color: fgColor } : {},
-          ]}
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            gap: 10,
+          }}
         >
-          {text}
-        </Text>
+          <Text
+            style={[
+              styles.text,
+              styles[`text_${type}`],
+              fgColor ? { color: fgColor } : {},
+            ]}
+          >
+            {text}
+          </Text>
+          {icon}
+        </View>
       )}
     </TouchableOpacity>
   );
@@ -61,7 +73,7 @@ const styles = StyleSheet.create({
     padding: 10,
     marginVertical: 5,
     alignItems: "center",
-    borderRadius: 5,
+    borderRadius: 100,
   },
 
   container_PRIMARY: {
