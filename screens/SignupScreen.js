@@ -14,7 +14,12 @@ import { useDispatch } from "react-redux";
 import { setUser } from "../redux/actions";
 import SVGImg from "../assets/ClimbersEyeLogoShapesTest3.svg";
 import { colors } from "../utils/styles";
-import { ArrowLongRightIcon } from "react-native-heroicons/outline";
+import {
+  ArrowLongRightIcon,
+  EnvelopeIcon,
+  LockClosedIcon,
+  UserIcon,
+} from "react-native-heroicons/outline";
 
 const SignupScreen = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -105,6 +110,7 @@ const SignupScreen = ({ navigation }) => {
           secureTextEntry={false}
           width="90%"
           autoCapitalize="none"
+          icon={<UserIcon size={20} color={colors.textInputDark} />}
         />
         <CustomInput
           value={email}
@@ -112,6 +118,7 @@ const SignupScreen = ({ navigation }) => {
           placeholder="Email"
           secureTextEntry={false}
           width="90%"
+          icon={<EnvelopeIcon size={20} color={colors.textInputDark} />}
         />
         <CustomInput
           value={password}
@@ -119,6 +126,7 @@ const SignupScreen = ({ navigation }) => {
           placeholder="Password"
           secureTextEntry={true}
           width="90%"
+          icon={<LockClosedIcon size={20} color={colors.textInputDark} />}
         />
         <CustomInput
           value={passwordRepeat}
@@ -126,6 +134,7 @@ const SignupScreen = ({ navigation }) => {
           placeholder="Re-Enter Password"
           secureTextEntry={true}
           width="90%"
+          icon={<LockClosedIcon size={20} color={colors.textInputDark} />}
         />
         <View
           style={{
