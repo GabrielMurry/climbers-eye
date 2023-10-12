@@ -1,5 +1,18 @@
 <img src="/assets/ClimbersEyeLogo.svg" width="500">
-Easily build, share, and track boulders on a spray wall.
+
+**Stage: Pre-Release**
+
+Easily build, share, and track boulders on a spray wall. View and filter through other user published boulders on a spray wall, switch between spray walls in a gym, or search for other gyms.
+
+# Tech Stack
+Full stack application: 
+- React Native
+- Django
+- PostgreSQL
+- Amazon S3 Buckets
+
+# Images
+
 <img src="/assets/sampleImages/CE_1.PNG" width="200">
 Login
 <img src="/assets/sampleImages/CE_2.PNG" width="200">
