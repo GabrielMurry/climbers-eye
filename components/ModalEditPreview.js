@@ -51,15 +51,8 @@ const ModalEditPreview = ({
   const [isKickboardOn, setIsKickboardOn] = useState(false);
   const [imageFullScreen, setImageFullScreen] = useState(false);
   const [isImageLoading, setIsImageLoading] = useState(true);
-  const [tags, setTags] = useState(TAGS);
   const [error, setError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
-  const handleTagPress = (index) => {
-    const updatedTags = [...tags];
-    updatedTags[index].selected = !updatedTags[index].selected;
-    setTags(updatedTags);
-  };
 
   const handleConfirm = async ({ publish }) => {
     if (name === "") {
@@ -180,6 +173,8 @@ const ModalEditPreview = ({
                 placeholder="Boulder Name"
                 secureTextEntry={false}
                 error={error}
+                bordered={true}
+                rounded={true}
               />
               <TextInput
                 value={description}

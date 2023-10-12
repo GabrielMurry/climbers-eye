@@ -97,7 +97,7 @@ const LoginScreen = ({ navigation }) => {
           paddingHorizontal: 20,
         }}
       >
-        <Text style={{ fontSize: 50, fontWeight: "bold" }}>Login</Text>
+        <Text style={{ fontSize: 45, fontWeight: "bold" }}>Login</Text>
         <SVGImg width={"100%"} height={50} />
       </View>
       <View

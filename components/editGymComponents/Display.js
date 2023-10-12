@@ -318,33 +318,42 @@ export const SprayWallName = ({ spraywall, navigation }) => {
         justifyContent: "space-between",
       }}
     >
-      <View style={{ gap: 10 }}>
-        <Text>Spray Wall Name</Text>
-        <TextInput
-          style={{
-            borderWidth: 1,
-            borderColor: "#ccc",
-            borderRadius: 5,
-            paddingVertical: 10,
-            paddingHorizontal: 20,
-            fontSize: 16,
-          }}
-          value={newSprayWallName}
-          onChangeText={(text) => setNewSprayWallName(text)}
-        />
-      </View>
-      <View>
-        <TouchableOpacity
-          style={[styles.button, isDisabled && styles.disabledButton]}
-          disabled={isDisabled}
-          onPress={handleSave}
-        >
-          {isLoading ? (
-            <ActivityIndicator />
-          ) : (
-            <Text style={{ color: "white", fontWeight: "bold" }}>Save</Text>
-          )}
-        </TouchableOpacity>
+      <View
+        style={{
+          paddingHorizontal: 20,
+          paddingVertical: 10,
+          flex: 1,
+          justifyContent: "space-between",
+        }}
+      >
+        <View style={{ gap: 10 }}>
+          <Text>Spray Wall Name</Text>
+          <TextInput
+            style={{
+              borderWidth: 1,
+              borderColor: "#ccc",
+              borderRadius: 5,
+              paddingVertical: 10,
+              paddingHorizontal: 20,
+              fontSize: 16,
+            }}
+            value={newSprayWallName}
+            onChangeText={(text) => setNewSprayWallName(text)}
+          />
+        </View>
+        <View>
+          <TouchableOpacity
+            style={[styles.button, isDisabled && styles.disabledButton]}
+            disabled={isDisabled}
+            onPress={handleSave}
+          >
+            {isLoading ? (
+              <ActivityIndicator />
+            ) : (
+              <Text style={{ color: "white", fontWeight: "bold" }}>Save</Text>
+            )}
+          </TouchableOpacity>
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -452,25 +461,34 @@ export const SprayWallImage = ({ spraywall, navigation, image }) => {
         justifyContent: "space-between",
       }}
     >
-      <Pressable style={{ flex: 1 }} onPress={handleImagePress}>
-        <Image
-          source={{ uri: newImage.url ?? spraywall.url }}
-          style={{ width: "100%", height: "100%" }}
-          resizeMode="contain"
-        />
-      </Pressable>
-      <View>
-        <TouchableOpacity
-          style={[styles.button, isDisabled && styles.disabledButton]}
-          disabled={isDisabled}
-          onPress={handleSave}
-        >
-          {isLoading ? (
-            <ActivityIndicator />
-          ) : (
-            <Text style={{ color: "white", fontWeight: "bold" }}>Save</Text>
-          )}
-        </TouchableOpacity>
+      <View
+        style={{
+          paddingHorizontal: 20,
+          paddingVertical: 10,
+          flex: 1,
+          justifyContent: "space-between",
+        }}
+      >
+        <Pressable style={{ flex: 1 }} onPress={handleImagePress}>
+          <Image
+            source={{ uri: newImage.url ?? spraywall.url }}
+            style={{ width: "100%", height: "100%" }}
+            resizeMode="contain"
+          />
+        </Pressable>
+        <View>
+          <TouchableOpacity
+            style={[styles.button, isDisabled && styles.disabledButton]}
+            disabled={isDisabled}
+            onPress={handleSave}
+          >
+            {isLoading ? (
+              <ActivityIndicator />
+            ) : (
+              <Text style={{ color: "white", fontWeight: "bold" }}>Save</Text>
+            )}
+          </TouchableOpacity>
+        </View>
       </View>
     </SafeAreaView>
   );

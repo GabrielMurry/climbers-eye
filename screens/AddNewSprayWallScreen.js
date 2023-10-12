@@ -15,6 +15,7 @@ import { request } from "../api/requestMethods";
 import { useSelector, useDispatch } from "react-redux";
 import { setSpraywalls } from "../redux/actions";
 import useCustomHeader from "../hooks/useCustomHeader";
+import { colors } from "../utils/styles";
 
 const AddNewSprayWallScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
@@ -180,7 +181,7 @@ const AddNewSprayWallScreen = ({ navigation, route }) => {
         </View>
         <TouchableOpacity
           style={{
-            backgroundColor: "rgb(0, 122, 255)",
+            backgroundColor: colors.primary,
             borderRadius: 5,
             width: "100%",
             height: 45,

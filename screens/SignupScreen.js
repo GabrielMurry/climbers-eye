@@ -14,6 +14,7 @@ import { useDispatch } from "react-redux";
 import { setUser } from "../redux/actions";
 import SVGImg from "../assets/ClimbersEyeLogoShapesTest3.svg";
 import { colors } from "../utils/styles";
+import { ArrowLongRightIcon } from "react-native-heroicons/outline";
 
 const SignupScreen = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -126,12 +127,22 @@ const SignupScreen = ({ navigation }) => {
           secureTextEntry={true}
           width="90%"
         />
-        <CustomButton
-          onPress={handleCreateAccount}
-          text="Create Account"
-          isLoading={isLoading}
-          width="90%"
-        />
+        <View
+          style={{
+            width: "100%",
+            alignItems: "flex-end",
+            paddingHorizontal: 20,
+          }}
+        >
+          <CustomButton
+            onPress={handleCreateAccount}
+            text="CREATE"
+            isLoading={isLoading}
+            width="50%"
+            bgColor={colors.primary}
+            icon={<ArrowLongRightIcon size={25} color={"white"} />}
+          />
+        </View>
       </View>
 
       <Text style={styles.text}>

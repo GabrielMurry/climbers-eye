@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Spray",
+    "name": "ClimbersEye",
     "slug": "Spray",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -18,10 +18,7 @@
       "adaptiveIcon": {
         "backgroundColor": "#ffffff"
       },
-      "permissions": [
-        "android.permission.CAMERA",
-        "android.permission.RECORD_AUDIO"
-      ],
+      "permissions": ["android.permission.CAMERA"],
       "package": "com.gabrielmurry.Spray"
     },
     "web": {},
@@ -41,6 +38,18 @@
           "microphonePermission": false
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "f0c50695-8dd8-4403-9f64-7521b87af293"
+      }
+    },
+    "runtimeVersion": "1.0.0",
+    "updates": {
+      "url": "https://u.expo.dev/f0c50695-8dd8-4403-9f64-7521b87af293"
+    },
+    "hermes": {
+      "enabled": true
+    }
   }
 }

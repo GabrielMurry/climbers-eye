@@ -57,7 +57,13 @@ export default function App() {
                 component={LoginScreen}
                 options={{
                   headerShown: false,
-                  animation: "none",
+                }}
+              />
+              <Stack.Screen
+                name="Signup"
+                component={SignupScreen}
+                options={{
+                  headerShown: false,
                 }}
               />
               <Stack.Screen
@@ -79,14 +85,6 @@ export default function App() {
               <Stack.Screen
                 name="ResetPassword"
                 component={ResetPasswordScreen}
-                options={{
-                  headerShown: false,
-                  animation: "none",
-                }}
-              />
-              <Stack.Screen
-                name="Signup"
-                component={SignupScreen}
                 options={{
                   headerShown: false,
                   animation: "none",

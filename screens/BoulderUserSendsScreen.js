@@ -19,9 +19,9 @@ const BoulderUserSendsScreen = ({ navigation, route }) => {
         paddingVertical: 10,
       }}
     >
-      <Text>{item.date}</Text>
+      <Text style={{ fontWeight: "bold" }}>{item.date}</Text>
       <Text>Attempts: {item.attempts}</Text>
-      <Text>Grade: {item.grade}</Text>
+      <Text>Grade Proposed: {item.grade}</Text>
       <Text>Quality: {item.quality}</Text>
       <Text>Notes: {item.notes}</Text>
     </View>

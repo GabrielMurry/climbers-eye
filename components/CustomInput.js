@@ -19,6 +19,8 @@ const CustomInput = ({
   bgColor = "white",
   icon = null,
   button = null,
+  bordered = null,
+  rounded = null,
 }) => {
   return (
     <View
@@ -26,8 +28,10 @@ const CustomInput = ({
         width: width,
         flexDirection: "row",
         borderColor: error ? "red" : "#e8e8e8",
-        borderBottomWidth: 2,
+        borderBottomWidth: bordered ? null : 2,
+        borderWidth: bordered ? 1 : null,
         alignItems: "center",
+        borderRadius: rounded ? 5 : null,
       }}
     >
       {icon}

@@ -13,6 +13,7 @@ import CustomInput from "../components/CustomInput";
 import { request } from "../api/requestMethods";
 import { useSelector } from "react-redux";
 import CustomButton from "../components/CustomButton";
+import { colors } from "../utils/styles";
 
 const AddNewCircuitScreen = ({ navigation }) => {
   const { user } = useSelector((state) => state.userReducer);
@@ -85,6 +86,8 @@ const AddNewCircuitScreen = ({ navigation }) => {
               setValue={(value) => setNewCircuitName(value)}
               placeholder="Circuit Name"
               secureTextEntry={false}
+              bordered={true}
+              rounded={true}
             />
           </View>
           <View style={styles.row}>
@@ -94,6 +97,8 @@ const AddNewCircuitScreen = ({ navigation }) => {
               setValue={(value) => setNewCircuitDescription(value)}
               placeholder="Circuit Description"
               secureTextEntry={false}
+              bordered={true}
+              rounded={true}
             />
           </View>
           <View style={styles.row}>
@@ -177,6 +182,7 @@ const AddNewCircuitScreen = ({ navigation }) => {
           onPress={handleAddNewCircuitPress}
           text="Add"
           disabled={isSubmitDisabled}
+          bgColor={colors.primary}
         />
       </View>
     </SafeAreaView>

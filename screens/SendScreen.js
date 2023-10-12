@@ -20,6 +20,7 @@ import { boulderGrades } from "../utils/constants/boulderConstants";
 import * as Haptics from "expo-haptics";
 import useCustomHeader from "../hooks/useCustomHeader";
 import CustomButton from "../components/CustomButton";
+import { colors } from "../utils/styles";
 
 const options = {
   attempts: ["-"],
@@ -220,6 +221,7 @@ const SendScreen = ({ route, navigation }) => {
             onPress={handleSubmit}
             text="Submit"
             disabled={isSubmitDisabled}
+            bgColor={colors.primary}
           />
         </View>
       </TouchableWithoutFeedback>
