@@ -17,7 +17,7 @@ import {
   setSpraywalls,
   setHeadshotImage,
 } from "../redux/actions";
-import SVGImg from "../assets/ClimbersEyeLogoShapesTest3.svg";
+import SVGImg from "../assets/ClimbersEyeLogoShapes.svg";
 import { colors } from "../utils/styles";
 import {
   ArrowLongRightIcon,

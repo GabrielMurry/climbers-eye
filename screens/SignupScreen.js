@@ -12,7 +12,7 @@ import SocialSignInButtons from "../components/SocialSignInButtons";
 import { request } from "../api/requestMethods";
 import { useDispatch } from "react-redux";
 import { setUser } from "../redux/actions";
-import SVGImg from "../assets/ClimbersEyeLogoShapesTest3.svg";
+import SVGImg from "../assets/ClimbersEyeLogoShapes.svg";
 import { colors } from "../utils/styles";
 import {
   ArrowLongRightIcon,

@@ -1,8 +1,0 @@
-<svg width="720" height="70" viewBox="0 0 720 70" fill="none" xmlns="http://www.w3.org/2000/svg">
-<rect y="20" width="700" height="50" fill="black"/>
-<rect x="10" y="10" width="700" height="50" fill="white"/>
-<rect x="20" width="200" height="50" fill="#CC46FB"/>
-<rect x="220" width="100" height="50" fill="#31D04A"/>
-<path d="M620 0H720V50H620V0Z" fill="#FF0000"/>
-<rect x="320" width="300" height="50" fill="#0075FF"/>
-</svg>
