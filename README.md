@@ -1,4 +1,4 @@
-<img src="/assets/ClimbersEyeLogo.svg" width="500">
+<img src="/assets/ClimbersEyeLogoWhiteBackground.svg" width="500">
 
 **Stage: Pre-Release**
 
