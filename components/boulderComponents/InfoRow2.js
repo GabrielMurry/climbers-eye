@@ -6,15 +6,15 @@ import { colors } from "../../utils/styles";
 
 const InfoRow2 = ({ boulder, navigation }) => {
   const handleBoulderStatsPress = () => {
-    navigation.navigate("BoulderStats", { boulder: boulder });
+    navigation.navigate("BoulderStats", { boulder });
   };
 
   const handleSentBoulderPress = () => {
-    navigation.navigate("Send", { boulder: boulder });
+    navigation.navigate("Send", { boulder });
   };
 
   const handleUserSendsCountPress = () => {
-    navigation.navigate("BoulderUserSends", { boulder: boulder });
+    navigation.navigate("BoulderUserSends", { boulder });
   };
 
   return (

@@ -102,6 +102,11 @@ const BoulderScreen = ({ route, navigation }) => {
     navigation.navigate("ReportBoulder");
   };
 
+  handleRemoveLoggedAscentPress = () => {
+    setIsModalVisible(false);
+    navigation.navigate("BoulderUserSends", { boulder });
+  };
+
   useEffect(() => {
     const createOptionsData = () => {
       // start with options
@@ -122,7 +127,7 @@ const BoulderScreen = ({ route, navigation }) => {
       if (boulder.isSent) {
         const removeLoggedAscentOption = {
           title: "Remove Logged Ascent",
-          onPress: "",
+          onPress: handleRemoveLoggedAscentPress,
           color: "red",
         };
         const cancelOptionIndex = options.length - 1;

@@ -87,8 +87,8 @@ const ReportBoulderScreen = ({ navigation }) => {
       >
         <View>
           <Text>
-            We may contact the setter but we won't let them know that you
-            reported the climb.
+            We will look into your report and we may contact the setter. Your
+            name and information will remain private.
           </Text>
           <View style={{ marginTop: 10 }}>
             {reportReasons.map(renderReportReasons)}
