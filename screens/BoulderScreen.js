@@ -22,6 +22,8 @@ import InfoRow4 from "../components/boulderComponents/InfoRow4";
 import InfoRow5 from "../components/boulderComponents/InfoRow5";
 import InfoRow6 from "../components/boulderComponents/InfoRow6";
 import DraftNotif from "../components/boulderComponents/DraftNotif";
+import { Share } from "react-native";
+import { shareText } from "../utils/functions";
 
 const THEME_STYLE = "white"; //rgba(245,245,245,255)
 
@@ -111,7 +113,7 @@ const BoulderScreen = ({ route, navigation }) => {
     const createOptionsData = () => {
       // start with options
       const options = [
-        { title: "Share", onPress: "" },
+        // { title: "Share", onPress: () => shareText(boulder) },
         { title: "Report", onPress: handleReportPress },
         {
           title: "Cancel",

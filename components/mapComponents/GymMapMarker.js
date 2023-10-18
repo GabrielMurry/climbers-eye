@@ -12,33 +12,35 @@ const GymMapMarker = ({
   gymMarker,
   handleConfirmMyGymPress,
   isLoadingConfirmGym,
-}) => (
-  <Marker
-    coordinate={{
-      latitude: gymMarker.latitude,
-      longitude: gymMarker.longitude,
-    }}
-  >
-    <Callout style={styles.calloutContainer}>
-      <View style={styles.calloutContent}>
-        <View style={styles.gymInfo}>
-          <Text style={styles.gymName}>{gymMarker.name}</Text>
-          <Text style={styles.gymAddress}>{gymMarker.address}</Text>
+}) => {
+  return (
+    <Marker
+      coordinate={{
+        latitude: gymMarker.latitude,
+        longitude: gymMarker.longitude,
+      }}
+    >
+      <Callout style={styles.calloutContainer}>
+        <View style={styles.calloutContent}>
+          <View style={styles.gymInfo}>
+            <Text style={styles.gymName}>{gymMarker.name}</Text>
+            <Text style={styles.gymAddress}>{gymMarker.address}</Text>
+          </View>
+          <TouchableOpacity
+            style={styles.okButton}
+            onPress={() => handleConfirmMyGymPress(gymMarker.id)}
+          >
+            {isLoadingConfirmGym ? (
+              <ActivityIndicator color="white" />
+            ) : (
+              <Text style={styles.okButtonText}>OK</Text>
+            )}
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          style={styles.okButton}
-          onPress={() => handleConfirmMyGymPress(gymMarker.id)}
-        >
-          {isLoadingConfirmGym ? (
-            <ActivityIndicator color="white" />
-          ) : (
-            <Text style={styles.okButtonText}>OK</Text>
-          )}
-        </TouchableOpacity>
-      </View>
-    </Callout>
-  </Marker>
-);
+      </Callout>
+    </Marker>
+  );
+};
 
 export default GymMapMarker;
 

@@ -1,6 +1,5 @@
 import {
   ActivityIndicator,
-  Image,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -8,74 +7,86 @@ import {
 } from "react-native";
 import { XMarkIcon } from "react-native-heroicons/outline";
 import { colors } from "../../utils/styles";
+import CustomButton from "../CustomButton";
+import FullScreenImage from "../FullScreenImage";
+import { useState } from "react";
+import FlatListSpraywalls from "../general/FlatListSpraywalls";
 
 const GymInfoBottomSheet = ({
   gymMarker,
   isLoadingGymInfo,
   handleCancelGymPress,
   handleConfirmMyGymPress,
-  setImageFullScreen,
+  // setImageFullScreen,
   isLoadingConfirmGym,
-}) => (
-  <View style={styles.bottomSheetGymContainer}>
-    {isLoadingGymInfo ? (
-      <ActivityIndicator color="black" />
-    ) : (
-      <>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-          }}
-        >
-          <View style={styles.bottomSheetGym}>
-            <Text style={{ fontSize: 26 }}>{gymMarker.name}</Text>
-            <Text style={{ fontSize: 16 }}>
-              {gymMarker.address === "" ? "Home Gym" : gymMarker.address}
-            </Text>
+}) => {
+  const [imageFullScreen, setImageFullScreen] = useState(false);
+  const [spraywall, setSpraywall] = useState(null);
+
+  const handleSpraywallPress = ({ item }) => {
+    setImageFullScreen(true);
+    setSpraywall(item);
+  };
+
+  return (
+    <View style={styles.bottomSheetGymContainer}>
+      {isLoadingGymInfo ? (
+        <ActivityIndicator color="black" />
+      ) : (
+        <>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+            }}
+          >
+            <View style={styles.bottomSheetGym}>
+              <Text style={{ fontSize: 26, fontWeight: "bold" }}>
+                {gymMarker.name}
+              </Text>
+              <Text style={{ fontSize: 16 }}>
+                {gymMarker.address === "" ? "Home Gym" : gymMarker.address}
+              </Text>
+            </View>
+            <View style={styles.bottomSheetCancelGymContainer}>
+              <TouchableOpacity
+                style={styles.bottomSheetCancelGymButton}
+                onPress={handleCancelGymPress}
+              >
+                <XMarkIcon size={20} color="gray" />
+              </TouchableOpacity>
+            </View>
           </View>
-          <View style={styles.bottomSheetCancelGymContainer}>
-            <TouchableOpacity
-              style={styles.bottomSheetCancelGymButton}
-              onPress={handleCancelGymPress}
-            >
-              <XMarkIcon size={20} color="gray" />
-            </TouchableOpacity>
+          <View
+            style={{
+              height: 100,
+              justifyContent: "space-between",
+            }}
+          >
+            <FlatListSpraywalls
+              spraywalls={gymMarker.spraywalls}
+              height={100}
+              handleSpraywallPress={handleSpraywallPress}
+            />
           </View>
-        </View>
-        <View style={styles.bottomSheetImageAndButtonContainer}>
-          <View style={styles.bottomSheetImageContainer}>
-            <TouchableOpacity
-              style={styles.bottomSheetImage(gymMarker)}
-              onPress={() => setImageFullScreen(true)}
-            >
-              <Image
-                source={{ uri: gymMarker.spraywalls[0].url }}
-                style={{
-                  width: "100%",
-                  height: "100%",
-                }}
-                resizeMode="contain"
-              />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.bottomSheetConfirmGymContainer}>
-            <TouchableOpacity
-              style={styles.bottomSheetConfirmGymButton}
-              onPress={() => handleConfirmMyGymPress(gymMarker.id)}
-            >
-              {isLoadingConfirmGym ? (
-                <ActivityIndicator color="white" />
-              ) : (
-                <Text style={styles.okButtonText}>OK</Text>
-              )}
-            </TouchableOpacity>
-          </View>
-        </View>
-      </>
-    )}
-  </View>
-);
+          <CustomButton
+            onPress={() => handleConfirmMyGymPress(gymMarker.id)}
+            text="Confirm"
+            isLoading={isLoadingConfirmGym}
+            bgColor={colors.primary}
+          />
+        </>
+      )}
+      <FullScreenImage
+        imageFullScreen={imageFullScreen}
+        url={spraywall?.url}
+        width={spraywall?.width}
+        height={spraywall?.height}
+        onRequestClose={() => setImageFullScreen(false)}
+      />
+    </View>
+  );
+};
 
 export default GymInfoBottomSheet;
 

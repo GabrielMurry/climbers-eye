@@ -29,7 +29,7 @@ const CustomButton = ({
         { width: width },
         disabled ? { opacity: 0.5 } : null,
       ]}
-      disabled={disabled}
+      disabled={disabled || isLoading}
       onPress={onPress}
     >
       {isLoading ? (

@@ -4,8 +4,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   FlatList,
-  Pressable,
-  Image,
   SafeAreaView,
 } from "react-native";
 import React, { useCallback, useRef, useState } from "react";
@@ -22,6 +20,7 @@ import { setSpraywallIndex } from "../redux/actions";
 import SearchInput from "../components/listComponents/SearchInput";
 import ModalOptions from "../components/ModalOptions";
 import { colors } from "../utils/styles";
+import FlatListSpraywalls from "../components/general/FlatListSpraywalls";
 
 const THEME_STYLE = "white";
 
@@ -122,7 +121,12 @@ const ListScreen = ({ navigation }) => {
     navigation.navigate("Filter");
   };
 
-  const renderBoulderCards = ({ item, index }) => {
+  const handleSpraywallPress = ({ index }) => {
+    dispatch(setSpraywallIndex(index));
+  };
+
+  const renderList = ({ item, index }) => {
+    // if there are no boulders in the list or filters
     if (item.id === "empty") {
       return (
         <View
@@ -137,6 +141,7 @@ const ListScreen = ({ navigation }) => {
         </View>
       );
     }
+    // gym name, gym options (only if owner) flat list of spray walls, search input, filters
     if (index === 0) {
       return (
         <View
@@ -169,49 +174,10 @@ const ListScreen = ({ navigation }) => {
               <EllipsisHorizontalIcon size={35} color={"black"} />
             </TouchableOpacity>
           </View>
-          <FlatList
-            data={item.spraywalls}
-            renderItem={({ item, index }) => (
-              <Pressable
-                style={{
-                  height: "100%",
-                  aspectRatio: 1,
-                  padding: 5,
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-                key={item.id}
-                onPress={() => dispatch(setSpraywallIndex(index))}
-              >
-                <View
-                  style={{
-                    height: "110%",
-                    aspectRatio: 1,
-                    backgroundColor: "black",
-                    position: "absolute",
-                    borderRadius: 2,
-                    backgroundColor: colors.primaryLight,
-                    borderWidth: 2,
-                    borderColor:
-                      index === spraywallIndex
-                        ? colors.primary
-                        : colors.primaryLight,
-                  }}
-                />
-                <Image
-                  source={{ uri: item.url }}
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    borderRadius: 2,
-                    opacity: index === spraywallIndex ? 1 : 0.8,
-                  }}
-                />
-              </Pressable>
-            )}
-            keyExtractor={(item) => item.id}
-            contentContainerStyle={{ gap: 10 }}
-            horizontal
+          <FlatListSpraywalls
+            spraywalls={item.spraywalls}
+            handleSpraywallPress={handleSpraywallPress}
+            highlight={true}
           />
           <View style={{ flexDirection: "row", gap: 10 }}>
             <SearchInput
@@ -237,6 +203,7 @@ const ListScreen = ({ navigation }) => {
         </View>
       );
     }
+    // boulder list
     return (
       <TouchableOpacity
         onPress={() => navigateToBoulderScreen(item)}
@@ -284,7 +251,7 @@ const ListScreen = ({ navigation }) => {
         <FlatList
           ref={flatListRef}
           data={boulders}
-          renderItem={renderBoulderCards}
+          renderItem={renderList}
           keyExtractor={(item) => item.id}
           initialNumToRender={8} // Render the number of items that are initially visible on the screen
           windowSize={2} // Render an additional number of items to improve scrolling performance

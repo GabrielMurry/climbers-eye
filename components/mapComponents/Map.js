@@ -8,17 +8,15 @@ const Map = ({
   handleConfirmMyGymPress,
   isLoadingConfirmGym,
 }) => {
+  const initialRegion = {
+    latitude: 38.575764,
+    longitude: -121.478851,
+    latitudeDelta: 0.05, // zoom scale
+    longitudeDelta: 0.05,
+  };
+
   return (
-    <MapView
-      ref={mapRef}
-      initialRegion={{
-        latitude: 38.575764,
-        longitude: -121.478851,
-        latitudeDelta: 0.05, // zoom scale
-        longitudeDelta: 0.05,
-      }}
-      style={{ flex: 1 }}
-    >
+    <MapView ref={mapRef} initialRegion={initialRegion} style={{ flex: 1 }}>
       {gymMarker ? (
         <GymMapMarker
           gymMarker={gymMarker}
