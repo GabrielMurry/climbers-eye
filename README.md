@@ -10,9 +10,19 @@ Easily build, edit, share, and track boulders on a spray wall.
 
 View and filter through other user published boulders on a spray wall, switch between spray walls in a gym, or search for other gyms.
 
-# Tech Stack
+## Table of Contents
+
+- [Installation](#installation)
+- [Technologies Used](#tech-stack)
+- [Features](#features)
+- [Backend Functionality](#backend-functionality)
+- [Screenshots](#screenshots)
+
+# Tech-Stack
 Full stack application: 
 - React Native
+- Expo
+- Redux
 - Django
 - PostgreSQL
 - Amazon S3 Buckets
@@ -80,7 +90,7 @@ When changing your profile image, you can crop the image in aspect ratio 1:1, wh
 
 Switch to a different gym in your profile that which you have shown activity in previously.
 
-# Backend Functionality
+# Backend-Functionality
 Django as a backend utilizing its model-template-view architectural pattern as well as Django's rest_framework.
 
 7 Django models: Gym, SprayWall, Person, Boulder, Circuit, Like Send, Bookmark, and Activity.
@@ -95,7 +105,7 @@ CRUD operations in all areas of data posting - boulder creations, custom profile
 
 Organized code via categorized views, utils, helper functions, common functions, and common imports.
 
-# Images
+# Screenshots
 
 <img src="/assets/sampleImages/CE_1.PNG" width="200">
 Login
