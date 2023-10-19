@@ -2,16 +2,110 @@
 
 **Stage: Pre-Release**
 
-Easily build, share, and track boulders on a spray wall. View and filter through other user published boulders on a spray wall, switch between spray walls in a gym, or search for other gyms.
+**App images below**
 
-# Tech Stack
+An app for rock climbers by a rock climber.
+
+Easily build, edit, share, and track boulders on a spray wall.
+
+View and filter through other user published boulders on a spray wall, switch between spray walls in a gym, or search for other gyms.
+
+## Table of Contents
+
+- [Installation](#installation)
+- [Technologies Used](#tech-stack)
+- [Features](#features)
+- [Backend Functionality](#backend-functionality)
+- [Screenshots](#screenshots)
+
+# Tech-Stack
 Full stack application: 
 - React Native
+- Expo
+- Redux
 - Django
 - PostgreSQL
 - Amazon S3 Buckets
 
-# Images
+# Features
+Secure authentication with Django sessions and CSRF tokens.
+
+Search for your gym or home wall via Apple Maps and Google geocoder API.
+
+Add a new gym or home wall - edit the name, type, and location.
+
+Add new spray walls to that gym - edit each spray wall's name and default image.
+
+Home screen with a clean UI/UX that immediately displays the gym's name, spray walls, and a list of all published boulders in that spray wall.
+
+Filter between spray walls in that gym or filter boulders through categorical filters or text inputs for specificity.
+
+Add new boulder - options to use the default spray wall image, camera, or upload an image.
+
+Edit and paint the boulder using your chosen image - green paint: starting hand holds, purple paint: foot holds, blue paint: hand and foot holds, red paint: finishing hold.
+
+Can zoom and paint small holds whilst editing the boulder.
+
+Using Python Imaging Library to manipulate the image by gray-scaling the entire image except for painted holds - leave the painted holds the color they are.
+
+Storing all images in an Amazon S3 bucket and receiving the url to that image to send to the frontend and store in PostgreSQL database.
+
+Add a boulder name, description, and more to your newly created boulder.
+
+Publish or leave your boulder as a draft.
+
+View any boulder - its name, grade, rating, image, setter name, date created, description, etc.
+
+View the boulder image as a full screen with zoom and pan capabilities.
+
+Optimistic updating when liking or bookmarking the boulder.
+
+Log a repeated or first time ascent of a boulder - adding the number of attempts, grade and rating suggestion.
+
+View overall statistics of that boulder - how many people have climbed the boulder, distribution graph of all suggested grades from users, and more.
+
+View your personal statistics on that particular boulder - date ascended, suggested, grade, and number of attempts.
+
+Add the boulder to your circuits.
+
+Add a new circuit to your circuit list and place any boulders in that circuit (that exist on that spray wall).
+
+Activity screen that displays and time stamps your significant activities - publishing a new boulder, ascending a boulder, repeating an ascent of a boulder, liking a boulder, bookmarking a boulder, adding a boulder to a circuit, and creating a new boulder.
+
+Activity list are paginated to improve performance.
+
+Profile screen that beautifully displays username profile image, current gym, current spray wall, categorical boulder data, statistics, and circuits.
+
+Can freely change spray walls in your gym through the profile screen which changes all your boulder info (boulder info tied to each spray wall).
+
+View all your logged boulders that displays a graph of quantity of boulders climbed at each grade difficulty, and a section list of all boulders logged in a particular spray wall for each session (day).
+
+View liked, bookmarked, and created boulders for a particular spray wall.
+
+View all the boulders in particular circuits you custom made.
+
+Edit profile by changing your profile image, editing your nick name, username, email, signing out, or deleting your profile.
+
+When changing your profile image, you can crop the image in aspect ratio 1:1, whilst also zooming and panning to desired region of the image.
+
+Switch to a different gym in your profile that which you have shown activity in previously.
+
+# Backend-Functionality
+Django as a backend utilizing its model-template-view architectural pattern as well as Django's rest_framework.
+
+7 Django models: Gym, SprayWall, Person, Boulder, Circuit, Like Send, Bookmark, and Activity.
+
+Amazon S3 bucket for storing all images and using boto3 SDK for Python to retrieve those image urls for frontend use or storing in the database.
+
+PostgreSQL as a relational database management system to sort and find related data based on primary keys, such as certain boulders in a particular spray wall, displaying user data, user boulder statistics, etc..
+
+Over 35 API calls.
+
+CRUD operations in all areas of data posting - boulder creations, custom profile editing, gym and spray wall editing, circuits, etc.
+
+Organized code via categorized views, utils, helper functions, common functions, and common imports.
+
+# Screenshots
 
 <img src="/assets/sampleImages/CE_1.PNG" width="200">
 Login
