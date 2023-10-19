@@ -51,9 +51,13 @@ const SignupScreen = ({ navigation }) => {
     setIsLoading(false);
   };
 
-  const handleTermsOfUse = () => {};
+  const handleTermsAndConditions = () => {
+    navigation.navigate("TermsAndConditions");
+  };
 
-  const handlePrivacyPolicy = () => {};
+  const handlePrivacyPolicy = () => {
+    navigation.navigate("PrivacyPolicy");
+  };
 
   const handleLogin = () => {
     navigation.navigate("Login");
@@ -153,17 +157,31 @@ const SignupScreen = ({ navigation }) => {
           />
         </View>
       </View>
+      <View style={{ flexDirection: "row", width: "90%", flexWrap: "wrap" }}>
+        <Text style={{ color: "gray" }}>
+          By registering, you confirm that you accept our
+        </Text>
+        <TouchableOpacity onPress={handleTermsAndConditions}>
+          <Text style={styles.link}>Terms and Conditions </Text>
+        </TouchableOpacity>
+        <Text style={{ color: "gray" }}>and </Text>
+        <TouchableOpacity onPress={handlePrivacyPolicy}>
+          <Text style={styles.link}>Privacy Policy.</Text>
+        </TouchableOpacity>
+      </View>
 
-      <Text style={styles.text}>
+      {/* <Text style={styles.text}>
         By registering, you confirm that you accept our{" "}
-        <Text style={styles.link} onPress={handleTermsOfUse}>
-          Terms of Use
-        </Text>{" "}
-        and{" "}
+        <TouchableOpacity>
+          <Text style={styles.link} onPress={handleTermsOfUse}>
+            Terms and Conditions
+          </Text>
+        </TouchableOpacity>
+        <Text>and</Text>
         <Text style={styles.link} onPress={handlePrivacyPolicy}>
           Privacy Policy
         </Text>
-      </Text>
+      </Text> */}
 
       {/* <SocialSignInButtons /> */}
       <View

@@ -1,12 +1,5 @@
-import {
-  View,
-  Text,
-  TextInput,
-  StyleSheet,
-  TouchableOpacity,
-} from "react-native";
+import { View, TextInput, StyleSheet } from "react-native";
 import React from "react";
-import { UserIcon } from "react-native-heroicons/outline";
 
 const CustomInput = ({
   value,
@@ -52,7 +45,7 @@ export default CustomInput;
 
 const styles = StyleSheet.create({
   input: (error, bgColor) => ({
-    // backgroundColor: bgColor,
+    backgroundColor: bgColor,
     height: 50,
     padding: 5,
     justifyContent: "center",

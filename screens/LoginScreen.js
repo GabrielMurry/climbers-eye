@@ -106,7 +106,7 @@ const LoginScreen = ({ navigation }) => {
           alignItems: "center",
           flex: 2,
           justifyContent: "center",
-          gap: 25,
+          gap: 30,
         }}
       >
         <CustomInput

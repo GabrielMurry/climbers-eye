@@ -33,6 +33,8 @@ import BoulderUserSendsScreen from "./screens/BoulderUserSendsScreen";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Tabs from "./navigation/Tabs";
 import { clearAsyncStorage, getTempCsrfToken } from "./utils/initializeAuth";
+import PrivacyPolicyScreen from "./screens/PrivacyPolicyScreen";
+import TermsAndConditions from "./screens/TermsAndConditions";
 
 const Stack = createNativeStackNavigator();
 
@@ -71,7 +73,6 @@ export default function App() {
                 component={ForgotPasswordScreen}
                 options={{
                   headerShown: false,
-                  animation: "none",
                 }}
               />
               <Stack.Screen
@@ -87,7 +88,6 @@ export default function App() {
                 component={ResetPasswordScreen}
                 options={{
                   headerShown: false,
-                  animation: "none",
                 }}
               />
               <Stack.Screen
@@ -146,6 +146,14 @@ export default function App() {
               <Stack.Screen
                 name="BoulderUserSends"
                 component={BoulderUserSendsScreen}
+              />
+              <Stack.Screen
+                name="PrivacyPolicy"
+                component={PrivacyPolicyScreen}
+              />
+              <Stack.Screen
+                name="TermsAndConditions"
+                component={TermsAndConditions}
               />
             </Stack.Navigator>
           </NavigationContainer>
