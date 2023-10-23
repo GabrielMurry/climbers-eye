@@ -31,9 +31,9 @@ const AddBoulderModal = ({ isVisible, onClose, navigation }) => {
     onClose();
     navigation.navigate("EditBoulder", {
       image: {
-        url: spraywalls[spraywallIndex].url,
-        width: spraywalls[spraywallIndex].width,
-        height: spraywalls[spraywallIndex].height,
+        url: spraywalls[spraywallIndex]?.url,
+        width: spraywalls[spraywallIndex]?.width,
+        height: spraywalls[spraywallIndex]?.height,
       },
     });
   };
@@ -96,7 +96,7 @@ const AddBoulderModal = ({ isVisible, onClose, navigation }) => {
               }}
             >
               <Image
-                source={{ uri: spraywalls[spraywallIndex].url }}
+                source={{ uri: spraywalls[spraywallIndex]?.url }}
                 style={{ width: "100%", height: "100%" }}
                 resizeMode="contain"
               />
