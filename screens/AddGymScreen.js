@@ -14,10 +14,12 @@ import {
 import { CameraIcon, PhotoIcon } from "react-native-heroicons/outline";
 import { request } from "../api/requestMethods";
 import * as ImagePicker from "expo-image-picker";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import useCustomHeader from "../hooks/useCustomHeader";
+import { setGym, setSpraywalls } from "../redux/actions";
 
-const AddGymScreen = ({ route, navigation }) => {
+const AddGymScreen = ({ navigation }) => {
+  const dispatch = useDispatch();
   const { user } = useSelector((state) => state.userReducer);
 
   const [isCommercialGym, setIsCommercialGym] = useState(true);
@@ -36,12 +38,12 @@ const AddGymScreen = ({ route, navigation }) => {
     title: "Add New Gym",
   });
 
-  useEffect(() => {
-    if (route?.params?.image) {
-      const { image } = route.params;
-      setImage(image);
-    }
-  }, [route]);
+  // useEffect(() => {
+  //   if (route?.params?.image) {
+  //     const { image } = route.params;
+  //     setImage(image);
+  //   }
+  // }, [route]);
 
   const handleAddGym = () => {
     Alert.alert(
@@ -72,7 +74,8 @@ const AddGymScreen = ({ route, navigation }) => {
               setIsLoading(false);
               return;
             }
-            // DO: put response data in redux state
+            dispatch(setGym(response.data.gym));
+            dispatch(setSpraywalls(response.data.spraywalls));
             navigation.navigate("Home");
             setIsLoading(false);
           },
