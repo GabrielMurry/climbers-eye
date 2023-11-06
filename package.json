@@ -36,9 +36,10 @@
     "expo-media-library": "~15.4.1",
     "expo-splash-screen": "~0.20.5",
     "expo-status-bar": "~1.6.0",
+    "expo-updates": "~0.18.17",
     "lodash.isequal": "^4.5.0",
     "react": "18.2.0",
-    "react-native": "0.72.5",
+    "react-native": "0.72.6",
     "react-native-chart-kit": "^6.12.0",
     "react-native-fast-image": "^8.6.3",
     "react-native-geocoding": "^0.5.0",
@@ -57,10 +58,11 @@
     "react-native-webview": "13.2.2",
     "react-redux": "^8.0.5",
     "redux": "^4.2.1",
+    "redux-logger": "^3.0.6",
+    "redux-persist": "^6.0.0",
     "redux-thunk": "^2.4.2",
     "rn-perfect-sketch-canvas": "^0.3.0",
-    "victory-native": "^36.6.11",
-    "expo-updates": "~0.18.17"
+    "victory-native": "^36.6.11"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
