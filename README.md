@@ -26,6 +26,8 @@ Full stack application:
 - Django
 - PostgreSQL
 - Amazon S3 Buckets
+- AWS RDS
+- Heroku
 
 # Features
 Secure authentication with Django sessions and CSRF tokens.
