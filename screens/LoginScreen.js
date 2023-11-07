@@ -16,6 +16,7 @@ import {
   setGym,
   setSpraywalls,
   setHeadshotImage,
+  setProfileData,
 } from "../redux/actions";
 import SVGImg from "../assets/ClimbersEyeLogoShapes.svg";
 import { colors } from "../utils/styles";
@@ -51,6 +52,7 @@ const LoginScreen = ({ navigation }) => {
       if (response.data.gym) {
         dispatch(setGym(response.data.gym));
         dispatch(setSpraywalls(response.data.spraywalls));
+        dispatch(setProfileData(response.data.profileData));
         navigation.navigate("Tabs");
       } else {
         navigation.navigate("Map");

@@ -9,8 +9,9 @@ export const SET_FILTER_MAX_GRADE_INDEX = "SET_FILTER_MAX_GRADE_INDEX";
 export const SET_FILTER_CLIMB_TYPE = "SET_FILTER_CLIMB_TYPE";
 export const SET_FILTER_STATUS = "SET_FILTER_STATUS";
 export const SET_FILTER_CIRCUITS = "SET_FILTER_CIRCUITS";
-export const REMOVE_FILTER_CIRCUITS = "REMOVE_FILTER_CIRCUITS";
-export const RESET_FILTER_CIRCUITS = "RESET_FILTER_CIRCUITS";
+export const REMOVE_FILTER_CIRCUITS = "REMOVE_FILTER_CIRCUITS"; // don't need?
+export const RESET_FILTER_CIRCUITS = "RESET_FILTER_CIRCUITS"; // don't need?
+export const SET_PROFILE_DATA = "SET_PROFILE_DATA";
 
 export const setUser = (user) => (dispatch) => {
   dispatch({
@@ -99,5 +100,12 @@ export const removeFilterCircuits = (filterCircuits) => (dispatch) => {
 export const resetFilterCircuits = () => (dispatch) => {
   dispatch({
     type: RESET_FILTER_CIRCUITS,
+  });
+};
+
+export const setProfileData = (profileData) => (dispatch) => {
+  dispatch({
+    type: SET_PROFILE_DATA,
+    payload: profileData,
   });
 };

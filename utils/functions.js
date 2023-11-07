@@ -1,4 +1,4 @@
-import { setGym, setSpraywalls } from "../redux/actions";
+import { setGym, setSpraywalls, setProfileData } from "../redux/actions";
 import { request } from "../api/requestMethods";
 import { Share } from "react-native";
 
@@ -41,4 +41,28 @@ export const shareInfo = async (boulder) => {
   } catch (error) {
     console.error("Sharing failed:", error.message);
   }
+};
+
+export const handleCacheUpdate = ({
+  targetSection,
+  method,
+  profileData,
+  spraywallIndex,
+  dispatch,
+}) => {
+  // Clone the current profileData
+  const updatedProfileData = profileData;
+  const sectionData =
+    updatedProfileData[spraywallIndex].bouldersSectionQuickData;
+  for (let i = 0; i < sectionData.length; i++) {
+    if (sectionData[i].section === targetSection) {
+      if (method === "post") {
+        sectionData[i].data += 1;
+      } else {
+        sectionData[i].data -= 1;
+      }
+      break;
+    }
+  }
+  dispatch(setProfileData(updatedProfileData));
 };

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { BASE_URL } from "@env";
 
-const url = "https://climberseye-django-54eb29e79683.herokuapp.com/";
+const url = "http://192.168.50.29:8000/";
 
 export default axios.create({
   baseURL: url,

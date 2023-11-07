@@ -63,7 +63,6 @@ const ProfileScreen = ({ navigation }) => {
   useFocusEffect(
     useCallback(() => {
       fetchProfileQuickData();
-      fetchCircuits();
     }, [gym, spraywalls, spraywallIndex])
   );
 
@@ -79,20 +78,7 @@ const ProfileScreen = ({ navigation }) => {
     if (response.data) {
       setBouldersSectionQuickData(response.data.bouldersSectionQuickData);
       setStatsSectionQuickData(response.data.statsSectionQuickData);
-    }
-  };
-
-  const fetchCircuits = async () => {
-    const response = await request(
-      "get",
-      `get_user_circuits/${user.id}/${spraywalls[spraywallIndex].id}`
-    );
-    if (response.status !== 200) {
-      console.log(response.status);
-      return;
-    }
-    if (response.data) {
-      setCircuits(response.data.circuitsData);
+      setCircuits(response.data.circuitsSectionQuickData);
     }
   };
 

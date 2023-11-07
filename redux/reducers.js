@@ -13,6 +13,7 @@ import {
   SET_FILTER_CIRCUITS,
   REMOVE_FILTER_CIRCUITS,
   RESET_FILTER_CIRCUITS,
+  SET_PROFILE_DATA,
 } from "./actions";
 
 const initialState = {
@@ -27,6 +28,7 @@ const initialState = {
   filterClimbType: "boulder",
   filterStatus: "all",
   filterCircuits: [],
+  profileData: [],
 };
 
 export function userReducer(state = initialState, action) {
@@ -35,6 +37,8 @@ export function userReducer(state = initialState, action) {
       return { ...state, user: action.payload };
     case SET_HEADSHOT_IMAGE:
       return { ...state, headshotImage: action.payload };
+    case SET_PROFILE_DATA:
+      return { ...state, profileData: action.payload };
     default:
       return state;
   }
