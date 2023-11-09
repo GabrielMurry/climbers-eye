@@ -20,9 +20,20 @@
         "enterpriseProvisioning": "universal"
       }
     },
-    "production": {}
+    "production": {
+      "env": {
+        "GOOGLE_MAPS_GEOCODER_API_KEY": "AIzaSyD1T2Oc924WUDt4HeLm8fs5ACewI6AGs3Q",
+        "BASE_URL": "https://climberseye-django-54eb29e79683.herokuapp.com"
+      }
+    }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "ios": {
+        "appleId": "gabrielmurryedh@gmail.com",
+        "ascAppId": "6471462178",
+        "appleTeamId": "A32MMJ7WTS"
+      }
+    }
   }
 }

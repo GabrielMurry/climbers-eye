@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+  Image,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -8,7 +9,6 @@ import {
 } from "react-native";
 import CustomInput from "../components/CustomInput";
 import CustomButton from "../components/CustomButton";
-import SocialSignInButtons from "../components/SocialSignInButtons";
 import { request } from "../api/requestMethods";
 import { useDispatch } from "react-redux";
 import {
@@ -22,6 +22,8 @@ import SVGImg from "../assets/ClimbersEyeLogoShapes.svg";
 import { colors } from "../utils/styles";
 import {
   ArrowLongRightIcon,
+  EyeIcon,
+  EyeSlashIcon,
   LockClosedIcon,
   UserIcon,
 } from "react-native-heroicons/outline";
@@ -33,6 +35,7 @@ const LoginScreen = ({ navigation }) => {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = async () => {
     setIsLoading(true);
@@ -52,7 +55,7 @@ const LoginScreen = ({ navigation }) => {
       if (response.data.gym) {
         dispatch(setGym(response.data.gym));
         dispatch(setSpraywalls(response.data.spraywalls));
-        dispatch(setProfileData(response.data.profileData));
+        // dispatch(setProfileData(response.data.profileData));
         navigation.navigate("Tabs");
       } else {
         navigation.navigate("Map");
@@ -75,38 +78,52 @@ const LoginScreen = ({ navigation }) => {
     }
   }, [username, password]);
 
-  const ForgotPasswordButton = () => (
-    <TouchableOpacity onPress={handleForgotPassword}>
-      <Text
-        style={{
-          fontSize: 12,
-          fontWeight: "bold",
-          color: colors.primary,
-        }}
-      >
-        FORGOT
-      </Text>
+  const ShowPasswordButton = () => (
+    <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+      {showPassword ? (
+        <EyeSlashIcon size={25} color={colors.textInputDark} />
+      ) : (
+        <EyeIcon size={25} color={colors.textInputDark} />
+      )}
     </TouchableOpacity>
   );
 
   return (
     <SafeAreaView style={styles.container}>
+      {/* <View
+        style={{
+          width: "100%",
+          height: 200,
+          justifyContent: "center",
+          paddingHorizontal: 20,
+          alignItems: "center",
+        }}
+      >
+        <Image
+          source={require("../assets/images/icon-transparent.png")}
+          style={{ width: "100%", height: "100%" }}
+          resizeMode="contain"
+        />
+      </View> */}
       <View
         style={{
           width: "100%",
-          flex: 1,
           justifyContent: "center",
           paddingHorizontal: 20,
+          gap: 10,
+          flex: 1,
         }}
       >
         <Text style={{ fontSize: 45, fontWeight: "bold" }}>Login</Text>
-        <SVGImg width={"100%"} height={50} />
+        <Text style={{ fontSize: 18, color: "gray" }}>
+          Please sign in to continue.
+        </Text>
       </View>
       <View
         style={{
           width: "100%",
+          height: 350,
           alignItems: "center",
-          flex: 2,
           justifyContent: "center",
           gap: 30,
         }}
@@ -125,12 +142,25 @@ const LoginScreen = ({ navigation }) => {
           value={password}
           setValue={setPassword}
           placeholder="Password"
-          secureTextEntry={true}
+          secureTextEntry={!showPassword}
           width="90%"
           icon={<LockClosedIcon size={20} color={colors.textInputDark} />}
-          button={<ForgotPasswordButton />}
+          button={<ShowPasswordButton />}
           // bgColor={colors.textInputBG}
         />
+        <View
+          style={{
+            width: "100%",
+            alignItems: "flex-start",
+            paddingHorizontal: 20,
+          }}
+        >
+          <TouchableOpacity>
+            <Text style={{ color: colors.textInputDark }}>
+              Forgot Password?
+            </Text>
+          </TouchableOpacity>
+        </View>
         <View
           style={{
             width: "100%",
@@ -163,12 +193,6 @@ const LoginScreen = ({ navigation }) => {
           justifyContent: "flex-end",
         }}
       >
-        {/* <CustomButton
-          onPress={handleCreateAccount}
-          text="Don't have an account? Create one"
-          type="TERTIARY"
-          width="90%"
-        /> */}
         <View
           style={{
             height: 50,

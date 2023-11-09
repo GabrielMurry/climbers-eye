@@ -2,17 +2,19 @@
   "expo": {
     "name": "Climbers Eye",
     "slug": "Spray",
-    "version": "1.0.0",
+    "version": "1.0.2",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
     "splash": {
+      "image": "./assets/images/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.gabrielmurry.Spray"
+      "bundleIdentifier": "com.gabrielmurry.Spray",
+      "icon": "./assets/images/icon.png"
     },
     "android": {
       "adaptiveIcon": {
@@ -44,12 +46,9 @@
         "projectId": "f0c50695-8dd8-4403-9f64-7521b87af293"
       }
     },
-    "runtimeVersion": "1.0.0",
+    "runtimeVersion": "1.0.2",
     "updates": {
       "url": "https://u.expo.dev/f0c50695-8dd8-4403-9f64-7521b87af293"
-    },
-    "hermes": {
-      "enabled": true
     }
   }
 }

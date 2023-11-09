@@ -3,17 +3,32 @@
 <plist version="1.0">
   <dict>
     <key>CFBundleDevelopmentRegion</key>
-    <string>$(DEVELOPMENT_LANGUAGE)</string>
+    <string>en</string>
     <key>CFBundleDisplayName</key>
-    <string>Spray</string>
+    <string>Climber's Eye</string>
     <key>CFBundleExecutable</key>
     <string>$(EXECUTABLE_NAME)</string>
     <key>CFBundleIdentifier</key>
-    <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+    <string>com.gabrielmurry.Spray</string>
     <key>CFBundleInfoDictionaryVersion</key>
     <string>6.0</string>
     <key>CFBundleName</key>
     <string>$(PRODUCT_NAME)</string>
+    <key>CFBundleIcons</key>
+    <dict>
+        <key>CFBundlePrimaryIcon</key>
+        <dict>
+            <key>CFBundleIconName</key>
+            <string>ClimbersEye</string>
+            <key>CFBundleIconFiles</key>
+            <array>
+                <string>ClimbersEye@2x.png</string>
+                <string>ClimbersEye@3x.png</string>
+                <string>ClimbersEye@2x~ipad.png</string>
+                <string>ClimbersEye@3x~ipad.png</string>
+            </array>
+        </dict>
+    </dict>
     <key>CFBundlePackageType</key>
     <string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
     <key>CFBundleShortVersionString</key>
