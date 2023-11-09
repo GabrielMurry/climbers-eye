@@ -2,7 +2,7 @@
   "expo": {
     "name": "Climbers Eye",
     "slug": "Spray",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
     "splash": {
@@ -28,14 +28,14 @@
       [
         "expo-camera",
         {
-          "cameraPermission": "Allow Spray to access your camera."
+          "cameraPermission": "Allow Climber's Eye to access your camera."
         }
       ],
       [
         "expo-image-picker",
         {
           "photosPermission": "custom photos permission",
-          "cameraPermission": "Allow $(PRODUCT_NAME) to open the camera",
+          "cameraPermission": "Allow Climber's Eye to open the camera",
           "//": "Disables the microphone permission",
           "microphonePermission": false
         }
@@ -46,7 +46,7 @@
         "projectId": "f0c50695-8dd8-4403-9f64-7521b87af293"
       }
     },
-    "runtimeVersion": "1.0.2",
+    "runtimeVersion": "1.0.3",
     "updates": {
       "url": "https://u.expo.dev/f0c50695-8dd8-4403-9f64-7521b87af293"
     }
