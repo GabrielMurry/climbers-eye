@@ -83,10 +83,10 @@ const ModalEditPreview = ({
     }
     if (response.data) {
       handleVibrate();
-      navigation.navigate("Boulder", {
+      navigation.navigate("Boulder-Home", {
         boulder: response.data,
         fromScreen: "EditBoulder",
-        toScreen: "Home",
+        toScreen: "List",
       });
     }
     setIsModalVisible(!isModalVisible);

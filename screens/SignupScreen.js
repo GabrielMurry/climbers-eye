@@ -88,10 +88,10 @@ const SignupScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* <View
+      <View
         style={{
           width: "100%",
-          height: 200,
+          height: 150,
           justifyContent: "center",
           paddingHorizontal: 20,
           alignItems: "center",
@@ -99,16 +99,15 @@ const SignupScreen = ({ navigation }) => {
       >
         <Image
           source={require("../assets/images/icon-transparent.png")}
-          style={{ width: "100%", height: "100%" }}
+          style={{ width: "50%", height: "50%" }}
           resizeMode="contain"
         />
-      </View> */}
+      </View>
       <View
         style={{
           width: "100%",
           justifyContent: "center",
           paddingHorizontal: 20,
-          flex: 1,
         }}
       >
         <Text style={{ fontSize: 45, fontWeight: "bold" }}>Create Account</Text>

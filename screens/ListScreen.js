@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   FlatList,
   SafeAreaView,
+  ActivityIndicator,
 } from "react-native";
 import React, { useCallback, useRef, useState } from "react";
 import {
@@ -44,6 +45,7 @@ const ListScreen = ({ navigation }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [hasFilters, setHasFilters] = useState(false);
   const [isHeaderTitleVisible, setIsHeaderTitleVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const flatListRef = useRef(null);
 
@@ -97,6 +99,7 @@ const ListScreen = ({ navigation }) => {
       if (response.data.length === 0) {
         response.data.push({ id: "empty" });
       }
+      setIsLoading(false);
       setBoulders([
         { id: "spraywalls", spraywalls: spraywalls },
         ...response.data,
@@ -108,7 +111,7 @@ const ListScreen = ({ navigation }) => {
   // Providing navigation as a dependency, the navigateToBoulder function will only be re-created when the navigation prop changes, ensuring better performance.
   const navigateToBoulderScreen = useCallback(
     (item) => {
-      navigation.navigate("Boulder", {
+      navigation.navigate("Boulder-Home", {
         boulder: item,
         fromScreen: "Home",
         toScreen: "Home",
@@ -122,6 +125,7 @@ const ListScreen = ({ navigation }) => {
   };
 
   const handleSpraywallPress = ({ index }) => {
+    setIsLoading(true);
     dispatch(setSpraywallIndex(index));
   };
 
@@ -205,16 +209,28 @@ const ListScreen = ({ navigation }) => {
     }
     // boulder list
     return (
-      <TouchableOpacity
-        onPress={() => navigateToBoulderScreen(item)}
-        key={item.id}
-        style={{ paddingHorizontal: 10 }}
-      >
-        {index === 1 ? (
-          <View style={{ backgroundColor: "lightgray", height: 1 }} />
-        ) : null}
-        <BoulderCard boulder={item} />
-      </TouchableOpacity>
+      <>
+        {isLoading ? (
+          <ActivityIndicator
+            size="large"
+            style={{
+              width: "100%",
+              height: "100%",
+            }}
+          />
+        ) : (
+          <TouchableOpacity
+            onPress={() => navigateToBoulderScreen(item)}
+            key={item.id}
+            style={{ paddingHorizontal: 10 }}
+          >
+            {index === 1 ? (
+              <View style={{ backgroundColor: "lightgray", height: 1 }} />
+            ) : null}
+            <BoulderCard boulder={item} />
+          </TouchableOpacity>
+        )}
+      </>
     );
   };
 

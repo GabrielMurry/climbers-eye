@@ -144,7 +144,7 @@ const ProfileBoulderSectionScreen = ({ route, navigation }) => {
   // Providing navigation as a dependency, the navigateToBoulder function will only be re-created when the navigation prop changes, ensuring better performance.
   const navigateToBoulderScreen = useCallback(
     (item) => {
-      navigation.navigate("Boulder", {
+      navigation.navigate("Boulder-Profile", {
         boulder: item,
         fromScreen: "ProfileBoulderSection",
         toScreen: "ProfileBoulderSection",
@@ -217,7 +217,16 @@ const ProfileBoulderSectionScreen = ({ route, navigation }) => {
     <View style={{ flex: 1, backgroundColor: "white" }}>
       <View style={styles.listContainer}>
         {/* List of Boulders */}
-        {section === "Logbook" ? (
+        {isLoading ? (
+          <ActivityIndicator
+            size="large"
+            style={{
+              width: "100%",
+              height: "100%",
+              position: "absolute",
+            }}
+          />
+        ) : section === "Logbook" ? (
           <SectionList
             sections={boulders}
             keyExtractor={(item) => item.uuid || item.id}

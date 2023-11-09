@@ -38,7 +38,7 @@ function HomeStack() {
           headerShown: false,
         }}
       />
-      <Stack.Screen name="Boulder" component={BoulderScreen} />
+      <Stack.Screen name="Boulder-Home" component={BoulderScreen} />
     </Stack.Navigator>
   );
 }
@@ -54,7 +54,7 @@ function ProfileStack() {
         name="ProfileStatsSection"
         component={ProfileStatsSectionScreen}
       />
-      <Stack.Screen name="Boulder" component={BoulderScreen} />
+      <Stack.Screen name="Boulder-Profile" component={BoulderScreen} />
     </Stack.Navigator>
   );
 }

@@ -44,7 +44,7 @@ const InfoRow1 = ({ boulder, setBoulder, userID, navigation }) => {
           setBoulder({ ...boulder, isLiked: originalLike });
           return;
         }
-      }, 2000),
+      }, 1000),
     [originalLike]
   ); // Adjust the delay (in milliseconds) as needed
 

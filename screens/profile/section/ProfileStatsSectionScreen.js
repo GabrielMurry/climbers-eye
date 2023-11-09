@@ -41,6 +41,7 @@ const ProfileStatsSectionScreen = ({ route, navigation }) => {
   );
 
   const fetchData = async () => {
+    setIsLoading(true);
     const response = await request(
       "get",
       `profile_stats_section/${user.id}/${spraywalls[spraywallIndex].id}?section=${section}`
@@ -52,6 +53,7 @@ const ProfileStatsSectionScreen = ({ route, navigation }) => {
     if (response.data) {
       // setBoulderBarChartData(response.data.bouldersBarChartData);
       setBoulders(response.data);
+      setIsLoading(false);
     }
   };
 
@@ -59,7 +61,7 @@ const ProfileStatsSectionScreen = ({ route, navigation }) => {
   // Providing navigation as a dependency, the navigateToBoulder function will only be re-created when the navigation prop changes, ensuring better performance.
   const navigateToBoulderScreen = useCallback(
     (item) => {
-      navigation.navigate("Boulder", {
+      navigation.navigate("Boulder-Profile", {
         boulder: item,
         fromScreen: "ProfileStatsSection",
         toScreen: "ProfileStatsSection",
@@ -94,16 +96,27 @@ const ProfileStatsSectionScreen = ({ route, navigation }) => {
     <View style={{ flex: 1, backgroundColor: "white" }}>
       <View style={styles.listContainer}>
         {/* List of Boulders */}
-        <FlatList
-          data={boulders}
-          renderItem={renderBoulderCards}
-          keyExtractor={(item) => item.id}
-          initialNumToRender={8} // Render the number of items that are initially visible on the screen
-          windowSize={2} // Render an additional number of items to improve scrolling performance
-          ListFooterComponent={<View style={{ height: 50 }} />}
-          ListEmptyComponent={renderEmptyComponent}
-          keyboardShouldPersistTaps="handled" // click on search bar cancel buttons when Keyboard is visible (or click on boulder cards)
-        />
+        {isLoading ? (
+          <ActivityIndicator
+            size="large"
+            style={{
+              width: "100%",
+              height: "100%",
+              position: "absolute",
+            }}
+          />
+        ) : (
+          <FlatList
+            data={boulders}
+            renderItem={renderBoulderCards}
+            keyExtractor={(item) => item.id}
+            initialNumToRender={8} // Render the number of items that are initially visible on the screen
+            windowSize={2} // Render an additional number of items to improve scrolling performance
+            ListFooterComponent={<View style={{ height: 50 }} />}
+            ListEmptyComponent={renderEmptyComponent}
+            keyboardShouldPersistTaps="handled" // click on search bar cancel buttons when Keyboard is visible (or click on boulder cards)
+          />
+        )}
       </View>
     </View>
   );
