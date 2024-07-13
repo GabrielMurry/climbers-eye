@@ -97,9 +97,10 @@ export const removeFilterCircuits = (filterCircuits) => (dispatch) => {
   });
 };
 
-export const resetFilterCircuits = () => (dispatch) => {
+export const resetFilterCircuits = (filterCircuits) => (dispatch) => {
   dispatch({
     type: RESET_FILTER_CIRCUITS,
+    payload: filterCircuits,
   });
 };
 

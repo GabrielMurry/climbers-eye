@@ -96,6 +96,7 @@ const ListScreen = ({ navigation }) => {
       return;
     }
     if (response.data) {
+      console.log("DING!");
       if (response.data.length === 0) {
         response.data.push({ id: "empty" });
       }

@@ -14,6 +14,9 @@ export const clearAsyncStorage = async () => {
     const keys = await AsyncStorage.getAllKeys();
     if (keys.length > 0) {
       // If there are keys, clear AsyncStorage
+      console.log("------------");
+      console.log(keys);
+      console.log("------------");
       await AsyncStorage.clear();
       console.log("AsyncStorage cleared successfully.");
       getTempCsrfToken();

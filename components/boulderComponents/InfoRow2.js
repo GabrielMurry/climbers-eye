@@ -40,7 +40,7 @@ const InfoRow2 = ({ boulder, navigation }) => {
         >
           <FontAwesome name="book" size={24} color="black" />
         </TouchableOpacity>
-        {boulder.userSendsData.length > 0 ? (
+        {boulder?.userSendsData?.length > 0 ? (
           <TouchableOpacity
             onPress={handleUserSendsCountPress}
             style={{
@@ -53,7 +53,7 @@ const InfoRow2 = ({ boulder, navigation }) => {
             }}
           >
             <Text style={{ fontWeight: "bold" }}>
-              {boulder.userSendsData.length}
+              {boulder?.userSendsData?.length}
             </Text>
           </TouchableOpacity>
         ) : null}

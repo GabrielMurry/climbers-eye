@@ -20,8 +20,6 @@ const InfoRow1 = ({ boulder, setBoulder, userID, navigation }) => {
   const debouncedHandleLikePressed = useMemo(
     () =>
       _.debounce(async (currentLike) => {
-        console.log(originalLike);
-        console.log(currentLike);
         if (originalLike === currentLike) {
           return;
         }
@@ -44,7 +42,7 @@ const InfoRow1 = ({ boulder, setBoulder, userID, navigation }) => {
           setBoulder({ ...boulder, isLiked: originalLike });
           return;
         }
-      }, 1000),
+      }, 500),
     [originalLike]
   ); // Adjust the delay (in milliseconds) as needed
 
@@ -81,7 +79,7 @@ const InfoRow1 = ({ boulder, setBoulder, userID, navigation }) => {
           setBoulder({ ...boulder, isBookmarked: originalBookmark });
           return;
         }
-      }, 2000),
+      }, 500),
     [originalBookmark]
   ); // Adjust the delay (in milliseconds) as needed
 

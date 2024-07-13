@@ -23,6 +23,9 @@ import useCustomHeader from "../../../hooks/useCustomHeader";
 import BoulderBarChart from "../../../components/boulderStatsComponents/BoulderBarChart";
 import { EllipsisHorizontalIcon } from "react-native-heroicons/outline";
 import ModalOptions from "../../../components/ModalOptions";
+import { Skia } from "@shopify/react-native-skia";
+import BarChartTest from "../../../components/boulderStatsComponents/BarChartTest";
+import BarChartHorizontal from "../../../components/boulderStatsComponents/BarChartHorizontal";
 
 const ProfileBoulderSectionScreen = ({ route, navigation }) => {
   const { section } = route.params;
@@ -104,6 +107,10 @@ const ProfileBoulderSectionScreen = ({ route, navigation }) => {
       keyboardDidShowListener.remove();
       keyboardDidHideListener.remove();
     };
+  }, []);
+
+  useEffect(() => {
+    console.log("hi");
   }, []);
 
   // This event will be triggered when the screen gains focus (i.e., when you navigate back to it).
@@ -192,7 +199,8 @@ const ProfileBoulderSectionScreen = ({ route, navigation }) => {
   };
 
   const renderHeaderChart = () => {
-    return <BoulderBarChart data={boulderBarChartData} />;
+    // return <BoulderBarChart data={boulderBarChartData} />;
+    return <BarChartHorizontal data={boulderBarChartData} />;
   };
 
   const renderEmptyComponent = () => {

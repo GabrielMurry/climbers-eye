@@ -27,6 +27,7 @@ import {
   LockClosedIcon,
   UserIcon,
 } from "react-native-heroicons/outline";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const LoginScreen = ({ navigation }) => {
   const dispatch = useDispatch();

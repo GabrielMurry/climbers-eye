@@ -9,6 +9,7 @@ import BoulderPieChart from "../components/boulderStatsComponents/BoulderPieChar
 import BoulderBarChart from "../components/boulderStatsComponents/BoulderBarChart";
 import useCustomHeader from "../hooks/useCustomHeader";
 import { useSelector } from "react-redux";
+import BarChartHorizontal from "../components/boulderStatsComponents/BarChartHorizontal";
 
 const BoulderStatsScreen = ({ route, navigation }) => {
   const { boulder } = route.params;
@@ -80,7 +81,7 @@ const BoulderStatsScreen = ({ route, navigation }) => {
         <Text style={styles.label}>Published:</Text>
         <Text style={styles.info}>{boulder.date}</Text>
       </View>
-      <BoulderBarChart data={boulderBarChartData} isProject={isProject} />
+      <BarChartHorizontal data={boulderBarChartData} displayHeader={false} />
       {/* {boulderPieChartData ? (
         <BoulderPieChart boulderPieChartData={boulderPieChartData} />
       ) : null} */}
