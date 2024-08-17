@@ -4,24 +4,30 @@ import Slider from "@react-native-community/slider";
 
 const GradeRange = ({
   boulderGrades,
-  filterMinGradeIndex,
-  handleMinGradeChange,
-  filterMaxGradeIndex,
-  handleMaxGradeChange,
+  handleMinDisplayChange,
+  handleMinCompleteChange,
+  handleMaxDisplayChange,
+  handleMaxCompleteChange,
+  minGradeDisplay,
+  maxGradeDisplay,
 }) => {
+  const handleSlidingComplete = () => {
+    console.log("HELLO");
+  };
   return (
     <View style={styles.sliderContainer}>
       <View style={styles.sliderWrapper}>
         <Text style={styles.sliderLabel}>
-          Min Grade: {boulderGrades[filterMinGradeIndex]}
+          Min Grade: {boulderGrades[minGradeDisplay]}
         </Text>
         <Slider
           style={styles.slider}
           minimumValue={0}
           maximumValue={boulderGrades.length - 1}
-          upperLimit={filterMaxGradeIndex}
-          value={filterMinGradeIndex}
-          onValueChange={handleMinGradeChange}
+          upperLimit={maxGradeDisplay}
+          value={minGradeDisplay}
+          onValueChange={handleMinDisplayChange}
+          onSlidingComplete={handleMinCompleteChange}
           step={1}
           maximumTrackTintColor={"#4E9152"}
           minimumTrackTintColor={"lightgray"}
@@ -29,15 +35,16 @@ const GradeRange = ({
       </View>
       <View style={styles.sliderWrapper}>
         <Text style={styles.sliderLabel}>
-          Max Grade: {boulderGrades[filterMaxGradeIndex]}
+          Max Grade: {boulderGrades[maxGradeDisplay]}
         </Text>
         <Slider
           style={styles.slider}
           minimumValue={0}
           maximumValue={boulderGrades.length - 1}
-          lowerLimit={filterMinGradeIndex}
-          value={filterMaxGradeIndex}
-          onValueChange={handleMaxGradeChange}
+          lowerLimit={minGradeDisplay}
+          value={maxGradeDisplay}
+          onValueChange={handleMaxDisplayChange}
+          onSlidingComplete={handleMaxCompleteChange}
           step={1}
           maximumTrackTintColor={"lightgray"}
           minimumTrackTintColor={"#4E9152"}

@@ -3,20 +3,13 @@ import { BASE_URL } from "@env";
 import refreshTokenService from "./refreshTokenService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+console.log(BASE_URL);
+
 const axiosCustomAPI = axios.create({
   baseURL: BASE_URL,
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",
-    patch: {
-      "Content-Type": "application/json",
-    },
-    post: {
-      "Content-Type": "application/json",
-    },
-    put: {
-      "Content-Type": "application/json",
-    },
   },
 });
 
@@ -35,6 +28,8 @@ axiosCustomAPI.interceptors.response.use(
       originalRequest._retry = true; // mark the request that is a retry
       try {
         const { accessToken, refreshToken } = await refreshTokenService(); // This service handles the token refresh logic
+        console.log(accessToken);
+        console.log(refreshToken);
         if (accessToken && refreshToken) {
           // Store tokens in AsyncStorage (access token is new. Refresh token stays the same as previous)
           await AsyncStorage.setItem("accessToken", accessToken);
@@ -45,6 +40,7 @@ axiosCustomAPI.interceptors.response.use(
             "Authorization"
           ] = `Bearer ${accessToken}`;
           originalRequest.headers["Authorization"] = `Bearer ${accessToken}`;
+
           return axiosCustomAPI(originalRequest);
         }
       } catch (refreshError) {

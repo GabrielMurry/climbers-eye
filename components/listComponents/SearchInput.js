@@ -5,7 +5,7 @@ import {
   Keyboard,
   StyleSheet,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { MagnifyingGlassIcon, XMarkIcon } from "react-native-heroicons/outline";
 import { TextInput } from "react-native";
 import { colors } from "../../utils/styles";
@@ -61,8 +61,6 @@ const SearchInput = ({ searchQuery, setSearchQuery }) => {
   );
 };
 
-export default SearchInput;
-
 const styles = StyleSheet.create({
   SearchInputContainer: {
     height: 35,
@@ -92,3 +90,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 });
+
+export default memo(
+  SearchInput,
+  (prevProps, nextProps) => prevProps.searchQuery === nextProps.searchQuery
+);

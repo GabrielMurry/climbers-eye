@@ -28,6 +28,7 @@ import {
   UserIcon,
 } from "react-native-heroicons/outline";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { jwtDecode } from "jwt-decode";
 
 const LoginScreen = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -41,7 +42,7 @@ const LoginScreen = ({ navigation }) => {
   const handleLogin = async () => {
     setIsLoading(true);
     const data = { username, password };
-    const response = await request("post", "login/", data);
+    const response = await request("post", "api/login/", data);
     if (response.status !== 200) {
       console.log(response.status);
       setHasError(true);

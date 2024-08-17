@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet } from "react-native";
 import React from "react";
 import { StarIcon } from "react-native-heroicons/outline";
+import { boulderGrades } from "../../utils/constants/boulderConstants";
 
 const Titles = ({ boulder }) => {
   return (
@@ -8,7 +9,7 @@ const Titles = ({ boulder }) => {
       <Text style={styles.titleMain}>{boulder.name}</Text>
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <Text style={{ fontSize: 18 }}>
-          {boulder.grade ? boulder.grade : "Project"}{" "}
+          {boulder.grade ? boulderGrades[boulder.grade] : "Project"}{" "}
           {boulder.quality ? (
             <>
               {" "}

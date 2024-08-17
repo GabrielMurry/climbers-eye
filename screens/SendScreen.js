@@ -89,7 +89,7 @@ const SendScreen = ({ route, navigation }) => {
   handleSubmit = async () => {
     const data = {
       attempts: selectedAttempts,
-      grade: selectedDifficulty,
+      grade: boulderGrades.indexOf(selectedDifficulty),
       quality: qualityCount,
       notes: notes,
       person: user.id,
@@ -97,10 +97,10 @@ const SendScreen = ({ route, navigation }) => {
     };
     const response = await request(
       "post",
-      `sent_boulder/${user.id}/${boulder.id}`,
+      `api/sent_boulder/${boulder.id}`,
       data
     );
-    if (response.status !== 200) {
+    if (response.status !== 201) {
       console.log(response.status);
       return;
     }

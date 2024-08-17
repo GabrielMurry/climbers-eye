@@ -1,16 +1,15 @@
-import { View, Text, StyleSheet } from "react-native";
-import React from "react";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import React, { memo } from "react";
 import { CheckIcon, LinkIcon, StarIcon } from "react-native-heroicons/outline";
 import { FontAwesome } from "@expo/vector-icons";
-import isEqual from "lodash.isequal";
-import { Image } from "react-native";
+import { boulderGrades } from "../../utils/constants/boulderConstants";
 
 // We have to optimize the rendering of components - avoid unnecessary re-renders (we will use a form of PureComponent)
 // React.memo wraps the functional component and memoizes its rendering
 // It performs a shallow comparison of the incoming props and prevents re-renders if the props HAVEN'T changed
-const BoulderCard = React.memo(
-  ({ boulder }) => {
-    return (
+const BoulderCard = ({ boulder, navigate }) => {
+  return (
+    <TouchableOpacity onPress={navigate} style={{ paddingHorizontal: 10 }}>
       <View style={styles.boulder}>
         <View style={styles.boulderLeftWrapper}>
           <Text style={{ fontSize: 18, fontWeight: "bold" }}>
@@ -48,7 +47,11 @@ const BoulderCard = React.memo(
         )}
         <View style={styles.boulderIconsContainer}></View>
         <View style={styles.boulderRightWrapper}>
-          <Text>{boulder.grade ? boulder.grade : "Project"}</Text>
+          <Text>
+            {boulderGrades[boulder.grade]
+              ? boulderGrades[boulder.grade]
+              : "Project"}
+          </Text>
           <View style={styles.starsContainer}>
             <StarIcon
               size={15}
@@ -68,17 +71,9 @@ const BoulderCard = React.memo(
           </View>
         </View>
       </View>
-    );
-  },
-  (prevProps, nextProps) => {
-    // Custom comparison function is defined as the second argument to React.memo. It receives the previous props (prevProps) and the next props (nextProps) as arguments.
-    // Using 'isEqual' function from lodash to perform deep comparison of the boulder prop
-    // Should return true if the boulder prop is considered equal between the previous and next props, indicating that a re-render is not necessary.
-    return isEqual(prevProps.boulder, nextProps.boulder);
-  }
-);
-
-export default BoulderCard;
+    </TouchableOpacity>
+  );
+};
 
 const styles = StyleSheet.create({
   boulder: {
@@ -114,3 +109,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
 });
+
+export default memo(
+  BoulderCard,
+  (prevProps, nextProps) => prevProps.boulder.id === nextProps.boulder.id
+);

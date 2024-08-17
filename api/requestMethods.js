@@ -39,7 +39,8 @@ const request = async (method, endpoint, data = null) => {
     // return response object containing our status and data (data may be null)
     return response;
   } catch (error) {
-    return { status: `${method} error at ${endpoint}: ${error}`, data: null };
+    console.error(`${method} error at ${endpoint}: ${error}`);
+    return null;
   }
 };
 

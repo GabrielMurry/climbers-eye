@@ -24,24 +24,21 @@ const InfoRow1 = ({ boulder, setBoulder, userID, navigation }) => {
           return;
         }
         // The code for sending requests to the backend can be placed here
+        const data = { boulder: boulder.id, person: userID };
         const method = currentLike ? "post" : "delete";
         const response = await request(
           method,
-          `like_boulder/${boulder.id}/${userID}`
+          `api/like_boulder/${boulder.id}/${userID}`,
+          data
         );
-        // handleCacheUpdate({
-        //   targetSection: "Likes",
-        //   method,
-        //   spraywallIndex,
-        //   profileData,
-        //   dispatch,
-        // });
         setOriginalLike(currentLike);
-        if (response.status !== 200) {
-          console.log(response.status);
-          setBoulder({ ...boulder, isLiked: originalLike });
+        console.log(response);
+        if (response.status === 201 || response.status === 204) {
+          // Success! 201 == created and 204 == deleted
           return;
         }
+        console.log(response.status);
+        setBoulder({ ...boulder, isLiked: originalLike });
       }, 500),
     [originalLike]
   ); // Adjust the delay (in milliseconds) as needed
@@ -61,24 +58,20 @@ const InfoRow1 = ({ boulder, setBoulder, userID, navigation }) => {
           return;
         }
         // The code for sending requests to the backend can be placed here
+        const data = { boulder: boulder.id, person: userID };
         const method = currentBookmark ? "post" : "delete";
         const response = await request(
           method,
-          `bookmark_boulder/${boulder.id}/${userID}`
+          `api/bookmark_boulder/${boulder.id}/${userID}`,
+          data
         );
-        // handleCacheUpdate({
-        //   targetSection: "Bookmarks",
-        //   method,
-        //   spraywallIndex,
-        //   profileData,
-        //   dispatch,
-        // });
         setOriginalBookmark(currentBookmark);
-        if (response.status !== 200) {
-          console.log(response.status);
-          setBoulder({ ...boulder, isBookmarked: originalBookmark });
+        if (response.status === 201 || response.status === 204) {
+          // Success! 201 == created and 204 == deleted
           return;
         }
+        console.log(response.status);
+        setBoulder({ ...boulder, isBookmarked: originalBookmark });
       }, 500),
     [originalBookmark]
   ); // Adjust the delay (in milliseconds) as needed

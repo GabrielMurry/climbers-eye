@@ -28,11 +28,11 @@ const BoulderUserSendsScreen = ({ navigation, route }) => {
     }
   };
 
-  const renderUserSend = ({ item }) => {
+  const renderUserSend = ({ item: send }) => {
     const onDelete = () => {
       Alert.alert(
         "Delete Logged Ascent",
-        `Are you sure you want to delete logged ascent from ${item.date}?`,
+        `Are you sure you want to delete logged ascent from ${send.date}?`,
         [
           {
             text: "Cancel",
@@ -42,13 +42,14 @@ const BoulderUserSendsScreen = ({ navigation, route }) => {
             onPress: async () => {
               const response = await request(
                 "delete",
-                `delete_logged_ascent/${item.id}`
+                `api/sent_boulder/${send.id}`
               );
-              if (response.status !== 200) {
-                console.log(response.status);
+              if (response.status === 204) {
+                // successful deletion 204
+                fetchUpdatedBoulderData();
                 return;
               }
-              fetchUpdatedBoulderData();
+              console.error(response.status);
             },
             style: "destructive",
           },
@@ -68,11 +69,11 @@ const BoulderUserSendsScreen = ({ navigation, route }) => {
         }}
       >
         <View>
-          <Text style={{ fontWeight: "bold" }}>{item.date}</Text>
-          <Text>Attempts: {item.attempts}</Text>
-          <Text>Grade Proposed: {item.grade}</Text>
-          <Text>Quality: {item.quality}</Text>
-          <Text>Notes: {item.notes}</Text>
+          <Text style={{ fontWeight: "bold" }}>{send.date}</Text>
+          <Text>Attempts: {send.attempts}</Text>
+          <Text>Grade Proposed: {send.grade}</Text>
+          <Text>Quality: {send.quality}</Text>
+          <Text>Notes: {send.notes}</Text>
         </View>
         <TouchableOpacity
           style={{

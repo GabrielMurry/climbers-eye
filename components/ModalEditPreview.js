@@ -62,8 +62,8 @@ const ModalEditPreview = ({
     data = {
       name,
       description,
-      matching: isMatching,
       publish,
+      matching: isMatching,
       feet_follow_hands: isFeetFollowHands,
       kickboard_on: isKickboardOn,
       image_data: resultImageUri.split(",")[1], // using the default image has complete base64 as image.uri --> remove the 'data:image/png;base64' in the beginning of string
@@ -73,22 +73,20 @@ const ModalEditPreview = ({
     setIsLoading(true);
     const response = await request(
       "post",
-      `add_boulder/${spraywalls[spraywallIndex].id}/${user.id}`,
+      `api/list/${spraywalls[spraywallIndex].id}`,
       data
     );
-    if (response.status !== 200) {
-      console.log(response.status);
-      setIsLoading(false);
-      return;
-    }
-    if (response.data) {
+    if (response) {
       handleVibrate();
       navigation.navigate("Boulder-Home", {
         boulder: response.data,
         fromScreen: "EditBoulder",
         toScreen: "List",
       });
+    } else {
+      console.error("Failed to upload new boulder.");
     }
+    setIsLoading(false);
     setIsModalVisible(!isModalVisible);
   };
 

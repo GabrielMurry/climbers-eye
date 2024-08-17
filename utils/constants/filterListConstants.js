@@ -1,38 +1,66 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   setFilterSortBy,
   setFilterClimbType,
+  setFilterActivity,
   setFilterStatus,
 } from "../../redux/actions";
 
 const filterLists = () => {
   const dispatch = useDispatch();
+  const { filterActivity } = useSelector((state) => state.spraywallReducer);
+
+  const activity = [
+    {
+      id: 1,
+      title: "Liked",
+      filter: "liked",
+      onPress: () =>
+        dispatch(
+          setFilterActivity(filterActivity === "liked" ? null : "liked")
+        ),
+    },
+    {
+      id: 2,
+      title: "Bookmarked",
+      filter: "bookmarked",
+      onPress: () =>
+        dispatch(
+          setFilterActivity(
+            filterActivity === "bookmarked" ? null : "bookmarked"
+          )
+        ),
+    },
+    {
+      id: 3,
+      title: "Sent",
+      filter: "sent",
+      onPress: () =>
+        dispatch(setFilterActivity(filterActivity === "sent" ? null : "sent")),
+    },
+  ];
+
   const sortBy = [
     {
       id: 1,
-      title: "Most Popular",
+      title: "Grade",
+      filter: "grade",
+      onPress: () => dispatch(setFilterSortBy("grade")),
+    },
+    {
+      id: 2,
+      title: "Popular",
       filter: "popular",
       onPress: () => dispatch(setFilterSortBy("popular")),
     },
     {
-      id: 2,
-      title: "Liked",
-      filter: "liked",
-      onPress: () => dispatch(setFilterSortBy("liked")),
-    },
-    {
       id: 3,
-      title: "Bookmarked",
-      filter: "bookmarked",
-      onPress: () => dispatch(setFilterSortBy("bookmarked")),
-    },
-    {
-      id: 4,
-      title: "Most Recent",
-      filter: "recent",
-      onPress: () => dispatch(setFilterSortBy("recent")),
+      title: "Newest",
+      filter: "newest",
+      onPress: () => dispatch(setFilterSortBy("newest")),
     },
   ];
+
   const climbType = [
     {
       id: 1,
@@ -47,6 +75,7 @@ const filterLists = () => {
       onPress: () => dispatch(setFilterClimbType("route")),
     },
   ];
+
   const status = [
     {
       id: 1,
@@ -74,7 +103,7 @@ const filterLists = () => {
     },
   ];
 
-  return { sortBy, climbType, status }; // return the arrays as an object
+  return { activity, sortBy, climbType, status }; // return the arrays as an object
 };
 
 export default filterLists;

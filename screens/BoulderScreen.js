@@ -69,6 +69,8 @@ const BoulderScreen = ({ route, navigation }) => {
       console.log(response.status);
     }
     if (response.data) {
+      console.log("-----");
+      console.log(response.data);
       setBoulder(response.data);
     }
   };

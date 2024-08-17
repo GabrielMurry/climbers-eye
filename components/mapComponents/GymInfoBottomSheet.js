@@ -10,7 +10,7 @@ import { colors } from "../../utils/styles";
 import CustomButton from "../CustomButton";
 import FullScreenImage from "../FullScreenImage";
 import { useState } from "react";
-import FlatListSpraywalls from "../general/FlatListSpraywalls";
+import FlatListSpraywalls from "../listComponents/FlatListSpraywalls";
 
 const GymInfoBottomSheet = ({
   gymMarker,

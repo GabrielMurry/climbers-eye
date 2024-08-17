@@ -4,15 +4,15 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-  SafeAreaView,
 } from "react-native";
 import React, { useState } from "react";
-import { ArrowLeftCircleIcon, CheckIcon } from "react-native-heroicons/outline";
+import { CheckIcon } from "react-native-heroicons/outline";
 import { useSelector, useDispatch } from "react-redux";
 import {
   setFilterSortBy,
   setFilterMinGradeIndex,
   setFilterMaxGradeIndex,
+  setFilterActivity,
   setFilterClimbType,
   setFilterStatus,
   resetFilterCircuits,
@@ -26,16 +26,20 @@ import useCustomHeader from "../hooks/useCustomHeader";
 const FilterScreen = ({ navigation }) => {
   const dispatch = useDispatch();
 
-  const { sortBy, climbType, status } = filterLists(); // destructure the returned object
+  const { activity, sortBy, climbType, status } = filterLists(); // destructure the returned object
 
   const {
     filterSortBy,
     filterMinGradeIndex,
     filterMaxGradeIndex,
+    filterActivity,
     filterClimbType,
     filterStatus,
     filterCircuits,
   } = useSelector((state) => state.spraywallReducer);
+
+  const [minGradeDisplay, setMinGradeDisplay] = useState(filterMinGradeIndex);
+  const [maxGradeDisplay, setMaxGradeDisplay] = useState(filterMaxGradeIndex);
 
   const [showGradeRange, setShowGradeRange] = useState(false);
 
@@ -52,26 +56,35 @@ const FilterScreen = ({ navigation }) => {
     setShowGradeRange(!showGradeRange);
   };
 
-  const handleMinGradeChange = (value) => {
-    if (value <= filterMaxGradeIndex) {
-      dispatch(setFilterMinGradeIndex(value));
+  const handleMinDisplayChange = (value) => {
+    if (value <= maxGradeDisplay) {
+      setMinGradeDisplay(value);
     } else {
-      dispatch(setFilterMinGradeIndex(filterMaxGradeIndex));
+      setMinGradeDisplay(maxGradeDisplay);
     }
   };
 
-  const handleMaxGradeChange = (value) => {
-    if (value >= filterMinGradeIndex) {
-      dispatch(setFilterMaxGradeIndex(value));
+  const handleMaxDisplayChange = (value) => {
+    if (value >= minGradeDisplay) {
+      setMaxGradeDisplay(value);
     } else {
-      dispatch(setFilterMaxGradeIndex(filterMinGradeIndex));
+      setMaxGradeDisplay(minGradeDisplay);
     }
+  };
+
+  const handleMinCompleteChange = (value) => {
+    dispatch(setFilterMinGradeIndex(value));
+  };
+
+  const handleMaxCompleteChange = (value) => {
+    dispatch(setFilterMaxGradeIndex(value));
   };
 
   const handleResetFilters = () => {
-    dispatch(setFilterSortBy("popular"));
+    dispatch(setFilterSortBy("grade"));
     dispatch(setFilterMinGradeIndex(0));
     dispatch(setFilterMaxGradeIndex(boulderGrades.length - 1));
+    dispatch(setFilterActivity(null));
     dispatch(setFilterClimbType("boulder"));
     dispatch(setFilterStatus("all"));
     dispatch(resetFilterCircuits());
@@ -124,12 +137,28 @@ const FilterScreen = ({ navigation }) => {
         {showGradeRange && (
           <GradeRange
             boulderGrades={boulderGrades}
-            filterMinGradeIndex={filterMinGradeIndex}
-            handleMinGradeChange={handleMinGradeChange}
-            filterMaxGradeIndex={filterMaxGradeIndex}
-            handleMaxGradeChange={handleMaxGradeChange}
+            handleMinDisplayChange={handleMinDisplayChange}
+            handleMinCompleteChange={handleMinCompleteChange}
+            handleMaxDisplayChange={handleMaxDisplayChange}
+            handleMaxCompleteChange={handleMaxCompleteChange}
+            minGradeDisplay={minGradeDisplay}
+            maxGradeDisplay={maxGradeDisplay}
           />
         )}
+        <View style={styles.sortBox}>
+          <View style={styles.rowHeader}>
+            <Text style={styles.rowHeaderTitle}>Activity</Text>
+          </View>
+          {activity.map((item) => (
+            <FilterButton
+              key={item.id}
+              title={item.title}
+              filterType={filterActivity}
+              filter={item.filter}
+              onPress={item.onPress}
+            />
+          ))}
+        </View>
         <View style={styles.sortBox}>
           <View style={styles.rowHeader}>
             <Text style={styles.rowHeaderTitle}>Circuits</Text>

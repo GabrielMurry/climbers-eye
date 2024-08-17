@@ -8,6 +8,7 @@ import {
   SET_FILTER_SORT_BY,
   SET_FILTER_MIN_GRADE_INDEX,
   SET_FILTER_MAX_GRADE_INDEX,
+  SET_FILTER_ACTIVITY,
   SET_FILTER_CLIMB_TYPE,
   SET_FILTER_STATUS,
   SET_FILTER_CIRCUITS,
@@ -22,9 +23,10 @@ const initialState = {
   spraywalls: [],
   spraywallIndex: 0,
   headshotImage: {},
-  filterSortBy: "popular",
+  filterSortBy: "grade",
   filterMinGradeIndex: 0,
   filterMaxGradeIndex: boulderGrades.length - 1,
+  filterActivity: null,
   filterClimbType: "boulder",
   filterStatus: "all",
   filterCircuits: [],
@@ -65,6 +67,8 @@ export function spraywallReducer(state = initialState, action) {
       return { ...state, filterMinGradeIndex: action.payload };
     case SET_FILTER_MAX_GRADE_INDEX:
       return { ...state, filterMaxGradeIndex: action.payload };
+    case SET_FILTER_ACTIVITY:
+      return { ...state, filterActivity: action.payload };
     case SET_FILTER_CLIMB_TYPE:
       return { ...state, filterClimbType: action.payload };
     case SET_FILTER_STATUS:
