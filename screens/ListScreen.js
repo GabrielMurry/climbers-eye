@@ -44,33 +44,9 @@ const ListScreen = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(1);
 
-  // dispatch(setFilterSortBy("grade"));
-  //   dispatch(setFilterMinGradeIndex(0));
-  //   dispatch(setFilterMaxGradeIndex(boulderGrades.length - 1));
-  //   dispatch(setFilterActivity(null));
-  //   dispatch(setFilterClimbType("boulder"));
-  //   dispatch(setFilterStatus("all"));
-  //   dispatch(resetFilterCircuits());
-
-  // const areFiltersEnabled = () => {
-  //   if (
-  //     searchQuery === "" ||
-  //     filterMinGradeIndex === 0 ||
-  //     filterMaxGradeIndex === boulderGrades.length - 1 ||
-  //     filterActivity === null ||
-  //     filterClimbType === "boulder" ||
-  //     filterStatus === "all" ||
-  //     filterCircuits == []
-  //   ) {
-  //     return false;
-  //   }
-  //   return true;
-  // };
-
   useEffect(() => {
     setBoulders([]);
     setPage(1);
-    // setHasFilters(areFiltersEnabled());
     fetchListData(1);
   }, [
     searchQuery,
@@ -93,6 +69,9 @@ const ListScreen = ({ navigation }) => {
       setBoulders([{ id: "empty", message: "No boulders found." }]);
       setPage(null);
       return;
+    }
+    for (let i = 0; i < res.results.length; i++) {
+      console.log(res.results[i].name);
     }
     setBoulders((prevBoulders) => [...prevBoulders, ...res.results]);
     setPage((prev) => (res.next ? prev + 1 : null));
@@ -209,7 +188,7 @@ const ListScreen = ({ navigation }) => {
         <FlatList
           data={boulders}
           renderItem={renderBoulderCard}
-          keyExtractor={(item) => item.id.toString()}
+          keyExtractor={(item) => item.uuid.toString()}
           keyboardShouldPersistTaps="handled" // click on search bar cancel buttons when Keyboard is visible (or click on boulder cards)
           onEndReached={() => fetchListData(page)}
           ListHeaderComponent={renderListHeader()}

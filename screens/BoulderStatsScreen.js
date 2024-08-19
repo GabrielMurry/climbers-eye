@@ -1,51 +1,15 @@
 import { StyleSheet, Text, View } from "react-native";
-import React, { useEffect, useState } from "react";
-import { request } from "../api/requestMethods";
-import {
-  boulderBarChartDataTemplate,
-  boulderPieChartDataTemplate,
-} from "../utils/constants/boulderConstants";
-import BoulderPieChart from "../components/boulderStatsComponents/BoulderPieChart";
-import BoulderBarChart from "../components/boulderStatsComponents/BoulderBarChart";
+import React from "react";
 import useCustomHeader from "../hooks/useCustomHeader";
-import { useSelector } from "react-redux";
 import BarChartHorizontal from "../components/boulderStatsComponents/BarChartHorizontal";
 
 const BoulderStatsScreen = ({ route, navigation }) => {
-  const { boulder } = route.params;
-  const { user } = useSelector((state) => state.userReducer);
-
-  const [boulderBarChartData, setBoulderBarChartData] = useState(
-    boulderBarChartDataTemplate
-  );
-  const [isProject, setIsProject] = useState(true);
-  // const [boulderPieChartData, setBoulderPieChartData] = useState(
-  //   boulderPieChartDataTemplate
-  // );
+  const { boulder, chartData } = route.params;
 
   useCustomHeader({
     navigation,
     title: "Boulder Statistics",
   });
-
-  useEffect(() => {
-    fetchBoulderStats();
-  }, []);
-
-  const fetchBoulderStats = async () => {
-    const response = await request("get", `boulder_stats/${boulder.id}`);
-    if (response.status !== 200) {
-      console.log(response.status);
-      return;
-    }
-    if (response.data) {
-      setBoulderBarChartData(response.data.bouldersBarChartData);
-      // if (response.data.bouldersPieChartData) {
-      //   setBoulderPieChartData(response.data.bouldersPieChartData);
-      // }
-      setIsProject(response.data.isProject);
-    }
-  };
 
   return (
     <View
@@ -75,16 +39,13 @@ const BoulderStatsScreen = ({ route, navigation }) => {
       </View>
       <View style={styles.row}>
         <Text style={styles.label}>Your Sends:</Text>
-        <Text style={styles.info}>{boulder.userSendsData.length}</Text>
+        <Text style={styles.info}>{boulder.userSendsCount}</Text>
       </View>
       <View style={styles.row}>
         <Text style={styles.label}>Published:</Text>
         <Text style={styles.info}>{boulder.date}</Text>
       </View>
-      <BarChartHorizontal data={boulderBarChartData} displayHeader={false} />
-      {/* {boulderPieChartData ? (
-        <BoulderPieChart boulderPieChartData={boulderPieChartData} />
-      ) : null} */}
+      <BarChartHorizontal data={chartData} displayHeader={false} />
     </View>
   );
 };

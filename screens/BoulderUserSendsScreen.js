@@ -1,32 +1,16 @@
 import { View, Text, FlatList, TouchableOpacity, Alert } from "react-native";
-import React, { useState } from "react";
+import React from "react";
 import useCustomHeader from "../hooks/useCustomHeader";
 import { XMarkIcon } from "react-native-heroicons/outline";
-import { useSelector } from "react-redux";
 import { request } from "../api/requestMethods";
 
 const BoulderUserSendsScreen = ({ navigation, route }) => {
-  const { user } = useSelector((state) => state.userReducer);
-  const { boulder } = route.params;
+  const { userSendsData } = route.params;
+
   useCustomHeader({
     navigation,
     title: "Your Sends",
   });
-
-  const [data, setData] = useState(boulder.userSendsData);
-
-  const fetchUpdatedBoulderData = async () => {
-    const response = await request(
-      "get",
-      `updated_boulder_data/${boulder.id}/${user.id}`
-    );
-    if (response.status !== 200) {
-      console.log(response.status);
-    }
-    if (response.data) {
-      setData(response.data.userSendsData);
-    }
-  };
 
   const renderUserSend = ({ item: send }) => {
     const onDelete = () => {
@@ -98,7 +82,7 @@ const BoulderUserSendsScreen = ({ navigation, route }) => {
       }}
     >
       <FlatList
-        data={data}
+        data={userSendsData}
         renderItem={renderUserSend}
         keyExtractor={(item) => item.id}
       />

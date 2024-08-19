@@ -33,7 +33,7 @@ for (let i = 1; i <= 100; i++) {
 
 const SendScreen = ({ route, navigation }) => {
   const { user } = useSelector((state) => state.userReducer);
-  const { boulder } = route.params;
+  const { boulder, userSendsData } = route.params;
 
   const [selectedAttempts, setSelectedAttempts] = useState("-");
   const [selectedDifficulty, setSelectedDifficulty] = useState(
@@ -135,7 +135,7 @@ const SendScreen = ({ route, navigation }) => {
             </View>
             <View style={styles.row}>
               <Text style={styles.label}>Your Ascents:</Text>
-              <Text style={styles.info}>{boulder.userSendsData.length}</Text>
+              <Text style={styles.info}>{userSendsData.length}</Text>
             </View>
             <TouchableOpacity
               style={[styles.row, { backgroundColor: "white" }]}

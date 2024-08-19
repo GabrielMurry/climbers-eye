@@ -14,35 +14,8 @@ import BarPathHorizontal from "./BarPathHorizontal";
 import YAxisText from "./YAxisText";
 import { useFonts } from "../../contexts/FontContext";
 
-// const propData = [
-//   { x: "4a/V0", y: 1 },
-//   { x: "4b/V0", y: 1 },
-//   { x: "5a/V1", y: 1 },
-//   { x: "4c/V0", y: 1 },
-//   { x: "5b/V1", y: 1 },
-//   { x: "5c/V2", y: 1 },
-//   { x: "6a/V3", y: 1 },
-//   { x: "6a+/V3", y: 1 },
-//   { x: "6b/V4", y: 1 },
-//   { x: "6b+/V4", y: 1 },
-//   { x: "6c/V5", y: 1 },
-//   { x: "6c+/V5", y: 1 },
-//   { x: "7a/V6", y: 1 },
-//   { x: "7a+/V7", y: 1 },
-//   { x: "7b/V8", y: 1 },
-//   { x: "7b+/V8", y: 1 },
-//   { x: "7c/V9", y: 1 },
-//   { x: "7c+/V10", y: 1 },
-//   { x: "8a/V11", y: 1 },
-//   { x: "8a+/V12", y: 1 },
-//   { x: "8b/V13", y: 1 },
-//   { x: "8b+/V14", y: 10 },
-//   { x: "8c/V15", y: 5 },
-//   { x: "8c+/V16", y: 4 },
-// ];
-
 const BarChartHorizontal = ({
-  data: propData,
+  data,
   canvasWidth = null,
   canvasHeight = null,
   labelToBarPadding = null,
@@ -53,11 +26,6 @@ const BarChartHorizontal = ({
   displayHeader = true,
 }) => {
   const { width } = useWindowDimensions();
-
-  const data = propData.map((item) => ({
-    label: item.x,
-    value: item.y,
-  }));
 
   const maxDataValue = Math.max(...data.map((item) => item.value));
 

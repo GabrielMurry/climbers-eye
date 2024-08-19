@@ -47,11 +47,7 @@ const BoulderCard = ({ boulder, navigate }) => {
         )}
         <View style={styles.boulderIconsContainer}></View>
         <View style={styles.boulderRightWrapper}>
-          <Text>
-            {boulderGrades[boulder.grade]
-              ? boulderGrades[boulder.grade]
-              : "Project"}
-          </Text>
+          <Text>{boulder.grade ? boulder.grade : "Project"}</Text>
           <View style={styles.starsContainer}>
             <StarIcon
               size={15}

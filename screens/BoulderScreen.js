@@ -22,8 +22,6 @@ import InfoRow4 from "../components/boulderComponents/InfoRow4";
 import InfoRow5 from "../components/boulderComponents/InfoRow5";
 import InfoRow6 from "../components/boulderComponents/InfoRow6";
 import DraftNotif from "../components/boulderComponents/DraftNotif";
-import { Share } from "react-native";
-import { shareInfo, shareText } from "../utils/functions";
 
 const THEME_STYLE = "white"; //rgba(245,245,245,255)
 
@@ -37,6 +35,20 @@ const BoulderScreen = ({ route, navigation }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [optionsData, setOptionsData] = useState([]);
+  const [chartData, setChartData] = useState([]);
+  const [userSendsData, setUserSendsData] = useState(null);
+
+  const fetchBoulderDetail = async () => {
+    const response = await request("get", `api/boulder/${boulder.id}`);
+    if (response) {
+      setChartData(response.data.boulderBarChartData);
+      setUserSendsData(response.data.userSendsData);
+    }
+  };
+
+  useEffect(() => {
+    fetchBoulderDetail();
+  }, []);
 
   const headerRight = (
     <TouchableOpacity onPress={() => setIsModalVisible(true)}>
@@ -51,29 +63,6 @@ const BoulderScreen = ({ route, navigation }) => {
     title: "",
     headerRight,
   });
-
-  // This event will be triggered when the screen gains focus (i.e., when you navigate back to it).
-  useFocusEffect(
-    useCallback(() => {
-      fetchCertainData();
-    }, [])
-  );
-
-  // re-fetching certain data (grade, quality, first ascent user, did user send the boulder, liked, bookmarked, is boulder in a circuit) --> in the event of someone successfully sending (climbing) the boulder for the first time, or any other actions
-  const fetchCertainData = async () => {
-    const response = await request(
-      "get",
-      `updated_boulder_data/${boulder.id}/${user.id}`
-    );
-    if (response.status !== 200) {
-      console.log(response.status);
-    }
-    if (response.data) {
-      console.log("-----");
-      console.log(response.data);
-      setBoulder(response.data);
-    }
-  };
 
   const deleteBoulder = () => {
     Alert.alert(
@@ -171,7 +160,12 @@ const BoulderScreen = ({ route, navigation }) => {
           userID={user.id}
           navigation={navigation}
         />
-        <InfoRow2 boulder={boulder} navigation={navigation} />
+        <InfoRow2
+          boulder={boulder}
+          chartData={chartData}
+          userSendsData={userSendsData}
+          navigation={navigation}
+        />
         <InfoRow3 boulder={boulder} />
         <InfoRow4 boulder={boulder} />
         {/* Tags? */}

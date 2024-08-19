@@ -4,17 +4,17 @@ import { ArrowLongRightIcon } from "react-native-heroicons/outline";
 import { FontAwesome } from "@expo/vector-icons";
 import { colors } from "../../utils/styles";
 
-const InfoRow2 = ({ boulder, navigation }) => {
+const InfoRow2 = ({ boulder, chartData, userSendsData, navigation }) => {
   const handleBoulderStatsPress = () => {
-    navigation.navigate("BoulderStats", { boulder });
+    navigation.navigate("BoulderStats", { boulder, chartData });
   };
 
   const handleSentBoulderPress = () => {
-    navigation.navigate("Send", { boulder });
+    navigation.navigate("Send", { boulder, userSendsData });
   };
 
   const handleUserSendsCountPress = () => {
-    navigation.navigate("BoulderUserSends", { boulder });
+    navigation.navigate("BoulderUserSends", { userSendsData });
   };
 
   return (
@@ -40,7 +40,7 @@ const InfoRow2 = ({ boulder, navigation }) => {
         >
           <FontAwesome name="book" size={24} color="black" />
         </TouchableOpacity>
-        {boulder?.userSendsData?.length > 0 ? (
+        {boulder?.userSendsCount > 0 ? (
           <TouchableOpacity
             onPress={handleUserSendsCountPress}
             style={{
@@ -53,7 +53,7 @@ const InfoRow2 = ({ boulder, navigation }) => {
             }}
           >
             <Text style={{ fontWeight: "bold" }}>
-              {boulder?.userSendsData?.length}
+              {boulder?.userSendsCount}
             </Text>
           </TouchableOpacity>
         ) : null}
