@@ -9,21 +9,20 @@ import React, { useCallback, useEffect, useState } from "react";
 import BoulderCard from "../components/listComponents/BoulderCard";
 import EmptyCard from "../components/listComponents/EmptyCard";
 import { request } from "../api/requestMethods";
-import { useFocusEffect } from "@react-navigation/native";
 import { useSelector, useDispatch } from "react-redux";
-import { boulderGrades } from "../utils/constants/boulderConstants";
-import { setSpraywallIndex } from "../redux/actions";
+import {
+  setSpraywallIndex,
+  appendBoulders,
+  resetBoulders,
+  bouldersError,
+} from "../redux/actions";
 import ModalOptions from "../components/ModalOptions";
 import ListHeader from "../components/listComponents/ListHeader";
-import { debounce } from "lodash";
 
 const THEME_STYLE = "white";
 
-const initialPage = 1;
-
 const ListScreen = ({ navigation }) => {
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.userReducer);
   const { gym } = useSelector((state) => state.gymReducer);
   const {
     spraywalls,
@@ -36,16 +35,16 @@ const ListScreen = ({ navigation }) => {
     filterClimbType,
     filterStatus,
   } = useSelector((state) => state.spraywallReducer);
+  const { boulders } = useSelector((state) => state.boulderReducer);
 
   const [searchQuery, setSearchQuery] = useState("");
-  const [boulders, setBoulders] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [hasFilters, setHasFilters] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(1);
 
   useEffect(() => {
-    setBoulders([]);
+    dispatch(resetBoulders());
     setPage(1);
     fetchListData(1);
   }, [
@@ -66,25 +65,23 @@ const ListScreen = ({ navigation }) => {
 
   const handleResponse = (res) => {
     if (res.results.length === 0) {
-      setBoulders([{ id: "empty", message: "No boulders found." }]);
+      dispatch(bouldersError({ id: "empty", message: "No boulders found." }));
       setPage(null);
       return;
     }
-    for (let i = 0; i < res.results.length; i++) {
-      console.log(res.results[i].name);
-    }
-    setBoulders((prevBoulders) => [...prevBoulders, ...res.results]);
+    dispatch(appendBoulders(res.results));
     setPage((prev) => (res.next ? prev + 1 : null));
   };
 
   const handleError = () => {
-    setBoulders([{ id: "error", message: "Error retrieving boulders." }]);
+    dispatch(
+      bouldersError({ id: "error", message: "Error retrieving boulders." })
+    );
     setPage(null);
   };
 
   const fetchListData = async (page) => {
     var startTime = performance.now();
-    console.log("test1");
 
     if (isLoading || page === null) {
       return;
@@ -109,18 +106,13 @@ const ListScreen = ({ navigation }) => {
     logPerformance(startTime, "fetchListData");
   };
 
-  // Optimization --> use the React.useCallback hook to memoize the navigation function and prevent unnecessary re-creation of the function on every render.
-  // Providing navigation as a dependency, the navigateToBoulder function will only be re-created when the navigation prop changes, ensuring better performance.
-  const navigateToBoulderScreen = useCallback(
-    (item) => {
-      navigation.navigate("Boulder-Home", {
-        boulder: item,
-        fromScreen: "Home",
-        toScreen: "Home",
-      });
-    },
-    [navigation]
-  );
+  const navigateToBoulderScreen = (item) => {
+    navigation.navigate("Boulder-Home", {
+      boulderId: item.id,
+      fromScreen: "Home",
+      toScreen: "Home",
+    });
+  };
 
   const handleFilterPress = () => {
     navigation.navigate("Filter");
@@ -154,17 +146,17 @@ const ListScreen = ({ navigation }) => {
     ]
   );
 
-  const renderBoulderCard = useCallback(({ item }) => {
+  const renderBoulderCard = ({ item, index }) => {
     if (typeof item.id === "number") {
       return (
         <BoulderCard
           boulder={item}
-          navigate={() => navigateToBoulderScreen(item)}
+          navigate={() => navigateToBoulderScreen(item, index)}
         />
       );
     }
     return <EmptyCard message={item.message} />;
-  }, []);
+  };
 
   const handleEditGymPress = () => {
     setIsModalVisible(false);
@@ -188,7 +180,9 @@ const ListScreen = ({ navigation }) => {
         <FlatList
           data={boulders}
           renderItem={renderBoulderCard}
-          keyExtractor={(item) => item.uuid.toString()}
+          keyExtractor={(item) =>
+            item.uuid ? item.uuid.toString() : item.id.toString()
+          }
           keyboardShouldPersistTaps="handled" // click on search bar cancel buttons when Keyboard is visible (or click on boulder cards)
           onEndReached={() => fetchListData(page)}
           ListHeaderComponent={renderListHeader()}

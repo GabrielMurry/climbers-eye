@@ -1,7 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { combineReducers } from "redux";
 // import thunk from "redux-thunk";
-import { userReducer, gymReducer, spraywallReducer } from "./reducers";
+import {
+  userReducer,
+  gymReducer,
+  spraywallReducer,
+  boulderReducer,
+} from "./reducers";
 import { persistStore, persistReducer } from "redux-persist";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import logger from "redux-logger";
@@ -10,13 +15,19 @@ import logger from "redux-logger";
 const persistConfig = {
   key: "root",
   storage: AsyncStorage,
-  whitelist: ["userReducer", "gymReducer", "spraywallReducer"], // only userReducer will be persisted
+  whitelist: [
+    "userReducer",
+    "gymReducer",
+    "spraywallReducer",
+    "boulderReducer",
+  ], // only userReducer will be persisted
 };
 
 const rootReducer = combineReducers({
   userReducer,
   gymReducer,
   spraywallReducer,
+  boulderReducer,
 });
 
 // Create a persisted reducer

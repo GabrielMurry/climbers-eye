@@ -22,6 +22,8 @@ import CustomButton from "./CustomButton";
 import * as Haptics from "expo-haptics";
 import { ChevronLeftIcon } from "react-native-heroicons/outline";
 import { colors } from "../utils/styles";
+import { addNewBoulder } from "../redux/actions";
+import { useDispatch } from "react-redux";
 
 const TAGS = [
   { name: "crimp", selected: false },
@@ -40,7 +42,7 @@ const ModalEditPreview = ({
   navigation,
   resultImageUri,
 }) => {
-  const { user } = useSelector((state) => state.userReducer);
+  const dispatch = useDispatch();
   const { spraywalls, spraywallIndex } = useSelector(
     (state) => state.spraywallReducer
   );
@@ -77,9 +79,10 @@ const ModalEditPreview = ({
       data
     );
     if (response) {
+      dispatch(addNewBoulder(response.data));
       handleVibrate();
       navigation.navigate("Boulder-Home", {
-        boulder: response.data,
+        boulderId: response.data.id,
         fromScreen: "EditBoulder",
         toScreen: "List",
       });

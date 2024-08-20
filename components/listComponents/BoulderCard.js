@@ -1,12 +1,8 @@
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import React, { memo } from "react";
+import React from "react";
 import { CheckIcon, LinkIcon, StarIcon } from "react-native-heroicons/outline";
 import { FontAwesome } from "@expo/vector-icons";
-import { boulderGrades } from "../../utils/constants/boulderConstants";
 
-// We have to optimize the rendering of components - avoid unnecessary re-renders (we will use a form of PureComponent)
-// React.memo wraps the functional component and memoizes its rendering
-// It performs a shallow comparison of the incoming props and prevents re-renders if the props HAVEN'T changed
 const BoulderCard = ({ boulder, navigate }) => {
   return (
     <TouchableOpacity onPress={navigate} style={{ paddingHorizontal: 10 }}>
@@ -106,7 +102,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default memo(
-  BoulderCard,
-  (prevProps, nextProps) => prevProps.boulder.id === nextProps.boulder.id
-);
+export default BoulderCard;

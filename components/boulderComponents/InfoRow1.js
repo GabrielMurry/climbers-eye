@@ -1,26 +1,20 @@
-import { View, StyleSheet, TouchableOpacity, Alert, Text } from "react-native";
-import React, { useMemo, useState } from "react";
+import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
+import React, { useMemo } from "react";
 import { LinkIcon } from "react-native-heroicons/outline";
 import { FontAwesome } from "@expo/vector-icons";
 import { request } from "../../api/requestMethods";
 import * as Haptics from "expo-haptics";
-import { useSelector, useDispatch } from "react-redux";
-import { handleCacheUpdate } from "../../utils/functions";
+import { useDispatch } from "react-redux";
 import _ from "lodash";
+import { updateBoulder } from "../../redux/actions";
 
-const InfoRow1 = ({ boulder, setBoulder, userID, navigation }) => {
+const InfoRow1 = ({ boulder, userID, navigation }) => {
   const dispatch = useDispatch();
-  const { profileData } = useSelector((state) => state.userReducer);
-  const { spraywallIndex } = useSelector((state) => state.spraywallReducer);
-  const [originalLike, setOriginalLike] = useState(boulder.isLiked);
-  const [originalBookmark, setOriginalBookmark] = useState(
-    boulder.isBookmarked
-  );
 
   const debouncedHandleLikePressed = useMemo(
     () =>
       _.debounce(async (currentLike) => {
-        if (originalLike === currentLike) {
+        if (boulder.isLiked === currentLike) {
           return;
         }
         // The code for sending requests to the backend can be placed here
@@ -31,30 +25,28 @@ const InfoRow1 = ({ boulder, setBoulder, userID, navigation }) => {
           `api/like_boulder/${boulder.id}/${userID}`,
           data
         );
-        setOriginalLike(currentLike);
-        console.log(response);
+        // Success! 201 == created and 204 == deleted
         if (response.status === 201 || response.status === 204) {
-          // Success! 201 == created and 204 == deleted
           return;
         }
-        console.log(response.status);
-        setBoulder({ ...boulder, isLiked: originalLike });
+        dispatch(updateBoulder(boulder.id, { isLiked: currentLike }));
       }, 500),
-    [originalLike]
+    [boulder.isLiked]
   ); // Adjust the delay (in milliseconds) as needed
 
   const handleLikePressed = () => {
     // Optimistic updating
-    setBoulder({ ...boulder, isLiked: !boulder.isLiked });
+    const currentLike = !boulder.isLiked;
+    dispatch(updateBoulder(boulder.id, { isLiked: currentLike }));
     handleVibrate();
     // Call the debounced function to handle the like/unlike action after a delay
-    debouncedHandleLikePressed(!boulder.isLiked);
+    debouncedHandleLikePressed(currentLike);
   };
 
   const debouncedHandleBookmarkPressed = useMemo(
     () =>
       _.debounce(async (currentBookmark) => {
-        if (originalBookmark === currentBookmark) {
+        if (boulder.isBookmarked === currentBookmark) {
           return;
         }
         // The code for sending requests to the backend can be placed here
@@ -65,23 +57,22 @@ const InfoRow1 = ({ boulder, setBoulder, userID, navigation }) => {
           `api/bookmark_boulder/${boulder.id}/${userID}`,
           data
         );
-        setOriginalBookmark(currentBookmark);
+        // Success! 201 == created and 204 == deleted
         if (response.status === 201 || response.status === 204) {
-          // Success! 201 == created and 204 == deleted
           return;
         }
-        console.log(response.status);
-        setBoulder({ ...boulder, isBookmarked: originalBookmark });
+        dispatch(updateBoulder(boulder.id, { isBookmarked: currentBookmark }));
       }, 500),
-    [originalBookmark]
+    [boulder.isBookmarked]
   ); // Adjust the delay (in milliseconds) as needed
 
   const handleBookmarkPressed = () => {
     // Optimistic updating
-    setBoulder({ ...boulder, isBookmarked: !boulder.isBookmarked });
+    const currentBookmark = !boulder.isBookmarked;
+    dispatch(updateBoulder(boulder.id, { isBookmarked: currentBookmark }));
     handleVibrate();
     // Call the debounced function to handle the like/unlike action after a delay
-    debouncedHandleBookmarkPressed(!boulder.isBookmarked);
+    debouncedHandleBookmarkPressed(currentBookmark);
   };
 
   const handleCircuitPressed = () => {
@@ -132,7 +123,6 @@ const InfoRow1 = ({ boulder, setBoulder, userID, navigation }) => {
         </TouchableOpacity>
       </View>
     </View>
-    // </View>
   );
 };
 

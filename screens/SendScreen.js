@@ -8,12 +8,10 @@ import {
   TextInput,
   Keyboard,
   TouchableWithoutFeedback,
-  Vibration,
-  Platform,
   SafeAreaView,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
-import { ArrowLongRightIcon, StarIcon } from "react-native-heroicons/outline";
+import { StarIcon } from "react-native-heroicons/outline";
 import { request } from "../api/requestMethods";
 import { useSelector } from "react-redux";
 import { boulderGrades } from "../utils/constants/boulderConstants";
@@ -21,6 +19,8 @@ import * as Haptics from "expo-haptics";
 import useCustomHeader from "../hooks/useCustomHeader";
 import CustomButton from "../components/CustomButton";
 import { colors } from "../utils/styles";
+import { useDispatch } from "react-redux";
+import { updateBoulder } from "../redux/actions";
 
 const options = {
   attempts: ["-"],
@@ -32,6 +32,7 @@ for (let i = 1; i <= 100; i++) {
 }
 
 const SendScreen = ({ route, navigation }) => {
+  const dispatch = useDispatch();
   const { user } = useSelector((state) => state.userReducer);
   const { boulder, userSendsData } = route.params;
 
@@ -87,9 +88,10 @@ const SendScreen = ({ route, navigation }) => {
   }, [selectedAttempts, selectedDifficulty]);
 
   handleSubmit = async () => {
+    const grade = boulderGrades.indexOf(selectedDifficulty);
     const data = {
       attempts: selectedAttempts,
-      grade: boulderGrades.indexOf(selectedDifficulty),
+      grade: grade,
       quality: qualityCount,
       notes: notes,
       person: user.id,
@@ -101,9 +103,10 @@ const SendScreen = ({ route, navigation }) => {
       data
     );
     if (response.status !== 201) {
-      console.log(response.status);
+      console.error(response.status);
       return;
     }
+    dispatch(updateBoulder(boulder.id, { isSent: true, grade: grade }));
     handleVibrate();
     navigation.goBack();
   };

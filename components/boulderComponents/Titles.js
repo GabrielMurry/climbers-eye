@@ -6,11 +6,11 @@ import { boulderGrades } from "../../utils/constants/boulderConstants";
 const Titles = ({ boulder }) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.titleMain}>{boulder.name}</Text>
+      <Text style={styles.titleMain}>{boulder?.name}</Text>
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <Text style={{ fontSize: 18 }}>
-          {boulder.grade ? boulderGrades[boulder.grade] : "Project"}{" "}
-          {boulder.quality ? (
+          {boulder?.grade ? boulder.grade : "Project"}{" "}
+          {boulder?.quality ? (
             <>
               {" "}
               <StarIcon

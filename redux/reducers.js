@@ -15,6 +15,12 @@ import {
   REMOVE_FILTER_CIRCUITS,
   RESET_FILTER_CIRCUITS,
   SET_PROFILE_DATA,
+  SET_BOULDERS_LIST,
+  APPEND_BOULDERS,
+  RESET_BOULDERS,
+  BOULDERS_ERROR,
+  UPDATE_BOULDER,
+  ADD_NEW_BOULDER,
 } from "./actions";
 
 const initialState = {
@@ -31,6 +37,7 @@ const initialState = {
   filterStatus: "all",
   filterCircuits: [],
   profileData: [],
+  boulders: [],
 };
 
 export function userReducer(state = initialState, action) {
@@ -85,6 +92,43 @@ export function spraywallReducer(state = initialState, action) {
       return { ...state, filterCircuits: updatedCircuits };
     case RESET_FILTER_CIRCUITS:
       return { ...state, filterCircuits: [] };
+    default:
+      return state;
+  }
+}
+
+export function boulderReducer(state = initialState, action) {
+  switch (action.type) {
+    case APPEND_BOULDERS:
+      return {
+        ...state,
+        boulders: [...state.boulders, ...action.payload],
+      };
+    case ADD_NEW_BOULDER:
+      return {
+        ...state,
+        boulders: [action.payload, ...state.boulders],
+      };
+    case RESET_BOULDERS:
+      return {
+        ...state,
+        boulders: [],
+      };
+    case BOULDERS_ERROR:
+      return {
+        ...state,
+        boulders: [action.payload],
+      };
+    case UPDATE_BOULDER:
+      console.log(action.payload);
+      return {
+        ...state,
+        boulders: state.boulders.map((boulder) =>
+          boulder.id === action.payload.boulderId
+            ? { ...boulder, ...action.payload.updates }
+            : boulder
+        ),
+      };
     default:
       return state;
   }

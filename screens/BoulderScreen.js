@@ -5,10 +5,9 @@ import {
   ScrollView,
   Alert,
 } from "react-native";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import FullScreenImage from "../components/FullScreenImage";
 import { request } from "../api/requestMethods";
-import { useFocusEffect } from "@react-navigation/native";
 import { EllipsisHorizontalIcon } from "react-native-heroicons/outline";
 import { useSelector } from "react-redux";
 import ImageDisplay from "../components/boulderComponents/ImageDisplay";
@@ -28,9 +27,12 @@ const THEME_STYLE = "white"; //rgba(245,245,245,255)
 const BoulderScreen = ({ route, navigation }) => {
   const { user } = useSelector((state) => state.userReducer);
 
-  const { fromScreen, toScreen } = route.params;
+  const { fromScreen, toScreen, boulderId } = route.params;
 
-  const [boulder, setBoulder] = useState(route.params.boulder);
+  const boulder = useSelector((state) =>
+    state.boulderReducer.boulders.find((b) => b.id === boulderId)
+  );
+
   const [imageFullScreen, setImageFullScreen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -154,12 +156,7 @@ const BoulderScreen = ({ route, navigation }) => {
           setIsLoading={setIsLoading}
         />
         <DraftNotif boulder={boulder} />
-        <InfoRow1
-          boulder={boulder}
-          setBoulder={setBoulder}
-          userID={user.id}
-          navigation={navigation}
-        />
+        <InfoRow1 boulder={boulder} userID={user.id} navigation={navigation} />
         <InfoRow2
           boulder={boulder}
           chartData={chartData}
@@ -192,9 +189,9 @@ const BoulderScreen = ({ route, navigation }) => {
       />
       <FullScreenImage
         imageFullScreen={imageFullScreen}
-        url={boulder.url}
-        width={boulder.width}
-        height={boulder.height}
+        url={boulder?.url}
+        width={boulder?.width}
+        height={boulder?.height}
         onRequestClose={() => setImageFullScreen(false)}
       />
     </View>
