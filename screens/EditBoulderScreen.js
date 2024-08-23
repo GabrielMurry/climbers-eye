@@ -122,7 +122,7 @@ const EditBoulderScreen = ({ route, navigation }) => {
 
     const data = { drawing: snapshotDrawing, photo: snapshotPhoto };
 
-    const response = await request("post", "composite/", data);
+    const response = await request("post", "api/composite/", data);
     if (response.status !== 200) {
       console.log(response.status);
       return;

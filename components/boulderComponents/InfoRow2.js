@@ -14,7 +14,7 @@ const InfoRow2 = ({ boulder, chartData, userSendsData, navigation }) => {
   };
 
   const handleUserSendsCountPress = () => {
-    navigation.navigate("BoulderUserSends", { userSendsData });
+    navigation.navigate("BoulderUserSends", { boulder, userSendsData });
   };
 
   return (

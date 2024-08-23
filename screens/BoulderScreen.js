@@ -5,7 +5,7 @@ import {
   ScrollView,
   Alert,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import FullScreenImage from "../components/FullScreenImage";
 import { request } from "../api/requestMethods";
 import { EllipsisHorizontalIcon } from "react-native-heroicons/outline";
@@ -21,10 +21,14 @@ import InfoRow4 from "../components/boulderComponents/InfoRow4";
 import InfoRow5 from "../components/boulderComponents/InfoRow5";
 import InfoRow6 from "../components/boulderComponents/InfoRow6";
 import DraftNotif from "../components/boulderComponents/DraftNotif";
+import { useFocusEffect } from "@react-navigation/native";
+import { useDispatch } from "react-redux";
+import { updateBoulder, deleteBoulder } from "../redux/actions";
 
 const THEME_STYLE = "white"; //rgba(245,245,245,255)
 
 const BoulderScreen = ({ route, navigation }) => {
+  const dispatch = useDispatch();
   const { user } = useSelector((state) => state.userReducer);
 
   const { fromScreen, toScreen, boulderId } = route.params;
@@ -43,14 +47,27 @@ const BoulderScreen = ({ route, navigation }) => {
   const fetchBoulderDetail = async () => {
     const response = await request("get", `api/boulder/${boulder.id}`);
     if (response) {
+      const { firstAscent, sends, isSent, userSendsCount, boulderGrade } =
+        response.data;
       setChartData(response.data.boulderBarChartData);
       setUserSendsData(response.data.userSendsData);
+      dispatch(
+        updateBoulder(boulder.id, {
+          firstAscent,
+          sends,
+          isSent,
+          userSendsCount,
+          grade: boulderGrade,
+        })
+      );
     }
   };
 
-  useEffect(() => {
-    fetchBoulderDetail();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      fetchBoulderDetail();
+    }, [])
+  );
 
   const headerRight = (
     <TouchableOpacity onPress={() => setIsModalVisible(true)}>
@@ -66,7 +83,7 @@ const BoulderScreen = ({ route, navigation }) => {
     headerRight,
   });
 
-  const deleteBoulder = () => {
+  const handleDeleteBoulder = () => {
     Alert.alert(
       "Delete Boulder",
       `Are you sure you want to delete "${boulder.name}"?`,
@@ -77,13 +94,14 @@ const BoulderScreen = ({ route, navigation }) => {
           onPress: async () => {
             const response = await request(
               "delete",
-              `delete_boulder/${boulder.id}`
+              `api/boulder/${boulder.id}`
             );
-            if (response.status !== 200) {
-              console.log(response.status);
-              return;
+            if (response.status === 204) {
+              navigation.goBack();
+              dispatch(deleteBoulder(boulder.id));
+            } else {
+              console.error(response.status);
             }
-            navigation.goBack();
           },
           style: "destructive",
         },
@@ -132,7 +150,7 @@ const BoulderScreen = ({ route, navigation }) => {
       if (boulder.setter === user.username) {
         const deleteBoulderOption = {
           title: "Delete Boulder",
-          onPress: deleteBoulder,
+          onPress: handleDeleteBoulder,
           color: "red",
         };
         const cancelOptionIndex = options.length - 1;

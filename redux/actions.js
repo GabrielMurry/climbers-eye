@@ -18,6 +18,7 @@ export const RESET_BOULDERS = "RESET_BOULDERS";
 export const BOULDERS_ERROR = "BOULDERS_ERROR";
 export const UPDATE_BOULDER = "UPDATE_BOULDER";
 export const ADD_NEW_BOULDER = "ADD_NEW_BOULDER";
+export const DELETE_BOULDER = "DELETE_BOULDER"
 
 export const setUser = (user) => (dispatch) => {
   dispatch({
@@ -147,3 +148,8 @@ export const addNewBoulder = (boulder) => ({
   type: ADD_NEW_BOULDER,
   payload: boulder,
 });
+
+export const deleteBoulder = (boulderId) => ({
+  type: DELETE_BOULDER,
+  payload: boulderId
+})

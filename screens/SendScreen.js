@@ -88,25 +88,31 @@ const SendScreen = ({ route, navigation }) => {
   }, [selectedAttempts, selectedDifficulty]);
 
   handleSubmit = async () => {
-    const grade = boulderGrades.indexOf(selectedDifficulty);
     const data = {
       attempts: selectedAttempts,
-      grade: grade,
+      grade: boulderGrades.indexOf(selectedDifficulty),
       quality: qualityCount,
       notes: notes,
       person: user.id,
       boulder: boulder.id,
     };
-    const response = await request(
-      "post",
-      `api/sent_boulder/${boulder.id}`,
-      data
-    );
+    const response = await request("post", `api/send_list/${boulder.id}`, data);
     if (response.status !== 201) {
       console.error(response.status);
       return;
     }
-    dispatch(updateBoulder(boulder.id, { isSent: true, grade: grade }));
+    // console.log(response.data);
+    // const { firstAscent, sends, isSent, userSendsCount, boulderGrade } =
+    //   response.data;
+    // dispatch(
+    //   updateBoulder(boulder.id, {
+    //     firstAscent,
+    //     sends,
+    //     isSent,
+    //     userSendsCount,
+    //     grade: boulderGrade,
+    //   })
+    // );
     handleVibrate();
     navigation.goBack();
   };
@@ -138,7 +144,7 @@ const SendScreen = ({ route, navigation }) => {
             </View>
             <View style={styles.row}>
               <Text style={styles.label}>Your Ascents:</Text>
-              <Text style={styles.info}>{userSendsData.length}</Text>
+              <Text style={styles.info}>{userSendsData?.length}</Text>
             </View>
             <TouchableOpacity
               style={[styles.row, { backgroundColor: "white" }]}

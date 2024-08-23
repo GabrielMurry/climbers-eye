@@ -11,6 +11,7 @@ import { Text } from "react-native";
 import { EllipsisHorizontalIcon } from "react-native-heroicons/outline";
 import ModalOptions from "../../components/ModalOptions";
 import StatsSection from "../../components/profileComponents/StatsSection";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const THEME_STYLE = "white";
 
@@ -92,11 +93,14 @@ const ProfileScreen = ({ navigation }) => {
   };
   const handleLogoutPress = async () => {
     setIsModalVisible(false);
-    const response = await request("post", "logout/", {});
-    if (response.status !== 200) {
-      console.log(response.status);
-      return;
-    } else {
+    const refreshToken = await AsyncStorage.getItem("refreshToken");
+    const response = await request("post", "api/logout/", {
+      refresh: refreshToken,
+    });
+    if (response.status === 200) {
+      // Clear tokens from storage
+      await AsyncStorage.removeItem("accessToken");
+      await AsyncStorage.removeItem("refreshToken");
       navigation.navigate("Login");
     }
   };

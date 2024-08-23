@@ -21,6 +21,7 @@ import {
   BOULDERS_ERROR,
   UPDATE_BOULDER,
   ADD_NEW_BOULDER,
+  DELETE_BOULDER,
 } from "./actions";
 
 const initialState = {
@@ -120,13 +121,19 @@ export function boulderReducer(state = initialState, action) {
         boulders: [action.payload],
       };
     case UPDATE_BOULDER:
-      console.log(action.payload);
       return {
         ...state,
         boulders: state.boulders.map((boulder) =>
           boulder.id === action.payload.boulderId
             ? { ...boulder, ...action.payload.updates }
             : boulder
+        ),
+      };
+    case DELETE_BOULDER:
+      return {
+        ...state,
+        boulders: state.boulders.filter(
+          (boulder) => boulder.id !== action.payload
         ),
       };
     default:

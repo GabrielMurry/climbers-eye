@@ -42,6 +42,14 @@ const ListScreen = ({ navigation }) => {
   const [hasFilters, setHasFilters] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(1);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(() => {
+    dispatch(resetBoulders());
+    setRefreshing(true);
+    setPage(1);
+    fetchListData(1);
+  }, []);
 
   useEffect(() => {
     dispatch(resetBoulders());
@@ -102,6 +110,7 @@ const ListScreen = ({ navigation }) => {
     } else {
       handleError();
     }
+    setRefreshing(false);
     setIsLoading(false);
     logPerformance(startTime, "fetchListData");
   };
@@ -187,6 +196,8 @@ const ListScreen = ({ navigation }) => {
           onEndReached={() => fetchListData(page)}
           ListHeaderComponent={renderListHeader()}
           ListFooterComponent={() => isLoading && <ActivityIndicator />}
+          onRefresh={onRefresh}
+          refreshing={refreshing}
         />
       </View>
       <ModalOptions

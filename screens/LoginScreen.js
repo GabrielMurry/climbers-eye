@@ -50,6 +50,12 @@ const LoginScreen = ({ navigation }) => {
       return;
     }
     if (response.data) {
+      console.log(response.data);
+      console.log(response.data.user.spraywalls[0]);
+      console.log(response.data.user.spraywalls[0].name);
+      // console.log(JSON.parse(response.data.spraywalls));
+      // console.log(JSON.stringify(response.data.spraywalls));
+      return;
       // in dispatch, we enter the action "setUserID" along with the "userID" value (doing this for username also)
       dispatch(setUser(response.data.user));
       dispatch(setHeadshotImage(response.data.headshotImage));

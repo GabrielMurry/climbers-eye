@@ -29,7 +29,7 @@ async function refreshTokenService() {
   axiosRefreshAPI.defaults.headers.common["Referer"] = REFERER;
 
   // EXECUTE
-  const response = await axiosRefreshAPI.post(`/update_token/`, data);
+  const response = await axiosRefreshAPI.post(`update_token/`, data);
 
   const { accessToken, refreshToken } = response.data;
 

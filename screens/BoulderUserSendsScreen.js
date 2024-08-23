@@ -26,14 +26,14 @@ const BoulderUserSendsScreen = ({ navigation, route }) => {
             onPress: async () => {
               const response = await request(
                 "delete",
-                `api/sent_boulder/${send.id}`
+                `api/send_detail/${send.id}`
               );
-              if (response.status === 204) {
-                // successful deletion 204
-                fetchUpdatedBoulderData();
+              // not a successful deletion status of 204
+              if (response.status !== 204) {
+                console.error(response.status);
                 return;
               }
-              console.error(response.status);
+              navigation.goBack();
             },
             style: "destructive",
           },
