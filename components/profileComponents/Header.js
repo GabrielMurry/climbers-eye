@@ -5,12 +5,12 @@ import { useSelector } from "react-redux";
 import FullScreenImage from "../FullScreenImage";
 
 const Header = ({ navigation }) => {
-  const { user, headshotImage } = useSelector((state) => state.userReducer);
+  const { user } = useSelector((state) => state.userReducer);
 
   const [imageFullScreen, setImageFullScreen] = useState(false);
 
   const handleImagePress = () => {
-    if (!headshotImage.url) return;
+    if (!user.profilePicUrl) return;
     setImageFullScreen(true);
   };
 
@@ -41,9 +41,9 @@ const Header = ({ navigation }) => {
         }}
         onPress={handleImagePress}
       >
-        {headshotImage.url ? (
+        {user.profilePicUrl ? (
           <Image
-            source={{ uri: headshotImage.url }}
+            source={{ uri: user.profilePicUrl }}
             style={{ width: "100%", height: "100%", borderRadius: 100 }}
           />
         ) : (
@@ -52,9 +52,9 @@ const Header = ({ navigation }) => {
       </Pressable>
       <FullScreenImage
         imageFullScreen={imageFullScreen}
-        url={headshotImage.url}
-        width={headshotImage.width}
-        height={headshotImage.height}
+        url={user.profilePicUrl}
+        width={user.profilePicWidth}
+        height={user.profilePicHeight}
         onRequestClose={() => setImageFullScreen(false)}
       />
     </View>

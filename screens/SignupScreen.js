@@ -35,16 +35,16 @@ const SignupScreen = ({ navigation }) => {
     const data = {
       username,
       email,
-      password1: password,
-      password2: passwordRepeat,
+      password: password,
     };
-    const response = await request("post", "signup/", data);
-    if (response.status !== 200) {
+    const response = await request("post", "api/signup/", data);
+    if (response.status !== 201) {
       console.log(response.status);
       setIsLoading(false);
       return;
     }
     if (response.data) {
+      console.log(response);
       // in dispatch, we enter the action "setUserID" along with the "userID" value (doing this for username also)
       dispatch(setUser(response.data.user));
     }

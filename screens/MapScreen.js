@@ -14,13 +14,13 @@ import { GOOGLE_MAPS_GEOCODER_API_KEY } from "@env";
 import { request } from "../api/requestMethods";
 import GymCard from "../components/GymCard";
 import BottomSheet from "@gorhom/bottom-sheet";
-import { setGym, setSpraywalls } from "../redux/actions";
 import FullScreenImage from "../components/FullScreenImage";
 import GymInfoBottomSheet from "../components/mapComponents/GymInfoBottomSheet";
 import MapSearchQuery from "../components/mapComponents/MapSearchQuery";
 import Map from "../components/mapComponents/Map";
 import MapSearchResults from "../components/mapComponents/MapSearchResults";
 import { updateUserGym } from "../utils/functions";
+import { setGym, setSpraywalls } from "../redux/actions";
 
 // Initialize the module (needs to be done only once)
 Geocoder.init(GOOGLE_MAPS_GEOCODER_API_KEY); // use a valid API key
@@ -69,13 +69,11 @@ const MapScreen = ({ navigation }) => {
   }, [navigation]);
 
   useEffect(() => {
-    if (searchQuery) {
-      fetchSearchQueryData();
-    }
+    fetchSearchQueryData();
   }, [searchQuery]);
 
   const fetchSearchQueryData = async () => {
-    const response = await request("get", `query_gyms/?search=${searchQuery}`);
+    const response = await request("get", `api/gym_list/`);
     if (response.status !== 200) {
       console.log(response.status);
       return;
@@ -106,6 +104,7 @@ const MapScreen = ({ navigation }) => {
       id: gym.id,
       name: gym.name,
       address: gym.location,
+      spraywalls: [],
     };
     if (gym.location !== "") {
       const geoLocation = await getGeoLocation(gym);
@@ -120,13 +119,13 @@ const MapScreen = ({ navigation }) => {
     setSearchQuery("");
     Keyboard.dismiss();
     // when user clicks on gym card, we want to quickly display spraywall default image in bottom sheet
-    const response = await request("get", `queried_gym_spraywall/${gym.id}`);
+    const response = await request("get", `api/spraywall_list/${gym.id}`);
     if (response.status !== 200) {
       console.log(response.status);
       return;
     }
     if (response.data) {
-      gymData.spraywalls = response.data.spraywalls;
+      gymData.spraywalls = response.data;
     }
     setIsLoadingGymInfo(false);
     setGymMarker(gymData);
@@ -144,19 +143,20 @@ const MapScreen = ({ navigation }) => {
 
   const handleConfirmMyGymPress = async (gymID) => {
     setIsLoadingConfirmGym(true);
-    const response = await request("put", `choose_gym/${user.id}/${gymID}`);
+    const data = {
+      gym: gymID,
+    };
+    const response = await request("patch", `api/user_choose_gym/`, data);
     if (response.status !== 200) {
       console.log(response.status);
       setIsLoadingConfirmGym(false);
       return;
     }
     if (response.data) {
-      updateUserGym({
-        gym: response.data.gym,
-        spraywalls: response.data.spraywalls,
-        user: user,
-        dispatch: dispatch,
-      });
+      const { id, name, address, spraywalls } = gymMarker;
+      const gym = { id, name, location: address };
+      dispatch(setGym(gym));
+      dispatch(setSpraywalls(spraywalls));
       setIsLoadingConfirmGym(false);
       navigation.navigate("Home");
     }
@@ -204,7 +204,7 @@ const MapScreen = ({ navigation }) => {
               isLoadingGymInfo={isLoadingGymInfo}
               handleCancelGymPress={handleCancelGymPress}
               handleConfirmMyGymPress={handleConfirmMyGymPress}
-              setImageFullScreen={setImageFullScreen}
+              // setImageFullScreen={setImageFullScreen}
               isLoadingConfirmGym={isLoadingConfirmGym}
             />
           ) : (
@@ -225,13 +225,13 @@ const MapScreen = ({ navigation }) => {
           )}
         </View>
       </BottomSheet>
-      <FullScreenImage
+      {/* <FullScreenImage
         imageFullScreen={imageFullScreen}
         url={gymMarker ? gymMarker.spraywalls[0].url : null}
         width={gymMarker ? gymMarker.spraywalls[0].width : null}
         height={gymMarker ? gymMarker.spraywalls[0].height : null}
         onRequestClose={() => setImageFullScreen(false)}
-      />
+      /> */}
     </View>
   );
 };

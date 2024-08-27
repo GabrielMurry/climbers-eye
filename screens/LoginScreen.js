@@ -11,14 +11,7 @@ import CustomInput from "../components/CustomInput";
 import CustomButton from "../components/CustomButton";
 import { request } from "../api/requestMethods";
 import { useDispatch } from "react-redux";
-import {
-  setUser,
-  setGym,
-  setSpraywalls,
-  setHeadshotImage,
-  setProfileData,
-} from "../redux/actions";
-import SVGImg from "../assets/ClimbersEyeLogoShapes.svg";
+import { setUser, setGym, setSpraywalls } from "../redux/actions";
 import { colors } from "../utils/styles";
 import {
   ArrowLongRightIcon,
@@ -27,8 +20,6 @@ import {
   LockClosedIcon,
   UserIcon,
 } from "react-native-heroicons/outline";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { jwtDecode } from "jwt-decode";
 
 const LoginScreen = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -50,23 +41,23 @@ const LoginScreen = ({ navigation }) => {
       return;
     }
     if (response.data) {
-      console.log(response.data);
-      console.log(response.data.user.spraywalls[0]);
-      console.log(response.data.user.spraywalls[0].name);
-      // console.log(JSON.parse(response.data.spraywalls));
-      // console.log(JSON.stringify(response.data.spraywalls));
-      return;
-      // in dispatch, we enter the action "setUserID" along with the "userID" value (doing this for username also)
-      dispatch(setUser(response.data.user));
-      dispatch(setHeadshotImage(response.data.headshotImage));
-      // for redundancy. If user signs up, but restarts the app, then logs in, they still don't belong to a gym or spraywall, so redirect to Map screen
-      if (response.data.gym) {
-        dispatch(setGym(response.data.gym));
-        dispatch(setSpraywalls(response.data.spraywalls));
-        // dispatch(setProfileData(response.data.profileData));
+      const user = response.data.user;
+      const userInfo = {
+        id: user.id,
+        username: user.username,
+        name: user.name,
+        email: user.email,
+        profilePicUrl: user.profilePicUrl,
+        profilePicWidth: user.profilePicWidth,
+        profilePicHeight: user.profilePicHeight,
+      };
+      dispatch(setUser(userInfo));
+      if (user.gym) {
+        dispatch(setGym(user.gym));
+        dispatch(setSpraywalls(user.spraywalls));
         navigation.navigate("Tabs");
       } else {
-        navigation.navigate("Map");
+        navigation.navigate("Tabs", { screen: "Map" });
       }
     }
     setIsLoading(false);

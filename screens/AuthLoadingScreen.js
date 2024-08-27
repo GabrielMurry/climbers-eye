@@ -3,10 +3,12 @@ import React, { useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { jwtDecode } from "jwt-decode";
 import { clearAsyncStorage } from "../utils/initializeAuth";
+import { useSelector } from "react-redux";
 
 // Checking for access and refresh token validity and expiration on app start up.
 
 const AuthLoadingScreen = ({ navigation }) => {
+  const { gym } = useSelector((state) => state.gymReducer);
   const checkTokenExpiry = async () => {
     const accessToken = await AsyncStorage.getItem("accessToken");
     const refreshToken = await AsyncStorage.getItem("refreshToken");
@@ -33,14 +35,15 @@ const AuthLoadingScreen = ({ navigation }) => {
       const isTokenValid = await checkTokenExpiry();
       if (!isTokenValid) {
         // Navigate to Login Screen
-        console.log("need to login");
         clearAsyncStorage();
-
         navigation.navigate("Login");
       } else {
         // Navigate to Home Screen
-        console.log("good to go");
-        navigation.navigate("Tabs");
+        if (gym) {
+          navigation.navigate("Tabs");
+        } else {
+          navigation.navigate("Tabs", { screen: "Map" });
+        }
       }
     };
     initializeAuth();

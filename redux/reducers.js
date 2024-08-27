@@ -4,7 +4,6 @@ import {
   SET_GYM,
   SET_SPRAYWALLS,
   SET_SPRAYWALL_INDEX,
-  SET_HEADSHOT_IMAGE,
   SET_FILTER_SORT_BY,
   SET_FILTER_MIN_GRADE_INDEX,
   SET_FILTER_MAX_GRADE_INDEX,
@@ -14,8 +13,6 @@ import {
   SET_FILTER_CIRCUITS,
   REMOVE_FILTER_CIRCUITS,
   RESET_FILTER_CIRCUITS,
-  SET_PROFILE_DATA,
-  SET_BOULDERS_LIST,
   APPEND_BOULDERS,
   RESET_BOULDERS,
   BOULDERS_ERROR,
@@ -29,7 +26,6 @@ const initialState = {
   gym: {},
   spraywalls: [],
   spraywallIndex: 0,
-  headshotImage: {},
   filterSortBy: "grade",
   filterMinGradeIndex: 0,
   filterMaxGradeIndex: boulderGrades.length - 1,
@@ -37,7 +33,6 @@ const initialState = {
   filterClimbType: "boulder",
   filterStatus: "all",
   filterCircuits: [],
-  profileData: [],
   boulders: [],
 };
 
@@ -45,10 +40,6 @@ export function userReducer(state = initialState, action) {
   switch (action.type) {
     case SET_USER:
       return { ...state, user: action.payload };
-    case SET_HEADSHOT_IMAGE:
-      return { ...state, headshotImage: action.payload };
-    case SET_PROFILE_DATA:
-      return { ...state, profileData: action.payload };
     default:
       return state;
   }
@@ -69,6 +60,13 @@ export function spraywallReducer(state = initialState, action) {
       return { ...state, spraywalls: action.payload };
     case SET_SPRAYWALL_INDEX:
       return { ...state, spraywallIndex: action.payload };
+    default:
+      return state;
+  }
+}
+
+export function filterReducer(state = initialState, action) {
+  switch (action.type) {
     case SET_FILTER_SORT_BY:
       return { ...state, filterSortBy: action.payload };
     case SET_FILTER_MIN_GRADE_INDEX:

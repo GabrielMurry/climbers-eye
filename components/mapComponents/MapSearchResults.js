@@ -11,7 +11,7 @@ const MapSearchResults = ({
 }) => {
   return (
     <>
-      {searchQuery ? (
+      {gyms ? (
         <GymBottomSheetSearchResult
           navigation={navigation}
           gyms={gyms}

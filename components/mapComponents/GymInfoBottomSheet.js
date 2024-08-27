@@ -77,13 +77,13 @@ const GymInfoBottomSheet = ({
           />
         </>
       )}
-      <FullScreenImage
+      {/* <FullScreenImage
         imageFullScreen={imageFullScreen}
         url={spraywall?.url}
         width={spraywall?.width}
         height={spraywall?.height}
         onRequestClose={() => setImageFullScreen(false)}
-      />
+      /> */}
     </View>
   );
 };

@@ -2,20 +2,20 @@ import { setGym, setSpraywalls, setProfileData } from "../redux/actions";
 import { request } from "../api/requestMethods";
 import { Share } from "react-native";
 
-const updateUserGymAPI = async (data, user) => {
-  const response = request("put", `update_user_gym/${user}`, data);
-  if (response.status !== 200) {
-    console.log(response.status);
-    return;
-  }
-};
+// const updateUserGymAPI = async (data, user) => {
+//   const response = request("put", `update_user_gym/${user}`, data);
+//   if (response.status !== 200) {
+//     console.log(response.status);
+//     return;
+//   }
+// };
 
-export const updateUserGym = ({ gym, spraywalls, user, dispatch }) => {
-  dispatch(setGym(gym)); // gymData does NOT contain any info about its spray walls
-  dispatch(setSpraywalls(spraywalls));
-  const data = { gym: gym.id };
-  updateUserGymAPI(data, user);
-};
+// export const updateUserGym = ({ gym, spraywalls, user, dispatch }) => {
+//   dispatch(setGym(gym)); // gymData does NOT contain any info about its spray walls
+//   dispatch(setSpraywalls(spraywalls));
+//   const data = { gym: gym.id };
+//   updateUserGymAPI(data, user);
+// };
 
 // export const shareText = (boulder) => {
 //   const webLink = `https://tensionclimbing.com/`;

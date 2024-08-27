@@ -12,6 +12,7 @@ import { EllipsisHorizontalIcon } from "react-native-heroicons/outline";
 import ModalOptions from "../../components/ModalOptions";
 import StatsSection from "../../components/profileComponents/StatsSection";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { CommonActions } from "@react-navigation/native";
 
 const THEME_STYLE = "white";
 
@@ -61,11 +62,11 @@ const ProfileScreen = ({ navigation }) => {
     });
   }, [navigation, isHeaderTitleVisible]);
 
-  useFocusEffect(
-    useCallback(() => {
-      fetchProfileQuickData();
-    }, [gym, spraywalls, spraywallIndex])
-  );
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     fetchProfileQuickData();
+  //   }, [gym, spraywalls, spraywallIndex])
+  // );
 
   const fetchProfileQuickData = async () => {
     const response = await request(
@@ -101,7 +102,13 @@ const ProfileScreen = ({ navigation }) => {
       // Clear tokens from storage
       await AsyncStorage.removeItem("accessToken");
       await AsyncStorage.removeItem("refreshToken");
-      navigation.navigate("Login");
+      // Reset the navigation stack and navigate to the login screen
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: "Login" }],
+        })
+      );
     }
   };
 

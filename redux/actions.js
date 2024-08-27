@@ -2,7 +2,6 @@ export const SET_USER = "SET_USER";
 export const SET_GYM = "SET_GYM";
 export const SET_SPRAYWALLS = "SET_SPRAYWALLS";
 export const SET_SPRAYWALL_INDEX = "SET_SPRAYWALL_INDEX";
-export const SET_HEADSHOT_IMAGE = "SET_HEADSHOT_IMAGE";
 export const SET_FILTER_SORT_BY = "SET_FILTER_SORT_BY";
 export const SET_FILTER_MIN_GRADE_INDEX = "SET_FILTER_MIN_GRADE_INDEX";
 export const SET_FILTER_MAX_GRADE_INDEX = "SET_FILTER_MAX_GRADE_INDEX";
@@ -12,13 +11,12 @@ export const SET_FILTER_STATUS = "SET_FILTER_STATUS";
 export const SET_FILTER_CIRCUITS = "SET_FILTER_CIRCUITS";
 export const REMOVE_FILTER_CIRCUITS = "REMOVE_FILTER_CIRCUITS"; // don't need?
 export const RESET_FILTER_CIRCUITS = "RESET_FILTER_CIRCUITS"; // don't need?
-export const SET_PROFILE_DATA = "SET_PROFILE_DATA";
 export const APPEND_BOULDERS = "APPEND_BOULDERS";
 export const RESET_BOULDERS = "RESET_BOULDERS";
 export const BOULDERS_ERROR = "BOULDERS_ERROR";
 export const UPDATE_BOULDER = "UPDATE_BOULDER";
 export const ADD_NEW_BOULDER = "ADD_NEW_BOULDER";
-export const DELETE_BOULDER = "DELETE_BOULDER"
+export const DELETE_BOULDER = "DELETE_BOULDER";
 
 export const setUser = (user) => (dispatch) => {
   dispatch({
@@ -45,13 +43,6 @@ export const setSpraywallIndex = (spraywallIndex) => (dispatch) => {
   dispatch({
     type: SET_SPRAYWALL_INDEX,
     payload: spraywallIndex,
-  });
-};
-
-export const setHeadshotImage = (headshotImage) => (dispatch) => {
-  dispatch({
-    type: SET_HEADSHOT_IMAGE,
-    payload: headshotImage,
   });
 };
 
@@ -118,13 +109,6 @@ export const resetFilterCircuits = (filterCircuits) => (dispatch) => {
   });
 };
 
-export const setProfileData = (profileData) => (dispatch) => {
-  dispatch({
-    type: SET_PROFILE_DATA,
-    payload: profileData,
-  });
-};
-
 export const appendBoulders = (boulders) => ({
   type: APPEND_BOULDERS,
   payload: boulders,
@@ -151,5 +135,5 @@ export const addNewBoulder = (boulder) => ({
 
 export const deleteBoulder = (boulderId) => ({
   type: DELETE_BOULDER,
-  payload: boulderId
-})
+  payload: boulderId,
+});
