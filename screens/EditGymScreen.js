@@ -41,14 +41,14 @@ const EditGymScreen = ({ navigation }) => {
         {
           text: "Delete",
           onPress: async () => {
-            const response = await request("delete", `delete_gym/${gym.id}`);
-            if (response.status !== 200) {
-              console.log(response.status);
-              return;
+            const response = await request("delete", `api/gym/${gym.id}`);
+            if (response.status === 204) {
+              navigation.navigate("Map");
+              dispatch(setGym({}));
+              dispatch(setSpraywalls([]));
+            } else {
+              console.error(response.status);
             }
-            navigation.navigate("Map");
-            dispatch(setGym({}));
-            dispatch(setSpraywalls([]));
           },
           style: "destructive",
         },

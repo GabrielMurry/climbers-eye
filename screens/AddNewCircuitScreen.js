@@ -38,15 +38,16 @@ const AddNewCircuitScreen = ({ navigation }) => {
     };
     const response = await request(
       "post",
-      `circuits/${user.id}/${spraywalls[spraywallIndex].id}/${0}`, // 0 is boulder ID. Django endpoint takes a boulder ID as third parameter, but not needed for post method
+      `api/circuit_list/${spraywalls[spraywallIndex].id}`, // 0 is boulder ID. Django endpoint takes a boulder ID as third parameter, but not needed for post method
       data
     );
-    if (response.status !== 200) {
-      console.log(response.status);
-      return;
-    }
-    if (response.data) {
+    if (response.status === 201) {
+      console.log(response.data);
+      console.log("----");
       navigation.goBack();
+    } else {
+      console.error(response.status);
+      return;
     }
   };
 

@@ -5,7 +5,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import { colors } from "../../utils/styles";
 
 const InfoRow2 = ({ boulder, chartData, userSendsData, navigation }) => {
-  console.log(boulder);
+  // console.log(boulder);
   const handleBoulderStatsPress = () => {
     navigation.navigate("BoulderStats", { boulder, chartData });
   };

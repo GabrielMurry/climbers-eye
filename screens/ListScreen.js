@@ -24,9 +24,10 @@ const THEME_STYLE = "white";
 const ListScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const { gym } = useSelector((state) => state.gymReducer);
+  const { spraywalls, spraywallIndex } = useSelector(
+    (state) => state.spraywallReducer
+  );
   const {
-    spraywalls,
-    spraywallIndex,
     filterMinGradeIndex,
     filterMaxGradeIndex,
     filterActivity,
@@ -34,8 +35,10 @@ const ListScreen = ({ navigation }) => {
     filterCircuits,
     filterClimbType,
     filterStatus,
-  } = useSelector((state) => state.spraywallReducer);
+  } = useSelector((state) => state.filterReducer);
   const { boulders } = useSelector((state) => state.boulderReducer);
+
+  console.log(spraywalls);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -57,6 +60,7 @@ const ListScreen = ({ navigation }) => {
     fetchListData(1);
   }, [
     searchQuery,
+    spraywalls,
     spraywallIndex,
     filterMinGradeIndex,
     filterMaxGradeIndex,
@@ -91,7 +95,7 @@ const ListScreen = ({ navigation }) => {
   const fetchListData = async (page) => {
     var startTime = performance.now();
 
-    if (isLoading || page === null) {
+    if (isLoading || page === null || spraywalls.length === 0) {
       return;
     }
 

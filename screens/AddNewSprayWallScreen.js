@@ -13,7 +13,7 @@ import * as ImagePicker from "expo-image-picker";
 import { CameraIcon, PhotoIcon } from "react-native-heroicons/outline";
 import { request } from "../api/requestMethods";
 import { useSelector, useDispatch } from "react-redux";
-import { setSpraywalls } from "../redux/actions";
+import { appendSpraywalls, setSpraywalls } from "../redux/actions";
 import useCustomHeader from "../hooks/useCustomHeader";
 import { colors } from "../utils/styles";
 
@@ -80,16 +80,22 @@ const AddNewSprayWallScreen = ({ navigation, route }) => {
       image_data: image.url.split(",")[1],
       image_width: image.width,
       image_height: image.height,
+      gym: gym.id,
     };
-    const response = await request("post", `add_new_spraywall/${gym.id}`, data);
-    if (response.status !== 200) {
-      console.log(response.status);
+    const response = await request(
+      "post",
+      `api/spraywall_list/${gym.id}`,
+      data
+    );
+    if (response.status === 201) {
+      console.log(response.data);
+      dispatch(appendSpraywalls(response.data));
       setIsLoading(false);
-      return;
+      navigation.navigate("Home");
+    } else {
+      console.log(response.status);
     }
-    dispatch(setSpraywalls(response.data.spraywalls));
     setIsLoading(false);
-    navigation.goBack();
   };
 
   return (

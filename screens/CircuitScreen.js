@@ -9,7 +9,7 @@ import {
   Alert,
   Pressable,
 } from "react-native";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { request } from "../api/requestMethods";
 import { useSelector } from "react-redux";
 import CircuitCard from "../components/circuitComponents/CircuitCard";
@@ -17,8 +17,11 @@ import Swipeable from "react-native-gesture-handler/Swipeable";
 import { PlusIcon } from "react-native-heroicons/outline";
 import useCustomHeader from "../hooks/useCustomHeader";
 import { useFocusEffect } from "@react-navigation/native";
+import { updateBoulder } from "../redux/actions";
+import { useDispatch } from "react-redux";
 
 const CircuitScreen = ({ route, navigation }) => {
+  const dispatch = useDispatch();
   const { boulder } = route.params;
   const { user } = useSelector((state) => state.userReducer);
   const { spraywalls, spraywallIndex } = useSelector(
@@ -51,17 +54,25 @@ const CircuitScreen = ({ route, navigation }) => {
     }, [])
   );
 
+  useEffect(() => {
+    const inCircuit = circuits.some((circuit) => circuit.containsBoulder);
+    dispatch(updateBoulder(boulder.id, { inCircuit }));
+  }, [circuits]);
+
   fetchCircuitData = async () => {
     const response = await request(
       "get",
-      `circuits/${user.id}/${spraywalls[spraywallIndex].id}/${boulder.id}`
+      `api/circuit_list/${spraywalls[spraywallIndex].id}`
     );
-    if (response.status !== 200) {
-      console.log(response.status);
+    if (response.status === 200) {
+      const manipulatedCircuits = response.data.map((circuit) => ({
+        ...circuit,
+        containsBoulder: circuit.boulders.includes(boulder.id),
+      }));
+      setCircuits(manipulatedCircuits);
+    } else {
+      console.error(response.status);
       return;
-    }
-    if (response.data) {
-      setCircuits(response.data);
     }
   };
 
@@ -72,23 +83,24 @@ const CircuitScreen = ({ route, navigation }) => {
     prevOpenedRow = row[index];
   };
 
-  const renderCircuitCards = ({ item, index }) => {
+  const renderCircuitCards = ({ item: circuit, index }) => {
     const optimisticUpdate = () => {
       setCircuits((prevCircuits) => {
         const newCircuits = [...prevCircuits];
-        const index = newCircuits.findIndex((i) => i.id === item.id);
-        newCircuits[index].isSelected = !newCircuits[index].isSelected;
+        newCircuits[index].containsBoulder =
+          !newCircuits[index].containsBoulder;
         return newCircuits;
       });
     };
 
     const handleCircuitPressed = async () => {
-      // temp isSelected because we optimistically update item (circuit).isSelected before api call
-      const tempIsSelected = item.isSelected;
+      // temp isSelected because we optimistically update circuit (circuit).isSelected before api call
+      const tempIsSelected = circuit.containsBoulder;
+      const method = tempIsSelected ? "delete" : "post";
       optimisticUpdate();
       const response = await request(
-        tempIsSelected ? "delete" : "post",
-        `add_or_remove_boulder_in_circuit/${item.id}/${boulder.id}`
+        method,
+        `api/boulder_in_circuit/${circuit.id}/${boulder.id}`
       );
       if (response.status !== 200) {
         console.log(response.status);
@@ -118,7 +130,7 @@ const CircuitScreen = ({ route, navigation }) => {
     const onDelete = () => {
       Alert.alert(
         "Delete Circuit",
-        `Are you sure you want to delete "${item.name}"?`,
+        `Are you sure you want to delete "${circuit.name}"?`,
         [
           {
             text: "Cancel",
@@ -131,14 +143,19 @@ const CircuitScreen = ({ route, navigation }) => {
             onPress: async () => {
               const response = await request(
                 "delete",
-                `delete_circuit/${user.id}/${spraywalls[spraywallIndex].id}/${item.id}`
+                `api/circuit/${circuit.id}`
               );
-              if (response.status !== 200) {
+              if (response.status === 204) {
+                row[index].close();
+                setCircuits((prevCircuits) =>
+                  prevCircuits.filter(
+                    (prevCircuit) => prevCircuit.id !== circuit.id
+                  )
+                );
+              } else {
                 console.log(response.status);
                 return;
               }
-              fetchCircuitData();
-              row[index].close();
             },
             style: "destructive",
           },
@@ -154,7 +171,7 @@ const CircuitScreen = ({ route, navigation }) => {
         ref={(ref) => (row[index] = ref)}
       >
         <Pressable onPress={handleCircuitPressed}>
-          <CircuitCard circuit={item} height={CIRCUIT_ITEM_HEIGHT} />
+          <CircuitCard circuit={circuit} height={CIRCUIT_ITEM_HEIGHT} />
         </Pressable>
       </Swipeable>
     );

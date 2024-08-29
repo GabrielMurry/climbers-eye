@@ -2,13 +2,13 @@ import { View, Text, StyleSheet } from "react-native";
 import React from "react";
 import { CheckIcon } from "react-native-heroicons/outline";
 
-const CircuitCard = ({ circuit, height, isSelected = null }) => {
+const CircuitCard = ({ circuit, height }) => {
   return (
     <View style={styles.container(height)}>
       <View style={styles.color(circuit)} />
       <View style={styles.cardInfoContainer}>
         <Text>{circuit.name}</Text>
-        {circuit.isSelected || isSelected ? (
+        {circuit.containsBoulder ? (
           <CheckIcon size={25} color={"black"} style={{ marginRight: 5 }} />
         ) : null}
       </View>

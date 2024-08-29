@@ -11,7 +11,7 @@ import {
   Image,
   ActivityIndicator,
 } from "react-native";
-import { CameraIcon, PhotoIcon } from "react-native-heroicons/outline";
+// import { CameraIcon, PhotoIcon } from "react-native-heroicons/outline";
 import { request } from "../api/requestMethods";
 import * as ImagePicker from "expo-image-picker";
 import { useSelector, useDispatch } from "react-redux";
@@ -20,17 +20,17 @@ import { setGym, setSpraywalls } from "../redux/actions";
 
 const AddGymScreen = ({ navigation }) => {
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.userReducer);
+  // const { user } = useSelector((state) => state.userReducer);
 
   const [isCommercialGym, setIsCommercialGym] = useState(true);
   const [gymName, setGymName] = useState("");
   const [gymLocation, setGymLocation] = useState("");
-  const [image, setImage] = useState({
-    url: null,
-    width: null,
-    height: null,
-  });
-  const [sprayWallName, setSprayWallName] = useState("");
+  // const [image, setImage] = useState({
+  //   url: null,
+  //   width: null,
+  //   height: null,
+  // });
+  // const [sprayWallName, setSprayWallName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   useCustomHeader({
@@ -38,17 +38,10 @@ const AddGymScreen = ({ navigation }) => {
     title: "Add New Gym",
   });
 
-  // useEffect(() => {
-  //   if (route?.params?.image) {
-  //     const { image } = route.params;
-  //     setImage(image);
-  //   }
-  // }, [route]);
-
   const handleAddGym = () => {
     Alert.alert(
       "Add Gym",
-      `Are you sure you want to add "${gymName}" containing "${sprayWallName}"?`,
+      `Are you sure you want to add "${gymName}""?`,
       [
         { text: "Cancel" },
         {
@@ -56,27 +49,24 @@ const AddGymScreen = ({ navigation }) => {
           onPress: async () => {
             setIsLoading(true);
             const data = {
-              gym: {
-                name: gymName,
-                type: isCommercialGym ? "commercial" : "home",
-                location: gymLocation,
-              },
-              spraywall: {
-                name: sprayWallName,
-                image_data: image.url.split(",")[1],
-                image_width: image.width,
-                image_height: image.height,
-              },
+              name: gymName,
+              type: isCommercialGym ? "commercial" : "home",
+              location: gymLocation,
             };
-            const response = await request("post", `add_gym/${user.id}`, data);
-            if (response.status !== 200) {
+            // spraywall: {
+            //   name: sprayWallName,
+            //   image_data: image.url.split(",")[1],
+            //   image_width: image.width,
+            //   image_height: image.height,
+            // },
+            const response = await request("post", `api/gym_list/`, data);
+            if (response.status === 201) {
+              dispatch(setGym(response.data));
+              dispatch(setSpraywalls([]));
+              navigation.navigate("EditGym");
+            } else {
               console.log(response.status);
-              setIsLoading(false);
-              return;
             }
-            dispatch(setGym(response.data.gym));
-            dispatch(setSpraywalls(response.data.spraywalls));
-            navigation.navigate("Home");
             setIsLoading(false);
           },
         },
@@ -156,7 +146,7 @@ const AddGymScreen = ({ navigation }) => {
             />
           </View>
         </View>
-        <View style={styles.addNewSprayWallContainer}>
+        {/* <View style={styles.addNewSprayWallContainer}>
           <View style={styles.inputAndAddContainer}>
             <Text style={styles.label}>Spray Wall Name:</Text>
             <TextInput
@@ -239,7 +229,7 @@ const AddGymScreen = ({ navigation }) => {
               </>
             )}
           </View>
-        </View>
+        </View> */}
         <TouchableOpacity style={styles.addButton} onPress={handleAddGym}>
           {isLoading ? (
             <ActivityIndicator color="white" />

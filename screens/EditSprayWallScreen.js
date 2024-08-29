@@ -2,7 +2,11 @@ import { View, Text, Alert } from "react-native";
 import React, { useLayoutEffect } from "react";
 import SettingsButton from "../components/editGymComponents/SettingsButton";
 import { useSelector, useDispatch } from "react-redux";
-import { setSpraywalls, setSpraywallIndex } from "../redux/actions";
+import {
+  setSpraywalls,
+  setSpraywallIndex,
+  deleteSpraywall,
+} from "../redux/actions";
 import { request } from "../api/requestMethods";
 import useCustomHeader from "../hooks/useCustomHeader";
 
@@ -47,15 +51,15 @@ const EditSprayWallScreen = ({ navigation, route }) => {
           onPress: async () => {
             const response = await request(
               "delete",
-              `delete_spraywall/${spraywalls[index].id}`
+              `api/spraywall/${spraywalls[index].id}`
             );
-            if (response.status !== 200) {
-              console.log(response.status);
-              return;
+            if (response.status === 204) {
+              navigation.goBack();
+              dispatch(deleteSpraywall(spraywalls[index].id));
+              dispatch(setSpraywallIndex(0));
+            } else {
+              console.error(response.status);
             }
-            navigation.goBack();
-            dispatch(setSpraywallIndex(0));
-            dispatch(setSpraywalls(response.data.spraywalls));
           },
           style: "destructive",
         },

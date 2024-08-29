@@ -30,17 +30,23 @@ const ListHeader = ({
       }}
     >
       <GymAndOptions gym={gym} setIsModalVisible={setIsModalVisible} />
-      <FlatListSpraywalls
-        spraywalls={spraywalls}
-        handleSpraywallPress={handleSpraywallPress}
-        highlight={true}
-      />
-      <SearchAndFilters
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-        hasFilters={hasFilters}
-        handleFilterPress={handleFilterPress}
-      />
+      {spraywalls.length === 0 ? (
+        <Text>Missing Spraywall</Text>
+      ) : (
+        <>
+          <FlatListSpraywalls
+            spraywalls={spraywalls}
+            handleSpraywallPress={handleSpraywallPress}
+            highlight={true}
+          />
+          <SearchAndFilters
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            hasFilters={hasFilters}
+            handleFilterPress={handleFilterPress}
+          />
+        </>
+      )}
     </View>
   );
 };

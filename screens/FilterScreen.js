@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CheckIcon } from "react-native-heroicons/outline";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -36,7 +36,11 @@ const FilterScreen = ({ navigation }) => {
     filterClimbType,
     filterStatus,
     filterCircuits,
-  } = useSelector((state) => state.spraywallReducer);
+  } = useSelector((state) => state.filterReducer);
+
+  useEffect(() => {
+    console.log(filterSortBy);
+  }, [filterSortBy]);
 
   const [minGradeDisplay, setMinGradeDisplay] = useState(filterMinGradeIndex);
   const [maxGradeDisplay, setMaxGradeDisplay] = useState(filterMaxGradeIndex);

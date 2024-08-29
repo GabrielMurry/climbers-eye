@@ -3,7 +3,9 @@ import {
   SET_USER,
   SET_GYM,
   SET_SPRAYWALLS,
+  APPEND_SPRAYWALLS,
   SET_SPRAYWALL_INDEX,
+  DELETE_SPRAYWALL,
   SET_FILTER_SORT_BY,
   SET_FILTER_MIN_GRADE_INDEX,
   SET_FILTER_MAX_GRADE_INDEX,
@@ -56,10 +58,24 @@ export function gymReducer(state = initialState, action) {
 
 export function spraywallReducer(state = initialState, action) {
   switch (action.type) {
+    case APPEND_SPRAYWALLS:
+      return {
+        ...state,
+        spraywalls: Array.isArray(action.payload)
+          ? [...state.spraywalls, ...action.payload] // If payload is an array, spread it into boulders
+          : [...state.spraywalls, action.payload], // If payload is an object, add it directly to boulders
+      };
     case SET_SPRAYWALLS:
       return { ...state, spraywalls: action.payload };
     case SET_SPRAYWALL_INDEX:
       return { ...state, spraywallIndex: action.payload };
+    case DELETE_SPRAYWALL:
+      return {
+        ...state,
+        spraywalls: state.spraywalls.filter(
+          (spraywall) => spraywall.id !== action.payload
+        ),
+      };
     default:
       return state;
   }
