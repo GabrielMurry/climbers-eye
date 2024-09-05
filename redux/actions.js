@@ -1,9 +1,11 @@
 export const SET_USER = "SET_USER";
 export const SET_GYM = "SET_GYM";
+export const UPDATE_GYM = "UPDATE_GYM";
 export const SET_SPRAYWALLS = "SET_SPRAYWALLS";
 export const APPEND_SPRAYWALLS = "APPEND_SPRAYWALLS";
 export const SET_SPRAYWALL_INDEX = "SET_SPRAYWALL_INDEX";
 export const DELETE_SPRAYWALL = "DELETE_SPRAYWALL";
+export const UPDATE_SPRAYWALL = "UPDATE_SPRAYWALL";
 export const SET_FILTER_SORT_BY = "SET_FILTER_SORT_BY";
 export const SET_FILTER_MIN_GRADE_INDEX = "SET_FILTER_MIN_GRADE_INDEX";
 export const SET_FILTER_MAX_GRADE_INDEX = "SET_FILTER_MAX_GRADE_INDEX";
@@ -34,6 +36,11 @@ export const setGym = (gym) => (dispatch) => {
   });
 };
 
+export const updateGym = (updates) => ({
+  type: UPDATE_GYM,
+  payload: updates,
+});
+
 export const setSpraywalls = (spraywalls) => (dispatch) => {
   dispatch({
     type: SET_SPRAYWALLS,
@@ -56,6 +63,11 @@ export const setSpraywallIndex = (spraywallIndex) => (dispatch) => {
 export const deleteSpraywall = (spraywallId) => ({
   type: DELETE_SPRAYWALL,
   payload: spraywallId,
+});
+
+export const updateSpraywall = (spraywallId, updates) => ({
+  type: UPDATE_SPRAYWALL,
+  payload: { spraywallId, updates },
 });
 
 export const setFilterSortBy = (filterSortBy) => (dispatch) => {

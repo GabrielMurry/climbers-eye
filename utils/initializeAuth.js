@@ -2,7 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { request } from "../api/requestMethods";
 
 export const getTempCsrfToken = async () => {
-  const response = await request("get", "temp_csrf_token/");
+  const response = await request("get", "api/temp_csrf_token/");
   if (response.status !== 200) {
     console.log(response.status);
     return;
@@ -14,9 +14,6 @@ export const clearAsyncStorage = async () => {
     const keys = await AsyncStorage.getAllKeys();
     if (keys.length > 0) {
       // If there are keys, clear AsyncStorage
-      console.log("------------");
-      console.log(keys);
-      console.log("------------");
       await AsyncStorage.clear();
       console.log("AsyncStorage cleared successfully.");
       getTempCsrfToken();

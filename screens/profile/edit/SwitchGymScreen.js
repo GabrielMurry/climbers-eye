@@ -1,7 +1,7 @@
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import React, { useEffect, useState } from "react";
 import useCustomHeader from "../../../hooks/useCustomHeader";
-import GymCard from "../../../components/profileComponents/GymCard";
+import GymCard from "../../../components/profile/GymCard";
 import { FlatList } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { request } from "../../../api/requestMethods";

@@ -1,5 +1,5 @@
-import BoulderScreen from "../screens/BoulderScreen";
-import ListScreen from "../screens/ListScreen";
+import BoulderScreen from "../screens/boulder/BoulderScreen";
+import HomeScreen from "../screens/home/HomeScreen";
 import {
   UserIcon,
   MapPinIcon,
@@ -13,7 +13,7 @@ import {
   HomeIcon as HomeIconSolid,
   Square3Stack3DIcon as Square3Stack3DIconSolid,
 } from "react-native-heroicons/solid";
-import MapScreen from "../screens/MapScreen";
+import MapScreen from "../screens/map/MapScreen";
 import ProfileScreen from "../screens/profile/ProfileScreen";
 import { useState } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -32,8 +32,8 @@ function HomeStack() {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="List"
-        component={ListScreen}
+        name="HomeList"
+        component={HomeScreen}
         options={{
           headerShown: false,
         }}

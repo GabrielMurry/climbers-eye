@@ -10,8 +10,8 @@ import {
   Alert,
 } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
-import BoulderCard from "../../../components/listComponents/BoulderCard";
-import LogbookBoulderCard from "../../../components/profileComponents/LogbookBoulderCard";
+import BoulderCard from "../../../components/list/BoulderCard";
+import LogbookBoulderCard from "../../../components/profile/LogbookBoulderCard";
 import { request } from "../../../api/requestMethods";
 import { useSelector } from "react-redux";
 import { useFocusEffect } from "@react-navigation/native";
@@ -20,12 +20,12 @@ import {
   boulderGrades,
 } from "../../../utils/constants/boulderConstants";
 import useCustomHeader from "../../../hooks/useCustomHeader";
-import BoulderBarChart from "../../../components/boulderStatsComponents/BoulderBarChart";
+import BoulderBarChart from "../../../components/boulderStats/BoulderBarChart";
 import { EllipsisHorizontalIcon } from "react-native-heroicons/outline";
 import ModalOptions from "../../../components/ModalOptions";
 import { Skia } from "@shopify/react-native-skia";
-import BarChartTest from "../../../components/boulderStatsComponents/BarChartTest";
-import BarChartHorizontal from "../../../components/boulderStatsComponents/BarChartHorizontal";
+import BarChartTest from "../../../components/boulderStats/BarChartTest";
+import BarChartHorizontal from "../../../components/boulderStats/BarChartHorizontal";
 
 const ProfileBoulderSectionScreen = ({ route, navigation }) => {
   const { section } = route.params;

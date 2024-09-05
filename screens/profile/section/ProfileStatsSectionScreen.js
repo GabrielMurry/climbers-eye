@@ -11,9 +11,9 @@ import { useFocusEffect } from "@react-navigation/native";
 import { request } from "../../../api/requestMethods";
 import { useSelector } from "react-redux";
 import { boulderBarChartDataTemplate } from "../../../utils/constants/boulderConstants";
-import BoulderBarChart from "../../../components/boulderStatsComponents/BoulderBarChart";
+import BoulderBarChart from "../../../components/boulderStats/BoulderBarChart";
 import { FlatList } from "react-native";
-import BoulderCard from "../../../components/listComponents/BoulderCard";
+import BoulderCard from "../../../components/list/BoulderCard";
 
 const ProfileStatsSectionScreen = ({ route, navigation }) => {
   const { section } = route.params;

@@ -40,6 +40,7 @@ const request = async (method, endpoint, data = null) => {
     return response;
   } catch (error) {
     console.error(`${method} error at ${endpoint}: ${error}`);
+
     return null;
   }
 };

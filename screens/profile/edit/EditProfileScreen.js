@@ -1,6 +1,6 @@
 import { View, Text, SafeAreaView } from "react-native";
 import React, { useEffect, useState } from "react";
-import SettingsButton from "../../../components/editGymComponents/SettingsButton";
+import SettingsButton from "../../../components/SettingsButton";
 import { useDispatch, useSelector } from "react-redux";
 import { setHeadshotImage } from "../../../redux/actions";
 import { request } from "../../../api/requestMethods";

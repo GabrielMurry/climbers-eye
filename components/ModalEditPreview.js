@@ -46,6 +46,7 @@ const ModalEditPreview = ({
   const { spraywalls, spraywallIndex } = useSelector(
     (state) => state.spraywallReducer
   );
+  const { user } = useSelector((state) => state.userReducer);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [isMatching, setIsMatching] = useState(true);
@@ -66,11 +67,13 @@ const ModalEditPreview = ({
       description,
       publish,
       matching: isMatching,
-      feet_follow_hands: isFeetFollowHands,
-      kickboard_on: isKickboardOn,
-      image_data: resultImageUri.split(",")[1], // using the default image has complete base64 as image.uri --> remove the 'data:image/png;base64' in the beginning of string
-      image_width: image.width,
-      image_height: image.height,
+      feetFollowHands: isFeetFollowHands,
+      kickboardOn: isKickboardOn,
+      url: resultImageUri.split(",")[1], // using the default image has complete base64 as image.uri --> remove the 'data:image/png;base64' in the beginning of string
+      width: image.width,
+      height: image.height,
+      setter: user.id,
+      spraywall: spraywalls[spraywallIndex].id,
     };
     setIsLoading(true);
     const response = await request(

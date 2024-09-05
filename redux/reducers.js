@@ -2,10 +2,12 @@ import { boulderGrades } from "../utils/constants/boulderConstants";
 import {
   SET_USER,
   SET_GYM,
+  UPDATE_GYM,
   SET_SPRAYWALLS,
   APPEND_SPRAYWALLS,
   SET_SPRAYWALL_INDEX,
   DELETE_SPRAYWALL,
+  UPDATE_SPRAYWALL,
   SET_FILTER_SORT_BY,
   SET_FILTER_MIN_GRADE_INDEX,
   SET_FILTER_MAX_GRADE_INDEX,
@@ -51,6 +53,11 @@ export function gymReducer(state = initialState, action) {
   switch (action.type) {
     case SET_GYM:
       return { ...state, gym: action.payload };
+    case UPDATE_GYM:
+      return {
+        ...state,
+        gym: { ...state.gym, ...action.payload },
+      };
     default:
       return state;
   }
@@ -74,6 +81,15 @@ export function spraywallReducer(state = initialState, action) {
         ...state,
         spraywalls: state.spraywalls.filter(
           (spraywall) => spraywall.id !== action.payload
+        ),
+      };
+    case UPDATE_SPRAYWALL:
+      return {
+        ...state,
+        spraywalls: state.spraywalls.map((spraywall) =>
+          spraywall.id === action.payload.spraywallId
+            ? { ...spraywall, ...action.payload.updates }
+            : spraywall
         ),
       };
     default:

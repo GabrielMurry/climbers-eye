@@ -16,9 +16,6 @@ const axiosRefreshAPI = axios.create({
 });
 
 async function refreshTokenService() {
-  const method = "post";
-  const endpoint = "update_token/";
-
   const csrfToken = await AsyncStorage.getItem("csrfToken");
   const currentAccessToken = await AsyncStorage.getItem("accessToken");
   const currentRefreshToken = await AsyncStorage.getItem("refreshToken");
@@ -29,7 +26,7 @@ async function refreshTokenService() {
   axiosRefreshAPI.defaults.headers.common["Referer"] = REFERER;
 
   // EXECUTE
-  const response = await axiosRefreshAPI.post(`update_token/`, data);
+  const response = await axiosRefreshAPI.post(`api/update_token/`, data);
 
   const { accessToken, refreshToken } = response.data;
 
