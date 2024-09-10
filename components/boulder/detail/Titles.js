@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet } from "react-native";
 import React from "react";
 import { StarIcon } from "react-native-heroicons/outline";
-import { boulderGrades } from "../../utils/constants/boulderConstants";
+import { boulderGrades } from "../../../utils/constants/boulderConstants";
 
 const Titles = ({ boulder }) => {
   return (

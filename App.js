@@ -27,7 +27,7 @@ import AddNewCircuitScreen from "./screens/circuit/AddNewCircuitScreen";
 import ReportBoulderScreen from "./screens/boulder/ReportBoulderScreen";
 import BoulderUserSendsScreen from "./screens/boulder/BoulderUserSendsScreen";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import Tabs from "./navigation/Tabs";
+import Tabs from "./navigationTabs/Tabs";
 import PrivacyPolicyScreen from "./screens/auth/PrivacyPolicyScreen";
 import { PersistGate } from "redux-persist/integration/react";
 import { FontProvider } from "./contexts/FontContext";

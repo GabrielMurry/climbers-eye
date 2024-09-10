@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import EditData from "../../components/EditData";
+import SettingsTextInput from "../../components/custom/SettingsTextInput";
 import useCustomHeader from "../../hooks/useCustomHeader";
 
 const EditGymLocationScreen = ({ navigation }) => {
@@ -61,7 +61,7 @@ const EditGymLocationScreen = ({ navigation }) => {
           justifyContent: "space-between",
         }}
       >
-        <EditData
+        <SettingsTextInput
           text={newGymLocation}
           setText={setNewGymLocation}
           description={"Gym location (address) to be displayed to all users."}

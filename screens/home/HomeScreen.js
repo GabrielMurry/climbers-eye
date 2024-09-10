@@ -16,7 +16,7 @@ import {
   resetBoulders,
   bouldersError,
 } from "../../redux/actions";
-import ModalOptions from "../../components/ModalOptions";
+import ModalOptions from "../../components/custom/ModalOptions";
 import ListHeader from "../../components/list/ListHeader";
 
 const THEME_STYLE = "white";

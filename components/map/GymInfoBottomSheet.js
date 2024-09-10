@@ -7,8 +7,8 @@ import {
 } from "react-native";
 import { XMarkIcon } from "react-native-heroicons/outline";
 import { colors } from "../../utils/styles";
-import CustomButton from "../CustomButton";
-import FullScreenImage from "../FullScreenImage";
+import CustomButton from "../custom/CustomButton";
+import FullScreenImage from "../image/FullScreenImage";
 import { useState } from "react";
 import FlatListSpraywalls from "../list/FlatListSpraywalls";
 

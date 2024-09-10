@@ -15,17 +15,11 @@ import LogbookBoulderCard from "../../../components/profile/LogbookBoulderCard";
 import { request } from "../../../api/requestMethods";
 import { useSelector } from "react-redux";
 import { useFocusEffect } from "@react-navigation/native";
-import {
-  boulderBarChartDataTemplate,
-  boulderGrades,
-} from "../../../utils/constants/boulderConstants";
+import { boulderBarChartDataTemplate } from "../../../utils/constants/boulderConstants";
 import useCustomHeader from "../../../hooks/useCustomHeader";
-import BoulderBarChart from "../../../components/boulderStats/BoulderBarChart";
 import { EllipsisHorizontalIcon } from "react-native-heroicons/outline";
-import ModalOptions from "../../../components/ModalOptions";
-import { Skia } from "@shopify/react-native-skia";
-import BarChartTest from "../../../components/boulderStats/BarChartTest";
-import BarChartHorizontal from "../../../components/boulderStats/BarChartHorizontal";
+import ModalOptions from "../../../components/custom/ModalOptions";
+import BarChartHorizontal from "../../../components/boulder/stats/BarChartHorizontal";
 
 const ProfileBoulderSectionScreen = ({ route, navigation }) => {
   const { section } = route.params;

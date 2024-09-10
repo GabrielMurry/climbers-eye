@@ -1,6 +1,6 @@
 import { View, Text, Alert } from "react-native";
 import React from "react";
-import SettingsButton from "../SettingsButton";
+import SettingsButton from "../custom/SettingsButton";
 import { request } from "../../api/requestMethods";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";

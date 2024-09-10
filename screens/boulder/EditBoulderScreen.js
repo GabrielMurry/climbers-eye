@@ -3,22 +3,15 @@ import {
   Text,
   StyleSheet,
   Image,
-  SafeAreaView,
   TouchableOpacity,
   Dimensions,
 } from "react-native";
-import React, {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { useCallback, useLayoutEffect, useRef, useState } from "react";
 import { SketchCanvas } from "rn-perfect-sketch-canvas";
 import ReactNativeZoomableView from "@openspacelabs/react-native-zoomable-view/src/ReactNativeZoomableView";
-import ItemEditBar from "../../components/ItemEditBar";
-import BrushSize from "../../components/BrushSize";
-import ModalEditPreview from "../../components/ModalEditPreview";
+import ItemEditBar from "../../components/boulder/paint/ItemEditBar";
+import BrushSize from "../../components/boulder/paint/BrushSize";
+import ModalEditPreview from "../../components/boulder/ModalEditPreview";
 import { captureRef } from "react-native-view-shot";
 import { useFocusEffect } from "@react-navigation/native";
 import { request } from "../../api/requestMethods";
@@ -169,7 +162,7 @@ const EditBoulderScreen = ({ route, navigation }) => {
           </View>
           <Image
             ref={snapshotPhotoRef}
-            source={{ uri: image.url }}
+            source={{ uri: image.uri }}
             style={styles.image(image, imageScaleDownFactor)}
           />
         </ReactNativeZoomableView>

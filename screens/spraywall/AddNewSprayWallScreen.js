@@ -21,11 +21,7 @@ const AddNewSprayWallScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
   const { gym } = useSelector((state) => state.gymReducer);
   const [sprayWallName, setSprayWallName] = useState("");
-  const [image, setImage] = useState({
-    url: null,
-    width: null,
-    height: null,
-  });
+  const { image } = route.params;
   const [isDisabled, setIsDisabled] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -36,42 +32,12 @@ const AddNewSprayWallScreen = ({ navigation, route }) => {
   });
 
   useEffect(() => {
-    if (route?.params?.image) {
-      const { image } = route.params;
-      setImage({
-        url: image.url,
-        width: image.width,
-        height: image.height,
-      });
-    }
-  }, [route]);
-
-  useEffect(() => {
     if (sprayWallName && image) {
       setIsDisabled(false);
     } else {
       setIsDisabled(true);
     }
   }, [sprayWallName, image]);
-
-  const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: false,
-      aspect: [4, 3],
-      quality: 1,
-      base64: true,
-    });
-    if (result && !result.canceled) {
-      const { base64, width, height } = result.assets[0];
-      setImage({
-        url: "data:image/png;base64," + base64,
-        width: width,
-        height: height,
-      });
-    }
-  };
 
   const handleAddNewSprayWall = async () => {
     setIsLoading(true);
@@ -111,79 +77,21 @@ const AddNewSprayWallScreen = ({ navigation, route }) => {
           />
         </View>
         <View style={styles.imageContainer}>
-          {image.url ? (
-            <View
+          <View
+            style={{
+              width: "100%",
+              height: "100%",
+              justifyContent: "center",
+            }}
+          >
+            <Image
+              source={{ uri: image.uri }}
               style={{
-                width: "100%",
-                height: "100%",
-                justifyContent: "center",
+                flex: 1,
               }}
-            >
-              <Image
-                source={{ uri: image.url }}
-                style={{
-                  flex: 1,
-                }}
-                resizeMode="contain"
-              />
-              <View
-                style={{
-                  justifyContent: "space-evenly",
-                  padding: 10,
-                  flexDirection: "row",
-                }}
-              >
-                <TouchableOpacity
-                  style={{
-                    width: 60,
-                    height: 60,
-                    borderWidth: 1,
-                    borderColor: "black",
-                    borderRadius: 10,
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                  onPress={() =>
-                    navigation.navigate("Camera", { screen: "AddNewSprayWall" })
-                  }
-                >
-                  <CameraIcon size={25} color="black" />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={{
-                    width: 60,
-                    height: 60,
-                    borderWidth: 1,
-                    borderColor: "black",
-                    borderRadius: 10,
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                  onPress={pickImage}
-                >
-                  <PhotoIcon size={25} color="black" />
-                </TouchableOpacity>
-              </View>
-            </View>
-          ) : (
-            <>
-              <TouchableOpacity
-                style={styles.imageButton}
-                onPress={() =>
-                  navigation.navigate("Camera", { screen: "AddNewSprayWall" })
-                }
-              >
-                <CameraIcon size={30} color="black" />
-                <Text style={styles.imageButtonText}>Take Picture of</Text>
-                <Text style={styles.imageButtonText}>Spray Wall</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.imageButton} onPress={pickImage}>
-                <PhotoIcon size={30} color="black" />
-                <Text style={styles.imageButtonText}>Select Photo</Text>
-                <Text style={styles.imageButtonText}>From Album</Text>
-              </TouchableOpacity>
-            </>
-          )}
+              resizeMode="contain"
+            />
+          </View>
         </View>
         <TouchableOpacity
           style={{

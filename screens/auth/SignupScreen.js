@@ -7,9 +7,9 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import CustomInput from "../../components/CustomInput";
-import CustomButton from "../../components/CustomButton";
-import SocialSignInButtons from "../../components/SocialSignInButtons";
+import CustomInput from "../../components/custom/CustomInput";
+import CustomButton from "../../components/custom/CustomButton";
+import SocialSignInButtons from "../../components/custom/SocialSignInButtons";
 import { request } from "../../api/requestMethods";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../redux/actions";

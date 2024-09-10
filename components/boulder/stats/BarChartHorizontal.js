@@ -12,7 +12,7 @@ import AnimatedText from "./AnimatedText";
 import { useSharedValue, withTiming } from "react-native-reanimated";
 import BarPathHorizontal from "./BarPathHorizontal";
 import YAxisText from "./YAxisText";
-import { useFonts } from "../../contexts/FontContext";
+import { useFonts } from "../../../contexts/FontContext";
 
 const BarChartHorizontal = ({
   data,

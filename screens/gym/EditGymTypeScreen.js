@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import EditData from "../../components/EditData";
+import SettingsTextInput from "../../components/custom/SettingsTextInput";
 import useCustomHeader from "../../hooks/useCustomHeader";
 
 const EditGymTypeScreen = ({ navigation }) => {
@@ -106,7 +106,7 @@ const EditGymTypeScreen = ({ navigation }) => {
               />
             </View>
           </View>
-          <EditData
+          <SettingsTextInput
             description={
               'Choosing "Commercial Gym" requires an address of the gym. "Home Gym" remains private.'
             }

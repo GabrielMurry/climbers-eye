@@ -10,7 +10,6 @@ const SpraywallCard = ({
   highlight,
 }) => {
   const { spraywallIndex } = useSelector((state) => state.spraywallReducer);
-  console.log("======");
 
   return (
     <Pressable

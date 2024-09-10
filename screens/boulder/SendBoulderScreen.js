@@ -17,7 +17,7 @@ import { useSelector } from "react-redux";
 import { boulderGrades } from "../../utils/constants/boulderConstants";
 import * as Haptics from "expo-haptics";
 import useCustomHeader from "../../hooks/useCustomHeader";
-import CustomButton from "../../components/CustomButton";
+import CustomButton from "../../components/custom/CustomButton";
 import { colors } from "../../utils/styles";
 import { useDispatch } from "react-redux";
 import { updateBoulder } from "../../redux/actions";

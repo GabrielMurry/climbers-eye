@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import EditData from "../../components/EditData";
+import SettingsTextInput from "../../components/custom/SettingsTextInput";
 import useCustomHeader from "../../hooks/useCustomHeader";
 import { updateSpraywall } from "../../redux/actions";
 
@@ -72,7 +72,7 @@ const EditSpraywallNameScreen = ({ navigation, route }) => {
           justifyContent: "space-between",
         }}
       >
-        <EditData
+        <SettingsTextInput
           text={newSprayWallName}
           setText={setNewSprayWallName}
           description={"Spray wall name to be displayed to all users."}

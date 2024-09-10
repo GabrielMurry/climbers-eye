@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { SafeAreaView, StyleSheet, Text, View } from "react-native";
-import CustomInput from "../../components/CustomInput";
-import CustomButton from "../../components/CustomButton";
+import CustomInput from "../../components/custom/CustomInput";
+import CustomButton from "../../components/custom/CustomButton";
 import {
   ArrowLongRightIcon,
   EnvelopeIcon,

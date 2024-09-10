@@ -1,8 +1,7 @@
 import { StyleSheet, Text, View } from "react-native";
-import React, { useEffect } from "react";
+import React from "react";
 import useCustomHeader from "../../hooks/useCustomHeader";
-import BarChartHorizontal from "../../components/boulderStats/BarChartHorizontal";
-import { useSelector } from "react-redux";
+import BarChartHorizontal from "../../components/boulder/stats/BarChartHorizontal";
 
 const BoulderStatsScreen = ({ route, navigation }) => {
   const { boulder, chartData } = route.params;

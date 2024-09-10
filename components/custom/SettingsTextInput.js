@@ -2,7 +2,7 @@ import { View, Text } from "react-native";
 import React from "react";
 import { TextInput } from "react-native";
 
-const EditData = ({
+const SettingsTextInput = ({
   text = null,
   setText = null,
   description,
@@ -36,4 +36,4 @@ const EditData = ({
   );
 };
 
-export default EditData;
+export default SettingsTextInput;

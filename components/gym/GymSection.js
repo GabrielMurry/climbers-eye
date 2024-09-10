@@ -1,6 +1,6 @@
 import { View, Text } from "react-native";
 import React from "react";
-import SettingsButton from "../SettingsButton";
+import SettingsButton from "../custom/SettingsButton";
 
 const GymSection = ({ navigation }) => {
   return (

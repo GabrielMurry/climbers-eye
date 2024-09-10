@@ -2,11 +2,11 @@ import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
 import React, { useMemo } from "react";
 import { LinkIcon } from "react-native-heroicons/outline";
 import { FontAwesome } from "@expo/vector-icons";
-import { request } from "../../api/requestMethods";
+import { request } from "../../../api/requestMethods";
 import * as Haptics from "expo-haptics";
 import { useDispatch } from "react-redux";
 import _ from "lodash";
-import { updateBoulder } from "../../redux/actions";
+import { updateBoulder } from "../../../redux/actions";
 
 const InfoRow1 = ({ boulder, userID, navigation }) => {
   const dispatch = useDispatch();

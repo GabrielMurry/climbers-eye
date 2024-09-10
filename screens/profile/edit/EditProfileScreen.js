@@ -1,12 +1,12 @@
 import { View, Text, SafeAreaView } from "react-native";
 import React, { useEffect, useState } from "react";
-import SettingsButton from "../../../components/SettingsButton";
+import SettingsButton from "../../../components/custom/SettingsButton";
 import { useDispatch, useSelector } from "react-redux";
 import { setHeadshotImage } from "../../../redux/actions";
 import { request } from "../../../api/requestMethods";
 import * as ImagePicker from "expo-image-picker";
 import useCustomHeader from "../../../hooks/useCustomHeader";
-import ModalOptions from "../../../components/ModalOptions";
+import ModalOptions from "../../../components/custom/ModalOptions";
 
 const EditProfileScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();

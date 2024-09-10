@@ -2,7 +2,7 @@ import { View, Text, Image, Pressable } from "react-native";
 import React, { useState } from "react";
 import { UserIcon } from "react-native-heroicons/outline";
 import { useSelector } from "react-redux";
-import FullScreenImage from "../FullScreenImage";
+import FullScreenImage from "../image/FullScreenImage";
 
 const Header = ({ navigation }) => {
   const { user } = useSelector((state) => state.userReducer);

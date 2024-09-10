@@ -7,7 +7,7 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import useCustomHeader from "../../hooks/useCustomHeader";
-import CustomButton from "../../components/CustomButton";
+import CustomButton from "../../components/custom/CustomButton";
 import { CheckIcon } from "react-native-heroicons/outline";
 
 const ReportBoulderScreen = ({ navigation }) => {

@@ -9,7 +9,7 @@ import CircuitsSection from "../../components/profile/CircuitsSection";
 import GymSection from "../../components/profile/GymSection";
 import { Text } from "react-native";
 import { EllipsisHorizontalIcon } from "react-native-heroicons/outline";
-import ModalOptions from "../../components/ModalOptions";
+import ModalOptions from "../../components/custom/ModalOptions";
 import StatsSection from "../../components/profile/StatsSection";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { CommonActions } from "@react-navigation/native";

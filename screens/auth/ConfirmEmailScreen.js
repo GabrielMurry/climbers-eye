@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { SafeAreaView, StyleSheet, Text } from "react-native";
-import CustomInput from "../../components/CustomInput";
-import CustomButton from "../../components/CustomButton";
-import SocialSignInButtons from "../../components/SocialSignInButtons";
+import CustomInput from "../../components/custom/CustomInput";
+import CustomButton from "../../components/custom/CustomButton";
+import SocialSignInButtons from "../../components/custom/SocialSignInButtons";
 
 const ConfirmEmailScreen = ({ navigation }) => {
   const [code, setCode] = useState("");

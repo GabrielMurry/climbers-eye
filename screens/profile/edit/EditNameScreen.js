@@ -11,7 +11,7 @@ import { SafeAreaView } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { request } from "../../../api/requestMethods";
 import { setUser } from "../../../redux/actions";
-import EditData from "../../../components/EditData";
+import SettingsTextInput from "../../../components/custom/SettingsTextInput";
 import { colors } from "../../../utils/styles";
 
 const CHAR_LIMIT = 30;
@@ -104,7 +104,7 @@ const EditNameScreen = ({ navigation }) => {
           flex: 1,
         }}
       >
-        <EditData
+        <SettingsTextInput
           text={newName}
           setText={setNewName}
           description={"Nickname to be displayed to all users."}

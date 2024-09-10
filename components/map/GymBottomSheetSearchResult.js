@@ -1,7 +1,7 @@
 import { BottomSheetFlatList } from "@gorhom/bottom-sheet";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { PlusIcon } from "react-native-heroicons/outline";
-import GymCard from "../GymCard";
+import GymCard from "../gym/GymCard";
 import { useCallback } from "react";
 
 const GymBottomSheetSearchResult = ({

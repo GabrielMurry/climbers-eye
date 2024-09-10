@@ -2,7 +2,7 @@ import { View, Text } from "react-native";
 import React from "react";
 import useCustomHeader from "../../hooks/useCustomHeader";
 import { useSelector } from "react-redux";
-import SettingsButton from "../../components/SettingsButton";
+import SettingsButton from "../../components/custom/SettingsButton";
 
 const EditSpraywallScreen = ({ navigation, route }) => {
   const index = route?.params?.index;

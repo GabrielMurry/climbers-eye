@@ -9,10 +9,10 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import useCustomHeader from "../../hooks/useCustomHeader";
-import CustomInput from "../../components/CustomInput";
+import CustomInput from "../../components/custom/CustomInput";
 import { request } from "../../api/requestMethods";
 import { useSelector } from "react-redux";
-import CustomButton from "../../components/CustomButton";
+import CustomButton from "../../components/custom/CustomButton";
 import { colors } from "../../utils/styles";
 
 const AddNewCircuitScreen = ({ navigation }) => {

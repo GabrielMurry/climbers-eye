@@ -2,7 +2,7 @@ import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
 import { ArrowLongRightIcon } from "react-native-heroicons/outline";
 import { FontAwesome } from "@expo/vector-icons";
-import { colors } from "../../utils/styles";
+import { colors } from "../../../utils/styles";
 
 const InfoRow2 = ({ boulder, chartData, userSendsData, navigation }) => {
   // console.log(boulder);

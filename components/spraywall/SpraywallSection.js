@@ -1,7 +1,7 @@
 import { View, Text, FlatList } from "react-native";
 import React from "react";
 import { useSelector } from "react-redux";
-import SettingsButton from "../SettingsButton";
+import SettingsButton from "../custom/SettingsButton";
 
 const SpraywallSection = ({ navigation }) => {
   const { spraywalls } = useSelector((state) => state.spraywallReducer);

@@ -14,15 +14,15 @@ import {
   Dimensions,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import FullScreenImage from "./FullScreenImage";
-import { request } from "../api/requestMethods";
+import FullScreenImage from "../image/FullScreenImage";
+import { request } from "../../api/requestMethods";
 import { useSelector } from "react-redux";
-import CustomInput from "./CustomInput";
-import CustomButton from "./CustomButton";
+import CustomInput from "../custom/CustomInput";
+import CustomButton from "../custom/CustomButton";
 import * as Haptics from "expo-haptics";
 import { ChevronLeftIcon } from "react-native-heroicons/outline";
-import { colors } from "../utils/styles";
-import { addNewBoulder } from "../redux/actions";
+import { colors } from "../../utils/styles";
+import { addNewBoulder } from "../../redux/actions";
 import { useDispatch } from "react-redux";
 
 const TAGS = [
