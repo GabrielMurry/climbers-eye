@@ -22,13 +22,6 @@ const ProfileScreen = ({ navigation }) => {
   const { spraywalls, spraywallIndex } = useSelector(
     (state) => state.spraywallReducer
   );
-
-  const [bouldersSectionQuickData, setBouldersSectionQuickData] = useState([
-    { section: "Logbook", data: 0 },
-    { section: "Likes", data: 0 },
-    { section: "Bookmarks", data: 0 },
-    { section: "Creations", data: 0 },
-  ]);
   const [statsSectionQuickData, setStatsSectionQuickData] = useState([
     { section: "Top Grade", data: 0 },
     { section: "Flashes", data: 0 },
@@ -62,56 +55,6 @@ const ProfileScreen = ({ navigation }) => {
     });
   }, [navigation, isHeaderTitleVisible]);
 
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     fetchProfileQuickData();
-  //   }, [gym, spraywalls, spraywallIndex])
-  // );
-
-  const fetchProfileQuickData = async () => {
-    const response = await request(
-      "get",
-      `profile_quick_data/${user.id}/${spraywalls[spraywallIndex].id}`
-    );
-    if (response.status !== 200) {
-      console.log(response.status);
-      return;
-    }
-    if (response.data) {
-      setBouldersSectionQuickData(response.data.bouldersSectionQuickData);
-      setStatsSectionQuickData(response.data.statsSectionQuickData);
-      setCircuits(response.data.circuitsSectionQuickData);
-    }
-  };
-
-  const handleSwitchGymPress = () => {
-    setIsModalVisible(false);
-    navigation.navigate("SwitchGym");
-  };
-  const handleEditProfilePress = () => {
-    setIsModalVisible(false);
-    navigation.navigate("EditProfile");
-  };
-  const handleLogoutPress = async () => {
-    setIsModalVisible(false);
-    const refreshToken = await AsyncStorage.getItem("refreshToken");
-    const response = await request("post", "api/logout/", {
-      refresh: refreshToken,
-    });
-    if (response.status === 200) {
-      // Clear tokens from storage
-      await AsyncStorage.removeItem("accessToken");
-      await AsyncStorage.removeItem("refreshToken");
-      // Reset the navigation stack and navigate to the login screen
-      navigation.dispatch(
-        CommonActions.reset({
-          index: 0,
-          routes: [{ name: "Login" }],
-        })
-      );
-    }
-  };
-
   const handleScroll = (event) => {
     const offsetY = event.nativeEvent.contentOffset.y;
     const threshold = 50; // Change this value to your desired threshold
@@ -123,23 +66,20 @@ const ProfileScreen = ({ navigation }) => {
     }
   };
 
-  const optionsData = [
-    { title: "Switch Gym", onPress: handleSwitchGymPress },
-    { title: "Edit Profile", onPress: handleEditProfilePress },
-    { title: "Log out", onPress: handleLogoutPress, color: "red" },
-    { title: "Cancel", onPress: () => setIsModalVisible(false), color: "gray" },
-  ];
+  // const optionsData = [
+  //   { title: "Switch Gym", onPress: handleSwitchGymPress },
+  //   { title: "Edit Profile", onPress: handleEditProfilePress },
+  //   { title: "Log out", onPress: handleLogoutPress, color: "red" },
+  //   { title: "Cancel", onPress: () => setIsModalVisible(false), color: "gray" },
+  // ];
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: THEME_STYLE }}>
       {/* screen */}
       <ScrollView onScroll={handleScroll} scrollEventThrottle={16}>
         <Header navigation={navigation} />
-        <GymSection navigation={navigation} />
-        <BouldersSection
-          bouldersSectionQuickData={bouldersSectionQuickData}
-          navigation={navigation}
-        />
+        <GymSection />
+        <BouldersSection navigation={navigation} />
         <StatsSection
           statsSectionQuickData={statsSectionQuickData}
           navigation={navigation}
@@ -147,11 +87,11 @@ const ProfileScreen = ({ navigation }) => {
         <CircuitsSection circuits={circuits} navigation={navigation} />
       </ScrollView>
       {/* modal */}
-      <ModalOptions
+      {/* <ModalOptions
         isModalVisible={isModalVisible}
         setIsModalVisible={setIsModalVisible}
         optionsData={optionsData}
-      />
+      /> */}
     </SafeAreaView>
   );
 };

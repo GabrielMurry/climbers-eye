@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -8,31 +8,23 @@ import {
   Switch,
   SafeAreaView,
   Alert,
-  Image,
   ActivityIndicator,
 } from "react-native";
-// import { CameraIcon, PhotoIcon } from "react-native-heroicons/outline";
 import { request } from "../../api/requestMethods";
-import * as ImagePicker from "expo-image-picker";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import useCustomHeader from "../../hooks/useCustomHeader";
 import { setGym, setSpraywalls } from "../../redux/actions";
 import { CommonActions } from "@react-navigation/native";
+import AddressTextInput from "../../components/googlePlacesAutoComplete/AddressTextInput";
 
 const AddGymScreen = ({ navigation }) => {
   const dispatch = useDispatch();
-  // const { user } = useSelector((state) => state.userReducer);
 
   const [isCommercialGym, setIsCommercialGym] = useState(true);
   const [gymName, setGymName] = useState("");
-  const [gymLocation, setGymLocation] = useState("");
-  // const [image, setImage] = useState({
-  //   url: null,
-  //   width: null,
-  //   height: null,
-  // });
-  // const [sprayWallName, setSprayWallName] = useState("");
+  const [gymAddress, setGymAddress] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [addressSuggestions, setAddressSuggestions] = useState([]); // Autocomplete results
 
   useCustomHeader({
     navigation,
@@ -52,14 +44,8 @@ const AddGymScreen = ({ navigation }) => {
             const data = {
               name: gymName,
               type: isCommercialGym ? "commercial" : "home",
-              location: gymLocation,
+              location: gymAddress,
             };
-            // spraywall: {
-            //   name: sprayWallName,
-            //   image_data: image.url.split(",")[1],
-            //   image_width: image.width,
-            //   image_height: image.height,
-            // },
             const response = await request("post", `api/gym_list/`, data);
             if (response.status === 201) {
               dispatch(setGym(response.data));
@@ -79,25 +65,6 @@ const AddGymScreen = ({ navigation }) => {
       ],
       { cancelable: false }
     );
-  };
-
-  const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: false,
-      aspect: [4, 3],
-      quality: 1,
-      base64: true,
-    });
-    if (result && !result.canceled) {
-      const { base64, width, height } = result.assets[0];
-      setImage({
-        url: "data:image/png;base64," + base64,
-        width: width,
-        height: height,
-      });
-    }
   };
 
   return (
@@ -143,99 +110,15 @@ const AddGymScreen = ({ navigation }) => {
           </View>
           <View style={styles.locationContainer(isCommercialGym)}>
             <Text style={styles.label}>Gym Address:</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Enter gym address"
-              value={gymLocation}
-              onChangeText={(text) => setGymLocation(text)}
-              editable={isCommercialGym}
+            <AddressTextInput
+              input={gymAddress}
+              setInput={setGymAddress}
+              suggestions={addressSuggestions}
+              setSuggestions={setAddressSuggestions}
+              placeholder={"Enter gym address"}
             />
           </View>
         </View>
-        {/* <View style={styles.addNewSprayWallContainer}>
-          <View style={styles.inputAndAddContainer}>
-            <Text style={styles.label}>Spray Wall Name:</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Enter spray wall name"
-              value={sprayWallName}
-              onChangeText={(text) => setSprayWallName(text)}
-            />
-          </View>
-          <View style={styles.imageContainer}>
-            {image.url ? (
-              <View
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  flexDirection: "row",
-                  justifyContent: "center",
-                }}
-              >
-                <Image
-                  source={{ uri: image.url }}
-                  style={{
-                    flex: 1,
-                  }}
-                  resizeMode="contain"
-                />
-                <View style={{ justifyContent: "space-evenly", padding: 10 }}>
-                  <TouchableOpacity
-                    style={{
-                      width: 60,
-                      height: 60,
-                      borderWidth: 1,
-                      borderColor: "black",
-                      borderRadius: 10,
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                    onPress={() =>
-                      navigation.navigate("Camera", { screen: "AddGym" })
-                    }
-                  >
-                    <CameraIcon size={25} color="black" />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={{
-                      width: 60,
-                      height: 60,
-                      borderWidth: 1,
-                      borderColor: "black",
-                      borderRadius: 10,
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                    onPress={pickImage}
-                  >
-                    <PhotoIcon size={25} color="black" />
-                  </TouchableOpacity>
-                </View>
-              </View>
-            ) : (
-              <>
-                <TouchableOpacity
-                  style={styles.imageButton}
-                  onPress={() =>
-                    navigation.navigate("Camera", { screen: "AddGym" })
-                  }
-                >
-                  <CameraIcon size={30} color="black" />
-                  <Text style={styles.imageButtonText}>Take Picture of</Text>
-                  <Text style={styles.imageButtonText}>Spray Wall</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.imageButton}
-                  onPress={pickImage}
-                >
-                  <PhotoIcon size={30} color="black" />
-                  <Text style={styles.imageButtonText}>Select Photo</Text>
-                  <Text style={styles.imageButtonText}>From Album</Text>
-                </TouchableOpacity>
-              </>
-            )}
-          </View>
-        </View> */}
         <TouchableOpacity style={styles.addButton} onPress={handleAddGym}>
           {isLoading ? (
             <ActivityIndicator color="white" />

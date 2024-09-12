@@ -24,9 +24,13 @@ const THEME_STYLE = "white";
 const HomeScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const { gym } = useSelector((state) => state.gymReducer);
+  const { user } = useSelector((state) => state.userReducer);
   const { spraywalls, spraywallIndex } = useSelector(
     (state) => state.spraywallReducer
   );
+
+  console.log(user);
+
   const {
     filterMinGradeIndex,
     filterMaxGradeIndex,
@@ -54,14 +58,6 @@ const HomeScreen = ({ navigation }) => {
   }, []);
 
   useEffect(() => {
-    for (let i = 0; i < spraywalls.length; i++) {
-      console.log(spraywalls[i].url);
-    }
-    // https://sprayimages.s3.amazonaws.com/images/96c03b65-f790-40d5-91d2-a8a3670c4e7e.jpg
-  }, [spraywalls]);
-
-  useEffect(() => {
-    console.log("helloooo");
     dispatch(resetBoulders());
     setPage(1);
     fetchListData(1);
@@ -101,12 +97,9 @@ const HomeScreen = ({ navigation }) => {
 
   const fetchListData = async (page) => {
     var startTime = performance.now();
-    console.log("---");
     if (isLoading || page === null || spraywalls.length === 0) {
-      console.log(isLoading, page, spraywalls.length);
       return;
     }
-    console.log("+++");
 
     setIsLoading(true);
 
@@ -203,11 +196,10 @@ const HomeScreen = ({ navigation }) => {
         <FlatList
           data={boulders}
           renderItem={renderBoulderCard}
-          keyExtractor={(item) =>
-            item.uuid ? item.uuid.toString() : item.id.toString()
-          }
+          keyExtractor={(item) => item.id.toString()}
           keyboardShouldPersistTaps="handled" // click on search bar cancel buttons when Keyboard is visible (or click on boulder cards)
           onEndReached={() => fetchListData(page)}
+          onEndReachedThreshold={0.2} // represents the number of screen lengths you should be from the bottom before it fires the event
           ListHeaderComponent={renderListHeader()}
           ListFooterComponent={() => isLoading && <ActivityIndicator />}
           onRefresh={onRefresh}
@@ -226,122 +218,8 @@ const HomeScreen = ({ navigation }) => {
 export default HomeScreen;
 
 const styles = StyleSheet.create({
-  titleText: {
-    fontSize: 28,
-    fontWeight: "bold",
-  },
-  subTitleText: {
-    fontSize: 24,
-  },
   listContainer: {
     flex: 1,
     rowGap: 10,
-  },
-  searchContainer: {
-    flex: 1,
-    flexDirection: "row",
-    backgroundColor: "#f1f1f1",
-    justifyContent: "center",
-    alignItems: "center",
-    paddingHorizontal: 20,
-    borderRadius: 10,
-    height: 35,
-  },
-  searchInput: {
-    width: "100%",
-    height: "100%",
-    paddingHorizontal: 5,
-  },
-  filterButton: (hasFilters) => ({
-    padding: 15,
-    backgroundColor: hasFilters ? "rgb(0, 122, 255)" : "white",
-    borderRadius: "100%",
-    position: "absolute",
-    bottom: 25,
-    left: 20,
-    // adding shadow to add new circuit button
-    shadowColor: "black",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 5, // Required for Android
-  }),
-  addNewBoulderButton: {
-    padding: 15,
-    backgroundColor: "white",
-    borderRadius: "100%",
-    position: "absolute",
-    bottom: 10,
-    right: 20,
-    // adding shadow to add new circuit button
-    shadowColor: "black",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 5, // Required for Android
-  },
-  modalContainer: {
-    flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-  },
-  modalContent: {
-    flex: 1,
-  },
-  displayContainer: {
-    width: "100%",
-    height: 325,
-    justifyContent: "center",
-    flexDirection: "row",
-    position: "absolute", //Here is the trick
-    bottom: 0, //Here is the trick
-  },
-  columnContainer: {
-    justifyContent: "flex-end",
-    alignItems: "center",
-    gap: 10,
-  },
-  buttonTextSmall: {
-    width: 125,
-    height: 40,
-    justifyContent: "center",
-    alignItems: "flex-end",
-  },
-  buttonTextBig: {
-    width: 125,
-    height: 60,
-    justifyContent: "center",
-    alignItems: "flex-end",
-  },
-  buttonContainerIcon: {
-    width: "100%",
-    alignItems: "center",
-  },
-  buttonIconSmall: {
-    width: 40,
-    height: 40,
-    backgroundColor: "white",
-    borderRadius: "100%",
-    justifyContent: "center",
-    alignItems: "center",
-    // shadow
-    shadowColor: "black",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 5, // Required for Android
-  },
-  buttonIconBig: {
-    width: 60,
-    height: 60,
-    backgroundColor: "rgb(0, 122, 255)",
-    borderRadius: "100%",
-    justifyContent: "center",
-    alignItems: "center",
-    // shadow
-    shadowColor: "black",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 5, // Required for Android
   },
 });

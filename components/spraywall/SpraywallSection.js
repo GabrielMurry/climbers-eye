@@ -1,16 +1,11 @@
-import { View, Text, FlatList } from "react-native";
+import { View, Text } from "react-native";
 import React from "react";
 import { useSelector } from "react-redux";
 import SettingsButton from "../custom/SettingsButton";
 
 const SpraywallSection = ({ navigation }) => {
   const { spraywalls } = useSelector((state) => state.spraywallReducer);
-  const renderSpraywallSettingCards = ({ item }) => (
-    <SettingsButton
-      title={item.name}
-      onPress={() => navigation.navigate("EditGymType")}
-    />
-  );
+
   return (
     <View>
       <View
@@ -30,17 +25,6 @@ const SpraywallSection = ({ navigation }) => {
             onPress={() => navigation.navigate("EditSpraywall", { index })}
           />
         ))}
-        {/* <View
-          style={{
-            borderRadius: 5,
-            borderWidth: 1,
-          }}
-        >
-          <SettingsButton
-            title={"Add New Spray Wall"}
-            onPress={() => navigation.navigate("AddNewSprayWall")}
-          />
-        </View> */}
       </View>
     </View>
   );

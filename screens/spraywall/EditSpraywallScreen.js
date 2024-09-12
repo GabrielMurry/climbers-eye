@@ -3,6 +3,7 @@ import React from "react";
 import useCustomHeader from "../../hooks/useCustomHeader";
 import { useSelector } from "react-redux";
 import SettingsButton from "../../components/custom/SettingsButton";
+import DeleteSpraywall from "../../components/spraywall/DeleteSpraywall";
 
 const EditSpraywallScreen = ({ navigation, route }) => {
   const index = route?.params?.index;
@@ -39,6 +40,7 @@ const EditSpraywallScreen = ({ navigation, route }) => {
           onPress={() => navigation.navigate("EditSpraywallImage", { index })}
         />
       </View>
+      <DeleteSpraywall navigation={navigation} spraywall={spraywalls[index]} />
     </View>
   );
 };

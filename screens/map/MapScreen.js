@@ -1,7 +1,6 @@
-import { View, StyleSheet, TouchableOpacity, Keyboard } from "react-native";
+import { View, StyleSheet, Keyboard } from "react-native";
 import React, {
   useCallback,
-  useEffect,
   useLayoutEffect,
   useMemo,
   useRef,
@@ -12,14 +11,12 @@ import { useDispatch, useSelector } from "react-redux";
 import Geocoder from "react-native-geocoding";
 import { GOOGLE_MAPS_GEOCODER_API_KEY } from "@env";
 import { request } from "../../api/requestMethods";
-import GymCard from "../../components/gym/GymCard";
 import BottomSheet from "@gorhom/bottom-sheet";
 import FullScreenImage from "../../components/image/FullScreenImage";
 import GymInfoBottomSheet from "../../components/map/GymInfoBottomSheet";
 import MapSearchQuery from "../../components/map/MapSearchQuery";
 import Map from "../../components/map/Map";
 import MapSearchResults from "../../components/map/MapSearchResults";
-import { updateUserGym } from "../../utils/functions";
 import { setGym, setSpraywalls } from "../../redux/actions";
 import { useFocusEffect } from "@react-navigation/native";
 

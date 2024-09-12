@@ -1,7 +1,7 @@
 import { Image, StyleSheet } from "react-native";
 
 const ImagePreview = ({ image }) => {
-  return <Image source={{ uri: image.uri }} style={styles.camera} />;
+  return <Image source={{ uri: image.url }} style={styles.camera} />;
 };
 
 export default ImagePreview;

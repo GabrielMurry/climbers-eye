@@ -27,7 +27,7 @@ export default ModalButton;
 
 const styles = StyleSheet.create({
   modalButton: (colors) => ({
-    height: "90%",
+    width: 100,
     aspectRatio: 1,
     backgroundColor: colors.primaryLight,
     borderRadius: 10,
@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
     gap: 10,
   }),
   emphasizedModalButton: (colors) => ({
-    height: "90%",
+    width: 100,
     aspectRatio: 1,
     borderWidth: 1,
     borderColor: colors.primary,

@@ -87,13 +87,11 @@ const CustomModal = ({ isVisible, onClose, navigation, isBoulder = true }) => {
             </View>
             {/* image */}
             {isBoulder ? (
-              <View style={styles.image}>
-                <Image
-                  source={{ uri: spraywalls[spraywallIndex]?.url }}
-                  style={{ width: "100%", height: "100%" }}
-                  resizeMode="contain"
-                />
-              </View>
+              <Image
+                source={{ uri: spraywalls[spraywallIndex]?.url }}
+                style={styles.image}
+                resizeMode="contain"
+              />
             ) : null}
             {/* buttons */}
             <View style={styles.buttonContainer}>
@@ -143,26 +141,25 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 10,
     borderRadius: 10,
-    // paddingBottom: 35,
     position: "absolute", //Here is the trick
     bottom: 90, //Here is the trick
     alignSelf: "center",
   },
   titleContainer: {
-    height: 50,
+    padding: 10,
     justifyContent: "center",
   },
   title: { fontSize: 24, fontWeight: "bold" },
   image: {
     width: "100%",
     height: 225,
-    padding: 10,
   },
   buttonContainer: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-evenly",
+    padding: 10,
     width: "100%",
-    height: 100,
+    gap: 10,
   },
 });

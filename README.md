@@ -28,6 +28,7 @@ Full stack application:
 - Amazon S3 Buckets
 - AWS RDS
 - Heroku
+- Google Maps API: Geocoder and Places
 
 # Features
 Secure authentication with Django sessions and CSRF tokens.

@@ -162,7 +162,7 @@ const EditBoulderScreen = ({ route, navigation }) => {
           </View>
           <Image
             ref={snapshotPhotoRef}
-            source={{ uri: image.uri }}
+            source={{ uri: image.url }}
             style={styles.image(image, imageScaleDownFactor)}
           />
         </ReactNativeZoomableView>

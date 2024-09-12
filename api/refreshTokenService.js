@@ -2,8 +2,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { BASE_URL, REFERER } from "@env";
 
-console.log(BASE_URL);
-
 const axiosRefreshAPI = axios.create({
   baseURL: BASE_URL,
   withCredentials: true,

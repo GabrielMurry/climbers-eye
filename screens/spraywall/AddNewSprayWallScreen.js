@@ -85,7 +85,7 @@ const AddNewSprayWallScreen = ({ navigation, route }) => {
             }}
           >
             <Image
-              source={{ uri: image.uri }}
+              source={{ uri: image.url }}
               style={{
                 flex: 1,
               }}

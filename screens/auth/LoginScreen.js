@@ -50,6 +50,10 @@ const LoginScreen = ({ navigation }) => {
         profilePicUrl: user.profilePicUrl,
         profilePicWidth: user.profilePicWidth,
         profilePicHeight: user.profilePicHeight,
+        logbookCount: user.logbookCount,
+        likesCount: user.likesCount,
+        bookmarksCount: user.bookmarksCount,
+        creationsCount: user.creationsCount,
       };
       dispatch(setUser(userInfo));
       if (user.gym) {

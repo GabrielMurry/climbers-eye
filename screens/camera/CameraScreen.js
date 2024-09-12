@@ -59,7 +59,7 @@ const CameraScreen = ({ navigation, route }) => {
       quality: 0.7,
     });
     setImage({
-      uri: "data:image/png;base64," + imageData.base64,
+      url: "data:image/png;base64," + imageData.base64,
       width: imageData.width,
       height: imageData.height,
     });

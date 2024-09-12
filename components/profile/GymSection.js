@@ -9,7 +9,7 @@ import { Image } from "react-native";
 
 const width = Dimensions.get("window").width;
 
-const GymSection = ({ navigation }) => {
+const GymSection = () => {
   const dispatch = useDispatch();
   const { gym } = useSelector((state) => state.gymReducer);
   const { spraywalls, spraywallIndex } = useSelector(
