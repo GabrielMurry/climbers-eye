@@ -66,12 +66,32 @@ const ProfileScreen = ({ navigation }) => {
     }
   };
 
-  // const optionsData = [
-  //   { title: "Switch Gym", onPress: handleSwitchGymPress },
-  //   { title: "Edit Profile", onPress: handleEditProfilePress },
-  //   { title: "Log out", onPress: handleLogoutPress, color: "red" },
-  //   { title: "Cancel", onPress: () => setIsModalVisible(false), color: "gray" },
-  // ];
+  const handleLogoutPress = async () => {
+    setIsModalVisible(false);
+    const refreshToken = await AsyncStorage.getItem("refreshToken");
+    const response = await request("post", "api/logout/", {
+      refresh: refreshToken,
+    });
+    if (response.status === 200) {
+      // Clear tokens from storage
+      await AsyncStorage.removeItem("accessToken");
+      await AsyncStorage.removeItem("refreshToken");
+      // Reset the navigation stack and navigate to the login screen
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: "Login" }],
+        })
+      );
+    }
+  };
+
+  const optionsData = [
+    // { title: "Switch Gym", onPress: handleSwitchGymPress },
+    // { title: "Edit Profile", onPress: handleEditProfilePress },
+    { title: "Log out", onPress: handleLogoutPress, color: "red" },
+    { title: "Cancel", onPress: () => setIsModalVisible(false), color: "gray" },
+  ];
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: THEME_STYLE }}>
@@ -87,11 +107,11 @@ const ProfileScreen = ({ navigation }) => {
         <CircuitsSection circuits={circuits} navigation={navigation} />
       </ScrollView>
       {/* modal */}
-      {/* <ModalOptions
+      <ModalOptions
         isModalVisible={isModalVisible}
         setIsModalVisible={setIsModalVisible}
         optionsData={optionsData}
-      /> */}
+      />
     </SafeAreaView>
   );
 };

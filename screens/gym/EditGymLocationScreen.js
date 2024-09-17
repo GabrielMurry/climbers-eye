@@ -15,26 +15,26 @@ import useCustomHeader from "../../hooks/useCustomHeader";
 const EditGymLocationScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const { gym } = useSelector((state) => state.gymReducer);
-  const [newGymLocation, setNewGymLocation] = useState(gym.location);
+  const [newGymAddress, setNewGymAddress] = useState(gym.address);
   const [isDisabled, setIsDisabled] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
   const CHAR_LIMIT = 100;
 
   useEffect(() => {
-    if (newGymLocation !== gym.location) {
+    if (newGymAddress !== gym.address) {
       setIsDisabled(false);
     } else {
       setIsDisabled(true);
     }
-  }, [newGymLocation, gym.location]);
+  }, [newGymAddress, gym.address]);
 
   const handleSave = async () => {
     setIsLoading(true);
-    const data = { location: newGymLocation };
+    const data = { address: newGymAddress };
     const response = await request("patch", `api/gym/${gym.id}`, data);
     if (response.status === 200) {
-      dispatch(updateGym({ location: newGymLocation }));
+      dispatch(updateGym({ address: newGymAddress }));
       navigation.goBack();
     }
     setIsLoading(false);
@@ -43,7 +43,7 @@ const EditGymLocationScreen = ({ navigation }) => {
   useCustomHeader({
     backgroundColor: "rgba(245,245,245,255)",
     navigation,
-    title: "Edit Gym Location",
+    title: "Edit Gym Address",
   });
 
   return (
@@ -62,9 +62,9 @@ const EditGymLocationScreen = ({ navigation }) => {
         }}
       >
         <SettingsTextInput
-          text={newGymLocation}
-          setText={setNewGymLocation}
-          description={"Gym location (address) to be displayed to all users."}
+          text={newGymAddress}
+          setText={setNewGymAddress}
+          description={"Gym address to be displayed to all users."}
           charLimit={CHAR_LIMIT}
         />
         <View>

@@ -16,6 +16,8 @@ import useCustomHeader from "../../hooks/useCustomHeader";
 import { setGym, setSpraywalls } from "../../redux/actions";
 import { CommonActions } from "@react-navigation/native";
 import AddressTextInput from "../../components/googlePlacesAutoComplete/AddressTextInput";
+import { GOOGLE_MAPS_GEOCODER_API_KEY } from "@env";
+// import Geocoder from "react-native-geocoding";
 
 const AddGymScreen = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -23,6 +25,7 @@ const AddGymScreen = ({ navigation }) => {
   const [isCommercialGym, setIsCommercialGym] = useState(true);
   const [gymName, setGymName] = useState("");
   const [gymAddress, setGymAddress] = useState("");
+  const [placeID, setPlaceID] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [addressSuggestions, setAddressSuggestions] = useState([]); // Autocomplete results
 
@@ -30,6 +33,24 @@ const AddGymScreen = ({ navigation }) => {
     navigation,
     title: "Add New Gym",
   });
+
+  const getGeoLocation = async (place_id) => {
+    if (!place_id) return;
+    try {
+      const url = `https://maps.googleapis.com/maps/api/geocode/json?place_id=${place_id}&key=${GOOGLE_MAPS_GEOCODER_API_KEY}`;
+      const response = await fetch(url);
+      const json = await response.json();
+      if (json.results.length > 0) {
+        const lat = json.results[0].geometry.location.lat.toFixed(6);
+        const lng = json.results[0].geometry.location.lng.toFixed(6);
+        return { lat, lng };
+      } else {
+        console.log("No results found");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const handleAddGym = () => {
     Alert.alert(
@@ -41,11 +62,16 @@ const AddGymScreen = ({ navigation }) => {
           text: "OK",
           onPress: async () => {
             setIsLoading(true);
+            const geoData = await getGeoLocation(placeID);
             const data = {
               name: gymName,
               type: isCommercialGym ? "commercial" : "home",
-              location: gymAddress,
+              address: gymAddress,
+              latitude: geoData ? geoData.lat : null,
+              longitude: geoData ? geoData.lng : null,
+              place_id: placeID,
             };
+            console.log(data);
             const response = await request("post", `api/gym_list/`, data);
             if (response.status === 201) {
               dispatch(setGym(response.data));
@@ -111,11 +137,12 @@ const AddGymScreen = ({ navigation }) => {
           <View style={styles.locationContainer(isCommercialGym)}>
             <Text style={styles.label}>Gym Address:</Text>
             <AddressTextInput
-              input={gymAddress}
-              setInput={setGymAddress}
+              address={gymAddress}
+              setAddress={setGymAddress}
               suggestions={addressSuggestions}
               setSuggestions={setAddressSuggestions}
               placeholder={"Enter gym address"}
+              setPlaceID={setPlaceID}
             />
           </View>
         </View>

@@ -20,9 +20,6 @@ import MapSearchResults from "../../components/map/MapSearchResults";
 import { setGym, setSpraywalls } from "../../redux/actions";
 import { useFocusEffect } from "@react-navigation/native";
 
-// Initialize the module (needs to be done only once)
-Geocoder.init(GOOGLE_MAPS_GEOCODER_API_KEY); // use a valid API key
-
 const MapScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const { gym } = useSelector((state) => state.gymReducer);
@@ -83,37 +80,17 @@ const MapScreen = ({ navigation }) => {
     }
   };
 
-  const getGeoLocation = async (gym) => {
-    // Search by address
-    return new Promise((resolve, reject) => {
-      Geocoder.from(gym.location)
-        .then((json) => {
-          const location = json.results[0].geometry.location;
-          resolve(location);
-        })
-        .catch(() => {
-          // invalid location address
-          resolve(false);
-        });
-    });
-  };
-
   const handleGymCardPress = async (gym) => {
     setIsLoadingGymInfo(true);
     let gymData = {
       id: gym.id,
       name: gym.name,
-      address: gym.location,
+      address: gym.address,
       spraywalls: [],
     };
-    if (gym.location !== "") {
-      const geoLocation = await getGeoLocation(gym);
-      // if received a valid geoLocation (valid location address)
-      if (geoLocation) {
-        gymData.latitude = geoLocation.lat;
-        gymData.longitude = geoLocation.lng;
-        animateToRegion(geoLocation);
-      }
+    if (gym.latitude && gym.longitude) {
+      console.log("uh oh");
+      animateToRegion(gym.latitude, gym.longitude);
     }
     bottomSheetRef.current?.snapToIndex(1);
     setSearchQuery("");
@@ -131,10 +108,10 @@ const MapScreen = ({ navigation }) => {
     setGymMarker(gymData);
   };
 
-  const animateToRegion = (geoLocation) => {
+  const animateToRegion = (lat, lng) => {
     const region = {
-      latitude: geoLocation.lat,
-      longitude: geoLocation.lng,
+      latitude: lat,
+      longitude: lng,
       latitudeDelta: 0.012,
       longitudeDelta: 0.012,
     };

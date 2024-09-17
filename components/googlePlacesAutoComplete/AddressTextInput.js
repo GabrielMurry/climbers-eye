@@ -11,11 +11,12 @@ import axios from "axios";
 import { colors } from "../../utils/styles";
 
 const AddressTextInput = ({
-  input,
-  setInput,
+  address,
+  setAddress,
   suggestions,
   setSuggestions,
   placeholder,
+  setPlaceID,
 }) => {
   const fetchSuggestions = async (text) => {
     if (text.length < 3) return; // Avoid API call if input is too short
@@ -44,7 +45,8 @@ const AddressTextInput = ({
   const handleSelectSuggestion = (suggestion) => {
     console.log("Selected Place ID:", suggestion.place_id);
     console.log("Selected Description:", suggestion.description);
-    setInput(suggestion.description); // Set selected suggestion address in input
+    setPlaceID(suggestion.place_id);
+    setAddress(suggestion.description); // Set selected suggestion address in input
     setSuggestions([]); // Clear suggestions
   };
 
@@ -72,9 +74,9 @@ const AddressTextInput = ({
           fontSize: 16,
         }}
         placeholder={placeholder}
-        value={input}
+        value={address}
         onChangeText={(text) => {
-          setInput(text);
+          setAddress(text);
           fetchSuggestions(text);
         }}
       />

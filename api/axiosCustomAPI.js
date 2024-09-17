@@ -2,6 +2,7 @@ import axios from "axios";
 import { BASE_URL } from "@env";
 import refreshTokenService from "./refreshTokenService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+console.log(BASE_URL);
 
 const axiosCustomAPI = axios.create({
   baseURL: BASE_URL,
