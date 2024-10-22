@@ -5,9 +5,14 @@ import { XMarkIcon } from "react-native-heroicons/outline";
 import { request } from "../../services/common/apiRequest";
 import QualityRating from "../../components/boulder/QualityRating";
 import { deleteSendFromBoulder } from "../../services/send";
+import { useFetch } from "../../hooks/useFetch";
 
 const BoulderUserSendsScreen = ({ navigation, route }) => {
   const { userSendsData } = route.params;
+
+  const [fetchDeleteSend, isLoadingDeleteSend, isErrorDeleteSend] = useFetch(
+    deleteSendFromBoulder
+  );
 
   useCustomHeader({
     navigation,
@@ -27,7 +32,7 @@ const BoulderUserSendsScreen = ({ navigation, route }) => {
             text: "Delete",
             onPress: async () => {
               const pathParams = { sendId: send.id };
-              const response = await deleteSendFromBoulder(pathParams);
+              const response = await fetchDeleteSend({ pathParams });
               // not a successful deletion status of 204
               if (response.status !== 204) {
                 console.error(response.status);

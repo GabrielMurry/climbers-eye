@@ -5,11 +5,13 @@ import * as Haptics from "expo-haptics";
 import { useDispatch } from "react-redux";
 import { addBoulderToSpraywall } from "../../services/boulder";
 import { addNewBoulder } from "../../redux/features/boulder/boulderSlice";
+import { appendExcludeId } from "../../redux/features/filter/filterSlice";
 import FullScreenImage from "../../components/image/FullScreenImage";
 import useCustomHeader from "../../hooks/useCustomHeader";
 import PreviewInputData from "../../components/boulder/preview/PreviewInputData";
 import PreviewImage from "../../components/boulder/preview/PreviewImage";
 import PreviewPublishButtons from "../../components/boulder/preview/PreviewPublishButtons";
+import { useFetch } from "../../hooks/useFetch";
 
 const TAGS = [
   { name: "crimp", selected: false },
@@ -29,6 +31,10 @@ const PreviewEditScreen = ({ navigation, route }) => {
 
   const { image, resultImageUri } = route.params;
 
+  const [fetchAddBoulder, isLoadingAddBoulder, isErrorAddBoulder] = useFetch(
+    addBoulderToSpraywall
+  );
+
   const { user } = useSelector((state) => state.user);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -38,7 +44,6 @@ const PreviewEditScreen = ({ navigation, route }) => {
   const [imageFullScreen, setImageFullScreen] = useState(false);
   const [isImageLoading, setIsImageLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
   useCustomHeader({
     navigation,
@@ -46,10 +51,6 @@ const PreviewEditScreen = ({ navigation, route }) => {
   });
 
   const handleConfirm = async ({ publish }) => {
-    if (name === "") {
-      setError(true);
-      return;
-    }
     data = {
       name,
       description,
@@ -63,9 +64,8 @@ const PreviewEditScreen = ({ navigation, route }) => {
       setter: user.id,
       spraywall: spraywalls[spraywallIndex].id,
     };
-    setIsLoading(true);
     const pathParams = { spraywallId: spraywalls[spraywallIndex].id };
-    const response = await addBoulderToSpraywall(pathParams, data);
+    const response = await fetchAddBoulder({ pathParams, data });
     if (response) {
       dispatch(addNewBoulder(response.data));
       handleVibrate();
@@ -74,14 +74,14 @@ const PreviewEditScreen = ({ navigation, route }) => {
         params: {
           screen: "Boulder", // Target the 'Boulder' screen inside the 'Home' stack
           params: {
-            boulderId: response.data.id, // Pass any necessary parameters
+            boulderId: response.data.id,
           },
         },
       });
+      dispatch(appendExcludeId(response.data.id));
     } else {
       console.error("Failed to upload new boulder.");
     }
-    setIsLoading(false);
   };
 
   const handleVibrate = () => {
@@ -120,7 +120,7 @@ const PreviewEditScreen = ({ navigation, route }) => {
       />
       <PreviewPublishButtons
         handleConfirm={handleConfirm}
-        isLoading={isLoading}
+        isLoading={isLoadingAddBoulder}
       />
       <FullScreenImage
         imageFullScreen={imageFullScreen}

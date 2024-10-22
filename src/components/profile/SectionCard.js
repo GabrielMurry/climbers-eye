@@ -2,7 +2,7 @@ import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
 import { ChevronRightIcon } from "react-native-heroicons/outline";
 
-const SectionCard = ({ icon, title, data, navigation }) => {
+const SectionCard = ({ icon, title, data, navigate }) => {
   return (
     <TouchableOpacity
       style={{
@@ -12,7 +12,7 @@ const SectionCard = ({ icon, title, data, navigation }) => {
         alignItems: "center",
         flexDirection: "row",
       }}
-      onPress={() => navigation.navigate("Profile", { screen: "Logbook" })}
+      onPress={navigate}
     >
       <View style={{ width: 30 }}>{icon}</View>
       <View style={{ flex: 1 }}>

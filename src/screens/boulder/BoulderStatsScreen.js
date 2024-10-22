@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import useCustomHeader from "../../hooks/useCustomHeader";
-import BarChartHorizontal from "../../components/boulder/stats/BarChartHorizontal";
+// import BarChartHorizontal from "../../components/boulder/stats/BarChartHorizontal";
 import QualityRating from "../../components/boulder/QualityRating";
 
 const BoulderStatsScreen = ({ route, navigation }) => {

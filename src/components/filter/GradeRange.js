@@ -5,8 +5,10 @@ import {
   setMaxGradeIndex,
   setMinGradeIndex,
 } from "../../redux/features/filter/filterSlice";
+import { useDispatch } from "react-redux";
 
 const GradeRange = ({ boulderGrades, filters }) => {
+  const dispatch = useDispatch();
   const [min, setMin] = useState(filters.minGradeIndex);
   const [max, setMax] = useState(filters.maxGradeIndex);
 

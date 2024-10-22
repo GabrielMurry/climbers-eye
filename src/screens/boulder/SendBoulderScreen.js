@@ -19,6 +19,7 @@ import useCustomHeader from "../../hooks/useCustomHeader";
 import CustomButton from "../../components/custom/CustomButton";
 import { colors } from "../../utils/styles";
 import { addSendToBoulder } from "../../services/send";
+import { useFetch } from "../../hooks/useFetch";
 
 const options = {
   attempts: ["-"],
@@ -43,6 +44,9 @@ const SendBoulderScreen = ({ route, navigation }) => {
   const [notes, setNotes] = useState("");
   const [errors, setErrors] = useState({ attempts: false, difficulty: false });
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
+
+  const [fetchAddSend, isLoadingAddSend, isErrorAddSend] =
+    useFetch(addSendToBoulder);
 
   useCustomHeader({
     backgroundColor: "rgba(245,245,245,255)",
@@ -98,7 +102,7 @@ const SendBoulderScreen = ({ route, navigation }) => {
       boulder: boulder.id,
     };
     const pathParams = { boulderId: boulder.id };
-    const response = await addSendToBoulder(pathParams, data);
+    const response = await fetchAddSend({ pathParams, data });
     if (response.status !== 201) {
       console.error(response.status);
       return;

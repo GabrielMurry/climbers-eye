@@ -41,20 +41,14 @@ const TabIcons = ({ route, size, focused }) => {
             borderColor: colors.primary,
             backgroundColor: colors.primaryLight,
             padding: 8,
+            marginTop: 15,
           }}
         >
           <PlusIcon size={size} color={colors.primary} />
         </View>
       );
       break;
-    case "Activity":
-      iconSource = focused ? (
-        <Square3Stack3DIconSolid size={size} color={"black"} />
-      ) : (
-        <Square3Stack3DIcon size={size} color={"black"} />
-      );
-      break;
-    case "Profile":
+    case "ProfileStack-Tabs":
       iconSource = focused ? (
         <UserIconSolid size={size} color={"black"} />
       ) : (

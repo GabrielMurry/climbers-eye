@@ -28,8 +28,8 @@ export const boulderGrades = [
 export const boulderBarChartDataTemplate = [
   { x: "4a/V0", y: 0 },
   { x: "4b/V0", y: 0 },
-  { x: "5a/V1", y: 0 },
   { x: "4c/V0", y: 0 },
+  { x: "5a/V1", y: 0 },
   { x: "5b/V1", y: 0 },
   { x: "5c/V2", y: 0 },
   { x: "6a/V3", y: 0 },

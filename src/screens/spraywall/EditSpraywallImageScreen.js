@@ -15,6 +15,7 @@ import { useActionSheet } from "@expo/react-native-action-sheet";
 import { launchImageLibraryAsync, MediaTypeOptions } from "expo-image-picker";
 import { updateSpraywallAPI } from "../../services/spraywall";
 import { updateSpraywall } from "../../redux/features/spraywall/spraywallSlice";
+import { useFetch } from "../../hooks/useFetch";
 
 const EditSpraywallImageScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
@@ -28,6 +29,9 @@ const EditSpraywallImageScreen = ({ navigation, route }) => {
   });
   const [isDisabled, setIsDisabled] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+
+  const [fetchUpdate, isLoadingUpdate, isErrorUpdate] =
+    useFetch(updateSpraywallAPI);
 
   useEffect(() => {
     setNewImage(spraywalls[index].url);
@@ -49,7 +53,7 @@ const EditSpraywallImageScreen = ({ navigation, route }) => {
       height: newImage.height,
     };
     const pathParams = { spraywallId: spraywalls[index].id };
-    const response = await updateSpraywallAPI(pathParams, data);
+    const response = await fetchUpdate({ pathParams, data });
     if (response.status === 200) {
       dispatch(
         updateSpraywall(spraywalls[index].id, {

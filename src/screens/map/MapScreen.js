@@ -19,6 +19,7 @@ import { getGymList, userChooseGym } from "../../services/gym";
 import { getSpraywallList } from "../../services/spraywall";
 import { setGym } from "../../redux/features/gym/gymSlice";
 import { setSpraywalls } from "../../redux/features/spraywall/spraywallSlice";
+import { useFetch } from "../../hooks/useFetch";
 
 const MapScreen = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -29,6 +30,14 @@ const MapScreen = ({ navigation }) => {
   const [isLoadingConfirmGym, setIsLoadingConfirmGym] = useState(false);
   const [isLoadingGymInfo, setIsLoadingGymInfo] = useState(false);
   const [imageFullScreen, setImageFullScreen] = useState(false);
+
+  const [fetchGymList, isLoadingGymList, isErrorGymList] = useFetch(getGymList);
+
+  const [fetchUserChoose, isLoadingUserChoose, isErrorUserChoose] =
+    useFetch(userChooseGym);
+
+  const [fetchSpraywallList, isLoadingSpraywallList, isErrorSpraywallList] =
+    useFetch(getSpraywallList);
 
   const mapRef = useRef(null);
 
@@ -70,7 +79,7 @@ const MapScreen = ({ navigation }) => {
   );
 
   const fetchSearchQueryData = async () => {
-    const response = await getGymList();
+    const response = await fetchGymList();
     if (response.status !== 200) {
       console.log(response.status);
       return;
@@ -96,7 +105,7 @@ const MapScreen = ({ navigation }) => {
     Keyboard.dismiss();
     // when user clicks on gym card, we want to quickly display spraywall default image in bottom sheet
     const pathParams = { gymId: gym.id };
-    const response = await getSpraywallList(pathParams);
+    const response = await fetchSpraywallList({ pathParams });
     if (response.status !== 200) {
       console.log(response.status);
       return;
@@ -123,7 +132,7 @@ const MapScreen = ({ navigation }) => {
     const data = {
       gym: gymID,
     };
-    const response = await userChooseGym(data);
+    const response = await fetchUserChoose({ data });
     if (response.status !== 200) {
       console.log(response.status);
       setIsLoadingConfirmGym(false);

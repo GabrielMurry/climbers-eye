@@ -6,7 +6,7 @@ const FilterButton = ({
   filterType,
   title,
   filter = null,
-  onPress,
+  onPress = () => {},
   circuitColor = null,
 }) => {
   return (

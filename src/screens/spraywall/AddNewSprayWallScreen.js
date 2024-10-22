@@ -14,6 +14,7 @@ import useCustomHeader from "../../hooks/useCustomHeader";
 import { colors } from "../../utils/styles";
 import { createSpraywall } from "../../services/spraywall";
 import { appendSpraywall } from "../../redux/features/spraywall/spraywallSlice";
+import { useFetch } from "../../hooks/useFetch";
 
 const AddNewSprayWallScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
@@ -22,6 +23,12 @@ const AddNewSprayWallScreen = ({ navigation, route }) => {
   const { image } = route.params;
   const [isDisabled, setIsDisabled] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+
+  const [
+    fetchCreateSpraywall,
+    isLoadingCreateSpraywall,
+    isErrorCreateSpraywall,
+  ] = useFetch(createSpraywall);
 
   useCustomHeader({
     backgroundColor: "rgba(245,245,245,255)",
@@ -47,7 +54,7 @@ const AddNewSprayWallScreen = ({ navigation, route }) => {
       gym: gym.id,
     };
     const pathParams = { gymId: gym.id };
-    const response = await createSpraywall(pathParams, data);
+    const response = await fetchCreateSpraywall({ pathParams, data });
     if (response.status === 201) {
       console.log(response.data);
       dispatch(appendSpraywall(response.data));

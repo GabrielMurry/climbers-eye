@@ -19,11 +19,13 @@ import {
   setClimbType,
   setSortBy,
 } from "../../redux/features/filter/filterSlice";
+import FilterCircuitButton from "../../components/filter/FilterCircuitButton";
 
 const FilterHomeListScreen = ({ navigation }) => {
   const dispatch = useDispatch();
 
   const filters = useSelector((state) => state.filter);
+  const { circuits } = useSelector((state) => state.circuit);
 
   const [showGradeRange, setShowGradeRange] = useState(false);
 
@@ -39,10 +41,6 @@ const FilterHomeListScreen = ({ navigation }) => {
 
   const handleResetFilters = () => {
     dispatch(resetFilters());
-  };
-
-  const handleCircuitsPress = () => {
-    navigation.navigate("CircuitStack", { screen: "FilterCircuit" });
   };
 
   return (
@@ -138,17 +136,18 @@ const FilterHomeListScreen = ({ navigation }) => {
           <View style={styles.rowHeader}>
             <Text style={styles.rowHeaderTitle}>Circuits</Text>
           </View>
-          {filters.circuits.length > 0 ? (
-            filters.circuits.map((item) => (
-              <FilterButton
-                key={item.id}
-                title={item.name}
-                circuitColor={item.color}
-                onPress={handleCircuitsPress}
+          {circuits.length > 0 ? (
+            circuits.map((circuit) => (
+              <FilterCircuitButton
+                key={circuit.id}
+                title={circuit.name}
+                color={circuit.color}
+                circuitId={circuit.id}
+                filters={filters}
               />
             ))
           ) : (
-            <FilterButton title={"-"} onPress={handleCircuitsPress} />
+            <FilterButton title={"-"} />
           )}
         </View>
         <View style={styles.sortBox}>

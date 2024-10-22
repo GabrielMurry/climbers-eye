@@ -9,8 +9,6 @@ const request = async (method, endpoint, data = null) => {
     // grab csrf token, access token, and refresh token from storage
     const csrfToken = await AsyncStorage.getItem("csrfToken");
     const accessToken = await AsyncStorage.getItem("accessToken");
-    console.log("csrf:", csrfToken);
-    console.log("access:", accessToken);
 
     // attach csrf token to request header
     // Including the actual CSRF token in GET requests is generally not a common practice and is not required for CSRF protection.
@@ -41,8 +39,7 @@ const request = async (method, endpoint, data = null) => {
     return response;
   } catch (error) {
     console.error(`${method} error at ${endpoint}: ${error}`);
-
-    return null;
+    throw error;
   }
 };
 

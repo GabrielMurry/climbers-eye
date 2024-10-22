@@ -9,12 +9,15 @@ import {
 import React, { useEffect, useState } from "react";
 import useCustomHeader from "../../hooks/useCustomHeader";
 import CustomInput from "../../components/custom/CustomInput";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import CustomButton from "../../components/custom/CustomButton";
 import { colors } from "../../utils/styles";
 import { createCircuit } from "../../services/circuit";
+import { useFetch } from "../../hooks/useFetch";
+import { addNewCircuit } from "../../redux/features/circuit/circuitSlice";
 
 const AddNewCircuitScreen = ({ navigation }) => {
+  const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
   const { spraywalls, spraywallIndex } = useSelector(
     (state) => state.spraywall
@@ -26,6 +29,8 @@ const AddNewCircuitScreen = ({ navigation }) => {
   const [isNewCircuitPrivate, setIsNewCircuitPrivate] = useState(false);
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
 
+  const [fetchCreate, isLoadingCreate, isErrorCreate] = useFetch(createCircuit);
+
   const handleAddNewCircuitPress = async () => {
     const data = {
       name: newCircuitName,
@@ -36,8 +41,9 @@ const AddNewCircuitScreen = ({ navigation }) => {
       spraywall: spraywalls[spraywallIndex].id,
     };
     const pathParams = { spraywallId: spraywalls[spraywallIndex].id };
-    const response = await createCircuit(pathParams, data);
+    const response = await fetchCreate({ pathParams, data });
     if (response.status === 201) {
+      dispatch(addNewCircuit(response.data));
       navigation.goBack();
     } else {
       console.error(response.status);

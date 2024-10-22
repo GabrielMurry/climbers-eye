@@ -5,7 +5,7 @@ import { FlatList } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { request } from "../../services/common/apiRequest";
 import { CheckIcon } from "react-native-heroicons/outline";
-import { updateUserGym } from "../../utils/functions";
+// import { updateUserGym } from "../../utils/functions";
 
 const SwitchGymScreen = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -38,12 +38,12 @@ const SwitchGymScreen = ({ navigation }) => {
   const handleGymCardPress = (item) => {
     // Separating the gym and that gym's spraywalls for dispatch - Create a copy of the gym object without 'spraywalls' property
     const { spraywalls, ...gymWithoutSpraywalls } = item;
-    updateUserGym({
-      gym: gymWithoutSpraywalls,
-      spraywalls: spraywalls,
-      user: user,
-      dispatch: dispatch,
-    });
+    // updateUserGym({
+    //   gym: gymWithoutSpraywalls,
+    //   spraywalls: spraywalls,
+    //   user: user,
+    //   dispatch: dispatch,
+    // });
   };
 
   const renderItem = ({ item, index }) => (

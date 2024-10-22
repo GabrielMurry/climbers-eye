@@ -14,18 +14,32 @@ import {
   deleteLikeFromBoulder,
 } from "../../../services/like";
 import { updateBoulder } from "../../../redux/features/boulder/boulderSlice";
+import { useFetch } from "../../../hooks/useFetch";
 
 const InfoRow1 = ({ boulder, userID, navigation }) => {
   const dispatch = useDispatch();
+
+  const [fetchAddBookmark, isLoadingAddBookmark, isErrorAddBookmark] =
+    useFetch(addBookmarkToBoulder);
+
+  const [fetchDeleteBookmark, isLoadingDeleteBookmark, isErrorDeleteBookmark] =
+    useFetch(deleteBookmarkFromBoulder);
+
+  const [fetchAddLike, isLoadingAddLike, isErrorAddLike] =
+    useFetch(addLikeToBoulder);
+
+  const [fetchDeleteLike, isLoadingDeleteLike, isErrorDeleteLike] = useFetch(
+    deleteLikeFromBoulder
+  );
 
   const performLikeRequest = async (method) => {
     const pathParams = { boulderId: boulder.id, userId: userID };
     const data = { boulder: boulder.id, person: userID };
     switch (method) {
       case "post":
-        return await addLikeToBoulder(pathParams, data);
+        return await fetchAddLike({ pathParams, data });
       case "delete":
-        return await deleteLikeFromBoulder(pathParams, data);
+        return await fetchDeleteLike({ pathParams, data });
       default:
         console.error("Invalid method.");
     }
@@ -62,9 +76,9 @@ const InfoRow1 = ({ boulder, userID, navigation }) => {
     const data = { boulder: boulder.id, person: userID };
     switch (method) {
       case "post":
-        return await addBookmarkToBoulder(pathParams, data);
+        return await fetchAddBookmark({ pathParams, data });
       case "delete":
-        return await deleteBookmarkFromBoulder(pathParams, data);
+        return await fetchDeleteBookmark({ pathParams, data });
       default:
         console.error("Invalid method.");
     }

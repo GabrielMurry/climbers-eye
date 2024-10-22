@@ -12,6 +12,7 @@ import SettingsTextInput from "../../components/custom/SettingsTextInput";
 import useCustomHeader from "../../hooks/useCustomHeader";
 import { updateSpraywallAPI } from "../../services/spraywall";
 import { updateSpraywall } from "../../redux/features/spraywall/spraywallSlice";
+import { useFetch } from "../../hooks/useFetch";
 
 const EditSpraywallNameScreen = ({ navigation, route }) => {
   const CHAR_LIMIT = 50;
@@ -25,6 +26,9 @@ const EditSpraywallNameScreen = ({ navigation, route }) => {
   const [isDisabled, setIsDisabled] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
+  const [fetchUpdate, isLoadingUpdate, isErrorUpdate] =
+    useFetch(updateSpraywallAPI);
+
   useEffect(() => {
     if (newSprayWallName !== spraywalls[index].name) {
       setIsDisabled(false);
@@ -37,7 +41,7 @@ const EditSpraywallNameScreen = ({ navigation, route }) => {
     setIsLoading(true);
     const data = { name: newSprayWallName };
     const pathParams = { spraywallId: spraywalls[index].id };
-    const response = await updateSpraywallAPI(pathParams, data);
+    const response = await fetchUpdate({ pathParams, data });
     if (response.status === 200) {
       dispatch(
         updateSpraywall(spraywalls[index].id, { name: newSprayWallName })

@@ -7,9 +7,13 @@ import {
   deleteSpraywall,
   resetSpraywallIndex,
 } from "../../redux/features/spraywall/spraywallSlice";
+import { useFetch } from "../../hooks/useFetch";
 
 const DeleteSpraywall = ({ navigation, spraywall }) => {
   const dispatch = useDispatch();
+
+  const [fetchDelete, isLoadingDelete, isErrorDelete] =
+    useFetch(deleteSpraywallAPI);
 
   const handleDelete = () => {
     Alert.alert(
@@ -23,7 +27,7 @@ const DeleteSpraywall = ({ navigation, spraywall }) => {
           text: "Delete",
           onPress: async () => {
             const pathParams = { spraywallId: spraywall.id };
-            const response = await deleteSpraywallAPI(pathParams);
+            const response = await fetchDelete({ pathParams });
             if (response.status === 204) {
               navigation.goBack();
               dispatch(deleteSpraywall(spraywall.id));

@@ -13,6 +13,7 @@ import AddressTextInput from "../../components/googlePlacesAutoComplete/AddressT
 import { getGeoLocation } from "../../services/googleMapsAPI/geocoder";
 import { updateGymInfo } from "../../services/gym";
 import { updateGym } from "../../redux/features/gym/gymSlice";
+import { useFetch } from "../../hooks/useFetch";
 
 const EditGymAddressScreen = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -22,6 +23,8 @@ const EditGymAddressScreen = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [addressSuggestions, setAddressSuggestions] = useState([]);
   const [placeID, setPlaceID] = useState(null);
+
+  const [fetchUpdate, isLoadingUpdate, isErrorUpdate] = useFetch(updateGymInfo);
 
   const CHAR_LIMIT = 100;
 
@@ -43,7 +46,7 @@ const EditGymAddressScreen = ({ navigation }) => {
       place_id: placeID,
     };
     const pathParams = { gymId: gym.id };
-    const response = await updateGymInfo(pathParams, data);
+    const response = await fetchUpdate({ pathParams, data });
     if (response.status === 200) {
       dispatch(
         updateGym({

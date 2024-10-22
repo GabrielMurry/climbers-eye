@@ -1,191 +1,31 @@
-import {
-  View,
-  Text,
-  SafeAreaView,
-  FlatList,
-  TouchableOpacity,
-  StyleSheet,
-  Button,
-  Alert,
-  Pressable,
-} from "react-native";
-import React, { useCallback, useEffect, useState } from "react";
+import { View, Text, SafeAreaView, FlatList, StyleSheet } from "react-native";
+import React from "react";
 import { useSelector } from "react-redux";
 import CircuitCard from "../../components/circuit/CircuitCard";
-import Swipeable from "react-native-gesture-handler/Swipeable";
-import { PlusIcon } from "react-native-heroicons/outline";
 import useCustomHeader from "../../hooks/useCustomHeader";
-import { useFocusEffect } from "@react-navigation/native";
-import { useDispatch } from "react-redux";
-import {
-  addBoulderToCircuit,
-  deleteBoulderFromCircuit,
-} from "../../services/boulder";
-import { deleteCircuit, getCircuitList } from "../../services/circuit";
-import { updateBoulder } from "../../redux/features/boulder/boulderSlice";
 
 const CircuitScreen = ({ route, navigation }) => {
-  const dispatch = useDispatch();
+  const { circuits } = useSelector((state) => state.circuit);
   const { boulder } = route.params;
-  const { spraywalls, spraywallIndex } = useSelector(
-    (state) => state.spraywall
-  );
 
   const CIRCUIT_ITEM_HEIGHT = 45;
-
-  const [circuits, setCircuits] = useState([]);
-
-  // for managing opening and closing rows
-  let row = [];
-  let prevOpenedRow;
-
-  const headerRight = (
-    <TouchableOpacity
-      onPress={() =>
-        navigation.navigate("CircuitStack", { screen: "AddNewCircuit" })
-      }
-    >
-      <PlusIcon size={25} color={"black"} />
-    </TouchableOpacity>
-  );
 
   useCustomHeader({
     navigation,
     title: "Add to Circuit",
-    headerRight,
+    headerRightOnPress: () =>
+      navigation.navigate("CircuitStack", { screen: "AddNewCircuit" }),
+    screenName: route.name,
   });
 
-  useFocusEffect(
-    useCallback(() => {
-      fetchCircuitData();
-    }, [])
-  );
-
-  useEffect(() => {
-    const inCircuit = circuits.some((circuit) => circuit.containsBoulder);
-    dispatch(updateBoulder(boulder.id, { inCircuit }));
-  }, [circuits]);
-
-  fetchCircuitData = async () => {
-    const pathParams = { spraywallId: spraywalls[spraywallIndex].id };
-    const response = await getCircuitList(pathParams);
-    if (response.status === 200) {
-      const manipulatedCircuits = response.data.map((circuit) => ({
-        ...circuit,
-        containsBoulder: circuit.boulders.includes(boulder.id),
-      }));
-      setCircuits(manipulatedCircuits);
-    } else {
-      console.error(response.status);
-      return;
-    }
-  };
-
-  const closeRow = (index) => {
-    if (prevOpenedRow && prevOpenedRow !== row[index]) {
-      prevOpenedRow.close();
-    }
-    prevOpenedRow = row[index];
-  };
-
-  const renderCircuitCards = ({ item: circuit, index }) => {
-    const optimisticUpdate = () => {
-      setCircuits((prevCircuits) => {
-        const newCircuits = [...prevCircuits];
-        newCircuits[index].containsBoulder =
-          !newCircuits[index].containsBoulder;
-        return newCircuits;
-      });
-    };
-
-    const performRequest = async (method) => {
-      const pathParams = { circuitId: circuit.id, boulderId: boulder.id };
-      switch (method) {
-        case "post":
-          return await addBoulderToCircuit(pathParams);
-        case "delete":
-          return await deleteBoulderFromCircuit(pathParams);
-        default:
-          console.error("Invalid method.");
-      }
-    };
-
-    const handleCircuitPressed = async () => {
-      // temp isSelected because we optimistically update circuit (circuit).isSelected before api call
-      const tempIsSelected = circuit.containsBoulder;
-      optimisticUpdate();
-      const method = tempIsSelected ? "delete" : "post";
-      const response = performRequest(method);
-      if (response.status !== 200) {
-        console.log(response.status);
-        optimisticUpdate();
-        return;
-      }
-    };
-
-    const renderRightView = (onDeleteHandler) => {
-      return (
-        <View
-          style={{
-            margin: 0,
-            alignContent: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Button
-            color="red"
-            onPress={(e) => onDeleteHandler(e)}
-            title="DELETE"
-          />
-        </View>
-      );
-    };
-
-    const onDelete = () => {
-      Alert.alert(
-        "Delete Circuit",
-        `Are you sure you want to delete "${circuit.name}"?`,
-        [
-          {
-            text: "Cancel",
-            onPress: () => {
-              row[index].close();
-            },
-          },
-          {
-            text: "Delete",
-            onPress: async () => {
-              const pathParams = { circuitId: circuit.id };
-              const response = await deleteCircuit(pathParams);
-              if (response.status === 204) {
-                row[index].close();
-                setCircuits((prevCircuits) =>
-                  prevCircuits.filter(
-                    (prevCircuit) => prevCircuit.id !== circuit.id
-                  )
-                );
-              } else {
-                console.log(response.status);
-                return;
-              }
-            },
-            style: "destructive",
-          },
-        ],
-        { cancelable: false }
-      );
-    };
-
+  const renderCircuitCards = ({ item, index }) => {
     return (
-      <Swipeable
-        renderRightActions={(progress, dragX) => renderRightView(onDelete)}
-        onSwipeableOpen={() => closeRow(index)}
-        ref={(ref) => (row[index] = ref)}
-      >
-        <Pressable onPress={handleCircuitPressed}>
-          <CircuitCard circuit={circuit} height={CIRCUIT_ITEM_HEIGHT} />
-        </Pressable>
-      </Swipeable>
+      <CircuitCard
+        circuit={item}
+        index={index}
+        height={CIRCUIT_ITEM_HEIGHT}
+        boulder={boulder}
+      />
     );
   };
 
@@ -209,7 +49,7 @@ const CircuitScreen = ({ route, navigation }) => {
           contentContainerStyle={styles.flatList}
           data={circuits}
           renderItem={renderCircuitCards}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item.id.toString()}
           ListFooterComponent={renderFooter}
           ListEmptyComponent={renderEmptyList}
         />
@@ -225,15 +65,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "white",
   },
-  titleContainer: {
-    padding: 10,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  titleText: {
-    fontSize: 30,
-    fontWeight: "bold",
-  },
   flatListContainer: {
     marginTop: 15,
     flex: 1,
@@ -241,19 +72,5 @@ const styles = StyleSheet.create({
   flatList: {
     gap: 15,
     paddingHorizontal: 20,
-  },
-  addNewCircuitButton: {
-    padding: 15,
-    backgroundColor: "white",
-    borderRadius: "100%",
-    position: "absolute",
-    bottom: 30,
-    right: 25,
-    // adding shadow to add new circuit button
-    shadowColor: "black",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 5, // Required for Android
   },
 });

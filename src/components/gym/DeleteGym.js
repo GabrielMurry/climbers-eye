@@ -6,10 +6,13 @@ import { useDispatch } from "react-redux";
 import { deleteGym } from "../../services/gym";
 import { setGym } from "../../redux/features/gym/gymSlice";
 import { setSpraywalls } from "../../redux/features/spraywall/spraywallSlice";
+import { useFetch } from "../../hooks/useFetch";
 
 const DeleteGym = ({ navigation }) => {
   const dispatch = useDispatch();
   const { gym } = useSelector((state) => state.gym);
+
+  const [fetchDelete, isLoadingDelete, isErrorDelete] = useFetch(deleteGym);
 
   const handleDelete = () => {
     Alert.alert(
@@ -23,7 +26,7 @@ const DeleteGym = ({ navigation }) => {
           text: "Delete",
           onPress: async () => {
             const pathParams = { gymId: gym.id };
-            const response = await deleteGym(pathParams);
+            const response = await fetchDelete({ pathParams });
             if (response.status === 204) {
               navigation.navigate("Tabs", { screen: "Map" });
               dispatch(setGym({}));

@@ -17,6 +17,7 @@ export const boulderSlice = createSlice({
       reducer: (state, action) => {
         const { id, updates } = action.payload; // Destructure payload prepared by 'prepare'
         const boulder = state.boulders.find((boulder) => boulder.id === id);
+        console.log("-----");
 
         if (boulder) {
           Object.assign(boulder, updates); // Apply the updates

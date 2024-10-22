@@ -18,6 +18,7 @@ import { getGeoLocation } from "../../services/googleMapsAPI/geocoder";
 import { createGym } from "../../services/gym";
 import { setGym } from "../../redux/features/gym/gymSlice";
 import { setSpraywalls } from "../../redux/features/spraywall/spraywallSlice";
+import { useFetch } from "../../hooks/useFetch";
 
 const AddGymScreen = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -28,6 +29,8 @@ const AddGymScreen = ({ navigation }) => {
   const [placeID, setPlaceID] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [addressSuggestions, setAddressSuggestions] = useState([]);
+
+  const [fetchCreate, isLoadingCreate, isErrorCreate] = useFetch(createGym);
 
   useCustomHeader({
     navigation,
@@ -53,7 +56,7 @@ const AddGymScreen = ({ navigation }) => {
               longitude: geoData ? geoData.lng : null,
               place_id: placeID,
             };
-            const response = await createGym(data);
+            const response = await fetchCreate({ data });
             if (response.status === 201) {
               dispatch(setGym(response.data));
               dispatch(setSpraywalls([]));

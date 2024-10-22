@@ -4,7 +4,6 @@ import {
   TouchableOpacity,
   ScrollView,
   Alert,
-  Text,
 } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import FullScreenImage from "../../components/image/FullScreenImage";
@@ -18,7 +17,6 @@ import InfoRow1 from "../../components/boulder/detail/InfoRow1";
 import InfoRow2 from "../../components/boulder/detail/InfoRow2";
 import InfoRow3 from "../../components/boulder/detail/InfoRow3";
 import InfoRow4 from "../../components/boulder/detail/InfoRow4";
-import InfoRow5 from "../../components/boulder/detail/InfoRow5";
 import InfoRow6 from "../../components/boulder/detail/InfoRow6";
 import DraftNotif from "../../components/boulder/DraftNotif";
 import { useFocusEffect } from "@react-navigation/native";
@@ -30,6 +28,7 @@ import {
   deleteBoulder,
   updateBoulder,
 } from "../../redux/features/boulder/boulderSlice";
+import { useFetch } from "../../hooks/useFetch";
 
 const THEME_STYLE = "white"; //rgba(245,245,245,255)
 
@@ -44,15 +43,24 @@ const BoulderScreen = ({ route, navigation }) => {
   );
 
   const [imageFullScreen, setImageFullScreen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [optionsData, setOptionsData] = useState([]);
   const [chartData, setChartData] = useState([]);
   const [userSendsData, setUserSendsData] = useState(null);
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
+
+  const [fetchDetail, isLoadingDetail, isErrorDetail] =
+    useFetch(getBoulderDetail);
+
+  const [fetchUpdate, isLoadingUpdate, isErrorUpdate] =
+    useFetch(updateBoulderAPI);
+
+  const [fetchDelete, isLoadingDelete, isErrorDelete] =
+    useFetch(deleteBoulderAPI);
 
   const fetchBoulderDetail = async () => {
     const pathParams = { boulderId: boulder.id };
-    const response = await getBoulderDetail(pathParams);
+    const response = await fetchDetail({ pathParams });
     if (response) {
       const {
         firstAscensionist,
@@ -61,6 +69,7 @@ const BoulderScreen = ({ route, navigation }) => {
         userSendsCount,
         grade,
         quality,
+        inCircuit,
       } = response.data;
       setChartData(response.data.boulderBarChartData);
       setUserSendsData(response.data.userSendsData);
@@ -72,6 +81,7 @@ const BoulderScreen = ({ route, navigation }) => {
           userSendsCount,
           grade,
           quality,
+          inCircuit,
         })
       );
     }
@@ -105,7 +115,7 @@ const BoulderScreen = ({ route, navigation }) => {
           text: "Delete",
           onPress: async () => {
             const pathParams = { boulderId: boulder.id };
-            const response = deleteBoulderAPI(pathParams);
+            const response = await fetchDelete({ pathParams });
             if (response.status === 204) {
               navigation.goBack();
               dispatch(deleteBoulder(boulder.id));
@@ -134,7 +144,7 @@ const BoulderScreen = ({ route, navigation }) => {
           onPress: async () => {
             const data = { publish: true };
             const pathParams = { boulderId: boulder.id };
-            const response = await updateBoulderAPI(pathParams, data);
+            const response = await fetchUpdate({ pathParams, data });
             if (response.status === 200) {
               navigation.goBack();
               dispatch(updateBoulder(boulder.id, { publish: true }));
@@ -187,12 +197,7 @@ const BoulderScreen = ({ route, navigation }) => {
     <View style={styles.container}>
       <ScrollView>
         <Titles boulder={boulder} />
-        <ImageDisplay
-          image={boulder}
-          setImageFullScreen={setImageFullScreen}
-          isLoading={isLoading}
-          setIsLoading={setIsLoading}
-        />
+        <ImageDisplay image={boulder} setImageFullScreen={setImageFullScreen} />
         <DraftNotif boulder={boulder} />
         <InfoRow1 boulder={boulder} userID={user.id} navigation={navigation} />
         <InfoRow2
@@ -204,7 +209,6 @@ const BoulderScreen = ({ route, navigation }) => {
         <InfoRow3 boulder={boulder} />
         <InfoRow4 boulder={boulder} />
         {/* Tags? */}
-        {/* <InfoRow5 boulder={boulder} /> */}
         <InfoRow6 boulder={boulder} />
         {/* separator line */}
         <View style={{ paddingHorizontal: 20 }}>

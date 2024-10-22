@@ -12,17 +12,15 @@ import StatsSection from "../../components/profile/StatsSection";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { CommonActions } from "@react-navigation/native";
 import { logoutUser } from "../../services/auth";
-import { persistor } from "../../redux/store";
-import { NavigationProvider } from "../../contexts/NavigationContext";
 
 const THEME_STYLE = "white";
 
 const ProfileScreen = ({ navigation }) => {
   const { user } = useSelector((state) => state.user);
-  const [statsSectionQuickData, setStatsSectionQuickData] = useState([
-    { section: "Top Grade", data: 0 },
-    { section: "Flashes", data: 0 },
-  ]);
+  // const [statsSectionQuickData, setStatsSectionQuickData] = useState([
+  //   { section: "Top Grade", data: 0 },
+  //   { section: "Flashes", data: 0 },
+  // ]);
 
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [circuits, setCircuits] = useState([]);
@@ -31,7 +29,7 @@ const ProfileScreen = ({ navigation }) => {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerStyle: {
-        backgroundColor: THEME_STYLE, // Change this to your desired background color
+        backgroundColor: THEME_STYLE,
       },
       headerShadowVisible: false,
       animation: "none",
@@ -98,10 +96,10 @@ const ProfileScreen = ({ navigation }) => {
         <Header navigation={navigation} />
         <GymSection />
         <BouldersSection navigation={navigation} />
-        <StatsSection
+        {/* <StatsSection
           statsSectionQuickData={statsSectionQuickData}
           navigation={navigation}
-        />
+        /> */}
         <CircuitsSection circuits={circuits} navigation={navigation} />
       </ScrollView>
       {/* modal */}

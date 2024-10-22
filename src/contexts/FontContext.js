@@ -10,17 +10,17 @@ const FontContext = createContext({
 export const FontProvider = ({ children }) => {
   // NOT efficient if scaled up - meaning needing many more font sizes. Each size is a whole new asset so more memory. More fonts to preload may mean longer app startup load time
   const interFont12 = useFont(interFontPath, 12);
-  const interFont88 = useFont(interFontPath, 88);
+  const interFont75 = useFont(interFontPath, 75);
   const [fontsLoaded, setFontsLoaded] = useState(false);
 
   useEffect(() => {
-    if (interFont12 && interFont88) {
+    if (interFont12 && interFont75) {
       setFontsLoaded(true);
     }
-  }, [interFont12, interFont88]);
+  }, [interFont12, interFont75]);
 
   const fontValue = {
-    fonts: { inter12: interFont12, inter88: interFont88 },
+    fonts: { inter12: interFont12, inter75: interFont75 },
     fontsLoaded,
   };
 

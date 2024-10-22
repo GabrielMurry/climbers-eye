@@ -12,10 +12,10 @@ import AnimatedText from "./AnimatedText";
 import { useSharedValue, withTiming } from "react-native-reanimated";
 import BarPathHorizontal from "./BarPathHorizontal";
 import YAxisText from "./YAxisText";
-import { useFonts } from "../../../contexts/FontContext";
+import { useFonts } from "../../contexts/FontContext";
 
 const BarChartHorizontal = ({
-  data,
+  data, // type: list[dict[str, int]]
   canvasWidth = null,
   canvasHeight = null,
   labelToBarPadding = null,
@@ -27,7 +27,7 @@ const BarChartHorizontal = ({
 }) => {
   const { width } = useWindowDimensions();
 
-  const maxDataValue = Math.max(...data.map((item) => item.value));
+  const maxDataValue = Math.max(...data.map((item) => Object.values(item)[0]));
 
   const TEXT_SIZE = 12;
 
@@ -37,20 +37,22 @@ const BarChartHorizontal = ({
     console.log("Inter font not loaded for horizontal bar chart.");
   }
 
+  // Font sizes declared explicitly
   const font = fonts.inter12;
-  const fontTotal = fonts.inter88;
+  const fontTotal = fonts.inter75;
 
   let maxTextWidth = 0;
   if (font) {
     maxTextWidth = data.reduce((max, item) => {
-      const { width } = font.measureText(item.label);
+      const key = Object.keys(item)[0];
+      const { width } = font.measureText(key);
       return width > max ? width : max;
     }, 0);
   }
 
   // USER CAN CHANGE THESE VALUES (CAPITAL LETTERS)
   const CANVAS_WIDTH = canvasWidth || width;
-  const CANVAS_HEIGHT = canvasHeight || 440;
+  const CANVAS_HEIGHT = canvasHeight || 450;
   const LABEL_TO_BAR_PADDING = labelToBarPadding || 2;
   const CANVAS_PADDING_HOR = canvasPaddingHorizontal || 10;
   const SCREEN_PADDING = screenPadding || 20;
@@ -70,7 +72,7 @@ const BarChartHorizontal = ({
 
   const progress = useSharedValue(0);
   const selectedValue = useSharedValue(0);
-  const totalValue = data.reduce((acc, cur) => acc + cur.value, 0);
+  const totalValue = data.reduce((acc, cur) => acc + Object.values(cur)[0], 0);
   // Creating a state to store the selected label
   const [selectedLabel, setSelectedLabel] = useState("Total");
   // Creating a sharedValue to store the selected label (bar)
@@ -81,7 +83,7 @@ const BarChartHorizontal = ({
   const xDomain = maxDataValue > 0 ? [0, maxDataValue] : [0, 1];
 
   const yRange = [0, GRAPH_HEIGHT];
-  const yDomain = data.map((dataPoint) => dataPoint.label);
+  const yDomain = data.map((dataPoint) => Object.keys(dataPoint)[0]);
 
   const x = d3.scaleLinear().domain(xDomain).range(xRange);
 
@@ -98,10 +100,13 @@ const BarChartHorizontal = ({
     const index = Math.floor((touchY - BAR_WIDTH / 2) / y.step());
     // If our touch lands at the start of the first bar and within the end of the last bar
     if (index >= 0 && index < data.length) {
-      const { label, value } = data[index];
-      setSelectedLabel(label);
-      selectedBar.value = label;
+      const dataPoint = data[index];
+      const key = Object.keys(dataPoint)[0];
+      const value = Object.values(dataPoint)[0];
+      setSelectedLabel(key);
+      selectedBar.value = key;
       selectedValue.value = withTiming(value);
+      console.log("hi");
     }
   };
 
@@ -165,11 +170,11 @@ const BarChartHorizontal = ({
         {data.map((dataPoint, index) => (
           <Group key={index}>
             <BarPathHorizontal
-              x={x(dataPoint.value)}
-              y={y(dataPoint.label)}
+              x={x(Object.values(dataPoint)[0])}
+              y={y(Object.keys(dataPoint)[0])}
               BAR_WIDTH={BAR_WIDTH}
               progress={progress}
-              label={dataPoint.label}
+              label={Object.keys(dataPoint)[0]}
               selectedBar={selectedBar}
               maxTextWidth={maxTextWidth}
               LABEL_TO_BAR_PADDING={LABEL_TO_BAR_PADDING}
@@ -178,8 +183,8 @@ const BarChartHorizontal = ({
             />
             <YAxisText
               x={0}
-              y={y(dataPoint.label)}
-              text={dataPoint.label}
+              y={y(Object.keys(dataPoint)[0])}
+              text={Object.keys(dataPoint)[0]}
               selectedBar={selectedBar}
               BAR_WIDTH={BAR_WIDTH}
               TEXT_SIZE={TEXT_SIZE}

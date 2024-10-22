@@ -12,16 +12,18 @@ import SettingsTextInput from "../../components/custom/SettingsTextInput";
 import useCustomHeader from "../../hooks/useCustomHeader";
 import { updateGymInfo } from "../../services/gym";
 import { updateGym } from "../../redux/features/gym/gymSlice";
+import { useFetch } from "../../hooks/useFetch";
 
 const EditGymNameScreen = ({ navigation }) => {
   const CHAR_LIMIT = 50;
 
   const dispatch = useDispatch();
   const { gym } = useSelector((state) => state.gym);
-  console.log(gym);
   const [newGymName, setNewGymName] = useState(gym.name);
   const [isDisabled, setIsDisabled] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+
+  const [fetchUpdate, isLoadingUpdate, isErrorUpdate] = useFetch(updateGymInfo);
 
   useEffect(() => {
     if (newGymName !== gym.name) {
@@ -35,7 +37,7 @@ const EditGymNameScreen = ({ navigation }) => {
     setIsLoading(true);
     const data = { name: newGymName };
     const pathParams = { gymId: gym.id };
-    const response = await updateGymInfo(pathParams, data);
+    const response = await fetchUpdate({ pathParams, data });
     if (response.status === 200) {
       dispatch(updateGym({ name: newGymName }));
       navigation.goBack();

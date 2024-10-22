@@ -59,9 +59,8 @@ function Tabs({ navigation }) {
             },
           })}
         />
-        {/* <Tab.Screen name="Activity" component={ActivityScreen} /> */}
         <Tab.Screen
-          name="Profile"
+          name="ProfileStack-Tabs"
           component={ProfileStack}
           options={{
             headerShown: false,

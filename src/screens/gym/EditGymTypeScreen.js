@@ -23,6 +23,8 @@ const EditGymTypeScreen = ({ navigation }) => {
   const [isDisabled, setIsDisabled] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
+  const [fetchUpdate, isLoadingUpdate, isErrorUpdate] = useFetch(updateGymInfo);
+
   useEffect(() => {
     const newType = isCommercialGym ? "commercial" : "home";
     if (newType !== gym.type) {
@@ -37,7 +39,7 @@ const EditGymTypeScreen = ({ navigation }) => {
     const newType = isCommercialGym ? "commercial" : "home";
     const data = { type: newType };
     const pathParams = { gymId: gym.id };
-    const response = await updateGymInfo(pathParams, data);
+    const response = await fetchUpdate({ pathParams, data });
     if (response.status === 200) {
       dispatch(updateGym({ type: newType }));
       navigation.goBack();

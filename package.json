@@ -64,13 +64,16 @@
     "redux-logger": "^3.0.6",
     "redux-persist": "^6.0.0",
     "redux-thunk": "^3.1.0",
-    "rn-perfect-sketch-canvas": "^0.3.0",
-    "victory-native": "^41.0.0"
+    "victory-native": "^41.0.0",
+    "expo-image": "~1.13.0"
   },
   "devDependencies": {
     "@babel/core": "^7.24.6",
+    "@types/react": "^18.3.11",
+    "@types/react-native": "^0.73.0",
     "react-native-dotenv": "^3.4.11",
-    "react-native-svg-transformer": "^1.4.0"
+    "react-native-svg-transformer": "^1.4.0",
+    "typescript": "^5.6.3"
   },
   "private": true
 }

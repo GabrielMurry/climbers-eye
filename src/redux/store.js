@@ -8,6 +8,7 @@ import userReducer from "./features/user/userSlice";
 import spraywallReducer from "./features/spraywall/spraywallSlice";
 import filterReducer from "./features/filter/filterSlice";
 import boulderReducer from "./features/boulder/boulderSlice";
+import circuitReducer from "./features/circuit/circuitSlice";
 
 // Define the configuration for redux-persist
 const persistConfig = {
@@ -23,6 +24,7 @@ const rootReducer = combineReducers({
   spraywall: spraywallReducer,
   filter: filterReducer,
   boulder: boulderReducer,
+  circuit: circuitReducer,
 });
 
 // Persist the combined reducers

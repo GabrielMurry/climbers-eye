@@ -8,7 +8,8 @@ const initialState = {
   activity: null,
   climbType: "boulder",
   climbStatus: "all",
-  circuits: [],
+  circuit: null,
+  excludeIds: [],
 };
 
 export const filterSlice = createSlice({
@@ -33,15 +34,17 @@ export const filterSlice = createSlice({
     setClimbStatus: (state, action) => {
       state.climbStatus = action.payload;
     },
-    appendCircuit: (state, action) => {
-      state.circuits.push(action.payload);
+    setCircuit: (state, action) => {
+      state.circuit = action.payload;
     },
-    removeCircuit: (state, action) => {
-      const id = action.payload;
-      state.circuits = state.circuits.filter((circuit) => circuit.id !== id);
+    resetCircuit: (state) => {
+      state.circuit = initialState.circuit;
     },
-    resetCircuits: (state) => {
-      state.circuits = [];
+    appendExcludeId: (state, action) => {
+      state.excludeIds.push(action.payload);
+    },
+    resetExcludeIds: (state) => {
+      state.excludeIds = initialState.excludeIds;
     },
     resetFilters: (state) => {
       // Mutating each field back to its initial value
@@ -51,7 +54,8 @@ export const filterSlice = createSlice({
       state.activity = initialState.activity;
       state.climbType = initialState.climbType;
       state.climbStatus = initialState.climbStatus;
-      state.circuits = [...initialState.circuits]; // Reset to an empty array
+      state.circuit = initialState.circuit;
+      state.excludeIds = initialState.excludeIds;
     },
   },
 });
@@ -63,9 +67,10 @@ export const {
   setActivity,
   setClimbType,
   setClimbStatus,
-  appendCircuit,
-  removeCircuit,
-  resetCircuits,
+  setCircuit,
+  resetCircuit,
+  appendExcludeId,
+  resetExcludeIds,
   resetFilters,
 } = filterSlice.actions;
 
