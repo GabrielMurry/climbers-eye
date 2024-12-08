@@ -1,7 +1,7 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
-import { Provider } from "react-redux";
+import { Provider, useSelector } from "react-redux";
 import { store, persistor } from "./src/redux/store";
 import { StatusBar } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -15,8 +15,41 @@ import CameraStack from "./src/navigation/CameraStack";
 import BoulderStack from "./src/navigation/BoulderStack";
 import ProfileStack from "./src/navigation/ProfileStack";
 import CircuitStack from "./src/navigation/CircuitStack";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { clearAsyncStorage } from "./src/utils/initializeAuth";
+import { jwtDecode } from "jwt-decode";
 
 const Stack = createNativeStackNavigator();
+
+const checkTokenExpiry = async () => {
+  const accessToken = await AsyncStorage.getItem("accessToken");
+  const refreshToken = await AsyncStorage.getItem("refreshToken");
+
+  if (!accessToken || !refreshToken) {
+    return false;
+  }
+
+  const { exp: accessExp } = jwtDecode(accessToken);
+  const { exp: refreshExp } = jwtDecode(refreshToken);
+
+  const currentTime = Date.now() / 1000; // Current time in seconds since epoch
+
+  // If both tokens have expired, return false
+  if (accessExp < currentTime && refreshExp < currentTime) {
+    return false;
+  }
+
+  return true;
+};
+
+const hasCredentials = async () => {
+  const isTokenValid = await checkTokenExpiry();
+  if (isTokenValid) {
+    return true;
+  } else {
+    return false;
+  }
+};
 
 export default function App() {
   return (
@@ -28,8 +61,9 @@ export default function App() {
             <FontProvider>
               <NavigationContainer>
                 <StatusBar barStyle={"dark-content"} />
-                {/* Preload the images before rendering any screen */}
-                <Stack.Navigator initialRouteName="AuthStack">
+                <Stack.Navigator
+                  initialRouteName={hasCredentials ? "Tabs" : "AuthStack"}
+                >
                   {/* Screens */}
                   <Stack.Screen
                     name="AuthStack"

@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { ScrollView, SafeAreaView } from "react-native";
 import React from "react";
 import useCustomHeader from "../../hooks/useCustomHeader";
 import GymSection from "../../components/gym/GymSection";
@@ -12,17 +12,23 @@ const EditGymScreen = ({ navigation }) => {
     title: "Edit Gym",
   });
   return (
-    <View
+    <SafeAreaView
       style={{
         flex: 1,
-        backgroundColor: "rgba(245,245,245,255)",
-        paddingHorizontal: 10,
       }}
     >
-      <GymSection navigation={navigation} />
-      <SpraywallSection navigation={navigation} />
-      <DeleteGym navigation={navigation} />
-    </View>
+      <ScrollView
+        style={{
+          flex: 1,
+          backgroundColor: "rgba(245,245,245,255)",
+          paddingHorizontal: 10,
+        }}
+      >
+        <GymSection navigation={navigation} />
+        <SpraywallSection navigation={navigation} />
+        <DeleteGym navigation={navigation} />
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 

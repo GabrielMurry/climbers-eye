@@ -1,67 +1,81 @@
-import { View, StyleSheet, ActivityIndicator } from "react-native";
+import { View, StyleSheet, ActivityIndicator, Image } from "react-native";
 import React, { useRef, useState } from "react";
-import { captureRef } from "react-native-view-shot";
 import { compositeBoulder } from "../../services/boulder";
 import { useFetch } from "../../hooks/useFetch";
 import ToolBar from "../../components/boulder/paint/ToolBar";
 import ImageCanvas from "../../components/boulder/paint/ImageCanvas";
 import useCustomHeader from "../../hooks/useCustomHeader";
+import * as FileSystem from "expo-file-system";
+import LoadingFadeOverlay from "../../components/common/LoadingFadeOverlay";
 
 const EditBoulderScreen = ({ route, navigation }) => {
   const { image } = route.params;
 
-  const canvasRef = useRef();
-  const zoomRef = useRef();
-  const snapshotDrawingRef = useRef();
-  const snapshotPhotoRef = useRef();
+  const canvasRef = useRef(null);
+  const snapshotDrawingRef = useRef(null);
+  const snapshotPhotoRef = useRef(null);
 
   const [selectedItem, setSelectedItem] = useState("green");
   const [strokeWidth, setStrokeWidth] = useState(20);
-  const [currentZoomLevel, setCurrentZoomLevel] = useState(1.0);
 
   const [fetchComposite, isLoadingComposite, isErrorComposite] =
     useFetch(compositeBoulder);
 
   const handleItemPress = (item) => {
     setSelectedItem(item);
-    setCurrentZoomLevel(zoomRef.current.zoomLevel);
+  };
+
+  const saveBase64AsFile = async (base64) => {
+    const fileUri = `${FileSystem.cacheDirectory}canvas-image.png`;
+
+    try {
+      // Ensure a Base64 string
+      if (typeof base64 !== "string") {
+        throw new Error("Must be a Base64-encoded string.");
+      }
+
+      // Write Base64 string to a file
+      await FileSystem.writeAsStringAsync(fileUri, base64, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+
+      console.log(`File saved at: ${fileUri}`);
+      return fileUri;
+    } catch (error) {
+      console.error("Error saving file:", error);
+      throw error;
+    }
   };
 
   const handleDonePress = async () => {
-    // snapshot of drawing in base64 png
-    const snapshotDrawing = await captureRef(snapshotDrawingRef, {
-      format: "png",
-      quality: 1,
-      result: "base64",
-    }).then(
-      (base64) => {
-        return base64;
-      },
-      (error) => console.error("Oops, snapshot failed", error)
-    );
-    // snapshot of photo in base64 png
-    const snapshotPhoto = await captureRef(snapshotPhotoRef, {
-      format: "png",
-      quality: 1,
-      result: "base64",
-    }).then(
-      (base64) => {
-        return base64;
-      },
-      (error) => console.error("Oops, snapshot failed", error)
-    );
-
-    const data = { drawing: snapshotDrawing, photo: snapshotPhoto };
-
-    const response = await fetchComposite({ data });
-    if (response.status !== 200) {
-      console.log(response.status);
-      return;
+    const canvasImageBase64 = await canvasRef.current?.saveAsBase64();
+    const canvasImageUri = await saveBase64AsFile(canvasImageBase64);
+    const formData = new FormData();
+    if (image.url.startsWith("https")) {
+      // Add the S3 URL as a string field
+      formData.append("image", {
+        uri: image.url,
+        name: "photo.jpeg",
+        type: "image/jpeg",
+      });
+    } else {
+      formData.append("image", {
+        uri: image.url,
+        name: "photo.png",
+        type: "image/png",
+      });
     }
-    if (response.data) {
+    const fileName = canvasImageUri.split("/").pop();
+    formData.append("canvas", {
+      uri: canvasImageUri,
+      name: fileName,
+      type: "image/png",
+    });
+    const response = await fetchComposite(formData);
+    if (response) {
       navigation.navigate("BoulderStack", {
         screen: "PreviewEdit",
-        params: { image, resultImageUri: response.data.uri },
+        params: { image: response.data },
       });
     }
   };
@@ -73,16 +87,10 @@ const EditBoulderScreen = ({ route, navigation }) => {
     headerRightOnPress: handleDonePress,
   });
 
-  if (isLoadingComposite) {
-    return <ActivityIndicator />;
-  }
-
   return (
     <View style={styles.container}>
       <ImageCanvas
         selectedItem={selectedItem}
-        currentZoomLevel={currentZoomLevel}
-        zoomRef={zoomRef}
         image={image}
         snapshotDrawingRef={snapshotDrawingRef}
         strokeWidth={strokeWidth}

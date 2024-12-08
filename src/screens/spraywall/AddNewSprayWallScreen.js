@@ -46,15 +46,19 @@ const AddNewSprayWallScreen = ({ navigation, route }) => {
 
   const handleAddNewSprayWall = async () => {
     setIsLoading(true);
-    const data = {
-      name: sprayWallName,
-      url: image.url.split(",")[1],
-      width: image.width,
-      height: image.height,
-      gym: gym.id,
-    };
+    const formData = new FormData();
+    formData.append("url", {
+      uri: image.url,
+      name: "photo.png",
+      type: "image/png",
+    });
+    formData.append("name", sprayWallName);
+    formData.append("gym", gym.id);
+    formData.append("width", image.width);
+    formData.append("height", image.height);
+
     const pathParams = { gymId: gym.id };
-    const response = await fetchCreateSpraywall({ pathParams, data });
+    const response = await fetchCreateSpraywall({ pathParams, data: formData });
     if (response.status === 201) {
       console.log(response.data);
       dispatch(appendSpraywall(response.data));

@@ -12,7 +12,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import useCustomHeader from "../../hooks/useCustomHeader";
 import { useActionSheet } from "@expo/react-native-action-sheet";
-import { launchImageLibraryAsync, MediaTypeOptions } from "expo-image-picker";
+import { launchImageLibraryAsync } from "expo-image-picker";
 import { updateSpraywallAPI } from "../../services/spraywall";
 import { updateSpraywall } from "../../redux/features/spraywall/spraywallSlice";
 import { useFetch } from "../../hooks/useFetch";
@@ -70,7 +70,7 @@ const EditSpraywallImageScreen = ({ navigation, route }) => {
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     let result = await launchImageLibraryAsync({
-      mediaTypes: MediaTypeOptions.All,
+      mediaTypes: "images",
       allowsEditing: false,
       aspect: [4, 3],
       quality: 1,

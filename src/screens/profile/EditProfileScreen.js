@@ -1,24 +1,40 @@
 import { View, Text, SafeAreaView } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-// import { setHeadshotImage } from "../../redux/actions";
 import * as ImagePicker from "expo-image-picker";
 import useCustomHeader from "../../hooks/useCustomHeader";
 import ModalOptions from "../../components/custom/ModalOptions";
 import SettingsButton from "../../components/custom/SettingsButton";
+import { useFetch } from "../../hooks/useFetch";
+import { updateProfileInfo } from "../../services/profile";
+import { updateUser } from "../../redux/features/user/userSlice";
 
 const EditProfileScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
-  const { user, headshotImage } = useSelector((state) => state.user);
+  const { user } = useSelector((state) => state.user);
 
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [optionsData, setOptionsData] = useState([]);
 
+  const [patchProfile, isLoadingPatchProfile, isErrorPatchProfile] =
+    useFetch(updateProfileInfo);
+
+  const requestPermissions = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== "granted") {
+      alert("Permission to access media library is required!");
+      return false;
+    }
+    return true;
+  };
+
   const handleUploadImage = async () => {
-    setIsModalVisible(false);
+    const hasPermission = await requestPermissions();
+    if (!hasPermission) return;
+
     try {
       const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        mediaTypes: ["images"],
         allowsEditing: false,
         aspect: [4, 3],
         quality: 1,
@@ -43,16 +59,17 @@ const EditProfileScreen = ({ navigation, route }) => {
     } catch (error) {
       console.log(error);
     }
+    setIsModalVisible(false);
   };
 
-  useCustomHeader({
-    backgroundColor: "rgba(245,245,245,255)",
-    navigation,
-    title: "Edit Profile",
-  });
-
-  const removeHeadshotPhoto = () => {
-    dispatch(setHeadshotImage({}));
+  const handleDeleteProfilePic = async () => {
+    const data = {
+      profilePicUrl: null,
+      profilePicWidth: null,
+      profilePicHeight: null,
+    };
+    const response = await patchProfile({ data });
+    dispatch(updateUser(response.data));
     setIsModalVisible(false);
   };
 
@@ -60,29 +77,30 @@ const EditProfileScreen = ({ navigation, route }) => {
     const createOptionsData = () => {
       // start with options
       const options = [
-        { title: "Choose From Library", onPress: handleUploadImage },
+        { title: "Choose Photo", onPress: handleUploadImage },
+        { title: "Take Photo", onPress: handleUploadImage },
+        {
+          title: "Delete Photo",
+          onPress: handleDeleteProfilePic,
+          color: "red",
+        },
         {
           title: "Cancel",
           onPress: () => setIsModalVisible(false),
           color: "gray",
         },
       ];
-      // If you are the setter of a boulder, give option to delete boulder
-      if (headshotImage.url) {
-        const removeHeadshotOption = {
-          title: "Remove Photo",
-          onPress: removeHeadshotPhoto,
-          color: "red",
-        };
-        const cancelOptionIndex = options.length - 1;
-        options.splice(cancelOptionIndex, 0, removeHeadshotOption);
-      }
-
       return options;
     };
 
     setOptionsData(createOptionsData());
-  }, [headshotImage]);
+  }, []);
+
+  useCustomHeader({
+    backgroundColor: "rgba(245,245,245,255)",
+    navigation,
+    title: "Edit Profile",
+  });
 
   return (
     <SafeAreaView
@@ -104,7 +122,7 @@ const EditProfileScreen = ({ navigation, route }) => {
         </View>
         <View style={{ backgroundColor: "white", borderRadius: 5 }}>
           <SettingsButton
-            imageUrl={headshotImage.url ? headshotImage.url : "default"}
+            imageUrl={user?.profilePicUrl ? user?.profilePicUrl : "default"}
             onPress={() => setIsModalVisible(true)}
           />
           <SettingsButton

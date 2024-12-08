@@ -1,33 +1,35 @@
-import { View, Image, StyleSheet } from "react-native";
-import React from "react";
+import { View, Image, Dimensions } from "react-native";
+import React, { useEffect, useRef } from "react";
 import ReactNativeZoomableView from "@openspacelabs/react-native-zoomable-view/src/ReactNativeZoomableView";
 import { CanvasBoard } from "../../canvas";
+import {
+  scaledImageHeight,
+  scaledImageWidth,
+} from "../../../utils/imageScaling";
 
 const ImageCanvas = ({
   selectedItem,
-  currentZoomLevel,
-  zoomRef,
   image,
   snapshotDrawingRef,
   strokeWidth,
   canvasRef,
   snapshotPhotoRef,
 }) => {
-  const imageScaleDownFactor = image.width > image.height ? 10 : 8;
+  const scaledWidth = scaledImageWidth();
+  const scaledHeight = scaledImageHeight(image.height, image.width);
 
   return (
     <ReactNativeZoomableView
-      disablePanOnInitialZoom={selectedItem === "hand" ? false : true}
+      zoomEnabled={selectedItem === "hand" ? true : false}
+      panEnabled={selectedItem === "hand" ? true : false}
       maxZoom={10}
       minZoom={1}
-      initialZoom={currentZoomLevel}
-      ref={zoomRef}
       visualTouchFeedbackEnabled={false}
     >
       <View
         style={{
-          width: image.width / imageScaleDownFactor,
-          height: image.height / imageScaleDownFactor,
+          width: scaledWidth,
+          height: scaledHeight,
         }}
         ref={snapshotDrawingRef}
       >
@@ -35,15 +37,20 @@ const ImageCanvas = ({
           disableBrush={selectedItem === "hand" ? true : false}
           color={selectedItem}
           strokeWidth={strokeWidth}
-          width={image.width / imageScaleDownFactor}
-          height={image.height / imageScaleDownFactor}
+          width={scaledWidth}
+          height={scaledHeight}
           opacity={0.5}
           ref={canvasRef}
         />
       </View>
       <Image
         source={{ uri: image.url }}
-        style={styles.image(image, imageScaleDownFactor)}
+        style={{
+          width: scaledWidth,
+          height: scaledHeight,
+          position: "absolute",
+          zIndex: -1,
+        }}
         ref={snapshotPhotoRef}
       />
     </ReactNativeZoomableView>
@@ -51,12 +58,3 @@ const ImageCanvas = ({
 };
 
 export default ImageCanvas;
-
-const styles = StyleSheet.create({
-  image: (image, imageScaleDownFactor) => ({
-    width: image.width / imageScaleDownFactor,
-    height: image.height / imageScaleDownFactor,
-    position: "absolute",
-    zIndex: -1,
-  }),
-});

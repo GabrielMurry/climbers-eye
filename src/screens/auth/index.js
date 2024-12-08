@@ -1,7 +1,6 @@
 // Barrel exporting
 export { default as LoginScreen } from "./LoginScreen";
 export { default as SignupScreen } from "./SignupScreen";
-export { default as AuthLoadingScreen } from "./AuthLoadingScreen";
 export { default as ConfirmEmailScreen } from "./ConfirmEmailScreen";
 export { default as ForgotPasswordScreen } from "./ForgotPasswordScreen";
 export { default as PrivacyPolicyScreen } from "./PrivacyPolicyScreen";

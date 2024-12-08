@@ -25,8 +25,13 @@ export const getBoulderDetail = async ({ pathParams }) => {
   return await request("get", `boulder/detail/${boulderId}`);
 };
 
-export const compositeBoulder = async ({ data }) => {
-  return await request("post", "boulder/composite/", data);
+export const compositeBoulder = async (data) => {
+  return await request(
+    "post",
+    "boulder/composite/",
+    data,
+    "multipart/form-data"
+  );
 };
 
 export const addBoulderToSpraywall = async ({ pathParams, data }) => {

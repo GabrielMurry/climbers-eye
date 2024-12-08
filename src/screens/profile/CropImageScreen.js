@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import React, { useLayoutEffect, useRef, useState } from "react";
 import {
   View,
   Image,
@@ -7,25 +7,30 @@ import {
   TouchableOpacity,
   Dimensions,
 } from "react-native";
-import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import ReactNativeZoomableView from "@openspacelabs/react-native-zoomable-view/src/ReactNativeZoomableView";
-// import { setHeadshotImage } from "../../redux/actions";
-import { request } from "../../services/common/apiRequest";
 import { colors } from "../../utils/styles";
+import { useFetch } from "../../hooks/useFetch";
+import { updateProfileInfo } from "../../services/profile";
+import { updateUser } from "../../redux/features/user/userSlice";
+import LoadingFadeOverlay from "../../components/common/LoadingFadeOverlay";
+import { ImageManipulator } from "expo-image-manipulator";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const SCREEN_HEIGHT = Dimensions.get("window").height;
 
 const CropImageScreen = ({ route, navigation }) => {
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.user);
   const { imageUri, width, height, isPortrait } = route.params;
 
   const [contentHeight, setContentHeight] = useState(0);
-  const [contentWidth, setContentWidth] = useState(0);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const zoomRef = useRef();
+
+  const [patchProfile, isLoadingPatchProfile, isErrorPatchProfile] =
+    useFetch(updateProfileInfo);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -40,7 +45,10 @@ const CropImageScreen = ({ route, navigation }) => {
         </Text>
       ),
       headerLeft: () => (
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          disabled={isLoading}
+        >
           <Text
             style={{
               color: "black",
@@ -53,7 +61,7 @@ const CropImageScreen = ({ route, navigation }) => {
         </TouchableOpacity>
       ),
       headerRight: () => (
-        <TouchableOpacity onPress={handleDonePress}>
+        <TouchableOpacity onPress={handleDonePress} disabled={isLoading}>
           <Text
             style={{
               color: colors.primary,
@@ -66,9 +74,10 @@ const CropImageScreen = ({ route, navigation }) => {
         </TouchableOpacity>
       ),
     });
-  }, [navigation]);
+  }, [navigation, isLoading]);
 
   const handleDonePress = async () => {
+    setIsLoading(true);
     // wow!
     // transform info
     const cropScale = width / SCREEN_WIDTH;
@@ -90,24 +99,22 @@ const CropImageScreen = ({ route, navigation }) => {
       width: cropWidth,
       height: cropHeight,
     };
-    const manipResult = await manipulateAsync(imageUri, [{ crop: cropData }], {
-      compress: 1,
-      format: SaveFormat.PNG,
-      base64: true,
+    const croppedImage = await ImageManipulator.manipulate(imageUri)
+      .crop(cropData)
+      .renderAsync();
+    const formattedImage = await croppedImage.saveAsync({
+      compress: 0.5,
     });
-    const data = {
-      url: manipResult.base64, // raw base64 (does not include png specifier at beginning)
-      width: width,
-      height: width, // squarecrop - same dimensions - based on image width
-    };
-    const response = await request("post", `edit_headshot/${user.id}`, data);
-    if (response.status !== 200) {
-      console.log(response.status);
-      return;
-    }
-    if (response.data) {
-      dispatch(setHeadshotImage(response.data.headshotImage));
-    }
+    const formData = new FormData();
+    formData.append("profilePicUrl", {
+      uri: formattedImage.uri,
+      name: "photo.jpeg",
+      type: "image/jpeg",
+    });
+    formData.append("profilePicWidth", width); // square crop - same dimensions - based on image width
+    formData.append("profilePicHeight", width);
+    const response = await patchProfile({ data: formData });
+    dispatch(updateUser(response.data));
     navigation.goBack();
   };
 
@@ -147,6 +154,7 @@ const CropImageScreen = ({ route, navigation }) => {
           }}
         />
       </ReactNativeZoomableView>
+      <LoadingFadeOverlay isLoading={isLoading} />
     </View>
   );
 };
@@ -170,6 +178,24 @@ const styles = StyleSheet.create({
     width: width,
     height: height,
   }),
+  activityIndicatorContainer: {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: [{ translateX: -25 }, { translateY: -25 }], // shifts the indicator by half its size (default is 50px for large size), ensuring it is perfectly centered.
+    zIndex: 10, // Ensure it appears above other components
+  },
+  overlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent black background
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 10, // Ensure it appears above other content
+  },
 });
 
 export default CropImageScreen;

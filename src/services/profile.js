@@ -32,3 +32,7 @@ export const getCreationList = async ({ pathParams, queryParams }) => {
     `profile/creation_list/${spraywallId}?page=${page}`
   );
 };
+
+export const updateProfileInfo = async ({ data }) => {
+  return await request("patch", `profile/detail/`, data, "multipart/form-data");
+};

@@ -7,7 +7,12 @@ export const getSpraywallList = async ({ pathParams }) => {
 
 export const createSpraywall = async ({ pathParams, data }) => {
   const { gymId } = pathParams;
-  return await request("post", `spraywall/list/${gymId}`, data);
+  return await request(
+    "post",
+    `spraywall/list/${gymId}`,
+    data,
+    "multipart/form-data"
+  );
 };
 
 export const updateSpraywallAPI = async ({ pathParams, data }) => {

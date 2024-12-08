@@ -1,18 +1,15 @@
-import {
-  Canvas,
-  Path,
-  Skia,
-  TouchInfo,
-  useTouchHandler,
-} from "@shopify/react-native-skia";
+import { Canvas, Path, Skia, useCanvasRef } from "@shopify/react-native-skia";
 import React, {
   forwardRef,
-  useCallback,
+  useEffect,
   useImperativeHandle,
+  useRef,
   useState,
 } from "react";
 import { SafeAreaView, StyleSheet, useWindowDimensions } from "react-native";
+import { GestureDetector, Gesture } from "react-native-gesture-handler";
 import { CanvasBoardProps, PathWithColorAndWidth } from "./types";
+import { runOnJS } from "react-native-reanimated";
 
 const CanvasBoard: React.FC<CanvasBoardProps> = forwardRef(
   (
@@ -28,98 +25,96 @@ const CanvasBoard: React.FC<CanvasBoardProps> = forwardRef(
   ) => {
     const [paths, setPaths] = useState<PathWithColorAndWidth[]>([]);
 
-    const onDrawingStart = useCallback(
-      (touchInfo: TouchInfo) => {
-        setPaths((currentPaths) => {
-          const { x, y } = touchInfo;
-          const newPath = Skia.Path.Make();
-          newPath.moveTo(x, y);
-          return [
-            ...currentPaths,
-            {
-              path: newPath,
-              color,
-              strokeWidth,
-            },
-          ];
-        });
-      },
-      [color, strokeWidth]
-    );
+    const cRef = useCanvasRef();
 
-    const onDrawingActive = useCallback((touchInfo: TouchInfo) => {
+    const onDrawingStart = (x: number, y: number) => {
       setPaths((currentPaths) => {
-        const { x, y } = touchInfo;
+        const newPath = Skia.Path.Make();
+        newPath.moveTo(x, y);
+        newPath.lineTo(x + 0, y + 0);
+        return [
+          ...currentPaths,
+          {
+            path: newPath,
+            color,
+            strokeWidth,
+          },
+        ];
+      });
+    };
+
+    const onDrawingActive = (x: number, y: number) => {
+      setPaths((currentPaths) => {
         const currentPath = currentPaths[currentPaths.length - 1];
         const lastPoint = currentPath.path.getLastPt();
         const xMid = (lastPoint.x + x) / 2;
         const yMid = (lastPoint.y + y) / 2;
-        // quadTo adds a smooth quadratic Bezier curve to the current path between the last point and a new point, making the drawing curve nicely and look smoother/natural rather than having a bunch of straight jagged lines.
         currentPath.path.quadTo(lastPoint.x, lastPoint.y, xMid, yMid);
         return [...currentPaths.slice(0, currentPaths.length - 1), currentPath];
       });
-    }, []);
-
-    const touchHandler = useTouchHandler(
-      {
-        onActive: onDrawingActive,
-        onStart: onDrawingStart,
-      },
-      [onDrawingActive, onDrawingStart]
-    );
-
-    // Modified touchHandler to account for disableBrush
-    const handleTouch = (event: any) => {
-      // Do nothing if the brush is disabled. Ensuring touch or strokes are not queued up even when brush is disabled.
-      if (disableBrush) {
-        return;
-      }
-      // Call touchHandler when brush is enabled
-      touchHandler(event);
     };
+
+    const panGesture = Gesture.Pan()
+      .onBegin((e) => {
+        if (!disableBrush) {
+          runOnJS(onDrawingStart)(e.x, e.y);
+        }
+      })
+      .onUpdate((e) => {
+        if (!disableBrush) {
+          runOnJS(onDrawingActive)(e.x, e.y);
+        }
+      });
 
     const handleUndo = () => {
       setPaths((currentPaths) => {
         if (currentPaths.length === 0) return currentPaths;
-        return currentPaths.slice(0, -1); // Remove the last stroke
+        return currentPaths.slice(0, -1);
       });
     };
 
-    // Use useImperativeHandle to expose custom methods or values to the parent component
+    const handleSaveAsBase64 = async () => {
+      try {
+        const image = await cRef.current?.makeImageSnapshotAsync();
+        if (image) {
+          const bytes = image.encodeToBase64();
+          return bytes;
+        }
+      } catch (error) {
+        console.error("Handle save as base64 error:", error);
+      }
+    };
+
     useImperativeHandle(ref, () => ({
       clearCanvas: () => setPaths([]),
       getPaths: () => paths,
       undo: handleUndo,
+      saveAsBase64: handleSaveAsBase64,
     }));
 
     return (
-      <SafeAreaView style={{ flex: 1 }}>
-        {/* <ToolBar
-        color={color}
-        strokeWidth={strokeWidth}
-        setColor={setColor}
-        strokes={strokes}
-        setStrokeWidth={setStrokeWidth}
-      /> */}
-        <Canvas style={{ width: width, height: height }} onTouch={handleTouch}>
-          {paths.map((path, index) => (
-            <Path
-              key={index}
-              path={path.path}
-              color={path.color}
-              style={"stroke"}
-              strokeWidth={path.strokeWidth}
-              strokeCap="round"
-              opacity={opacity}
-            />
-          ))}
-        </Canvas>
+      <SafeAreaView style={styles.container}>
+        <GestureDetector gesture={panGesture}>
+          <Canvas ref={cRef} style={{ width, height }}>
+            {paths.map((path, index) => (
+              <Path
+                key={index}
+                path={path.path}
+                color={path.color}
+                style={"stroke"}
+                strokeWidth={path.strokeWidth}
+                strokeCap="round"
+                opacity={opacity}
+              />
+            ))}
+          </Canvas>
+        </GestureDetector>
       </SafeAreaView>
     );
   }
 );
 
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
   },

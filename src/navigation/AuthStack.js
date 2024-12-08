@@ -3,7 +3,6 @@ import { NavigationContainer } from "@react-navigation/native";
 import {
   LoginScreen,
   SignupScreen,
-  AuthLoadingScreen,
   ConfirmEmailScreen,
   ForgotPasswordScreen,
   PrivacyPolicyScreen,
@@ -15,9 +14,8 @@ import {
 const Stack = createNativeStackNavigator();
 
 const AuthStack = () => (
-  <Stack.Navigator initialRouteName="AuthLoading">
+  <Stack.Navigator initialRouteName="Login">
     <Stack.Group screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="AuthLoading" component={AuthLoadingScreen} />
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="Signup" component={SignupScreen} />
       <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />

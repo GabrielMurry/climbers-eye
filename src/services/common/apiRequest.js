@@ -3,24 +3,29 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { REFERER } from "@env";
 
 // "data" parameter is optional
-const request = async (method, endpoint, data = null) => {
+const request = async (
+  method,
+  endpoint,
+  data = null,
+  contentType = "application/json"
+) => {
   try {
     console.log(method, endpoint);
     // grab csrf token, access token, and refresh token from storage
     const csrfToken = await AsyncStorage.getItem("csrfToken");
     const accessToken = await AsyncStorage.getItem("accessToken");
 
+    axiosInstance.defaults.headers["Content-Type"] = contentType;
+
     // attach csrf token to request header
     // Including the actual CSRF token in GET requests is generally not a common practice and is not required for CSRF protection.
     // The primary purpose of CSRF tokens is to protect against unauthorized state-changing requests, which are typically made using POST, PUT, DELETE, or similar HTTP methods.
     if (method == "post" || method == "put" || method == "delete") {
-      axiosInstance.defaults.headers.common["X-CSRFToken"] = csrfToken;
-      axiosInstance.defaults.headers.common["Referer"] = REFERER;
+      axiosInstance.defaults.headers["X-CSRFToken"] = csrfToken;
+      axiosInstance.defaults.headers["Referer"] = REFERER;
     }
     if (accessToken) {
-      axiosInstance.defaults.headers.common[
-        "Authorization"
-      ] = `Bearer ${accessToken}`;
+      axiosInstance.defaults.headers["Authorization"] = `Bearer ${accessToken}`;
     }
 
     // EXECUTE request method to backend endpoint with or without data

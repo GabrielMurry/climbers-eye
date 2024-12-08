@@ -5,6 +5,7 @@
     "version": "1.0.3",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
+    "newArchEnabled": true,
     "splash": {
       "image": "./src/assets/images/splash.png",
       "resizeMode": "contain",
@@ -34,8 +35,8 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "custom photos permission",
-          "cameraPermission": "Allow Climber's Eye to open the camera",
+          "photosPermission": "Allow Climber's Eye to access your photos.",
+          "cameraPermission": "Allow Climber's Eye to open the camera.",
           "//": "Disables the microphone permission",
           "microphonePermission": false
         }

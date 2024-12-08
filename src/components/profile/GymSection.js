@@ -1,9 +1,9 @@
-import { View, Text, Dimensions, Pressable } from "react-native";
+import { View, Text, Dimensions, Pressable, FlatList } from "react-native";
 import React from "react";
-import Carousel from "react-native-reanimated-carousel";
 import { useDispatch, useSelector } from "react-redux";
 import { Image } from "react-native";
 import { setSpraywallIndex } from "../../redux/features/spraywall/spraywallSlice";
+import SpraywallCard from "../home/SpraywallCard";
 
 const width = Dimensions.get("window").width;
 
@@ -43,6 +43,10 @@ const GymSection = () => {
     </Pressable>
   );
 
+  const renderSpraywallCard = ({ item, index }) => (
+    <SpraywallCard spraywall={item} index={index} highlight={true} />
+  );
+
   return (
     <View
       contentContainerStyle={{
@@ -68,20 +72,17 @@ const GymSection = () => {
           {/* section title */}
           <Text style={{ fontWeight: "bold", fontSize: 18 }}>{gym.name}</Text>
         </View>
-        <Carousel
-          loop={false}
-          width={width}
-          height={width - 150}
+        <FlatList
           data={spraywalls}
-          defaultIndex={spraywallIndex}
-          keyExtractor={(item) => item.id}
-          scrollAnimationDuration={250}
-          onSnapToItem={(index) => dispatch(setSpraywallIndex(index))}
-          renderItem={renderSpraywallItem}
-          mode="parallax"
-          modeConfig={{
-            parallaxScrollingScale: 0.9,
-            parallaxScrollingOffset: 50,
+          renderItem={renderSpraywallCard}
+          keyExtractor={(item) => item.id.toString()}
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{
+            gap: 10,
+            height: 150,
+            paddingVertical: 10,
+            paddingHorizontal: 30,
           }}
         />
       </View>

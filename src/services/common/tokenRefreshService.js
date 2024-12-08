@@ -1,6 +1,8 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { BASE_URL, REFERER } from "@env";
+
+console.log("hello");
 console.log(BASE_URL);
 
 const axiosTokenInstance = axios.create({

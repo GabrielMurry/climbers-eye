@@ -48,41 +48,37 @@ const CustomModal = ({ isVisible, onClose, navigation, isBoulder = true }) => {
 
   const handleUploadImagePressed = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      mediaTypes: "images",
       allowsEditing: false,
       aspect: [4, 3],
-      quality: 1,
-      base64: true,
+      quality: 0.5, // 1: highest quality. 0: lowest quality.
     });
-
-    if (result && !result.canceled) {
-      Image.getSize(result.assets[0].uri, (width, height) => {
-        onClose();
-        if (isBoulder) {
-          navigation.navigate("BoulderStack", {
-            screen: "EditBoulder",
-            params: {
-              image: {
-                url: "data:image/png;base64," + result.assets[0].base64,
-                width: width,
-                height: height,
-              },
-            },
-          });
-        } else {
-          navigation.navigate("SpraywallStack", {
-            screen: "AddNewSprayWall",
-            params: {
-              image: {
-                url: "data:image/png;base64," + result.assets[0].base64,
-                width: width,
-                height: height,
-              },
-            },
-          });
-        }
+    if (result.canceled) return;
+    const image = result.assets[0];
+    if (isBoulder) {
+      navigation.navigate("BoulderStack", {
+        screen: "EditBoulder",
+        params: {
+          image: {
+            url: image.uri,
+            width: image.width,
+            height: image.height,
+          },
+        },
+      });
+    } else {
+      navigation.navigate("SpraywallStack", {
+        screen: "AddNewSprayWall",
+        params: {
+          image: {
+            url: image.uri,
+            width: image.width,
+            height: image.height,
+          },
+        },
       });
     }
+    onClose();
   };
 
   return (

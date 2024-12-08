@@ -17,10 +17,6 @@ const THEME_STYLE = "white";
 
 const ProfileScreen = ({ navigation }) => {
   const { user } = useSelector((state) => state.user);
-  // const [statsSectionQuickData, setStatsSectionQuickData] = useState([
-  //   { section: "Top Grade", data: 0 },
-  //   { section: "Flashes", data: 0 },
-  // ]);
 
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [circuits, setCircuits] = useState([]);
@@ -82,9 +78,13 @@ const ProfileScreen = ({ navigation }) => {
     }
   };
 
+  const handleEditProfilePress = () => {
+    setIsModalVisible(false);
+    navigation.navigate("ProfileStack", { screen: "EditProfile" });
+  };
+
   const optionsData = [
-    // { title: "Switch Gym", onPress: handleSwitchGymPress },
-    // { title: "Edit Profile", onPress: handleEditProfilePress },
+    { title: "Edit Profile", onPress: handleEditProfilePress },
     { title: "Log out", onPress: handleLogoutPress, color: "red" },
     { title: "Cancel", onPress: () => setIsModalVisible(false), color: "gray" },
   ];
@@ -96,10 +96,6 @@ const ProfileScreen = ({ navigation }) => {
         <Header navigation={navigation} />
         <GymSection />
         <BouldersSection navigation={navigation} />
-        {/* <StatsSection
-          statsSectionQuickData={statsSectionQuickData}
-          navigation={navigation}
-        /> */}
         <CircuitsSection circuits={circuits} navigation={navigation} />
       </ScrollView>
       {/* modal */}

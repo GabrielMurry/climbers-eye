@@ -54,15 +54,16 @@ const CameraScreen = ({ navigation, route }) => {
 
   const handleImageTaken = async () => {
     if (!cameraReady) return;
-    const imageData = await cameraRef.current.takePictureAsync({
-      base64: true,
-      quality: 0.7,
-    });
-    setImage({
-      url: "data:image/png;base64," + imageData.base64,
-      width: imageData.width,
-      height: imageData.height,
-    });
+    try {
+      const photo = await cameraRef.current.takePictureAsync({ quality: 0.5 });
+      setImage({
+        url: photo.uri,
+        width: photo.width,
+        height: photo.height,
+      });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const handleSubmitImage = async () => {

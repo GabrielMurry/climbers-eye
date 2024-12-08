@@ -13,12 +13,6 @@ import PreviewImage from "../../components/boulder/preview/PreviewImage";
 import PreviewPublishButtons from "../../components/boulder/preview/PreviewPublishButtons";
 import { useFetch } from "../../hooks/useFetch";
 
-const TAGS = [
-  { name: "crimp", selected: false },
-  { name: "pinch", selected: false },
-  { name: "endurance", selected: false },
-];
-
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const SCREEN_HEIGHT = Dimensions.get("window").height;
 const SHRINK_SCALE = 0.3;
@@ -29,7 +23,7 @@ const PreviewEditScreen = ({ navigation, route }) => {
     (state) => state.spraywall
   );
 
-  const { image, resultImageUri } = route.params;
+  const { image } = route.params;
 
   const [fetchAddBoulder, isLoadingAddBoulder, isErrorAddBoulder] = useFetch(
     addBoulderToSpraywall
@@ -101,7 +95,7 @@ const PreviewEditScreen = ({ navigation, route }) => {
         SCREEN_HEIGHT={SCREEN_HEIGHT}
         SHRINK_SCALE={SHRINK_SCALE}
         setImageFullScreen={setImageFullScreen}
-        resultImageUri={resultImageUri}
+        resultImageUri={image.uri}
         isImageLoading={isImageLoading}
         setIsImageLoading={setIsImageLoading}
       />
@@ -124,7 +118,7 @@ const PreviewEditScreen = ({ navigation, route }) => {
       />
       <FullScreenImage
         imageFullScreen={imageFullScreen}
-        url={resultImageUri}
+        url={image.uri}
         width={image.width}
         height={image.height}
         onRequestClose={() => setImageFullScreen(false)}

@@ -25,6 +25,7 @@ const FlatListSpraywalls = ({
       contentContainerStyle={{ gap: 10 }}
       horizontal
       ListFooterComponent={hasEditPermission && renderFooter}
+      showsHorizontalScrollIndicator={false}
     />
   );
 };
