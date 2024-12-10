@@ -1,6 +1,6 @@
 import { View, StyleSheet, ActivityIndicator, Image } from "react-native";
 import React, { useRef, useState } from "react";
-import { compositeBoulder } from "../../services/boulder";
+import { compositeBoulder } from "../../services/boulder/boulder";
 import { useFetch } from "../../hooks/useFetch";
 import ToolBar from "../../components/boulder/paint/ToolBar";
 import ImageCanvas from "../../components/boulder/paint/ImageCanvas";

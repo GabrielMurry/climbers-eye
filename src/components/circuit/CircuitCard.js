@@ -7,7 +7,7 @@ import { deleteCircuitAPI } from "../../services/circuit";
 import {
   addBoulderToCircuitAPI,
   removeBoulderFromCircuitAPI,
-} from "../../services/boulder";
+} from "../../services/boulder/boulder";
 import {
   removeBoulderFromCircuit,
   addBoulderToCircuit,

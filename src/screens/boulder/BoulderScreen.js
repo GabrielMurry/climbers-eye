@@ -21,9 +21,9 @@ import InfoRow6 from "../../components/boulder/detail/InfoRow6";
 import DraftNotif from "../../components/boulder/DraftNotif";
 import { useFocusEffect } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
-import { getBoulderDetail } from "../../services/boulder";
-import { deleteBoulderAPI } from "../../services/boulder";
-import { updateBoulderAPI } from "../../services/boulder";
+import { getBoulderDetail } from "../../services/boulder/boulder";
+import { deleteBoulderAPI } from "../../services/boulder/boulder";
+import { updateBoulderAPI } from "../../services/boulder/boulder";
 import {
   deleteBoulder,
   updateBoulder,

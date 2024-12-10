@@ -1,0 +1,23 @@
+export type Boulder = {
+  id: number;
+  name: string;
+  description: string;
+  url: string;
+  width: number;
+  height: number;
+  matching: boolean;
+  publish: boolean;
+  feetFollowHands: boolean;
+  kickboardOn: boolean;
+  sends: number;
+  isLiked: boolean;
+  isBookmarked: boolean;
+  isSent: boolean;
+  inCircuit: boolean;
+  userSendsCount: number;
+  grade: string;
+  date: string;
+  spraywall: number;
+  setter: string;
+  firstAscensionist: string;
+};

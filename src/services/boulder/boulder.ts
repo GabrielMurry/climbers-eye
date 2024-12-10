@@ -1,31 +1,21 @@
-import { request } from "./common/apiRequest";
+import { request } from "../common/apiRequest";
+import { Path, Queries } from "./types";
+import { BoulderCompositeData } from "./types/composite";
+import { BoulderDetailParams } from "./types/detail";
+import { BoulderListParams } from "./types/list";
 
-export const getBoulderList = async ({ pathParams, queryParams }) => {
-  const { spraywallId } = pathParams;
-  const {
-    searchQuery,
-    minGradeIndex,
-    maxGradeIndex,
-    sortBy,
-    activity,
-    status,
-    circuit,
-    excludeIds,
-    page,
-  } = queryParams;
-  console.log(queryParams);
+export const getBoulderList = async (path: Path, queries: Queries) => {
   return await request(
     "get",
-    `boulder/list/${spraywallId}?search=${searchQuery}&grade_min=${minGradeIndex}&grade_max=${maxGradeIndex}&sort=${sortBy}&activity=${activity}&status=${status}&circuit=${circuit}&exclude_ids=${excludeIds}&page=${page}`
+    `boulder/list/${path.spraywallId}?search=${queries.searchQuery}&grade_min=${queries.minGradeIndex}&grade_max=${queries.maxGradeIndex}&sort=${queries.sortBy}&activity=${queries.activity}&status=${queries.status}&circuit=${queries.circuit}&exclude_ids=${queries.excludeIds}&page=${queries.page}`
   );
 };
 
-export const getBoulderDetail = async ({ pathParams }) => {
-  const { boulderId } = pathParams;
-  return await request("get", `boulder/detail/${boulderId}`);
+export const getBoulderDetail = async ({ path }: { path: Path }) => {
+  return await request("get", `boulder/detail/${path.boulderId}`);
 };
 
-export const compositeBoulder = async (data) => {
+export const compositeBoulder = async (data: BoulderCompositeData) => {
   return await request(
     "post",
     "boulder/composite/",

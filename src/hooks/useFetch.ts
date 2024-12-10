@@ -1,6 +1,8 @@
 import { useState } from "react";
 
-export const useFetch = (fetchFunc) => {
+export const useFetch = (
+  fetchFunc: () => object
+): [() => Promise<Object>, boolean, boolean] => {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
 

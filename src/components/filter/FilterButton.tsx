@@ -2,27 +2,36 @@ import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import React from "react";
 import { CheckIcon } from "react-native-heroicons/outline";
 
-const FilterButton = ({
-  filterType,
-  title,
-  filter = null,
-  onPress = () => {},
-  circuitColor = null,
-}) => {
+type FilterButton = {
+  filterType?: string | null;
+  title?: string | null;
+  filter?: string | null;
+  onPress?: () => void;
+  circuitColor?: string;
+};
+
+const FilterButton = (props: FilterButton) => {
   return (
-    <TouchableOpacity style={styles.container} onPress={onPress}>
-      {circuitColor ? (
+    <TouchableOpacity style={styles.container} onPress={props.onPress}>
+      {props.circuitColor ? (
         <>
           <View style={styles.circuitsContainer}>
-            <View style={styles.circuitColor(circuitColor)} />
-            <Text style={styles.rowTitle}>{title}</Text>
+            <View
+              style={[
+                styles.circuitColor,
+                { backgroundColor: props.circuitColor },
+              ]}
+            />
+            <Text style={styles.rowTitle}>{props.title}</Text>
           </View>
           <CheckIcon size={20} color={"black"} />
         </>
       ) : (
         <>
-          <Text style={styles.rowTitle}>{title}</Text>
-          {filterType === filter && <CheckIcon size={20} color={"black"} />}
+          <Text style={styles.rowTitle}>{props.title}</Text>
+          {props.filterType === props.filter && (
+            <CheckIcon size={20} color={"black"} />
+          )}
         </>
       )}
     </TouchableOpacity>
@@ -45,12 +54,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 10,
   },
-  circuitColor: (circuitColor) => ({
+  circuitColor: {
     width: 10,
     height: 10,
     borderRadius: "100%",
-    backgroundColor: circuitColor,
-  }),
+  },
   rowTitle: {
     color: "black",
   },

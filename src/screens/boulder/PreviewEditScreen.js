@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import * as Haptics from "expo-haptics";
 import { useDispatch } from "react-redux";
-import { addBoulderToSpraywall } from "../../services/boulder";
+import { addBoulderToSpraywall } from "../../services/boulder/boulder";
 import { addNewBoulder } from "../../redux/features/boulder/boulderSlice";
 import { appendExcludeId } from "../../redux/features/filter/filterSlice";
 import FullScreenImage from "../../components/image/FullScreenImage";

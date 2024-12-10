@@ -1,7 +1,18 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { boulderGrades } from "../../../utils/constants/boulderConstants";
 
-const initialState = {
+type Filter = {
+  sortBy: string;
+  minGradeIndex: number;
+  maxGradeIndex: number;
+  activity: string | null;
+  climbType: string;
+  climbStatus: string;
+  circuit: number | null;
+  excludeIds: number[];
+};
+
+const initialState: Filter = {
   sortBy: "grade",
   minGradeIndex: 0,
   maxGradeIndex: boulderGrades.length - 1,
@@ -13,34 +24,34 @@ const initialState = {
 };
 
 export const filterSlice = createSlice({
-  name: "filter",
+  name: "filters",
   initialState,
   reducers: {
-    setSortBy: (state, action) => {
+    setSortBy: (state, action: PayloadAction<string>) => {
       state.sortBy = action.payload;
     },
-    setMinGradeIndex: (state, action) => {
+    setMinGradeIndex: (state, action: PayloadAction<number>) => {
       state.minGradeIndex = action.payload;
     },
-    setMaxGradeIndex: (state, action) => {
+    setMaxGradeIndex: (state, action: PayloadAction<number>) => {
       state.maxGradeIndex = action.payload;
     },
-    setActivity: (state, action) => {
+    setActivity: (state, action: PayloadAction<string | null>) => {
       state.activity = action.payload;
     },
-    setClimbType: (state, action) => {
+    setClimbType: (state, action: PayloadAction<string>) => {
       state.climbType = action.payload;
     },
-    setClimbStatus: (state, action) => {
+    setClimbStatus: (state, action: PayloadAction<string>) => {
       state.climbStatus = action.payload;
     },
-    setCircuit: (state, action) => {
+    setCircuit: (state, action: PayloadAction<number>) => {
       state.circuit = action.payload;
     },
     resetCircuit: (state) => {
       state.circuit = initialState.circuit;
     },
-    appendExcludeId: (state, action) => {
+    appendExcludeId: (state, action: PayloadAction<number>) => {
       state.excludeIds.push(action.payload);
     },
     resetExcludeIds: (state) => {

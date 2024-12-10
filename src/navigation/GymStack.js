@@ -7,18 +7,21 @@ import {
   EditGymTypeScreen,
 } from "../screens/gym";
 
-const Stack = createNativeStackNavigator();
+const GymStackNav = createNativeStackNavigator();
 
 const GymStack = () => (
-  <Stack.Navigator initialRouteName="AddGym">
-    <Stack.Group>
-      <Stack.Screen name="AddGym" component={AddGymScreen} />
-      <Stack.Screen name="EditGym" component={EditGymScreen} />
-      <Stack.Screen name="EditGymType" component={EditGymTypeScreen} />
-      <Stack.Screen name="EditGymName" component={EditGymNameScreen} />
-      <Stack.Screen name="EditGymAddress" component={EditGymAddressScreen} />
-    </Stack.Group>
-  </Stack.Navigator>
+  <GymStackNav.Navigator initialRouteName="AddGym">
+    <GymStackNav.Group>
+      <GymStackNav.Screen name="AddGym" component={AddGymScreen} />
+      <GymStackNav.Screen name="EditGym" component={EditGymScreen} />
+      <GymStackNav.Screen name="EditGymType" component={EditGymTypeScreen} />
+      <GymStackNav.Screen name="EditGymName" component={EditGymNameScreen} />
+      <GymStackNav.Screen
+        name="EditGymAddress"
+        component={EditGymAddressScreen}
+      />
+    </GymStackNav.Group>
+  </GymStackNav.Navigator>
 );
 
 export default GymStack;

@@ -22,9 +22,9 @@ const rootReducer = combineReducers({
   user: userReducer,
   gym: gymReducer,
   spraywall: spraywallReducer,
-  filter: filterReducer,
-  boulder: boulderReducer,
-  circuit: circuitReducer,
+  filters: filterReducer,
+  boulders: boulderReducer,
+  circuits: circuitReducer,
 });
 
 // Persist the combined reducers
@@ -43,3 +43,8 @@ export const store = configureStore({
 
 // Create a persistor for later use (e.g., in app entry point)
 export const persistor = persistStore(store);
+
+// Infer the `RootState` and `AppDispatch` types from the store itself
+export type RootState = ReturnType<typeof store.getState>;
+// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
+export type AppDispatch = typeof store.dispatch;

@@ -2,18 +2,29 @@ import React, { useLayoutEffect } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { ChevronLeftIcon, PlusIcon } from "react-native-heroicons/outline";
 import { colors } from "../utils/styles";
+import { useNavigation } from "@react-navigation/native";
 
 const THEME_STYLE = "white";
 
-const useCustomHeader = ({
-  navigation,
-  title = "",
-  headerRight = <></>,
-  backgroundColor = null,
-  screenName = null,
-  headerRightOnPress = () => {},
-}) => {
-  if (screenName === "EditBoulder") {
+type CustomHeader = {
+  title: string;
+  backgroundColor?: string;
+  screenName?: string;
+  headerRight?: React.FunctionComponent;
+  headerRightOnPress?: () => void;
+};
+
+const defaultCustomHeader = {
+  title: "",
+  backgroundColor: undefined,
+  screenName: undefined,
+  headerRight: undefined,
+  headerRightOnPress: () => {},
+};
+
+const useCustomHeader = (props: CustomHeader = defaultCustomHeader) => {
+  const navigation = useNavigation();
+  if (props.screenName === "EditBoulder") {
     useLayoutEffect(() => {
       navigation.setOptions({
         headerTitle: () => (
@@ -40,7 +51,7 @@ const useCustomHeader = ({
           </TouchableOpacity>
         ),
         headerRight: () => (
-          <TouchableOpacity onPress={headerRightOnPress}>
+          <TouchableOpacity onPress={props.headerRightOnPress}>
             <Text
               style={{
                 color: colors.primary,
@@ -54,7 +65,7 @@ const useCustomHeader = ({
         ),
       });
     }, [navigation]);
-  } else if (screenName === "Circuit") {
+  } else if (props.screenName === "Circuit") {
     useLayoutEffect(() => {
       navigation.setOptions({
         headerLeft: () => (
@@ -65,21 +76,21 @@ const useCustomHeader = ({
             >
               <ChevronLeftIcon size={25} color="black" />
             </TouchableOpacity>
-            <Text style={{ fontSize: 24 }}>{title}</Text>
+            <Text style={{ fontSize: 24 }}>{props.title}</Text>
           </View>
         ),
         headerTitle: () => <Text></Text>,
         headerRight: () => (
-          <TouchableOpacity onPress={headerRightOnPress}>
+          <TouchableOpacity onPress={props.headerRightOnPress}>
             <PlusIcon size={25} color={"black"} />
           </TouchableOpacity>
         ),
         headerStyle: {
-          backgroundColor: backgroundColor ?? THEME_STYLE,
+          backgroundColor: props.backgroundColor ?? THEME_STYLE,
         },
         headerShadowVisible: false,
       });
-    }, [navigation, title, headerRight]);
+    }, [navigation, props.title, props.headerRight]);
   } else {
     useLayoutEffect(() => {
       navigation.setOptions({
@@ -91,17 +102,17 @@ const useCustomHeader = ({
             >
               <ChevronLeftIcon size={25} color="black" />
             </TouchableOpacity>
-            <Text style={{ fontSize: 24 }}>{title}</Text>
+            <Text style={{ fontSize: 24 }}>{props.title}</Text>
           </View>
         ),
         headerTitle: () => <Text></Text>,
-        headerRight: () => headerRight,
+        headerRight: () => props.headerRight,
         headerStyle: {
-          backgroundColor: backgroundColor ?? THEME_STYLE,
+          backgroundColor: props.backgroundColor ?? THEME_STYLE,
         },
         headerShadowVisible: false,
       });
-    }, [navigation, title, headerRight]);
+    }, [navigation, props.title, props.headerRight]);
   }
 };
 

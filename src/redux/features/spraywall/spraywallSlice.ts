@@ -1,7 +1,16 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+
+type Spraywall = {
+  id: number;
+  name: string;
+  url: string;
+  width: number;
+  height: number;
+  gym: number;
+};
 
 const initialState = {
-  spraywalls: [],
+  spraywalls: [] as Spraywall[], // Use a type assertion for the array
   spraywallIndex: 0,
 };
 
@@ -9,26 +18,29 @@ export const spraywallSlice = createSlice({
   name: "spraywall",
   initialState,
   reducers: {
-    appendSpraywall: (state, action) => {
+    appendSpraywall: (state, action: PayloadAction<Spraywall>) => {
       state.spraywalls.push(action.payload);
     },
-    setSpraywalls: (state, action) => {
+    setSpraywalls: (state, action: PayloadAction<Spraywall[]>) => {
       state.spraywalls = action.payload;
     },
-    setSpraywallIndex: (state, action) => {
+    setSpraywallIndex: (state, action: PayloadAction<number>) => {
       state.spraywallIndex = action.payload;
     },
     resetSpraywallIndex: (state) => {
       state.spraywallIndex = 0;
     },
-    deleteSpraywall: (state, action) => {
+    deleteSpraywall: (state, action: PayloadAction<number>) => {
       const id = action.payload;
       state.spraywalls = state.spraywalls.filter(
         (spraywall) => spraywall.id !== id
       );
     },
     updateSpraywall: {
-      reducer: (state, action) => {
+      reducer: (
+        state,
+        action: PayloadAction<{ id: number; updates: Partial<Spraywall> }>
+      ) => {
         const { id, updates } = action.payload;
         const spraywall = state.spraywalls.find(
           (spraywall) => spraywall.id === id
@@ -39,7 +51,7 @@ export const spraywallSlice = createSlice({
           Object.assign(spraywall, updates);
         }
       },
-      prepare: (id, updates) => {
+      prepare: (id: number, updates: Partial<Spraywall>) => {
         return { payload: { id, updates } };
       },
     },

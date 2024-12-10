@@ -7,7 +7,6 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { CheckIcon } from "react-native-heroicons/outline";
-import { useSelector, useDispatch } from "react-redux";
 import { boulderGrades } from "../../utils/constants/boulderConstants";
 import FilterButton from "../../components/filter/FilterButton";
 import GradeRange from "../../components/filter/GradeRange";
@@ -20,18 +19,18 @@ import {
   setSortBy,
 } from "../../redux/features/filter/filterSlice";
 import FilterCircuitButton from "../../components/filter/FilterCircuitButton";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 
-const FilterHomeListScreen = ({ navigation }) => {
-  const dispatch = useDispatch();
+const FilterHomeListScreen = () => {
+  const dispatch = useAppDispatch();
 
-  const filters = useSelector((state) => state.filter);
-  const { circuits } = useSelector((state) => state.circuit);
+  const filters = useAppSelector((state) => state.filters);
+  const circuits = useAppSelector((state) => state.circuits);
 
   const [showGradeRange, setShowGradeRange] = useState(false);
 
   useCustomHeader({
     backgroundColor: "rgba(245,245,245,255)",
-    navigation,
     title: "Filters",
   });
 
@@ -83,7 +82,7 @@ const FilterHomeListScreen = ({ navigation }) => {
             onPress={() => dispatch(setSortBy("newest"))}
           />
         </View>
-        <View style={styles.sortBoxGradeRange(showGradeRange)}>
+        <View style={styles.sortBoxGradeRange}>
           <View style={styles.rowHeader}>
             <Text style={styles.rowHeaderTitle}>Grade Range</Text>
           </View>
@@ -222,10 +221,10 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     width: "100%",
   },
-  sortBoxGradeRange: (showGradeRange) => ({
+  sortBoxGradeRange: {
     width: "100%",
     backgroundColor: "white",
-  }),
+  },
   rowHeaderTitle: {
     fontWeight: "bold",
     color: "black",
