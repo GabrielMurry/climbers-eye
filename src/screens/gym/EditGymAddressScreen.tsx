@@ -7,26 +7,30 @@ import {
   StyleSheet,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import useCustomHeader from "../../hooks/useCustomHeader";
 import AddressTextInput from "../../components/googlePlacesAutoComplete/AddressTextInput";
 import { getGeoLocation } from "../../services/googleMapsAPI/geocoder";
 import { updateGymInfo } from "../../services/gym";
 import { updateGym } from "../../redux/features/gym/gymSlice";
 import { useFetch } from "../../hooks/useFetch";
+import { useNavigation } from "@react-navigation/native";
+import { RootNavigationProp } from "../../navigation/types/navigation";
+import { selectGym } from "../../redux/features/gym/gymSelectors";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 
-const EditGymAddressScreen = ({ navigation }) => {
-  const dispatch = useDispatch();
-  const { gym } = useSelector((state) => state.gym);
+const CHAR_LIMIT = 100;
+
+const EditGymAddressScreen = () => {
+  const navigation = useNavigation<RootNavigationProp>();
+
+  const dispatch = useAppDispatch();
+
+  const gym = useAppSelector((state) => selectGym(state));
   const [newGymAddress, setNewGymAddress] = useState(gym.address);
   const [isDisabled, setIsDisabled] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [addressSuggestions, setAddressSuggestions] = useState([]);
   const [placeID, setPlaceID] = useState(null);
-
-  const [fetchUpdate, isLoadingUpdate, isErrorUpdate] = useFetch(updateGymInfo);
-
-  const CHAR_LIMIT = 100;
 
   useEffect(() => {
     if (newGymAddress !== gym.address) {
@@ -46,16 +50,20 @@ const EditGymAddressScreen = ({ navigation }) => {
       place_id: placeID,
     };
     const pathParams = { gymId: gym.id };
-    const response = await fetchUpdate({ pathParams, data });
+    const response = await updateGymInfo({ pathParams, data });
     if (response.status === 200) {
-      dispatch(
-        updateGym({
-          address: newGymAddress,
-          latitude: geoData.lat,
-          longitude: geoData.lng,
-          place_id: placeID,
-        })
-      );
+      if (geoData && placeID) {
+        dispatch(
+          updateGym({
+            address: newGymAddress,
+            latitude: geoData.lat,
+            longitude: geoData.lng,
+            place_id: placeID,
+          })
+        );
+      } else {
+        console.error("No geo data or place ID found.");
+      }
       navigation.goBack();
     }
     setIsLoading(false);
@@ -63,7 +71,6 @@ const EditGymAddressScreen = ({ navigation }) => {
 
   useCustomHeader({
     backgroundColor: "rgba(245,245,245,255)",
-    navigation,
     title: "Edit Gym Address",
   });
 

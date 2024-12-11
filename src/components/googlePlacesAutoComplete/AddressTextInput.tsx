@@ -5,34 +5,25 @@ import {
   TouchableOpacity,
   FlatList,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { colors } from "../../utils/styles";
 import { getAddressSuggestions } from "../../services/googleMapsAPI/placeAutocomplete";
+import { AddressTextInputProps, Suggestion } from "./types";
 
-const AddressTextInput = ({
-  address,
-  setAddress,
-  suggestions,
-  setSuggestions,
-  placeholder,
-  setPlaceID,
-  charLimit = null,
-  description = null,
-}) => {
-  const fetchSuggestions = async (text) => {
+const AddressTextInput = (props: AddressTextInputProps) => {
+  const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
+
+  const fetchSuggestions = async (text: string) => {
     setSuggestions(await getAddressSuggestions(text));
   };
 
-  const handleSelectSuggestion = (suggestion) => {
-    console.log("Selected Place ID:", suggestion.place_id);
-    console.log("Selected Description:", suggestion.description);
-    console.log(suggestion);
-    setPlaceID(suggestion.place_id);
-    setAddress(suggestion.description); // Set selected suggestion address in input
+  const handleSelectSuggestion = (suggestion: Suggestion) => {
+    props.setPlaceID(suggestion.place_id);
+    props.setAddress(suggestion.description); // Set selected suggestion address in input
     setSuggestions([]); // Clear suggestions
   };
 
-  const renderAddressSuggestion = ({ item }) => (
+  const renderAddressSuggestion = ({ item }: { item: Suggestion }) => (
     <TouchableOpacity
       style={{
         padding: 15,
@@ -55,27 +46,23 @@ const AddressTextInput = ({
           paddingHorizontal: 20,
           fontSize: 16,
         }}
-        placeholder={placeholder}
-        value={address}
+        placeholder={props.placeholder}
+        value={props.address}
         onChangeText={(text) => {
-          setAddress(text);
+          props.setAddress(text);
           fetchSuggestions(text);
         }}
       />
       <FlatList
         data={suggestions}
-        keyExtractor={(item) => item.place_id}
+        keyExtractor={(item) => item.place_id.toString()}
         renderItem={renderAddressSuggestion}
         ItemSeparatorComponent={() => <View style={{ height: 1 }} />}
       />
-      {charLimit ? (
-        <Text style={{ color: "gray", paddingTop: 10 }}>
-          {address?.length ? address.length : 0}/{charLimit}
-        </Text>
-      ) : null}
-      {description ? (
-        <Text style={{ color: "gray", paddingTop: 10 }}>{description}</Text>
-      ) : null}
+      <Text style={{ color: "gray", paddingTop: 10 }}>
+        {props.address?.length ? props.address.length : 0}/{props.charLimit}
+      </Text>
+      <Text style={{ color: "gray", paddingTop: 10 }}>{props.description}</Text>
     </View>
   );
 };

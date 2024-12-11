@@ -7,23 +7,25 @@ import {
   StyleSheet,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import SettingsTextInput from "../../components/custom/SettingsTextInput";
 import useCustomHeader from "../../hooks/useCustomHeader";
 import { updateGymInfo } from "../../services/gym";
 import { updateGym } from "../../redux/features/gym/gymSlice";
-import { useFetch } from "../../hooks/useFetch";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { selectGym } from "../../redux/features/gym/gymSelectors";
+import { useNavigation } from "@react-navigation/native";
+import { RootNavigationProp } from "../../navigation/types/navigation";
 
-const EditGymNameScreen = ({ navigation }) => {
-  const CHAR_LIMIT = 50;
+const CHAR_LIMIT = 50;
 
-  const dispatch = useDispatch();
-  const { gym } = useSelector((state) => state.gym);
+const EditGymNameScreen = () => {
+  const navigation = useNavigation<RootNavigationProp>();
+
+  const dispatch = useAppDispatch();
+  const gym = useAppSelector((state) => selectGym(state));
   const [newGymName, setNewGymName] = useState(gym.name);
   const [isDisabled, setIsDisabled] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
-
-  const [fetchUpdate, isLoadingUpdate, isErrorUpdate] = useFetch(updateGymInfo);
 
   useEffect(() => {
     if (newGymName !== gym.name) {
@@ -37,7 +39,7 @@ const EditGymNameScreen = ({ navigation }) => {
     setIsLoading(true);
     const data = { name: newGymName };
     const pathParams = { gymId: gym.id };
-    const response = await fetchUpdate({ pathParams, data });
+    const response = await updateGymInfo({ pathParams, data });
     if (response.status === 200) {
       dispatch(updateGym({ name: newGymName }));
       navigation.goBack();
@@ -47,7 +49,6 @@ const EditGymNameScreen = ({ navigation }) => {
 
   useCustomHeader({
     backgroundColor: "rgba(245,245,245,255)",
-    navigation,
     title: "Edit Gym Name",
   });
 

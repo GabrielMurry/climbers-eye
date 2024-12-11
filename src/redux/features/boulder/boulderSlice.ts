@@ -2,20 +2,22 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Boulder } from "../../../utils/types/boulder";
 
 // Define the initial state using that type
-const initialState: Boulder[] = [];
+const initialState = {
+  objects: [] as Boulder[],
+};
 
 export const boulderSlice = createSlice({
   name: "boulders",
   initialState,
   reducers: {
     appendBoulders: (state, action: PayloadAction<Boulder[]>) => {
-      state.push(...action.payload); // Directly mutates the array
+      state.objects.push(...action.payload); // Directly mutates the array
     },
     addNewBoulder: (state, action: PayloadAction<Boulder>) => {
-      state.unshift(action.payload);
+      state.objects.unshift(action.payload);
     },
-    resetBoulders: () => {
-      return [];
+    resetBoulders: (state) => {
+      state = initialState;
     },
     updateBoulder: {
       reducer: (
@@ -23,7 +25,7 @@ export const boulderSlice = createSlice({
         action: PayloadAction<{ id: number; updates: Partial<Boulder> }>
       ) => {
         const { id, updates } = action.payload; // Destructure payload prepared by 'prepare'
-        const boulder = state.find((boulder) => boulder.id === id);
+        const boulder = state.objects.find((boulder) => boulder.id === id);
 
         if (boulder) {
           Object.assign(boulder, updates); // Apply the updates
@@ -34,7 +36,9 @@ export const boulderSlice = createSlice({
       },
     },
     deleteBoulder: (state, action) => {
-      state = state.filter((boulder) => boulder.id !== action.payload);
+      state.objects = state.objects.filter(
+        (boulder) => boulder.id !== action.payload
+      );
     },
   },
 });

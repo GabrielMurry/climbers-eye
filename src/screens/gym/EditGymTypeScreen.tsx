@@ -8,25 +8,30 @@ import {
   StyleSheet,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import SettingsTextInput from "../../components/custom/SettingsTextInput";
 import useCustomHeader from "../../hooks/useCustomHeader";
 import { updateGymInfo } from "../../services/gym";
 import { updateGym } from "../../redux/features/gym/gymSlice";
+import { useNavigation } from "@react-navigation/native";
+import { RootNavigationProp } from "../../navigation/types/navigation";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { selectGym } from "../../redux/features/gym/gymSelectors";
+import { GymType } from "../../utils/types/gym";
 
-const EditGymTypeScreen = ({ navigation }) => {
-  const dispatch = useDispatch();
-  const { gym } = useSelector((state) => state.gym);
+const EditGymTypeScreen = () => {
+  const navigation = useNavigation<RootNavigationProp>();
+
+  const dispatch = useAppDispatch();
+  const gym = useAppSelector((state) => selectGym(state));
+
   const [isCommercialGym, setIsCommercialGym] = useState(
-    gym.type === "commercial"
+    gym.type === GymType.Commercial
   );
   const [isDisabled, setIsDisabled] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
-  const [fetchUpdate, isLoadingUpdate, isErrorUpdate] = useFetch(updateGymInfo);
-
   useEffect(() => {
-    const newType = isCommercialGym ? "commercial" : "home";
+    const newType = isCommercialGym ? GymType.Commercial : GymType.Home;
     if (newType !== gym.type) {
       setIsDisabled(false);
     } else {
@@ -36,10 +41,10 @@ const EditGymTypeScreen = ({ navigation }) => {
 
   const handleSave = async () => {
     setIsLoading(true);
-    const newType = isCommercialGym ? "commercial" : "home";
+    const newType = isCommercialGym ? GymType.Commercial : GymType.Home;
     const data = { type: newType };
     const pathParams = { gymId: gym.id };
-    const response = await fetchUpdate({ pathParams, data });
+    const response = await updateGymInfo({ pathParams, data });
     if (response.status === 200) {
       dispatch(updateGym({ type: newType }));
       navigation.goBack();
@@ -49,7 +54,6 @@ const EditGymTypeScreen = ({ navigation }) => {
 
   useCustomHeader({
     backgroundColor: "rgba(245,245,245,255)",
-    navigation,
     title: "Edit Gym Type",
   });
 
@@ -111,11 +115,15 @@ const EditGymTypeScreen = ({ navigation }) => {
               />
             </View>
           </View>
-          <SettingsTextInput
+          {/* <SettingsTextInput
             description={
               'Choosing "Commercial Gym" requires an address of the gym. "Home Gym" remains private.'
             }
-          />
+          /> */}
+          <Text style={{ color: "gray" }}>
+            Choosing "Commercial Gym" requires an address of the gym. "Home Gym"
+            remains private.
+          </Text>
         </View>
         <View>
           <TouchableOpacity

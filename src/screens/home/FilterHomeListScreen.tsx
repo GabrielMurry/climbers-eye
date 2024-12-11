@@ -20,12 +20,14 @@ import {
 } from "../../redux/features/filter/filterSlice";
 import FilterCircuitButton from "../../components/filter/FilterCircuitButton";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { selectFilters } from "../../redux/features/filter/filterSelectors";
+import { selectCircuits } from "../../redux/features/circuit/circuitSelectors";
 
 const FilterHomeListScreen = () => {
   const dispatch = useAppDispatch();
 
-  const filters = useAppSelector((state) => state.filters);
-  const circuits = useAppSelector((state) => state.circuits);
+  const filters = useAppSelector((state) => selectFilters(state));
+  const circuits = useAppSelector((state) => selectCircuits(state));
 
   const [showGradeRange, setShowGradeRange] = useState(false);
 

@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity } from "react-native";
 import { ChevronLeftIcon, PlusIcon } from "react-native-heroicons/outline";
 import { colors } from "../utils/styles";
 import { useNavigation } from "@react-navigation/native";
+import { RootNavigationProp } from "../navigation/types/navigation";
 
 const THEME_STYLE = "white";
 
@@ -23,7 +24,7 @@ const defaultCustomHeader = {
 };
 
 const useCustomHeader = (props: CustomHeader = defaultCustomHeader) => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<RootNavigationProp>();
   if (props.screenName === "EditBoulder") {
     useLayoutEffect(() => {
       navigation.setOptions({

@@ -1,20 +1,22 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Circuit } from "../../../utils/types/circuit";
 
-const initialState: Circuit[] = [];
+const initialState = {
+  objects: [] as Circuit[],
+};
 
 export const circuitSlice = createSlice({
   name: "circuits",
   initialState,
   reducers: {
     setCircuits: (state, action: PayloadAction<Circuit[]>) => {
-      state = action.payload;
+      state.objects = action.payload;
     },
     addNewCircuit: (state, action: PayloadAction<Circuit>) => {
-      state.unshift(action.payload);
+      state.objects.unshift(action.payload);
     },
     resetCircuits: (state) => {
-      state = [];
+      state = initialState;
     },
     updateCircuit: {
       reducer: (
@@ -22,7 +24,9 @@ export const circuitSlice = createSlice({
         action: PayloadAction<{ circuitId: number; updates: Partial<Circuit> }>
       ) => {
         const { circuitId, updates } = action.payload;
-        const circuit = state.find((circuit) => circuit.id === circuitId);
+        const circuit = state.objects.find(
+          (circuit) => circuit.id === circuitId
+        );
 
         if (circuit) {
           // Update fields (everything other than boulders) using Object.assign
@@ -39,7 +43,9 @@ export const circuitSlice = createSlice({
         action: PayloadAction<{ circuitId: number; boulderId: number }>
       ) => {
         const { circuitId, boulderId } = action.payload;
-        const circuit = state.find((circuit) => circuit.id === circuitId);
+        const circuit = state.objects.find(
+          (circuit) => circuit.id === circuitId
+        );
 
         if (circuit) {
           circuit.boulders = [...circuit.boulders, boulderId];
@@ -55,7 +61,9 @@ export const circuitSlice = createSlice({
         action: PayloadAction<{ circuitId: number; boulderId: number }>
       ) => {
         const { circuitId, boulderId } = action.payload;
-        const circuit = state.find((circuit) => circuit.id === circuitId);
+        const circuit = state.objects.find(
+          (circuit) => circuit.id === circuitId
+        );
 
         if (circuit) {
           circuit.boulders = circuit.boulders.filter(
@@ -68,7 +76,9 @@ export const circuitSlice = createSlice({
       },
     },
     deleteCircuit: (state, action: PayloadAction<number>) => {
-      state = state.filter((circuit) => circuit.id !== action.payload);
+      state.objects = state.objects.filter(
+        (circuit) => circuit.id !== action.payload
+      );
     },
   },
 });

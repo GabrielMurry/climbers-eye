@@ -22,9 +22,9 @@ const rootReducer = combineReducers({
   user: userReducer,
   gym: gymReducer,
   spraywall: spraywallReducer,
-  filters: filterReducer,
-  boulders: boulderReducer,
-  circuits: circuitReducer,
+  filter: filterReducer,
+  boulder: boulderReducer,
+  circuit: circuitReducer,
 });
 
 // Persist the combined reducers

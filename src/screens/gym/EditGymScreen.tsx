@@ -4,13 +4,17 @@ import useCustomHeader from "../../hooks/useCustomHeader";
 import GymSection from "../../components/gym/GymSection";
 import DeleteGym from "../../components/gym/DeleteGym";
 import SpraywallSection from "../../components/spraywall/SpraywallSection";
+import { useNavigation } from "@react-navigation/native";
+import { RootNavigationProp } from "../../navigation/types/navigation";
 
-const EditGymScreen = ({ navigation }) => {
+const EditGymScreen = () => {
+  const navigation = useNavigation<RootNavigationProp>();
+
   useCustomHeader({
     backgroundColor: "rgba(245,245,245,255)",
-    navigation,
     title: "Edit Gym",
   });
+
   return (
     <SafeAreaView
       style={{

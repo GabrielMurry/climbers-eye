@@ -1,17 +1,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
-type Spraywall = {
-  id: number;
-  name: string;
-  url: string;
-  width: number;
-  height: number;
-  gym: number;
-};
+import { Spraywall } from "../../../utils/types/spraywall";
 
 const initialState = {
-  spraywalls: [] as Spraywall[], // Use a type assertion for the array
-  spraywallIndex: 0,
+  objects: [] as Spraywall[], // Use a type assertion for the array
+  selectedId: null as number | null,
 };
 
 export const spraywallSlice = createSlice({
@@ -19,22 +11,24 @@ export const spraywallSlice = createSlice({
   initialState,
   reducers: {
     appendSpraywall: (state, action: PayloadAction<Spraywall>) => {
-      state.spraywalls.push(action.payload);
+      state.objects.push(action.payload);
     },
     setSpraywalls: (state, action: PayloadAction<Spraywall[]>) => {
-      state.spraywalls = action.payload;
+      state.objects = action.payload;
     },
     setSpraywallIndex: (state, action: PayloadAction<number>) => {
-      state.spraywallIndex = action.payload;
+      state.selectedId = action.payload;
     },
     resetSpraywallIndex: (state) => {
-      state.spraywallIndex = 0;
+      if (state.objects.length !== 0) {
+        state.selectedId = state.objects[0].id;
+      } else {
+        state.selectedId = initialState.selectedId;
+      }
     },
     deleteSpraywall: (state, action: PayloadAction<number>) => {
       const id = action.payload;
-      state.spraywalls = state.spraywalls.filter(
-        (spraywall) => spraywall.id !== id
-      );
+      state.objects = state.objects.filter((spraywall) => spraywall.id !== id);
     },
     updateSpraywall: {
       reducer: (
@@ -42,7 +36,7 @@ export const spraywallSlice = createSlice({
         action: PayloadAction<{ id: number; updates: Partial<Spraywall> }>
       ) => {
         const { id, updates } = action.payload;
-        const spraywall = state.spraywalls.find(
+        const spraywall = state.objects.find(
           (spraywall) => spraywall.id === id
         );
         // Objects and arrays are passed by reference in JS.

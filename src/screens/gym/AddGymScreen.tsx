@@ -10,30 +10,29 @@ import {
   Alert,
   ActivityIndicator,
 } from "react-native";
-import { useDispatch } from "react-redux";
 import useCustomHeader from "../../hooks/useCustomHeader";
-import { CommonActions } from "@react-navigation/native";
+import { CommonActions, useNavigation } from "@react-navigation/native";
 import AddressTextInput from "../../components/googlePlacesAutoComplete/AddressTextInput";
 import { getGeoLocation } from "../../services/googleMapsAPI/geocoder";
 import { createGym } from "../../services/gym";
 import { setGym } from "../../redux/features/gym/gymSlice";
 import { setSpraywalls } from "../../redux/features/spraywall/spraywallSlice";
-import { useFetch } from "../../hooks/useFetch";
+import { RootNavigationProp } from "../../navigation/types/navigation";
+import { useAppDispatch } from "../../redux/hooks";
 
-const AddGymScreen = ({ navigation }) => {
-  const dispatch = useDispatch();
+const CHAR_LIMIT = 100;
+
+const AddGymScreen = () => {
+  const navigation = useNavigation<RootNavigationProp>();
+  const dispatch = useAppDispatch();
 
   const [isCommercialGym, setIsCommercialGym] = useState(true);
   const [gymName, setGymName] = useState("");
   const [gymAddress, setGymAddress] = useState("");
-  const [placeID, setPlaceID] = useState(null);
+  const [placeID, setPlaceID] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [addressSuggestions, setAddressSuggestions] = useState([]);
-
-  const [fetchCreate, isLoadingCreate, isErrorCreate] = useFetch(createGym);
 
   useCustomHeader({
-    navigation,
     title: "Add New Gym",
   });
 
@@ -56,7 +55,7 @@ const AddGymScreen = ({ navigation }) => {
               longitude: geoData ? geoData.lng : null,
               place_id: placeID,
             };
-            const response = await fetchCreate({ data });
+            const response = await createGym({ data });
             if (response.status === 201) {
               dispatch(setGym(response.data));
               dispatch(setSpraywalls([]));
@@ -118,14 +117,19 @@ const AddGymScreen = ({ navigation }) => {
               onChangeText={(text) => setGymName(text)}
             />
           </View>
-          <View style={styles.addressContainer(isCommercialGym)}>
+          <View
+            style={[
+              styles.addressContainer,
+              { opacity: isCommercialGym ? 1 : 0.25 },
+            ]}
+          >
             <Text style={styles.label}>Gym Address:</Text>
             <AddressTextInput
               address={gymAddress}
               setAddress={setGymAddress}
-              suggestions={addressSuggestions}
-              setSuggestions={setAddressSuggestions}
               placeholder={"Enter gym address"}
+              description={"Gym Address to be displayed to all users."}
+              charLimit={CHAR_LIMIT}
               setPlaceID={setPlaceID}
             />
           </View>
@@ -165,10 +169,9 @@ const styles = StyleSheet.create({
   typeContainer: {
     alignSelf: "stretch",
   },
-  addressContainer: (isCommercialGym) => ({
-    opacity: isCommercialGym ? 1 : 0.25,
+  addressContainer: {
     alignSelf: "stretch",
-  }),
+  },
   inputContainer: {
     alignSelf: "stretch",
   },
@@ -223,10 +226,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  image: (image, imageScaleDownFactor) => ({
-    width: image.width / imageScaleDownFactor,
-    height: image.height / imageScaleDownFactor,
-  }),
   imageButtonText: {
     fontSize: 16,
   },

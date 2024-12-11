@@ -24,20 +24,25 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { Boulder } from "../../utils/types/boulder";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../../App";
-
-type RootNavigationProp = NativeStackNavigationProp<RootStackParamList>;
+import {
+  selectSpraywall,
+  selectSpraywalls,
+} from "../../redux/features/spraywall/spraywallSelectors";
+import { selectBoulders } from "../../redux/features/boulder/boulderSelectors";
+import { selectGym } from "../../redux/features/gym/gymSelectors";
+import { selectFilters } from "../../redux/features/filter/filterSelectors";
+import { RootNavigationProp } from "../../navigation/types/navigation";
 
 const INITIAL_PAGE: number = 1;
 
 const HomeScreen = () => {
   const navigation = useNavigation<RootNavigationProp>();
   const dispatch = useAppDispatch();
-  const { gym } = useAppSelector((state) => state.gym);
-  const { spraywalls, spraywallIndex } = useAppSelector(
-    (state) => state.spraywall
-  );
-  const filters = useAppSelector((state) => state.filters);
-  const boulders = useAppSelector((state) => state.boulders);
+  const gym = useAppSelector((state) => selectGym(state));
+  const spraywalls = useAppSelector((state) => selectSpraywalls(state));
+  const spraywall = useAppSelector((state) => selectSpraywall(state));
+  const filters = useAppSelector((state) => selectFilters(state));
+  const boulders = useAppSelector((state) => selectBoulders(state));
 
   const [searchQuery, setSearchQuery] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -66,14 +71,17 @@ const HomeScreen = () => {
     setIsLoading(true);
     dispatch(resetBoulders());
     setPage(INITIAL_PAGE);
-    const { path, queries } = getParams(INITIAL_PAGE);
-    const response = await getBoulderList(path, queries);
-    // const response = await fetchBoulderList(getParams(INITIAL_PAGE));
-    handleResponse(response.data.results, INITIAL_PAGE, response.data.next);
-    const pathParams = { spraywallId: spraywalls[spraywallIndex].id };
-    const circuitResponse = await getCircuitList({ pathParams });
-    dispatch(setCircuits(circuitResponse.data));
-    setIsLoading(false);
+    const params = getParams(INITIAL_PAGE);
+    if (params) {
+      const response = await getBoulderList(params.path, params.queries);
+      handleResponse(response.data.results, INITIAL_PAGE, response.data.next);
+      const pathParams = { spraywallId: spraywall?.id };
+      const circuitResponse = await getCircuitList({ pathParams });
+      dispatch(setCircuits(circuitResponse.data));
+      setIsLoading(false);
+    } else {
+      console.error("Failed to assemble parameters for fetching boulder list.");
+    }
   };
 
   useEffect(() => {
@@ -81,12 +89,16 @@ const HomeScreen = () => {
     if (canFetch()) {
       fetchInitialPage();
     }
-  }, [searchQuery, spraywalls, spraywallIndex, filters]);
+  }, [searchQuery, spraywalls, spraywall, filters]);
 
   const fetchNextPage = async () => {
-    const { path, queries } = getParams(INITIAL_PAGE);
-    const response = await getBoulderList(path, queries);
-    handleResponse(response.data.results, page, response.data.next);
+    const params = getParams(INITIAL_PAGE);
+    if (params) {
+      const response = await getBoulderList(params.path, params.queries);
+      handleResponse(response.data.results, page, response.data.next);
+    } else {
+      console.error("Failed to assemble parameters for fetching boulder list.");
+    }
   };
 
   // Call fetchNextPage when the user scrolls to the end of the list
@@ -112,7 +124,7 @@ const HomeScreen = () => {
   };
 
   const getParams = (page: number) => {
-    const path = { spraywallId: spraywalls[spraywallIndex].id };
+    const path = { spraywallId: spraywall?.id };
     const queries = {
       searchQuery,
       minGradeIndex: filters.minGradeIndex,

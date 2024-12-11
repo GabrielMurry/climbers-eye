@@ -1,18 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { boulderGrades } from "../../../utils/constants/boulderConstants";
+import { Filter } from "../../../utils/types/filter";
 
-type Filter = {
-  sortBy: string;
-  minGradeIndex: number;
-  maxGradeIndex: number;
-  activity: string | null;
-  climbType: string;
-  climbStatus: string;
-  circuit: number | null;
-  excludeIds: number[];
-};
-
-const initialState: Filter = {
+const defaultFilters: Filter = {
   sortBy: "grade",
   minGradeIndex: 0,
   maxGradeIndex: boulderGrades.length - 1,
@@ -23,50 +13,54 @@ const initialState: Filter = {
   excludeIds: [],
 };
 
+const initialState = {
+  object: defaultFilters,
+};
+
 export const filterSlice = createSlice({
   name: "filters",
   initialState,
   reducers: {
     setSortBy: (state, action: PayloadAction<string>) => {
-      state.sortBy = action.payload;
+      state.object.sortBy = action.payload;
     },
     setMinGradeIndex: (state, action: PayloadAction<number>) => {
-      state.minGradeIndex = action.payload;
+      state.object.minGradeIndex = action.payload;
     },
     setMaxGradeIndex: (state, action: PayloadAction<number>) => {
-      state.maxGradeIndex = action.payload;
+      state.object.maxGradeIndex = action.payload;
     },
     setActivity: (state, action: PayloadAction<string | null>) => {
-      state.activity = action.payload;
+      state.object.activity = action.payload;
     },
     setClimbType: (state, action: PayloadAction<string>) => {
-      state.climbType = action.payload;
+      state.object.climbType = action.payload;
     },
     setClimbStatus: (state, action: PayloadAction<string>) => {
-      state.climbStatus = action.payload;
+      state.object.climbStatus = action.payload;
     },
     setCircuit: (state, action: PayloadAction<number>) => {
-      state.circuit = action.payload;
+      state.object.circuit = action.payload;
     },
     resetCircuit: (state) => {
-      state.circuit = initialState.circuit;
+      state.object.circuit = initialState.object.circuit;
     },
     appendExcludeId: (state, action: PayloadAction<number>) => {
-      state.excludeIds.push(action.payload);
+      state.object.excludeIds.push(action.payload);
     },
     resetExcludeIds: (state) => {
-      state.excludeIds = initialState.excludeIds;
+      state.object.excludeIds = initialState.object.excludeIds;
     },
     resetFilters: (state) => {
       // Mutating each field back to its initial value
-      state.sortBy = initialState.sortBy;
-      state.minGradeIndex = initialState.minGradeIndex;
-      state.maxGradeIndex = initialState.maxGradeIndex;
-      state.activity = initialState.activity;
-      state.climbType = initialState.climbType;
-      state.climbStatus = initialState.climbStatus;
-      state.circuit = initialState.circuit;
-      state.excludeIds = initialState.excludeIds;
+      state.object.sortBy = initialState.object.sortBy;
+      state.object.minGradeIndex = initialState.object.minGradeIndex;
+      state.object.maxGradeIndex = initialState.object.maxGradeIndex;
+      state.object.activity = initialState.object.activity;
+      state.object.climbType = initialState.object.climbType;
+      state.object.climbStatus = initialState.object.climbStatus;
+      state.object.circuit = initialState.object.circuit;
+      state.object.excludeIds = initialState.object.excludeIds;
     },
   },
 });
