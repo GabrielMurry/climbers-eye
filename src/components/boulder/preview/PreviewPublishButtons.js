@@ -7,7 +7,7 @@ const PreviewPublishButtons = ({ handleConfirm, isLoading }) => {
   return (
     <View style={styles.container}>
       <CustomButton
-        onPress={() => handleConfirm({ publish: false })}
+        onPress={() => handleConfirm(false)}
         text="Drafts"
         type="TERTIARY"
         width="45%"
@@ -15,7 +15,7 @@ const PreviewPublishButtons = ({ handleConfirm, isLoading }) => {
         disabled={isLoading}
       />
       <CustomButton
-        onPress={() => handleConfirm({ publish: true })}
+        onPress={() => handleConfirm(true)}
         text="Publish"
         width="45%"
         bgColor={colors.primary}

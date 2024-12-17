@@ -15,11 +15,12 @@ export const spraywallSlice = createSlice({
     },
     setSpraywalls: (state, action: PayloadAction<Spraywall[]>) => {
       state.objects = action.payload;
+      state.selectedId = action.payload[0].id;
     },
-    setSpraywallIndex: (state, action: PayloadAction<number>) => {
+    setSelectedSpraywallId: (state, action: PayloadAction<number>) => {
       state.selectedId = action.payload;
     },
-    resetSpraywallIndex: (state) => {
+    resetSelectedSpraywallId: (state) => {
       if (state.objects.length !== 0) {
         state.selectedId = state.objects[0].id;
       } else {
@@ -49,16 +50,20 @@ export const spraywallSlice = createSlice({
         return { payload: { id, updates } };
       },
     },
+    removeSpraywalls: (state) => {
+      state = initialState;
+    },
   },
 });
 
 export const {
   appendSpraywall,
   setSpraywalls,
-  setSpraywallIndex,
-  resetSpraywallIndex,
+  setSelectedSpraywallId,
+  resetSelectedSpraywallId,
   deleteSpraywall,
   updateSpraywall,
+  removeSpraywalls,
 } = spraywallSlice.actions;
 
 export default spraywallSlice.reducer;

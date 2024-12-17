@@ -11,7 +11,7 @@ export type Gym = {
   address: string;
   latitude: number;
   longitude: number;
-  place_id: string;
+  place_id: number;
   type: GymTypeType;
   date_created: string;
 };

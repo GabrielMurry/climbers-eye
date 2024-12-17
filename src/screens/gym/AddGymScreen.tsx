@@ -23,7 +23,7 @@ import { useAppDispatch } from "../../redux/hooks";
 const CHAR_LIMIT = 100;
 
 const AddGymScreen = () => {
-  const navigation = useNavigation<RootNavigationProp>();
+  const navigation = useNavigation();
   const dispatch = useAppDispatch();
 
   const [isCommercialGym, setIsCommercialGym] = useState(true);

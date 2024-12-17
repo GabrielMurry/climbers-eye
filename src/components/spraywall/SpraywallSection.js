@@ -2,9 +2,13 @@ import { View, Text } from "react-native";
 import React from "react";
 import { useSelector } from "react-redux";
 import SettingsButton from "../custom/SettingsButton";
+import { useNavigation } from "@react-navigation/native";
+import { useAppSelector } from "../../redux/hooks";
+import { selectSpraywalls } from "../../redux/features/spraywall/spraywallSelectors";
 
-const SpraywallSection = ({ navigation }) => {
-  const { spraywalls } = useSelector((state) => state.spraywall);
+const SpraywallSection = () => {
+  const navigation = useNavigation();
+  const spraywalls = useAppSelector((state) => selectSpraywalls(state));
 
   return (
     <View>
@@ -18,14 +22,14 @@ const SpraywallSection = ({ navigation }) => {
         <Text style={{ fontSize: 14 }}>Spraywall</Text>
       </View>
       <View style={{ backgroundColor: "white", borderRadius: 5 }}>
-        {spraywalls.map((spraywall, index) => (
+        {spraywalls.map((spraywall) => (
           <SettingsButton
             key={spraywall.id.toString()}
             title={spraywall.name}
             onPress={() =>
               navigation.navigate("SpraywallStack", {
                 screen: "EditSpraywall",
-                params: { index: index },
+                params: { spraywall: spraywall },
               })
             }
           />

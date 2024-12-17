@@ -10,6 +10,7 @@ export type Boulder = {
   feetFollowHands: boolean;
   kickboardOn: boolean;
   sends: number;
+  quality: number;
   isLiked: boolean;
   isBookmarked: boolean;
   isSent: boolean;

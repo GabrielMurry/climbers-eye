@@ -8,8 +8,6 @@ import { useNavigation } from "@react-navigation/native";
 import { RootNavigationProp } from "../../navigation/types/navigation";
 
 const EditGymScreen = () => {
-  const navigation = useNavigation<RootNavigationProp>();
-
   useCustomHeader({
     backgroundColor: "rgba(245,245,245,255)",
     title: "Edit Gym",
@@ -28,9 +26,9 @@ const EditGymScreen = () => {
           paddingHorizontal: 10,
         }}
       >
-        <GymSection navigation={navigation} />
-        <SpraywallSection navigation={navigation} />
-        <DeleteGym navigation={navigation} />
+        <GymSection />
+        <SpraywallSection />
+        <DeleteGym />
       </ScrollView>
     </SafeAreaView>
   );

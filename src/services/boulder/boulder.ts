@@ -1,8 +1,5 @@
 import { request } from "../common/apiRequest";
-import { Path, Queries } from "./types";
-import { BoulderCompositeData } from "./types/composite";
-import { BoulderDetailParams } from "./types/detail";
-import { BoulderListParams } from "./types/list";
+import { Data, Path, Queries } from "./types";
 
 export const getBoulderList = async (path: Path, queries: Queries) => {
   return await request(
@@ -11,22 +8,16 @@ export const getBoulderList = async (path: Path, queries: Queries) => {
   );
 };
 
-export const getBoulderDetail = async ({ path }: { path: Path }) => {
+export const getBoulderDetail = async (path: Path) => {
   return await request("get", `boulder/detail/${path.boulderId}`);
 };
 
-export const compositeBoulder = async (data: BoulderCompositeData) => {
-  return await request(
-    "post",
-    "boulder/composite/",
-    data,
-    "multipart/form-data"
-  );
+export const compositeBoulder = async (data: FormData) => {
+  return await request("post", "boulder/composite/", data);
 };
 
-export const addBoulderToSpraywall = async ({ pathParams, data }) => {
-  const { spraywallId } = pathParams;
-  return await request("post", `boulder/list/${spraywallId}`, data);
+export const addBoulderToSpraywall = async (path: Path, data: Data) => {
+  return await request("post", `boulder/list/${path.spraywallId}`, data);
 };
 
 export const addBoulderToCircuitAPI = async ({ pathParams }) => {

@@ -21,7 +21,7 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 const CHAR_LIMIT = 100;
 
 const EditGymAddressScreen = () => {
-  const navigation = useNavigation<RootNavigationProp>();
+  const navigation = useNavigation();
 
   const dispatch = useAppDispatch();
 
@@ -30,7 +30,7 @@ const EditGymAddressScreen = () => {
   const [isDisabled, setIsDisabled] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [addressSuggestions, setAddressSuggestions] = useState([]);
-  const [placeID, setPlaceID] = useState(null);
+  const [placeID, setPlaceID] = useState<number | null>(null);
 
   useEffect(() => {
     if (newGymAddress !== gym.address) {
@@ -92,8 +92,8 @@ const EditGymAddressScreen = () => {
         <AddressTextInput
           address={newGymAddress}
           setAddress={setNewGymAddress}
-          suggestions={addressSuggestions}
-          setSuggestions={setAddressSuggestions}
+          // suggestions={addressSuggestions}
+          // setSuggestions={setAddressSuggestions}
           placeholder={"Enter gym address"}
           setPlaceID={setPlaceID}
           charLimit={CHAR_LIMIT}

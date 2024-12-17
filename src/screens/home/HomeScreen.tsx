@@ -5,6 +5,7 @@ import {
   SafeAreaView,
   ActivityIndicator,
   ListRenderItem,
+  Text,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import BoulderCard from "../../components/common/BoulderCard";
@@ -22,8 +23,6 @@ import { setCircuits } from "../../redux/features/circuit/circuitSlice";
 import { useNavigation } from "@react-navigation/native";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { Boulder } from "../../utils/types/boulder";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../../../App";
 import {
   selectSpraywall,
   selectSpraywalls,
@@ -31,16 +30,19 @@ import {
 import { selectBoulders } from "../../redux/features/boulder/boulderSelectors";
 import { selectGym } from "../../redux/features/gym/gymSelectors";
 import { selectFilters } from "../../redux/features/filter/filterSelectors";
-import { RootNavigationProp } from "../../navigation/types/navigation";
 
 const INITIAL_PAGE: number = 1;
 
 const HomeScreen = () => {
-  const navigation = useNavigation<RootNavigationProp>();
+  const navigation = useNavigation();
   const dispatch = useAppDispatch();
   const gym = useAppSelector((state) => selectGym(state));
   const spraywalls = useAppSelector((state) => selectSpraywalls(state));
   const spraywall = useAppSelector((state) => selectSpraywall(state));
+  if (!spraywall) {
+    console.error("No spraywall found.");
+    return <Text>No spray wall found.</Text>;
+  }
   const filters = useAppSelector((state) => selectFilters(state));
   const boulders = useAppSelector((state) => selectBoulders(state));
 
@@ -124,7 +126,7 @@ const HomeScreen = () => {
   };
 
   const getParams = (page: number) => {
-    const path = { spraywallId: spraywall?.id };
+    const path = { spraywallId: spraywall.id };
     const queries = {
       searchQuery,
       minGradeIndex: filters.minGradeIndex,
@@ -151,7 +153,7 @@ const HomeScreen = () => {
   );
 
   const renderBoulderCard: ListRenderItem<Boulder> = ({ item }) => (
-    <BoulderCard boulder={item} navigation={navigation} />
+    <BoulderCard boulder={item} />
   );
 
   const handleEditGymPress = () => {

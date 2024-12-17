@@ -14,11 +14,8 @@ export type Path = {
   spraywallId?: number;
   boulderId?: number;
   circuitId?: number;
-};
-
-export type CompositeData = {
-  image: FormData;
-  canvas: FormData;
+  sendId?: number;
+  gymId?: number;
 };
 
 export type Data = {

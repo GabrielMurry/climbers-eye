@@ -8,7 +8,6 @@ const BoulderStatsScreen = ({ route, navigation }) => {
   const { boulder, chartData } = route.params;
 
   useCustomHeader({
-    navigation,
     title: "Boulder Statistics",
   });
 

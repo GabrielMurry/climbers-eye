@@ -6,6 +6,10 @@ export const selectSpraywalls = (state: RootState) => {
 };
 
 export const selectSpraywall = (state: RootState): Spraywall | null => {
+  if (state.spraywall.objects.length === 0) {
+    console.log("Spraywall not found.");
+    return null;
+  }
   const spraywall = state.spraywall.objects.find(
     (spraywall) => spraywall.id === state.spraywall.selectedId
   );

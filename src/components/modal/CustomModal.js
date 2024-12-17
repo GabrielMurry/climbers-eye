@@ -17,8 +17,10 @@ import * as ImagePicker from "expo-image-picker";
 import { useSelector } from "react-redux";
 import { colors } from "../../utils/styles";
 import ModalButton from "./ModalButton";
+import { useNavigation } from "@react-navigation/native";
 
-const CustomModal = ({ isVisible, onClose, navigation, isBoulder = true }) => {
+const CustomModal = ({ isVisible, onClose, isBoulder = true }) => {
+  const navigation = useNavigation();
   const { spraywalls, spraywallIndex } = useSelector(
     (state) => state.spraywall
   );

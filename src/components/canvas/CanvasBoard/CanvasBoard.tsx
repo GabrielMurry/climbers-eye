@@ -1,14 +1,8 @@
 import { Canvas, Path, Skia, useCanvasRef } from "@shopify/react-native-skia";
-import React, {
-  forwardRef,
-  useEffect,
-  useImperativeHandle,
-  useRef,
-  useState,
-} from "react";
+import React, { forwardRef, Ref, useImperativeHandle, useState } from "react";
 import { SafeAreaView, StyleSheet, useWindowDimensions } from "react-native";
 import { GestureDetector, Gesture } from "react-native-gesture-handler";
-import { CanvasBoardProps, PathWithColorAndWidth } from "./types";
+import { CanvasBoardProps, PathWithColorAndWidth, RefProps } from "./types";
 import { runOnJS } from "react-native-reanimated";
 
 const CanvasBoard: React.FC<CanvasBoardProps> = forwardRef(
@@ -21,7 +15,7 @@ const CanvasBoard: React.FC<CanvasBoardProps> = forwardRef(
       strokeWidth,
       opacity,
     },
-    ref
+    ref: Ref<RefProps>
   ) => {
     const [paths, setPaths] = useState<PathWithColorAndWidth[]>([]);
 

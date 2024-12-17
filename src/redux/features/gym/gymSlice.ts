@@ -16,9 +16,12 @@ export const gymSlice = createSlice({
     updateGym: (state, action: PayloadAction<Partial<Gym>>) => {
       Object.assign(state.object, action.payload);
     },
+    removeGym: (state) => {
+      state = initialState;
+    },
   },
 });
 
-export const { setGym, updateGym } = gymSlice.actions;
+export const { setGym, updateGym, removeGym } = gymSlice.actions;
 
 export default gymSlice.reducer;
