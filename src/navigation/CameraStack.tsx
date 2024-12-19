@@ -1,9 +1,5 @@
-import {
-  createNativeStackNavigator,
-  NativeStackScreenProps,
-} from "@react-navigation/native-stack";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { CameraScreen } from "../screens/camera";
-import { RootStackParamList } from "../../App";
 
 export type CameraStackParamList = {
   Camera: undefined;

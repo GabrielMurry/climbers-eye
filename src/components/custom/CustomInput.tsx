@@ -10,6 +10,8 @@ type CustomInputProps = {
   error?: boolean;
   autoCapitalize?: string;
   bgColor?: string;
+  bordered?: boolean;
+  rounded?: boolean;
 };
 
 const CustomInput: React.FC<CustomInputProps> = ({
@@ -23,8 +25,8 @@ const CustomInput: React.FC<CustomInputProps> = ({
   bgColor = "white",
   // icon = null,
   // button = null,
-  // bordered = null,
-  // rounded = null,
+  bordered,
+  rounded,
 }) => {
   return (
     <View
@@ -32,10 +34,10 @@ const CustomInput: React.FC<CustomInputProps> = ({
         width: width,
         flexDirection: "row",
         borderColor: error ? "red" : "#e8e8e8",
-        // borderBottomWidth: bordered ? null : 2,
-        // borderWidth: bordered ? 1 : null,
+        borderBottomWidth: bordered ? undefined : 2,
+        borderWidth: bordered ? 1 : undefined,
         alignItems: "center",
-        // borderRadius: rounded ? 5 : null,
+        borderRadius: rounded ? 5 : undefined,
       }}
     >
       {/* {icon} */}

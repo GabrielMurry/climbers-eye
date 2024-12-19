@@ -8,15 +8,21 @@ import { selectSpraywalls } from "../../redux/features/spraywall/spraywallSelect
 import { Spraywall } from "../../utils/types/spraywall";
 
 type FlatListSpraywallsProps = {
-  highlight: boolean;
-  hasEditPermission: boolean;
+  spraywallsDataProp?: Spraywall[];
+  highlight?: boolean;
+  hasEditPermission?: boolean;
+  height?: number;
 };
 
 const FlatListSpraywalls: React.FC<FlatListSpraywallsProps> = ({
+  spraywallsDataProp,
   highlight = false,
   hasEditPermission,
+  height,
 }) => {
-  const spraywalls = useAppSelector((state) => selectSpraywalls(state));
+  const spraywalls = spraywallsDataProp
+    ? spraywallsDataProp
+    : useAppSelector((state) => selectSpraywalls(state));
 
   const renderSpraywall = ({ item }: { item: Spraywall }) => (
     <SpraywallCard spraywallCard={item} highlight={highlight} />
@@ -29,7 +35,7 @@ const FlatListSpraywalls: React.FC<FlatListSpraywallsProps> = ({
       data={spraywalls}
       renderItem={renderSpraywall}
       keyExtractor={(item) => item.id.toString()}
-      contentContainerStyle={{ gap: 10 }}
+      contentContainerStyle={{ gap: 10, height: height }}
       horizontal
       ListFooterComponent={hasEditPermission ? renderFooter : null}
       showsHorizontalScrollIndicator={false}

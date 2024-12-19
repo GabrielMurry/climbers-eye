@@ -40,8 +40,12 @@ function Tabs() {
           tabBarStyle: {
             borderTopWidth: 0,
           },
-          tabBarIcon: ({ size, focused }) => TabIcons({ route, size, focused }),
-          tabBarLabel: ({ focused }) => TabLabels({ route, focused }),
+          tabBarIcon: ({ size, focused }) => {
+            console.log(route);
+            return TabIcons({ name: route.name, size, focused });
+          },
+          tabBarLabel: ({ focused }) =>
+            TabLabels({ name: route.name, focused }),
         })}
       >
         <Tab.Screen

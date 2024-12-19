@@ -1,6 +1,12 @@
 import { Path } from "./boulder/types";
 import { request } from "./common/apiRequest";
 
+type ProfilePic = {
+  profilePicUrl: string | null;
+  profilePicWidth: number | null;
+  profilePicHeight: number | null;
+};
+
 export const getLogbookList = async (path: Path, page: number) => {
   return await request(
     "get",
@@ -8,30 +14,27 @@ export const getLogbookList = async (path: Path, page: number) => {
   );
 };
 
-export const getLikeList = async ({ pathParams, queryParams }) => {
-  const { spraywallId } = pathParams;
-  const { page } = queryParams;
-  return await request("get", `profile/like_list/${spraywallId}?page=${page}`);
-};
-
-export const getBookmarkList = async ({ pathParams, queryParams }) => {
-  const { spraywallId } = pathParams;
-  const { page } = queryParams;
+export const getLikeList = async (path: Path, page: number) => {
   return await request(
     "get",
-    `profile/bookmark_list/${spraywallId}?page=${page}`
+    `profile/like_list/${path.spraywallId}?page=${page}`
   );
 };
 
-export const getCreationList = async ({ pathParams, queryParams }) => {
-  const { spraywallId } = pathParams;
-  const { page } = queryParams;
+export const getBookmarkList = async (path: Path, page: number) => {
   return await request(
     "get",
-    `profile/creation_list/${spraywallId}?page=${page}`
+    `profile/bookmark_list/${path.spraywallId}?page=${page}`
   );
 };
 
-export const updateProfileInfo = async ({ data }) => {
-  return await request("patch", `profile/detail/`, data, "multipart/form-data");
+export const getCreationList = async (path: Path, page: number) => {
+  return await request(
+    "get",
+    `profile/creation_list/${path.spraywallId}?page=${page}`
+  );
+};
+
+export const updateProfileInfo = async (data: ProfilePic | FormData) => {
+  return await request("patch", `profile/detail/`, data);
 };

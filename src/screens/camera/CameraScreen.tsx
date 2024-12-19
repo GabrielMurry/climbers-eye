@@ -1,4 +1,4 @@
-import { CameraViewRef, useCameraPermissions } from "expo-camera";
+import { CameraView, useCameraPermissions } from "expo-camera";
 import { useState, useLayoutEffect, useRef } from "react";
 import {
   Button,
@@ -14,18 +14,16 @@ import Camera from "../../components/camera/Camera";
 import ImagePreview from "../../components/camera/ImagePreview";
 import { ImageObjUrl } from "../../utils/types/image";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../../../App";
-import { useNavigation } from "@react-navigation/native";
 import { CameraStackParamList } from "../../navigation/CameraStack";
 
 type Props = NativeStackScreenProps<CameraStackParamList, "Camera">;
 
 const CameraScreen = ({ navigation }: Props) => {
-  const [image, setImage] = useState<ImageObjUrl>();
+  const [image, setImage] = useState<ImageObjUrl | null>(null);
   const [cameraReady, setCameraReady] = useState(false);
   const [permission, requestPermission] = useCameraPermissions();
 
-  const cameraRef = useRef<CameraViewRef>(null);
+  const cameraRef = useRef<CameraView>(null);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -58,7 +56,7 @@ const CameraScreen = ({ navigation }: Props) => {
   const handleImageTaken = async () => {
     if (!cameraReady) return;
     try {
-      const photo = await cameraRef.current?.takePicture({ quality: 0.5 });
+      const photo = await cameraRef.current?.takePictureAsync({ quality: 0.5 });
       if (!photo) {
         console.error("Unable to take picture.");
         return;

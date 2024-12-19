@@ -5,9 +5,18 @@ import ToolBar from "../../components/boulder/paint/ToolBar";
 import ImageCanvas from "../../components/boulder/paint/ImageCanvas";
 import useCustomHeader from "../../hooks/useCustomHeader";
 import * as FileSystem from "expo-file-system";
-import { EditBoulderScreenProps } from "../../navigation/BoulderStack";
+import { BoulderStackParamList } from "../../navigation/BoulderStack";
 import { RefProps } from "../../components/canvas/CanvasBoard/types";
 import { createImageFormData } from "../../utils/formData";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { Color } from "../../components/canvas/ColorButton/types";
+
+type EditBoulderScreenProps = NativeStackScreenProps<
+  BoulderStackParamList,
+  "EditBoulder"
+>;
+
+export type item = {};
 
 const EditBoulderScreen: React.FC<EditBoulderScreenProps> = ({
   route,
@@ -16,15 +25,9 @@ const EditBoulderScreen: React.FC<EditBoulderScreenProps> = ({
   const { image } = route.params;
 
   const canvasRef = useRef<RefProps>(null);
-  const snapshotDrawingRef = useRef(null);
-  const snapshotPhotoRef = useRef(null);
 
-  const [selectedItem, setSelectedItem] = useState("green");
+  const [selectedColor, setSelectedColor] = useState<Color | null>("green");
   const [strokeWidth, setStrokeWidth] = useState(20);
-
-  const handleItemPress = (item: string) => {
-    setSelectedItem(item);
-  };
 
   const saveBase64AsFile = async (base64: string) => {
     const fileUri = `${FileSystem.cacheDirectory}canvas-image.png`;
@@ -75,16 +78,14 @@ const EditBoulderScreen: React.FC<EditBoulderScreenProps> = ({
   return (
     <View style={styles.container}>
       <ImageCanvas
-        selectedItem={selectedItem}
+        selectedColor={selectedColor}
         image={image}
-        snapshotDrawingRef={snapshotDrawingRef}
         strokeWidth={strokeWidth}
         canvasRef={canvasRef}
-        snapshotPhotoRef={snapshotPhotoRef}
       />
       <ToolBar
-        selectedItem={selectedItem}
-        handleItemPress={handleItemPress}
+        selectedColor={selectedColor}
+        setSelectedColor={setSelectedColor}
         strokeWidth={strokeWidth}
         setStrokeWidth={setStrokeWidth}
         canvasRef={canvasRef}

@@ -1,0 +1,161 @@
+import { View, StyleSheet, TouchableOpacity } from "react-native";
+import React, { RefObject } from "react";
+import { FontAwesome } from "@expo/vector-icons";
+import { RefProps } from "../../canvas/CanvasBoard/types";
+import { Color } from "../../canvas/ColorButton/types";
+
+type ItemEditBarProps = {
+  selectedColor: Color | null;
+  setSelectedColor: (item: Color | null) => void;
+  canvasRef: RefObject<RefProps>;
+};
+
+const ItemEditBar: React.FC<ItemEditBarProps> = ({
+  selectedColor,
+  setSelectedColor,
+  canvasRef,
+}) => {
+  return (
+    <View style={styles.editBarContainer}>
+      {/* Undo Button */}
+      <TouchableOpacity
+        style={styles.undoButton}
+        onPress={() => canvasRef.current?.undo()}
+      >
+        <FontAwesome name="undo" size={25} color="white" />
+      </TouchableOpacity>
+      {/* Eraser Button */}
+      <TouchableOpacity
+        style={
+          selectedColor
+            ? styles.handButtonUnselected
+            : styles.handButtonSelected
+        }
+        onPress={() => setSelectedColor(null)}
+      >
+        <FontAwesome
+          name={selectedColor ? "hand-stop-o" : "hand-grab-o"}
+          size={25}
+          color="white"
+        />
+      </TouchableOpacity>
+      {/* Green Button */}
+      <TouchableOpacity
+        style={
+          selectedColor === "green"
+            ? styles.colorButtonSelected
+            : styles.colorButtonUnselected
+        }
+        onPress={() => setSelectedColor("green")}
+      >
+        <View style={[styles.colorButton, { backgroundColor: "green" }]}></View>
+      </TouchableOpacity>
+      {/* Blue Button */}
+      <TouchableOpacity
+        style={
+          selectedColor === "blue"
+            ? styles.colorButtonSelected
+            : styles.colorButtonUnselected
+        }
+        onPress={() => setSelectedColor("blue")}
+      >
+        <View style={[styles.colorButton, { backgroundColor: "blue" }]}></View>
+      </TouchableOpacity>
+      {/* Purple Button */}
+      <TouchableOpacity
+        style={
+          selectedColor === "purple"
+            ? styles.colorButtonSelected
+            : styles.colorButtonUnselected
+        }
+        onPress={() => setSelectedColor("purple")}
+      >
+        <View
+          style={[styles.colorButton, { backgroundColor: "purple" }]}
+        ></View>
+      </TouchableOpacity>
+      {/* Red Button */}
+      <TouchableOpacity
+        style={
+          selectedColor === "red"
+            ? styles.colorButtonSelected
+            : styles.colorButtonUnselected
+        }
+        onPress={() => setSelectedColor("red")}
+      >
+        <View style={[styles.colorButton, { backgroundColor: "red" }]}></View>
+      </TouchableOpacity>
+    </View>
+  );
+};
+
+export default ItemEditBar;
+
+const styles = StyleSheet.create({
+  editBarContainer: {
+    height: 50,
+    width: "90%",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-evenly",
+    columnGap: 10,
+  },
+  undoButton: {
+    width: 40,
+    height: 40,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  handButtonSelected: {
+    borderColor: "white",
+    borderWidth: 2,
+    width: 40,
+    height: 40,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 10,
+  },
+  handButtonUnselected: {
+    width: 40,
+    height: 40,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  colorButtonSelected: {
+    borderColor: "white",
+    borderWidth: 2,
+    width: 40,
+    height: 40,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 10,
+  },
+  colorButtonUnselected: {
+    width: 40,
+    height: 40,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  colorButton: {
+    width: 30,
+    height: 30,
+    borderRadius: 5,
+  },
+  brushSizeContainer: {
+    width: "90%",
+    flexDirection: "row",
+    alignItems: "center",
+    columnGap: 10,
+  },
+  brushSizePreview: {
+    justifyContent: "center",
+    alignItems: "center",
+    width: 50,
+    height: 50,
+  },
+  brushSizeSliderContainer: {
+    height: 50,
+    flex: 1,
+    justifyContent: "center",
+  },
+});

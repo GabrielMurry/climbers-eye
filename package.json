@@ -25,6 +25,7 @@
     "@reduxjs/toolkit": "^2.3.0",
     "@shopify/react-native-skia": "^1.5.7",
     "@types/d3": "^7.4.3",
+    "@types/lodash": "^4.17.13",
     "axios": "^1.7.7",
     "d3": "^7.9.0",
     "expo": "^52.0.9",

@@ -2,9 +2,8 @@ import { request } from "./common/apiRequest";
 import { Path } from "./boulder/types";
 import { ImageObjUrl } from "../utils/types/image";
 
-export const getSpraywallList = async ({ pathParams }) => {
-  const { gymId } = pathParams;
-  return await request("get", `spraywall/list/${gymId}`);
+export const getSpraywallList = async (path: Path) => {
+  return await request("get", `spraywall/list/${path.gymId}`);
 };
 
 export const createSpraywall = async (path: Path, data: FormData) => {

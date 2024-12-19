@@ -18,7 +18,12 @@ export type ProfileStackParamList = {
   ProfileUser: undefined;
   EditProfile: undefined;
   EditName: undefined;
-  CropImage: undefined;
+  CropImage: {
+    imageUri: string;
+    width: number;
+    height: number;
+    isPortrait: boolean;
+  };
   SwitchGym: undefined;
   Boulder: { boulderId: number };
   Logbook: undefined;

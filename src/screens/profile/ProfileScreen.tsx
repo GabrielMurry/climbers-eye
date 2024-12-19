@@ -19,6 +19,7 @@ import { CommonActions, useNavigation } from "@react-navigation/native";
 import { logoutUser } from "../../services/auth";
 import { useAppSelector } from "../../redux/hooks";
 import { selectUser } from "../../redux/features/user/userSelectors";
+import { Options } from "../boulder/types";
 
 const THEME_STYLE = "white";
 
@@ -28,7 +29,6 @@ const ProfileScreen = () => {
   const user = useAppSelector((state) => selectUser(state));
 
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [circuits, setCircuits] = useState([]);
   const [isHeaderTitleVisible, setIsHeaderTitleVisible] = useState(false);
 
   useLayoutEffect(() => {
@@ -92,8 +92,8 @@ const ProfileScreen = () => {
     navigation.navigate("ProfileStack", { screen: "EditProfile" });
   };
 
-  const optionsData = [
-    { title: "Edit Profile", onPress: handleEditProfilePress },
+  const optionsData: Options[] = [
+    { title: "Edit Profile", onPress: handleEditProfilePress, color: "black" },
     { title: "Log out", onPress: handleLogoutPress, color: "red" },
     { title: "Cancel", onPress: () => setIsModalVisible(false), color: "gray" },
   ];
@@ -102,10 +102,10 @@ const ProfileScreen = () => {
     <SafeAreaView style={{ flex: 1, backgroundColor: THEME_STYLE }}>
       {/* screen */}
       <ScrollView onScroll={handleScroll} scrollEventThrottle={16}>
-        <Header navigation={navigation} />
+        <Header />
         <GymSection />
-        <BouldersSection navigation={navigation} />
-        <CircuitsSection circuits={circuits} navigation={navigation} />
+        <BouldersSection />
+        <CircuitsSection />
       </ScrollView>
       {/* modal */}
       <ModalOptions

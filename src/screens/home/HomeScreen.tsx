@@ -143,12 +143,10 @@ const HomeScreen = () => {
 
   const renderListHeader = () => (
     <ListHeader
-      gym={gym}
       setIsModalVisible={setIsModalVisible}
       searchQuery={searchQuery}
       setSearchQuery={setSearchQuery}
       hasEditPermission={hasEditPermission} // put in component
-      navigation={navigation}
     />
   );
 
@@ -197,7 +195,7 @@ const HomeScreen = () => {
         isModalVisible={isModalVisible}
         setIsModalVisible={setIsModalVisible}
         optionsData={[
-          { title: "Edit Gym", onPress: handleEditGymPress },
+          { title: "Edit Gym", onPress: handleEditGymPress, color: "black" },
           {
             title: "Cancel",
             onPress: () => setIsModalVisible(false),

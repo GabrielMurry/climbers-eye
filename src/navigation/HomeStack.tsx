@@ -1,7 +1,4 @@
-import {
-  createNativeStackNavigator,
-  NativeStackScreenProps,
-} from "@react-navigation/native-stack";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { FilterHomeListScreen, HomeScreen } from "../screens/home";
 import { BoulderScreen } from "../screens/boulder";
 import { NavigationProvider } from "../contexts/NavigationContext";

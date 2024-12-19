@@ -35,12 +35,25 @@ import { useFetch } from "../../hooks/useFetch";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { selectUser } from "../../redux/features/user/userSelectors";
 import { selectBoulder } from "../../redux/features/boulder/boulderSelectors";
-import { BoulderScreenProps } from "../../navigation/BoulderStack";
+import { BoulderStackParamList } from "../../navigation/BoulderStack";
 import { Options, UserSendsData } from "./types";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+
+export type ChartData = {
+  label: string;
+  value: number;
+};
+
+type BoulderScreenProps = NativeStackScreenProps<
+  BoulderStackParamList,
+  "Boulder"
+>;
 
 const THEME_STYLE = "white"; //rgba(245,245,245,255)
 
-const BoulderScreen: React.FC<BoulderScreenProps> = ({ route, navigation }) => {
+const BoulderScreen: React.FC<BoulderScreenProps> = ({ route }) => {
+  const navigation = useNavigation();
+
   const boulderId = route.params.boulderId;
 
   const dispatch = useAppDispatch();
@@ -55,7 +68,7 @@ const BoulderScreen: React.FC<BoulderScreenProps> = ({ route, navigation }) => {
   const [imageFullScreen, setImageFullScreen] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [optionsData, setOptionsData] = useState<Options[]>([]);
-  const [chartData, setChartData] = useState([]);
+  const [chartData, setChartData] = useState<ChartData[]>([]);
   const [userSendsData, setUserSendsData] = useState<UserSendsData[]>([]);
   const [isImageLoaded, setIsImageLoaded] = useState(false);
 
@@ -109,7 +122,7 @@ const BoulderScreen: React.FC<BoulderScreenProps> = ({ route, navigation }) => {
 
   const handleReportPress = () => {
     setIsModalVisible(false);
-    navigation.navigate("ReportBoulder");
+    // navigation.navigate("ReportBoulder");
   };
 
   const handlePublishBoulder = () => {
@@ -179,12 +192,11 @@ const BoulderScreen: React.FC<BoulderScreenProps> = ({ route, navigation }) => {
         <Titles boulder={boulder} />
         <ImageDisplay image={boulder} setImageFullScreen={setImageFullScreen} />
         <DraftNotif boulder={boulder} />
-        <InfoRow1 boulder={boulder} userID={user.id} navigation={navigation} />
+        <InfoRow1 boulder={boulder} userID={user.id} />
         <InfoRow2
           boulder={boulder}
           chartData={chartData}
           userSendsData={userSendsData}
-          navigation={navigation}
         />
         <InfoRow3 boulder={boulder} />
         <InfoRow4 boulder={boulder} />

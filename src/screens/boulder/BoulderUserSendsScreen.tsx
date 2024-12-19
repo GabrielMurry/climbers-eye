@@ -4,8 +4,14 @@ import useCustomHeader from "../../hooks/useCustomHeader";
 import { XMarkIcon } from "react-native-heroicons/outline";
 import QualityRating from "../../components/boulder/QualityRating";
 import { deleteSendFromBoulder } from "../../services/send";
-import { BoulderUserSendsScreenProps } from "../../navigation/BoulderStack";
+import { BoulderStackParamList } from "../../navigation/BoulderStack";
 import { UserSendsData } from "./types";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+
+type BoulderUserSendsScreenProps = NativeStackScreenProps<
+  BoulderStackParamList,
+  "BoulderUserSends"
+>;
 
 const BoulderUserSendsScreen: React.FC<BoulderUserSendsScreenProps> = ({
   navigation,

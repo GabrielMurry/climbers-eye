@@ -1,6 +1,10 @@
 import { Path } from "./boulder/types";
 import { request } from "./common/apiRequest";
 
+type UserChooseGymData = {
+  gym: number;
+};
+
 export const getGymList = async () => {
   return await request("get", `gym/list/`);
 };
@@ -9,7 +13,7 @@ export const createGym = async ({ data }) => {
   return await request("post", `gym/list/`, data);
 };
 
-export const userChooseGym = async ({ data }) => {
+export const userChooseGym = async (data: UserChooseGymData) => {
   return await request("patch", `gym/user_choose_gym/`, data);
 };
 

@@ -1,7 +1,4 @@
-import {
-  createNativeStackNavigator,
-  NativeStackScreenProps,
-} from "@react-navigation/native-stack";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import {
   BoulderScreen,
   BoulderStatsScreen,
@@ -14,41 +11,17 @@ import {
 import { UserSendsData } from "../screens/boulder/types";
 import { ImageObjUri, ImageObjUrl } from "../utils/types/image";
 import { Boulder } from "../utils/types/boulder";
+import { ChartData } from "../screens/boulder/BoulderScreen";
 
 export type BoulderStackParamList = {
   Boulder: { boulderId: number };
   EditBoulder: { image: ImageObjUrl };
   PreviewEdit: { image: ImageObjUri };
   SendBoulder: { boulder: Boulder; userSendsData: UserSendsData[] };
-  BoulderStats: undefined;
+  BoulderStats: { boulder: Boulder; chartData: ChartData[] };
   ReportBoulder: undefined;
   BoulderUserSends: { userSendsData: UserSendsData[] };
 };
-
-export type BoulderScreenProps = NativeStackScreenProps<
-  BoulderStackParamList,
-  "Boulder"
->;
-
-export type BoulderUserSendsScreenProps = NativeStackScreenProps<
-  BoulderStackParamList,
-  "BoulderUserSends"
->;
-
-export type EditBoulderScreenProps = NativeStackScreenProps<
-  BoulderStackParamList,
-  "EditBoulder"
->;
-
-export type PreviewEditScreenProps = NativeStackScreenProps<
-  BoulderStackParamList,
-  "PreviewEdit"
->;
-
-export type SendBoulderScreenProps = NativeStackScreenProps<
-  BoulderStackParamList,
-  "SendBoulder"
->;
 
 const Stack = createNativeStackNavigator<BoulderStackParamList>();
 

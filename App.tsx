@@ -22,13 +22,16 @@ import BoulderStack, {
 import ProfileStack, {
   ProfileStackParamList,
 } from "./src/navigation/ProfileStack";
-import CircuitStack from "./src/navigation/CircuitStack";
+import CircuitStack, {
+  CircuitStackParamList,
+} from "./src/navigation/CircuitStack";
 import { useEffect, useState } from "react";
 import CameraNavigator, {
   CameraStackParamList,
 } from "./src/navigation/CameraStack";
 import AuthNavigator from "./src/navigation/AuthStack";
 import { checkCredentials } from "./src/utils/auth";
+import MapStack, { MapStackParamList } from "./src/navigation/MapStack";
 
 export type RootStackParamList = {
   AuthStack: NavigatorScreenParams<AuthStackParamList>;
@@ -38,7 +41,8 @@ export type RootStackParamList = {
   TabsStack: NavigatorScreenParams<TabsStackParamList>;
   BoulderStack: NavigatorScreenParams<BoulderStackParamList>;
   ProfileStack: NavigatorScreenParams<ProfileStackParamList>;
-  // CircuitStack: undefined;
+  CircuitStack: NavigatorScreenParams<CircuitStackParamList>;
+  MapStack: NavigatorScreenParams<MapStackParamList>;
 };
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();
@@ -65,6 +69,7 @@ export default function App() {
     // Render a loading screen while user's credentials are being determined
     return <ActivityIndicator />;
   }
+
   return (
     // ReactNativeActionSheet uses React context to allow your components to invoke the menu
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -113,6 +118,11 @@ export default function App() {
                   <RootStack.Screen
                     name="CircuitStack"
                     component={CircuitStack}
+                    options={{ headerShown: false }}
+                  />
+                  <RootStack.Screen
+                    name="MapStack"
+                    component={MapStack}
                     options={{ headerShown: false }}
                   />
                 </RootStack.Navigator>
