@@ -1,8 +1,6 @@
 import { View, Text, StyleSheet, Pressable, Button, Alert } from "react-native";
 import React, { useEffect, useState } from "react";
 import { CheckIcon } from "react-native-heroicons/outline";
-import { Swipeable } from "react-native-gesture-handler";
-import { useFetch } from "../../hooks/useFetch";
 import { deleteCircuitAPI } from "../../services/circuit";
 import {
   addBoulderToCircuitAPI,
@@ -13,21 +11,18 @@ import {
   addBoulderToCircuit,
   deleteCircuit,
 } from "../../redux/features/circuit/circuitSlice";
-import { useDispatch } from "react-redux";
 import { Circuit } from "../../utils/types/circuit";
 import { Boulder } from "../../utils/types/boulder";
 import { useAppDispatch } from "../../redux/hooks";
 
 type CircuitCardProps = {
   circuit: Circuit;
-  index: number;
   height: number;
   boulder: Boulder;
 };
 
 const CircuitCard: React.FC<CircuitCardProps> = ({
   circuit,
-  index,
   height,
   boulder,
 }) => {
@@ -37,21 +32,15 @@ const CircuitCard: React.FC<CircuitCardProps> = ({
 
   const isBoulderInCircuit = () => {
     return circuit.boulders.some(
-      (circuitBoulder) => circuitBoulder === boulder.id
+      (circuitBoulder) => circuitBoulder.id === boulder.id
     );
   };
-
-  console.log(circuit);
 
   useEffect(() => {
     setIsChecked(isBoulderInCircuit);
   }, [circuit]);
 
-  // for managing opening and closing rows
-  let row = [];
-  let prevOpenedRow;
-
-  const performRequest = async (method) => {
+  const performRequest = async (method: string) => {
     const pathParams = { circuitId: circuit.id, boulderId: boulder.id };
     switch (method) {
       case "post":
@@ -67,111 +56,73 @@ const CircuitCard: React.FC<CircuitCardProps> = ({
 
   const handleCircuitPressed = async () => {
     const method = handleIsBoulderInCircuit() ? "delete" : "post";
-    const response = performRequest(method);
-    if (response.status !== 200) {
-      console.log(response.status);
-      return;
-    }
+    performRequest(method);
   };
 
   const handleIsBoulderInCircuit = () => {
-    const circuitBoulderIds = circuit.boulders;
-    return circuitBoulderIds.some(
-      (circuitBoulderId) => circuitBoulderId === boulder.id
+    return circuit.boulders.some(
+      (circuitBoulder) => circuitBoulder.id === boulder.id
     );
   };
 
-  const renderRightView = (onDeleteHandler) => {
-    return (
-      <View
-        style={{
-          margin: 0,
-          alignContent: "center",
-          justifyContent: "center",
-        }}
-      >
-        <Button
-          color="red"
-          onPress={(e) => onDeleteHandler(e)}
-          title="DELETE"
-        />
-      </View>
-    );
-  };
-
-  const closeRow = (index) => {
-    if (prevOpenedRow && prevOpenedRow !== row[index]) {
-      prevOpenedRow.close();
-    }
-    prevOpenedRow = row[index];
-  };
-
-  const onDelete = () => {
-    Alert.alert(
-      "Delete Circuit",
-      `Are you sure you want to delete "${circuit.name}"?`,
-      [
-        {
-          text: "Cancel",
-          onPress: () => {
-            row[index].close();
-          },
-        },
-        {
-          text: "Delete",
-          onPress: async () => {
-            const pathParams = { circuitId: circuit.id };
-            dispatch(deleteCircuit(circuit.id));
-            await deleteCircuitAPI({ pathParams });
-          },
-          style: "destructive",
-        },
-      ],
-      { cancelable: false }
-    );
-  };
+  // const onDelete = () => {
+  //   Alert.alert(
+  //     "Delete Circuit",
+  //     `Are you sure you want to delete "${circuit.name}"?`,
+  //     [
+  //       {
+  //         text: "Cancel",
+  //         onPress: () => {
+  //           // row[index].close();
+  //         },
+  //       },
+  //       {
+  //         text: "Delete",
+  //         onPress: async () => {
+  //           const pathParams = { circuitId: circuit.id };
+  //           dispatch(deleteCircuit(circuit.id));
+  //           await deleteCircuitAPI({ pathParams });
+  //         },
+  //         style: "destructive",
+  //       },
+  //     ],
+  //     { cancelable: false }
+  //   );
+  // };
 
   return (
-    <Swipeable
-      renderRightActions={(progress, dragX) => renderRightView(onDelete)}
-      onSwipeableOpen={() => closeRow(index)}
-      ref={(ref) => (row[index] = ref)}
+    <Pressable
+      onPress={handleCircuitPressed}
+      style={[styles.container, { height: height }]}
     >
-      <Pressable
-        onPress={handleCircuitPressed}
-        style={styles.container(height)}
-      >
-        <View style={styles.color(circuit)} />
-        <View style={styles.cardInfoContainer}>
-          <Text>{circuit.name}</Text>
-          {isChecked ? (
-            <CheckIcon size={25} color={"black"} style={{ marginRight: 5 }} />
-          ) : null}
-        </View>
-      </Pressable>
-    </Swipeable>
+      <View style={[styles.color, { backgroundColor: circuit.color }]} />
+      <View style={styles.cardInfoContainer}>
+        <Text>{circuit.name}</Text>
+        {isChecked ? (
+          <CheckIcon size={25} color={"black"} style={{ marginRight: 5 }} />
+        ) : null}
+      </View>
+    </Pressable>
   );
 };
 
 export default CircuitCard;
 
 const styles = StyleSheet.create({
-  container: (height) => ({
+  container: {
     flexDirection: "row",
     backgroundColor: "white",
     borderWidth: 1,
     borderColor: "lightgray",
-    height: height,
     borderRadius: 10,
     alignItems: "center",
     paddingHorizontal: 10,
-  }),
-  color: (circuit) => ({
+  },
+  color: {
     width: 15,
     height: 15,
     borderRadius: "100%",
-    backgroundColor: circuit.color,
-  }),
+  },
   cardInfoContainer: {
     width: "100%",
     height: "100%",

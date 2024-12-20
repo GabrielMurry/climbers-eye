@@ -4,18 +4,37 @@ import {
   StyleSheet,
   View,
   Text,
+  GestureResponderEvent,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { Canvas, Group } from "@shopify/react-native-skia";
+import { Canvas, Group, useFont } from "@shopify/react-native-skia";
 import * as d3 from "d3";
 import AnimatedText from "./AnimatedText";
 import { useSharedValue, withTiming } from "react-native-reanimated";
 import BarPathHorizontal from "./BarPathHorizontal";
 import YAxisText from "./YAxisText";
+import { ChartData } from "../../screens/boulder/BoulderScreen";
 import { useFonts } from "../../contexts/FontContext";
 
-const BarChartHorizontal = ({
-  data, // type: list[dict[str, int]]
+type BarChartHorizontalProps = {
+  data: ChartData[];
+  canvasWidth?: number;
+  canvasHeight?: number;
+  labelToBarPadding?: number;
+  canvasPaddingHorizontal?: number;
+  screenPadding?: null;
+  barWidth?: number;
+  barCornerRadius?: number;
+  displayHeader?: boolean;
+};
+
+type StartTouchPosition = {
+  x: number;
+  y: number;
+};
+
+const BarChartHorizontal: React.FC<BarChartHorizontalProps> = ({
+  data,
   canvasWidth = null,
   canvasHeight = null,
   labelToBarPadding = null,
@@ -27,19 +46,28 @@ const BarChartHorizontal = ({
 }) => {
   const { width } = useWindowDimensions();
 
-  const maxDataValue = Math.max(...data.map((item) => Object.values(item)[0]));
+  const maxDataValue = Math.max(...data.map((item) => item.value));
 
   const TEXT_SIZE = 12;
 
-  const { fonts, fontsLoaded } = useFonts();
+  // const { fonts, fontsLoaded } = useFonts();
 
-  if (!fontsLoaded) {
-    console.log("Inter font not loaded for horizontal bar chart.");
-  }
+  // if (!fontsLoaded) {
+  //   console.log("Inter font not loaded for horizontal bar chart.");
+  // }
 
   // Font sizes declared explicitly
-  const font = fonts.inter12;
-  const fontTotal = fonts.inter75;
+  // const font = fonts.inter12;
+  // const fontTotal = fonts.inter75;
+
+  const fontSize = 12;
+  const font = useFont(require("../../assets/fonts/Inter-Font.ttf"), fontSize);
+
+  const fontSizeTotal = 75;
+  const fontTotal = useFont(
+    require("../../assets/fonts/Inter-Font.ttf"),
+    fontSizeTotal
+  );
 
   let maxTextWidth = 0;
   if (font) {
@@ -67,16 +95,17 @@ const BarChartHorizontal = ({
   const BAR_CORNER_RADIUS = barCornerRadius || 3;
   const DISPLAY_HEADER = displayHeader;
 
-  const [startTouchPosition, setStartTouchPosition] = useState(null);
+  const [startTouchPosition, setStartTouchPosition] =
+    useState<StartTouchPosition | null>(null);
   const [isScrolling, setIsScrolling] = useState(false);
 
   const progress = useSharedValue(0);
   const selectedValue = useSharedValue(0);
-  const totalValue = data.reduce((acc, cur) => acc + Object.values(cur)[0], 0);
+  const totalValue = data.reduce((acc, cur) => acc + cur.value, 0);
   // Creating a state to store the selected label
   const [selectedLabel, setSelectedLabel] = useState("Total");
   // Creating a sharedValue to store the selected label (bar)
-  const selectedBar = useSharedValue(null);
+  const selectedBar = useSharedValue<string | null>(null);
 
   const xRange = [0, GRAPH_WIDTH];
   // Set x domain depending on whether all values are zero
@@ -96,28 +125,27 @@ const BarChartHorizontal = ({
     selectedValue.value = withTiming(totalValue, { duration: 1000 });
   }, [progress, selectedValue, totalValue]);
 
-  const onTouchPress = (touchX, touchY) => {
+  const onTouchPress = (touchX: number, touchY: number) => {
     const index = Math.floor((touchY - BAR_WIDTH / 2) / y.step());
     // If our touch lands at the start of the first bar and within the end of the last bar
     if (index >= 0 && index < data.length) {
       const dataPoint = data[index];
-      const key = Object.keys(dataPoint)[0];
-      const value = Object.values(dataPoint)[0];
+      const key = dataPoint.label;
+      const value = dataPoint.value;
       setSelectedLabel(key);
       selectedBar.value = key;
       selectedValue.value = withTiming(value);
-      console.log("hi");
     }
   };
 
-  const handleTouchStart = (e) => {
+  const handleTouchStart = (e: GestureResponderEvent) => {
     // Store the start position of the touch
     const { locationX, locationY } = e.nativeEvent;
     setStartTouchPosition({ x: locationX, y: locationY });
     setIsScrolling(false); // Reset scrolling state on new touch
   };
 
-  const handleTouchMove = (e) => {
+  const handleTouchMove = (e: GestureResponderEvent) => {
     const { locationX, locationY } = e.nativeEvent;
     if (startTouchPosition) {
       // Calculate the distance moved
@@ -133,7 +161,7 @@ const BarChartHorizontal = ({
     }
   };
 
-  const handleTouchEnd = (e) => {
+  const handleTouchEnd = (e: GestureResponderEvent) => {
     if (!isScrolling) {
       // Handle touch as a press if it wasn't a scroll
       onTouchPress(e.nativeEvent.locationX, e.nativeEvent.locationY);
@@ -154,7 +182,10 @@ const BarChartHorizontal = ({
         <View onTouchStart={handleResetBarInfo} style={styles.textContainer}>
           {/* <Text style={styles.textTitle}>Logbook</Text> */}
           <Text style={styles.textSteps}>{selectedLabel} Boulders Climbed</Text>
-          <AnimatedText selectedValue={selectedValue} fontTotal={fontTotal} />
+          <AnimatedText
+            selectedValueNum={selectedValue.value}
+            fontTotal={fontTotal}
+          />
         </View>
       ) : null}
       <Canvas
@@ -170,12 +201,12 @@ const BarChartHorizontal = ({
         {data.map((dataPoint, index) => (
           <Group key={index}>
             <BarPathHorizontal
-              x={x(Object.values(dataPoint)[0])}
-              y={y(Object.keys(dataPoint)[0])}
+              x={x(dataPoint.value)}
+              y={y(dataPoint.label)}
               BAR_WIDTH={BAR_WIDTH}
-              progress={progress}
+              progress={progress.value}
               label={Object.keys(dataPoint)[0]}
-              selectedBar={selectedBar}
+              selectedBarText={selectedBar.value}
               maxTextWidth={maxTextWidth}
               LABEL_TO_BAR_PADDING={LABEL_TO_BAR_PADDING}
               CANVAS_PADDING_HOR={CANVAS_PADDING_HOR}
@@ -183,11 +214,10 @@ const BarChartHorizontal = ({
             />
             <YAxisText
               x={0}
-              y={y(Object.keys(dataPoint)[0])}
+              y={y(dataPoint.label)}
               text={Object.keys(dataPoint)[0]}
-              selectedBar={selectedBar}
+              selectedBarText={selectedBar.value}
               BAR_WIDTH={BAR_WIDTH}
-              TEXT_SIZE={TEXT_SIZE}
               CANVAS_PADDING_HOR={CANVAS_PADDING_HOR}
               font={font}
               maxTextWidth={maxTextWidth}

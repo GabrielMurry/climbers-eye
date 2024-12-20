@@ -41,7 +41,6 @@ function Tabs() {
             borderTopWidth: 0,
           },
           tabBarIcon: ({ size, focused }) => {
-            console.log(route);
             return TabIcons({ name: route.name, size, focused });
           },
           tabBarLabel: ({ focused }) =>

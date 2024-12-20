@@ -3,9 +3,15 @@ import { BASE_URL } from "@env";
 import tokenRefreshService from "./tokenRefreshService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+console.log(BASE_URL);
+console.log("--");
+
 const axiosInstance = axios.create({
   baseURL: BASE_URL,
   withCredentials: true,
+  headers: {
+    Accept: "application/json",
+  },
 });
 
 // INTERCEPTOR - for expired access token

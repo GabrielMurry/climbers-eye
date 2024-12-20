@@ -6,7 +6,7 @@ export function scaledImageWidth() {
   return width;
 }
 
-export function scaledImageHeight(imageHeight, imageWidth) {
+export function scaledImageHeight(imageHeight: number, imageWidth: number) {
   const aspectRatio = imageHeight / imageWidth;
   return width * aspectRatio;
 }

@@ -8,7 +8,17 @@ import {
 } from "react-native";
 import React from "react";
 
-const PreviewImage = ({
+type PreviewImageProps = {
+  SCREEN_WIDTH: number;
+  SCREEN_HEIGHT: number;
+  SHRINK_SCALE: number;
+  setImageFullScreen: (isFullScreen: boolean) => void;
+  resultImageUri: string;
+  isImageLoading: boolean;
+  setIsImageLoading: (isLoading: boolean) => void;
+};
+
+const PreviewImage: React.FC<PreviewImageProps> = ({
   SCREEN_WIDTH,
   SCREEN_HEIGHT,
   SHRINK_SCALE,

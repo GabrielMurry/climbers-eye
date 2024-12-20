@@ -16,6 +16,7 @@ import { colors } from "../../utils/styles";
 import { useAppSelector } from "../../redux/hooks";
 import { selectSpraywall } from "../../redux/features/spraywall/spraywallSelectors";
 import { LogbookBoulder } from "../../utils/types/logbook";
+import { ChartData } from "../boulder/BoulderScreen";
 
 const INITIAL_PAGE = 1;
 
@@ -29,7 +30,7 @@ const LogbookScreen = () => {
 
   const [data, setData] = useState<LogbookBoulder[]>([]);
   const [page, setPage] = useState(INITIAL_PAGE);
-  const [chartData, setChartData] = useState([]);
+  const [chartData, setChartData] = useState<ChartData[]>([]);
   const [refreshing, setRefreshing] = useState(false);
   const [hasNexPage, setHasNextPage] = useState(false);
   const [isLoadingList, setIsLoadingList] = useState(false);

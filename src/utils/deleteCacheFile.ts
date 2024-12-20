@@ -1,6 +1,6 @@
 import * as FileSystem from "expo-file-system";
 
-const checkAndDeleteFile = async (fileUri) => {
+const checkAndDeleteFile = async (fileUri: string) => {
   const fileInfo = await FileSystem.getInfoAsync(fileUri);
   if (fileInfo.exists) {
     await FileSystem.deleteAsync(fileUri);

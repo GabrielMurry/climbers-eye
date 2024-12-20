@@ -1,7 +1,7 @@
 import { GOOGLE_MAPS_GEOCODER_API_KEY } from "@env";
 import axios from "axios";
 
-export const getAddressSuggestions = async (text) => {
+export const getAddressSuggestions = async (text: string) => {
   if (text.length < 3) return; // Avoid API call if input is too short
 
   try {

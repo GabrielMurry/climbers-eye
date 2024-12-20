@@ -2,7 +2,21 @@ import { View, Text, TextInput, Switch, StyleSheet } from "react-native";
 import React from "react";
 import CustomInput from "../../custom/CustomInput";
 
-const PreviewInputData = ({
+type PreviewInputDataProps = {
+  name: string;
+  setName: (text: string) => void;
+  description: string;
+  setDescription: (text: string) => void;
+  isMatching: boolean;
+  setIsMatching: (isMatching: boolean) => void;
+  isFeetFollowHands: boolean;
+  setIsFeetFollowHands: (isFeetFollowHands: boolean) => void;
+  isKickboardOn: boolean;
+  setIsKickboardOn: (isKickboardOn: boolean) => void;
+  error: boolean;
+};
+
+const PreviewInputData: React.FC<PreviewInputDataProps> = ({
   name,
   setName,
   description,
@@ -30,7 +44,7 @@ const PreviewInputData = ({
         value={description}
         onChangeText={(value) => setDescription(value)}
         placeholder={"Boulder Description (optional)"}
-        keyboardType="default" // twitter???
+        keyboardType="default"
         style={styles.textInput}
         multiline={true}
       />
@@ -47,7 +61,10 @@ const PreviewInputData = ({
       </View>
       <View style={styles.switchContainer}>
         <Text>All Kickboard Footholds Allowed</Text>
-        <Switch value={isKickboardOn} onValueChange={setIsKickboardOn} />
+        <Switch
+          value={isKickboardOn}
+          onValueChange={(value) => setIsKickboardOn(value)}
+        />
       </View>
     </View>
   );

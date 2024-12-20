@@ -1,6 +1,11 @@
 import { Image, StyleSheet } from "react-native";
+import { ImageObjUrl } from "../../utils/types/image";
 
-const ImagePreview = ({ image }) => {
+type ImagePreviewProps = {
+  image: ImageObjUrl;
+};
+
+const ImagePreview: React.FC<ImagePreviewProps> = ({ image }) => {
   return <Image source={{ uri: image.url }} style={styles.camera} />;
 };
 

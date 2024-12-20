@@ -48,11 +48,10 @@ const SignupScreen = () => {
       return;
     }
     if (response.data) {
-      console.log(response);
       // in dispatch, we enter the action "setUserID" along with the "userID" value (doing this for username also)
       dispatch(setUser(response.data.user));
     }
-    navigation.navigate("Tabs", { screen: "Map" });
+    navigation.navigate("TabsStack", { screen: "MapStack" });
     setIsLoading(false);
   };
 

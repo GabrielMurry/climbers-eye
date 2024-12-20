@@ -29,17 +29,10 @@ const CircuitScreen: React.FC<CircuitScreenProps> = ({ route }) => {
     screenName: route.name,
   });
 
-  const renderCircuitCards = ({
-    item,
-    index,
-  }: {
-    item: Circuit;
-    index: number;
-  }) => {
+  const renderCircuitCards = ({ item }: { item: Circuit }) => {
     return (
       <CircuitCard
         circuit={item}
-        index={index}
         height={CIRCUIT_ITEM_HEIGHT}
         boulder={boulder}
       />

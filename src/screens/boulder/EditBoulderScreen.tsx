@@ -59,13 +59,23 @@ const EditBoulderScreen: React.FC<EditBoulderScreenProps> = ({
     }
     const canvasImageUri = await saveBase64AsFile(canvasImageBase64);
     const formData = new FormData();
-    await createImageFormData(formData, image.url, "photo");
-    await createImageFormData(formData, canvasImageUri, "canvas");
+    formData.append("image", {
+      uri: image.url,
+      name: "photo",
+      type: "image/jpeg",
+    } as any);
+    formData.append("canvas", {
+      uri: canvasImageUri,
+      name: "canvas",
+      type: "image/jpeg",
+    } as any);
+    // await createImageFormData(formData, image.url, "photo");
+    // await createImageFormData(formData, canvasImageUri, "canvas");
     const response = await compositeBoulder(formData);
 
     if (response) {
       // "PreviewEdit", params: {image: response.data}
-      navigation.navigate("PreviewEdit", response.data);
+      navigation.navigate("PreviewEdit", { image: response.data });
     }
   };
 

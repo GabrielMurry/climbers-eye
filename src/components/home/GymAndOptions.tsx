@@ -5,11 +5,11 @@ import { Gym } from "../../utils/types/gym";
 import { useAppSelector } from "../../redux/hooks";
 import { selectGym } from "../../redux/features/gym/gymSelectors";
 
-type GymAndOption = {
+type GymAndOptionsProps = {
   setIsModalVisible: (isVisible: boolean) => void;
 };
 
-const GymAndOptions: React.FC<GymAndOption> = ({ setIsModalVisible }) => {
+const GymAndOptions: React.FC<GymAndOptionsProps> = ({ setIsModalVisible }) => {
   const gym = useAppSelector((state) => selectGym(state));
 
   return (
@@ -36,9 +36,4 @@ const GymAndOptions: React.FC<GymAndOption> = ({ setIsModalVisible }) => {
   );
 };
 
-export default memo(
-  GymAndOptions,
-  (prevProps, nextProps) =>
-    prevProps.gym.id === nextProps.gym.id &&
-    prevProps.gym.name === nextProps.gym.name
-);
+export default GymAndOptions;

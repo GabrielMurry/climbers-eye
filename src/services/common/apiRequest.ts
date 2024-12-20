@@ -1,6 +1,7 @@
 import axiosInstance from "./axiosInstance";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { REFERER } from "@env";
+import { AxiosResponse } from "axios";
 
 const request = async (
   method: string,
@@ -8,6 +9,7 @@ const request = async (
   data?: object | FormData
 ) => {
   try {
+    console.log(method, endpoint, data);
     // grab csrf token, access token, and refresh token from storage
     const csrfToken = await AsyncStorage.getItem("csrfToken");
     const accessToken = await AsyncStorage.getItem("accessToken");
@@ -28,7 +30,6 @@ const request = async (
     if (accessToken) {
       axiosInstance.defaults.headers["Authorization"] = `Bearer ${accessToken}`;
     }
-
     // EXECUTE request method to backend endpoint with or without data
     const response = await axiosInstance({
       method: method,

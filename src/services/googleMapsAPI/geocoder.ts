@@ -1,7 +1,7 @@
 import { GOOGLE_MAPS_GEOCODER_API_KEY } from "@env";
 import axios from "axios";
 
-export const getGeoLocation = async (place_id) => {
+export const getGeoLocation = async (place_id: number | null) => {
   if (!place_id) return;
   try {
     const url = `https://maps.googleapis.com/maps/api/geocode/json?place_id=${place_id}&key=${GOOGLE_MAPS_GEOCODER_API_KEY}`;

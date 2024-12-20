@@ -10,7 +10,6 @@ import { ActivityIndicator, StatusBar } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Tabs, { TabsStackParamList } from "./src/navigation/tabs/Tabs";
 import { PersistGate } from "redux-persist/integration/react";
-import { FontProvider } from "./src/contexts/FontContext";
 import { AuthStackParamList } from "./src/navigation/AuthStack";
 import GymStack, { GymStackParamsList } from "./src/navigation/GymStack";
 import SpraywallStack, {
@@ -76,58 +75,56 @@ export default function App() {
       <ActionSheetProvider>
         <Provider store={store}>
           <PersistGate loading={null} persistor={persistor}>
-            <FontProvider>
-              <NavigationContainer>
-                <StatusBar barStyle={"dark-content"} />
-                <RootStack.Navigator initialRouteName={"AuthStack"}>
-                  <RootStack.Screen
-                    name="AuthStack"
-                    component={AuthNavigator}
-                    options={{ headerShown: false }}
-                  />
-                  <RootStack.Screen
-                    name="TabsStack"
-                    component={Tabs}
-                    options={{ headerShown: false }}
-                  />
-                  <RootStack.Screen
-                    name="GymStack"
-                    component={GymStack}
-                    options={{ headerShown: false }}
-                  />
-                  <RootStack.Screen
-                    name="SpraywallStack"
-                    component={SpraywallStack}
-                    options={{ headerShown: false }}
-                  />
-                  <RootStack.Screen
-                    name="CameraStack"
-                    component={CameraNavigator}
-                    options={{ headerShown: false }}
-                  />
-                  <RootStack.Screen
-                    name="BoulderStack"
-                    component={BoulderStack}
-                    options={{ headerShown: false }}
-                  />
-                  <RootStack.Screen
-                    name="ProfileStack"
-                    component={ProfileStack}
-                    options={{ headerShown: false }}
-                  />
-                  <RootStack.Screen
-                    name="CircuitStack"
-                    component={CircuitStack}
-                    options={{ headerShown: false }}
-                  />
-                  <RootStack.Screen
-                    name="MapStack"
-                    component={MapStack}
-                    options={{ headerShown: false }}
-                  />
-                </RootStack.Navigator>
-              </NavigationContainer>
-            </FontProvider>
+            <NavigationContainer>
+              <StatusBar barStyle={"dark-content"} />
+              <RootStack.Navigator initialRouteName={"AuthStack"}>
+                <RootStack.Screen
+                  name="AuthStack"
+                  component={AuthNavigator}
+                  options={{ headerShown: false }}
+                />
+                <RootStack.Screen
+                  name="TabsStack"
+                  component={Tabs}
+                  options={{ headerShown: false }}
+                />
+                <RootStack.Screen
+                  name="GymStack"
+                  component={GymStack}
+                  options={{ headerShown: false }}
+                />
+                <RootStack.Screen
+                  name="SpraywallStack"
+                  component={SpraywallStack}
+                  options={{ headerShown: false }}
+                />
+                <RootStack.Screen
+                  name="CameraStack"
+                  component={CameraNavigator}
+                  options={{ headerShown: false }}
+                />
+                <RootStack.Screen
+                  name="BoulderStack"
+                  component={BoulderStack}
+                  options={{ headerShown: false }}
+                />
+                <RootStack.Screen
+                  name="ProfileStack"
+                  component={ProfileStack}
+                  options={{ headerShown: false }}
+                />
+                <RootStack.Screen
+                  name="CircuitStack"
+                  component={CircuitStack}
+                  options={{ headerShown: false }}
+                />
+                <RootStack.Screen
+                  name="MapStack"
+                  component={MapStack}
+                  options={{ headerShown: false }}
+                />
+              </RootStack.Navigator>
+            </NavigationContainer>
           </PersistGate>
         </Provider>
       </ActionSheetProvider>

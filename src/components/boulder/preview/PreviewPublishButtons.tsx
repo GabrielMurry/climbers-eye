@@ -3,7 +3,15 @@ import React from "react";
 import CustomButton from "../../custom/CustomButton";
 import { colors } from "../../../utils/styles";
 
-const PreviewPublishButtons = ({ handleConfirm, isLoading }) => {
+type PreviewPublishButtonsProps = {
+  handleConfirm: (value: boolean) => void;
+  isLoading: boolean;
+};
+
+const PreviewPublishButtons: React.FC<PreviewPublishButtonsProps> = ({
+  handleConfirm,
+  isLoading,
+}) => {
   return (
     <View style={styles.container}>
       <CustomButton
