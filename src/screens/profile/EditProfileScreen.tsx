@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as ImagePicker from "expo-image-picker";
 import useCustomHeader from "../../hooks/useCustomHeader";
-import ModalOptions from "../../components/custom/ModalOptions";
+// import ModalOptions from "../../components/custom/ModalOptions";
 import SettingsButton from "../../components/custom/SettingsButton";
 import { useFetch } from "../../hooks/useFetch";
 import { updateProfileInfo } from "../../services/profile";
@@ -168,11 +168,11 @@ const EditProfileScreen = () => {
           />
         </View>
       </View>
-      <ModalOptions
+      {/* <ModalOptions
         isModalVisible={isModalVisible}
         setIsModalVisible={setIsModalVisible}
         optionsData={optionsData}
-      />
+      /> */}
     </SafeAreaView>
   );
 };

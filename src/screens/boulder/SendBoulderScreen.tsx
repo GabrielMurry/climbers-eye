@@ -111,7 +111,7 @@ const SendBoulderScreen: React.FC<SendBoulderScreenProps> = ({ route }) => {
       boulder: boulder.id,
     };
     const pathParams = { boulderId: boulder.id };
-    const response = await addSendToBoulder({ pathParams, data });
+    const response = await addSendToBoulder(pathParams, data);
     if (response.status !== 201) {
       console.error(response.status);
       return;

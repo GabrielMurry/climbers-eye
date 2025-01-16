@@ -25,7 +25,6 @@ async function tokenRefreshService() {
 
   axiosTokenInstance.defaults.headers.common["X-CSRFToken"] = csrfToken;
   axiosTokenInstance.defaults.headers.common["Referer"] = REFERER;
-
   // EXECUTE
   const response = await axiosTokenInstance.post(`auth/update_token/`, data);
 

@@ -2,7 +2,7 @@ import { View, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import { colors } from "../../utils/styles";
 import { PlusIcon } from "react-native-heroicons/outline";
-import CustomModal from "../modal/CustomModal";
+// import CustomModal from "../../screens/modal/ModalScreen";
 
 const AddSpraywallCard = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -34,11 +34,11 @@ const AddSpraywallCard = () => {
         />
         <PlusIcon color={colors.primary} />
       </TouchableOpacity>
-      <CustomModal
+      {/* <CustomModal
         isVisible={modalVisible}
         onClose={toggleModal}
         isBoulder={false}
-      />
+      /> */}
     </>
   );
 };

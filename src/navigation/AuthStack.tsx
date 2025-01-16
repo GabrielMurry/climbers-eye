@@ -24,18 +24,18 @@ const AuthNavigator = () => (
     <AuthStack.Group screenOptions={{ headerShown: false }}>
       <AuthStack.Screen name="Login" component={LoginScreen} />
       <AuthStack.Screen name="Signup" component={SignupScreen} />
-      <AuthStack.Screen
+      {/* <AuthStack.Screen
         name="ForgotPassword"
         component={ForgotPasswordScreen}
       />
       <AuthStack.Screen name="SubmitCode" component={SubmitCodeScreen} />
       <AuthStack.Screen name="ResetPassword" component={ResetPasswordScreen} />
-      <AuthStack.Screen name="ConfirmEmail" component={ConfirmEmailScreen} />
+      <AuthStack.Screen name="ConfirmEmail" component={ConfirmEmailScreen} /> */}
       <AuthStack.Screen name="PrivacyPolicy" component={PrivacyPolicyScreen} />
-      <AuthStack.Screen
+      {/* <AuthStack.Screen
         name="TermsAndConditions"
         component={TermsAndConditionsScreen}
-      />
+      /> */}
     </AuthStack.Group>
   </AuthStack.Navigator>
 );

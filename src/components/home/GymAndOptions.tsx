@@ -9,6 +9,21 @@ type GymAndOptionsProps = {
   setIsModalVisible: (isVisible: boolean) => void;
 };
 
+{
+  /* <ModalOptions
+        isModalVisible={isModalVisible}
+        setIsModalVisible={setIsModalVisible}
+        optionsData={[
+          { title: "Edit Gym", onPress: handleEditGymPress, color: "black" },
+          {
+            title: "Cancel",
+            onPress: () => setIsModalVisible(false),
+            color: "gray",
+          },
+        ]}
+      /> */
+}
+
 const GymAndOptions: React.FC<GymAndOptionsProps> = ({ setIsModalVisible }) => {
   const gym = useAppSelector((state) => selectGym(state));
 

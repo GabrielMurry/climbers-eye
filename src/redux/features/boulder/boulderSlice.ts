@@ -17,7 +17,7 @@ export const boulderSlice = createSlice({
       state.objects.unshift(action.payload);
     },
     resetBoulders: (state) => {
-      state = initialState;
+      state.objects = [] as Boulder[];
     },
     updateBoulder: {
       reducer: (

@@ -10,16 +10,14 @@ type CircuitData = {
   spraywall: number;
 };
 
-export const getCircuitList = async ({ pathParams }) => {
-  const { spraywallId } = pathParams;
-  return await request("get", `circuit/list/${spraywallId}`);
+export const getCircuitList = async (path: Path) => {
+  return await request("get", `circuit/list/${path.spraywallId}`);
 };
 
 export const createCircuit = async (path: Path, data: CircuitData) => {
   return await request("post", `circuit/list/${path.spraywallId}`, data);
 };
 
-export const deleteCircuitAPI = async ({ pathParams }) => {
-  const { circuitId } = pathParams;
-  return await request("delete", `circuit/detail/${circuitId}`);
+export const deleteCircuitAPI = async (path: Path) => {
+  return await request("delete", `circuit/detail/${path.circuitId}`);
 };

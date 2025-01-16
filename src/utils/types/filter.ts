@@ -1,4 +1,5 @@
 export type Filter = {
+  search: string;
   sortBy: string;
   minGradeIndex: number;
   maxGradeIndex: number;

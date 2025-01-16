@@ -70,6 +70,7 @@ const LoginScreen = () => {
       } else {
         navigation.navigate("TabsStack", {
           screen: "MapStack",
+          params: { screen: "Map" },
         });
       }
     }

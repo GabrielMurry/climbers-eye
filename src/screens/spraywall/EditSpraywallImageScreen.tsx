@@ -11,7 +11,6 @@ import {
 import React, { useEffect, useState } from "react";
 import useCustomHeader from "../../hooks/useCustomHeader";
 import { useActionSheet } from "@expo/react-native-action-sheet";
-import { launchImageLibraryAsync } from "expo-image-picker";
 import { updateSpraywallAPI } from "../../services/spraywall";
 import { updateSpraywall } from "../../redux/features/spraywall/spraywallSlice";
 import { useNavigation } from "@react-navigation/native";
@@ -19,6 +18,7 @@ import { useAppDispatch } from "../../redux/hooks";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { SpraywallStackParamList } from "../../navigation/SpraywallStack";
 import { ImageObjUrl } from "../../utils/types/image";
+import { getImageFromLibrary } from "../../utils/imageLibrary";
 
 type EditSpraywallImageScreenProps = NativeStackScreenProps<
   SpraywallStackParamList,
@@ -63,7 +63,7 @@ const EditSpraywallImageScreen: React.FC<EditSpraywallImageScreenProps> = ({
   const handleSave = async () => {
     setIsLoading(true);
     const data = {
-      url: newImage.url.split(",")[1],
+      url: newImage.url,
       width: newImage.width,
       height: newImage.height,
     };
@@ -83,20 +83,13 @@ const EditSpraywallImageScreen: React.FC<EditSpraywallImageScreenProps> = ({
   };
 
   const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
-    let result = await launchImageLibraryAsync({
-      mediaTypes: "images",
-      allowsEditing: false,
-      aspect: [4, 3],
-      quality: 1,
-      base64: true,
-    });
+    let result = await getImageFromLibrary();
     if (result && !result.canceled) {
-      const { base64, width, height } = result.assets[0];
+      const image = result.assets[0];
       setNewImage({
-        url: "data:image/png;base64," + base64,
-        width: width,
-        height: height,
+        url: image.uri,
+        width: image.width,
+        height: image.height,
       });
     }
   };

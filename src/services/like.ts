@@ -11,6 +11,5 @@ export const addLikeToBoulder = async (path: Path, data: LikeData) => {
 };
 
 export const deleteLikeFromBoulder = async (path: Path, data: LikeData) => {
-  const { boulderId, userId } = pathParams;
-  return await request("delete", `like/${boulderId}/${userId}`, data);
+  return await request("delete", `like/${path.boulderId}`, data);
 };

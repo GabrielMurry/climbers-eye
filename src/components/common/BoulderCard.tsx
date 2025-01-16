@@ -11,16 +11,14 @@ type BoulderCardProps = {
   boulder: Boulder;
 };
 
-const BoulderCard = (props: BoulderCardProps) => {
+const BoulderCard = React.memo((props: BoulderCardProps) => {
   const navigation = useNavigation();
-  const { stackName } = useNavigationContext();
+  const stackName = useNavigationContext();
 
   const handleOnPress = () => {
-    navigation.navigate(stackName, {
-      screen: "Boulder",
-      params: {
-        boulderId: props.boulder.id,
-      },
+    navigation.navigate("TabsStack", {
+      screen: stackName,
+      params: { screen: "Boulder", params: { boulderId: props.boulder.id } },
     });
   };
 
@@ -75,7 +73,7 @@ const BoulderCard = (props: BoulderCardProps) => {
       </View>
     </TouchableOpacity>
   );
-};
+});
 
 const styles = StyleSheet.create({
   boulder: {

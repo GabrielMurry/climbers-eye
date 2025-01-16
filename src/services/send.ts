@@ -1,9 +1,17 @@
 import { Path } from "./boulder/types";
 import { request } from "./common/apiRequest";
 
-export const addSendToBoulder = async ({ pathParams, data }) => {
-  const { boulderId } = pathParams;
-  return await request("post", `send/list/${boulderId}`, data);
+type SendData = {
+  attempts: string;
+  suggestedGrade: string;
+  quality: number;
+  notes: string;
+  person: number;
+  boulder: number;
+};
+
+export const addSendToBoulder = async (path: Path, data: SendData) => {
+  return await request("post", `send/list/${path.boulderId}`, data);
 };
 
 export const deleteSendFromBoulder = async (path: Path) => {

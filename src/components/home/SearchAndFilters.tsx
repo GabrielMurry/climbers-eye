@@ -4,19 +4,12 @@ import SearchInput from "./SearchInput";
 import { AdjustmentsHorizontalIcon } from "react-native-heroicons/outline";
 import { useNavigation } from "@react-navigation/native";
 
-type SearchAndFiltersProps = {
-  searchQuery: string;
-  setSearchQuery: (text: string) => void;
-};
-
-const SearchAndFilters: React.FC<SearchAndFiltersProps> = ({
-  searchQuery,
-  setSearchQuery,
-}) => {
+const SearchAndFilters = () => {
   const navigation = useNavigation();
+
   return (
     <View style={{ flexDirection: "row", gap: 10 }}>
-      <SearchInput searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+      <SearchInput />
       <TouchableOpacity
         style={{
           justifyContent: "center",

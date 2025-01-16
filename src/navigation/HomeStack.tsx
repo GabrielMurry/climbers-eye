@@ -1,8 +1,7 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { FilterHomeListScreen, HomeScreen } from "../screens/home";
 import { BoulderScreen } from "../screens/boulder";
-import { NavigationProvider } from "../contexts/NavigationContext";
-import { useRoute } from "@react-navigation/native";
+import { NavigationProvider, StackName } from "../contexts/NavigationContext";
 
 export type HomeStackParamsList = {
   HomeList: undefined;
@@ -10,30 +9,29 @@ export type HomeStackParamsList = {
   Boulder: { boulderId: number };
 };
 
-const Stack = createNativeStackNavigator<HomeStackParamsList>();
+const HomeStack = createNativeStackNavigator<HomeStackParamsList>();
 
-const HomeStack = () => {
-  const route = useRoute();
+const HomeNavigator = () => {
   return (
-    <NavigationProvider value={{ stackName: route.name }}>
-      <Stack.Navigator initialRouteName="HomeList">
-        <Stack.Group>
-          <Stack.Screen
+    <NavigationProvider value={StackName.HomeStack}>
+      <HomeStack.Navigator initialRouteName="HomeList">
+        <HomeStack.Group>
+          <HomeStack.Screen
             name="HomeList"
             component={HomeScreen}
             options={{
               headerShown: false,
             }}
           />
-          <Stack.Screen
+          <HomeStack.Screen
             name="FilterHomeList"
             component={FilterHomeListScreen}
           />
-          <Stack.Screen name="Boulder" component={BoulderScreen} />
-        </Stack.Group>
-      </Stack.Navigator>
+          <HomeStack.Screen name="Boulder" component={BoulderScreen} />
+        </HomeStack.Group>
+      </HomeStack.Navigator>
     </NavigationProvider>
   );
 };
 
-export default HomeStack;
+export default HomeNavigator;

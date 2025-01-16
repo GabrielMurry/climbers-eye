@@ -8,7 +8,7 @@ import { Provider } from "react-redux";
 import { store, persistor } from "./src/redux/store";
 import { ActivityIndicator, StatusBar } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import Tabs, { TabsStackParamList } from "./src/navigation/tabs/Tabs";
+import TabsStack, { TabsStackParamList } from "./src/navigation/tabs/TabsStack";
 import { PersistGate } from "redux-persist/integration/react";
 import { AuthStackParamList } from "./src/navigation/AuthStack";
 import GymStack, { GymStackParamsList } from "./src/navigation/GymStack";
@@ -31,6 +31,9 @@ import CameraNavigator, {
 import AuthNavigator from "./src/navigation/AuthStack";
 import { checkCredentials } from "./src/utils/auth";
 import MapStack, { MapStackParamList } from "./src/navigation/MapStack";
+import CustomModal from "./src/screens/modal/ModalScreen";
+import { TransitionPresets } from "@react-navigation/bottom-tabs";
+import ModalScreen from "./src/screens/modal/ModalScreen";
 
 export type RootStackParamList = {
   AuthStack: NavigatorScreenParams<AuthStackParamList>;
@@ -42,6 +45,7 @@ export type RootStackParamList = {
   ProfileStack: NavigatorScreenParams<ProfileStackParamList>;
   CircuitStack: NavigatorScreenParams<CircuitStackParamList>;
   MapStack: NavigatorScreenParams<MapStackParamList>;
+  Modal: undefined;
 };
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();
@@ -85,7 +89,7 @@ export default function App() {
                 />
                 <RootStack.Screen
                   name="TabsStack"
-                  component={Tabs}
+                  component={TabsStack}
                   options={{ headerShown: false }}
                 />
                 <RootStack.Screen
@@ -122,6 +126,15 @@ export default function App() {
                   name="MapStack"
                   component={MapStack}
                   options={{ headerShown: false }}
+                />
+                <RootStack.Screen
+                  name="Modal"
+                  component={ModalScreen}
+                  options={{
+                    headerShown: false,
+                    presentation: "transparentModal",
+                    animation: "fade",
+                  }}
                 />
               </RootStack.Navigator>
             </NavigationContainer>

@@ -3,6 +3,7 @@ import { boulderGrades } from "../../../utils/constants/boulderConstants";
 import { Filter } from "../../../utils/types/filter";
 
 const defaultFilters: Filter = {
+  search: "",
   sortBy: "grade",
   minGradeIndex: 0,
   maxGradeIndex: boulderGrades.length - 1,
@@ -21,6 +22,9 @@ export const filterSlice = createSlice({
   name: "filters",
   initialState,
   reducers: {
+    setSearch: (state, action: PayloadAction<string>) => {
+      state.object.search = action.payload;
+    },
     setSortBy: (state, action: PayloadAction<string>) => {
       state.object.sortBy = action.payload;
     },
@@ -53,6 +57,7 @@ export const filterSlice = createSlice({
     },
     resetFilters: (state) => {
       // Mutating each field back to its initial value
+      state.object.search = initialState.object.search;
       state.object.sortBy = initialState.object.sortBy;
       state.object.minGradeIndex = initialState.object.minGradeIndex;
       state.object.maxGradeIndex = initialState.object.maxGradeIndex;
@@ -66,6 +71,7 @@ export const filterSlice = createSlice({
 });
 
 export const {
+  setSearch,
   setSortBy,
   setMinGradeIndex,
   setMaxGradeIndex,

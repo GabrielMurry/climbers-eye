@@ -9,21 +9,9 @@ import {
 import React, { useCallback, useEffect, useState } from "react";
 import FullScreenImage from "../../components/image/FullScreenImage";
 import { EllipsisHorizontalIcon } from "react-native-heroicons/outline";
-import ImageDisplay from "../../components/boulder/detail/ImageDisplay";
-import Titles from "../../components/boulder/detail/Titles";
 import useCustomHeader from "../../hooks/useCustomHeader";
 import ModalOptions from "../../components/custom/ModalOptions";
-import InfoRow1 from "../../components/boulder/detail/InfoRow1";
-import InfoRow2 from "../../components/boulder/detail/InfoRow2";
-import InfoRow3 from "../../components/boulder/detail/InfoRow3";
-import InfoRow4 from "../../components/boulder/detail/InfoRow4";
-import InfoRow6 from "../../components/boulder/detail/InfoRow6";
-import DraftNotif from "../../components/boulder/DraftNotif";
-import {
-  useFocusEffect,
-  useNavigation,
-  useRoute,
-} from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { getBoulderDetail } from "../../services/boulder/boulder";
 import { deleteBoulderAPI } from "../../services/boulder/boulder";
 import { updateBoulderAPI } from "../../services/boulder/boulder";
@@ -31,13 +19,15 @@ import {
   deleteBoulder,
   updateBoulder,
 } from "../../redux/features/boulder/boulderSlice";
-import { useFetch } from "../../hooks/useFetch";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { selectUser } from "../../redux/features/user/userSelectors";
 import { selectBoulder } from "../../redux/features/boulder/boulderSelectors";
 import { BoulderStackParamList } from "../../navigation/BoulderStack";
 import { Options, UserSendsData } from "./types";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import Header from "../../components/boulder/detail/Header";
+import Body from "../../components/boulder/detail/Body";
+import Footer from "../../components/boulder/detail/Footer";
 
 export type ChartData = {
   label: string;
@@ -70,7 +60,6 @@ const BoulderScreen: React.FC<BoulderScreenProps> = ({ route }) => {
   const [optionsData, setOptionsData] = useState<Options[]>([]);
   const [chartData, setChartData] = useState<ChartData[]>([]);
   const [userSendsData, setUserSendsData] = useState<UserSendsData[]>([]);
-  const [isImageLoaded, setIsImageLoaded] = useState(false);
 
   const fetchBoulderDetail = async () => {
     const path = { boulderId: boulder.id };
@@ -107,7 +96,7 @@ const BoulderScreen: React.FC<BoulderScreenProps> = ({ route }) => {
           text: "Delete",
           onPress: async () => {
             const pathParams = { boulderId: boulder.id };
-            const response = await deleteBoulderAPI({ pathParams });
+            const response = await deleteBoulderAPI(pathParams);
             if (response.status === 204) {
               navigation.goBack();
               dispatch(deleteBoulder(boulder.id));
@@ -136,7 +125,7 @@ const BoulderScreen: React.FC<BoulderScreenProps> = ({ route }) => {
           onPress: async () => {
             const data = { publish: true };
             const pathParams = { boulderId: boulder.id };
-            const response = await updateBoulderAPI({ pathParams, data });
+            const response = await updateBoulderAPI(pathParams, data);
             if (response.status === 200) {
               navigation.goBack();
               dispatch(updateBoulder(boulder.id, { publish: true }));
@@ -189,30 +178,15 @@ const BoulderScreen: React.FC<BoulderScreenProps> = ({ route }) => {
   return (
     <View style={styles.container}>
       <ScrollView>
-        <Titles boulder={boulder} />
-        <ImageDisplay image={boulder} setImageFullScreen={setImageFullScreen} />
-        <DraftNotif boulder={boulder} />
-        <InfoRow1 boulder={boulder} userID={user.id} />
-        <InfoRow2
+        <Header boulder={boulder} />
+        <Body
           boulder={boulder}
           chartData={chartData}
           userSendsData={userSendsData}
+          user={user}
+          setImageFullScreen={setImageFullScreen}
         />
-        <InfoRow3 boulder={boulder} />
-        <InfoRow4 boulder={boulder} />
-        {/* Tags? */}
-        <InfoRow6 boulder={boulder} />
-        {/* separator line */}
-        <View style={{ paddingHorizontal: 20 }}>
-          <View
-            style={{
-              width: "100%",
-              height: 1,
-              backgroundColor: "lightgray",
-              marginTop: 20,
-            }}
-          />
-        </View>
+        <Footer boulder={boulder} />
         {/* empty view cushion */}
         <View style={{ height: 50 }} />
       </ScrollView>

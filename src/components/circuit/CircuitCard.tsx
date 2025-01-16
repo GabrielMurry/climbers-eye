@@ -1,5 +1,13 @@
-import { View, Text, StyleSheet, Pressable, Button, Alert } from "react-native";
-import React, { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Pressable,
+  Button,
+  Alert,
+  TouchableOpacity,
+} from "react-native";
+import React, { useEffect, useRef, useState } from "react";
 import { CheckIcon } from "react-native-heroicons/outline";
 import { deleteCircuitAPI } from "../../services/circuit";
 import {
@@ -14,12 +22,22 @@ import {
 import { Circuit } from "../../utils/types/circuit";
 import { Boulder } from "../../utils/types/boulder";
 import { useAppDispatch } from "../../redux/hooks";
+import ReanimatedSwipeable, {
+  SwipeableMethods,
+} from "react-native-gesture-handler/ReanimatedSwipeable";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import Reanimated, {
+  SharedValue,
+  useAnimatedStyle,
+} from "react-native-reanimated";
 
 type CircuitCardProps = {
   circuit: Circuit;
   height: number;
   boulder: Boulder;
 };
+
+const SWIPE_COMP_WIDTH = 100;
 
 const CircuitCard: React.FC<CircuitCardProps> = ({
   circuit,
@@ -29,6 +47,8 @@ const CircuitCard: React.FC<CircuitCardProps> = ({
   const dispatch = useAppDispatch();
 
   const [isChecked, setIsChecked] = useState(false);
+
+  const swipeableRef = useRef<SwipeableMethods>(null);
 
   const isBoulderInCircuit = () => {
     return circuit.boulders.some(
@@ -45,10 +65,10 @@ const CircuitCard: React.FC<CircuitCardProps> = ({
     switch (method) {
       case "post":
         dispatch(addBoulderToCircuit(circuit.id, boulder.id));
-        return await addBoulderToCircuitAPI({ pathParams });
+        return await addBoulderToCircuitAPI(pathParams);
       case "delete":
         dispatch(removeBoulderFromCircuit(circuit.id, boulder.id));
-        return await removeBoulderFromCircuitAPI({ pathParams });
+        return await removeBoulderFromCircuitAPI(pathParams);
       default:
         console.error("Invalid method.");
     }
@@ -65,44 +85,79 @@ const CircuitCard: React.FC<CircuitCardProps> = ({
     );
   };
 
-  // const onDelete = () => {
-  //   Alert.alert(
-  //     "Delete Circuit",
-  //     `Are you sure you want to delete "${circuit.name}"?`,
-  //     [
-  //       {
-  //         text: "Cancel",
-  //         onPress: () => {
-  //           // row[index].close();
-  //         },
-  //       },
-  //       {
-  //         text: "Delete",
-  //         onPress: async () => {
-  //           const pathParams = { circuitId: circuit.id };
-  //           dispatch(deleteCircuit(circuit.id));
-  //           await deleteCircuitAPI({ pathParams });
-  //         },
-  //         style: "destructive",
-  //       },
-  //     ],
-  //     { cancelable: false }
-  //   );
-  // };
+  const handleDelete = () => {
+    Alert.alert(
+      "Delete Circuit",
+      `Are you sure you want to delete "${circuit.name}"?`,
+      [
+        {
+          text: "Cancel",
+          onPress: () => {
+            swipeableRef.current?.close();
+          },
+        },
+        {
+          text: "Delete",
+          onPress: async () => {
+            const pathParams = { circuitId: circuit.id };
+            dispatch(deleteCircuit(circuit.id));
+            await deleteCircuitAPI({ pathParams });
+          },
+          style: "destructive",
+        },
+      ],
+      { cancelable: false }
+    );
+  };
+
+  function RightAction(_: SharedValue<number>, drag: SharedValue<number>) {
+    const styleAnimation = useAnimatedStyle(() => {
+      return {
+        transform: [{ translateX: drag.value + SWIPE_COMP_WIDTH }],
+      };
+    });
+
+    return (
+      <Reanimated.View style={styleAnimation}>
+        <TouchableOpacity
+          onPress={handleDelete}
+          style={{
+            backgroundColor: "red",
+            width: SWIPE_COMP_WIDTH,
+            height: height,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Text style={{ color: "white", fontWeight: "bold" }}>Delete</Text>
+        </TouchableOpacity>
+      </Reanimated.View>
+    );
+  }
 
   return (
-    <Pressable
-      onPress={handleCircuitPressed}
-      style={[styles.container, { height: height }]}
-    >
-      <View style={[styles.color, { backgroundColor: circuit.color }]} />
-      <View style={styles.cardInfoContainer}>
-        <Text>{circuit.name}</Text>
-        {isChecked ? (
-          <CheckIcon size={25} color={"black"} style={{ marginRight: 5 }} />
-        ) : null}
-      </View>
-    </Pressable>
+    <GestureHandlerRootView>
+      <ReanimatedSwipeable
+        friction={2}
+        enableTrackpadTwoFingerGesture
+        rightThreshold={25}
+        renderRightActions={RightAction}
+        ref={swipeableRef}
+      >
+        <Pressable
+          onPress={handleCircuitPressed}
+          style={[styles.container, { height: height }]}
+        >
+          <View style={[styles.color, { backgroundColor: circuit.color }]} />
+          <View style={styles.cardInfoContainer}>
+            <Text>{circuit.name}</Text>
+            {isChecked ? (
+              <CheckIcon size={25} color={"black"} style={{ marginRight: 5 }} />
+            ) : null}
+          </View>
+        </Pressable>
+      </ReanimatedSwipeable>
+    </GestureHandlerRootView>
   );
 };
 
@@ -114,7 +169,6 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderWidth: 1,
     borderColor: "lightgray",
-    borderRadius: 10,
     alignItems: "center",
     paddingHorizontal: 10,
   },
@@ -130,5 +184,9 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     paddingHorizontal: 8,
+  },
+  separator: {
+    width: "100%",
+    borderTopWidth: 1,
   },
 });

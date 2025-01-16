@@ -1,3 +1,5 @@
+import { Boulder } from "../../utils/types/boulder";
+
 export type Queries = {
   searchQuery?: string;
   minGradeIndex?: number;

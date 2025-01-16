@@ -1,24 +1,17 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Keyboard,
-  StyleSheet,
-} from "react-native";
-import React, { memo, useEffect, useState } from "react";
+import { View, TouchableOpacity, Keyboard, StyleSheet } from "react-native";
+import React, { useEffect, useState } from "react";
 import { MagnifyingGlassIcon, XMarkIcon } from "react-native-heroicons/outline";
 import { TextInput } from "react-native";
 import { colors } from "../../utils/styles";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { selectFilters } from "../../redux/features/filter/filterSelectors";
+import { setSearch } from "../../redux/features/filter/filterSlice";
 
-type SearchInputProps = {
-  searchQuery: string;
-  setSearchQuery: (text: string) => void;
-};
+const SearchInput = () => {
+  const dispatch = useAppDispatch();
 
-const SearchInput: React.FC<SearchInputProps> = ({
-  searchQuery,
-  setSearchQuery,
-}) => {
+  const filters = useAppSelector((state) => selectFilters(state));
+
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
   // Add an event listener to detect changes in keyboard visibility
@@ -40,7 +33,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
   }, []);
 
   const handleCancelSearchPress = () => {
-    setSearchQuery("");
+    dispatch(setSearch(""));
     if (isKeyboardVisible) {
       Keyboard.dismiss();
     }
@@ -51,16 +44,16 @@ const SearchInput: React.FC<SearchInputProps> = ({
       <MagnifyingGlassIcon size={20} color="gray" />
       <TextInput
         style={styles.SearchInput}
-        value={searchQuery}
+        value={filters.search}
         // onChange doesn't exist in react native. use onChangeText
-        onChangeText={(value) => setSearchQuery(value)} // in react native, you don't have to do e.target.value
+        onChangeText={(value) => dispatch(setSearch(value))} // in react native, you don't have to do e.target.value
         placeholder="Search (name, setter, or grade)"
         autoComplete="off"
       />
-      {searchQuery ? (
+      {filters.search ? (
         <TouchableOpacity
           style={styles.resetSearchQuery}
-          onPress={() => setSearchQuery("")}
+          onPress={() => dispatch(setSearch(""))}
         >
           <XMarkIcon size={12} color={"white"} />
         </TouchableOpacity>
@@ -99,7 +92,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default memo(
-  SearchInput,
-  (prevProps, nextProps) => prevProps.searchQuery === nextProps.searchQuery
-);
+export default SearchInput;

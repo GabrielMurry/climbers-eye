@@ -3,11 +3,11 @@ import React from "react";
 import QualityRating from "../QualityRating";
 import { Boulder } from "../../../utils/types/boulder";
 
-type TitlesProps = {
+type HeaderProps = {
   boulder: Boulder;
 };
 
-const Titles: React.FC<TitlesProps> = ({ boulder }) => {
+const Header: React.FC<HeaderProps> = ({ boulder }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.boulderName}>{boulder?.name}</Text>
@@ -22,7 +22,7 @@ const Titles: React.FC<TitlesProps> = ({ boulder }) => {
   );
 };
 
-export default Titles;
+export default Header;
 
 const styles = StyleSheet.create({
   container: {
