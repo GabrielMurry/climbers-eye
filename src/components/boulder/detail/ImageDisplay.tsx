@@ -2,31 +2,24 @@ import {
   Pressable,
   Image,
   Dimensions,
-  ActivityIndicator,
   StyleSheet,
   View,
   Animated,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { ImageObjUrl } from "../../../utils/types/image";
+import { useModalFullScreenImage } from "../../../contexts/ModalFullScreenImageContext";
 
 type ImageDisplayProps = {
   image: ImageObjUrl;
-  setImageFullScreen: (isFullScreen: boolean) => void;
 };
-
-const THEME_STYLE = "black";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const SCREEN_HEIGHT = Dimensions.get("window").height;
 const SHRINK_SCALE = 0.6;
 
-const ImageDisplay: React.FC<ImageDisplayProps> = ({
-  image,
-  setImageFullScreen,
-  // isLoading,
-  // setIsLoading,
-}) => {
+const ImageDisplay: React.FC<ImageDisplayProps> = ({ image }) => {
+  const { openModal } = useModalFullScreenImage();
   const [imageHeight, setImageHeight] = useState(0);
 
   const [isImageLoaded, setIsImageLoaded] = useState(false);
@@ -71,7 +64,7 @@ const ImageDisplay: React.FC<ImageDisplayProps> = ({
         height: imageHeight, // SCREEN_HEIGHT * 0.6 or image.height * (SCREEN_WIDTH / image.width)
         padding: 2,
       }}
-      onPress={() => setImageFullScreen(true)}
+      onPress={() => openModal(image.url, image.width, image.height)}
     >
       {!isImageLoaded && (
         <View

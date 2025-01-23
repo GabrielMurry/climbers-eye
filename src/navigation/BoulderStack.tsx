@@ -26,22 +26,20 @@ export type BoulderStackParamList = {
 const BoulderStack = createNativeStackNavigator<BoulderStackParamList>();
 
 const BoulderNavigator = () => (
-  <BoulderStack.Navigator initialRouteName="Boulder">
-    <BoulderStack.Group>
-      <BoulderStack.Screen name="Boulder" component={BoulderScreen} />
-      <BoulderStack.Screen name="EditBoulder" component={EditBoulderScreen} />
-      <BoulderStack.Screen name="PreviewEdit" component={PreviewEditScreen} />
-      <BoulderStack.Screen name="SendBoulder" component={SendBoulderScreen} />
-      <BoulderStack.Screen name="BoulderStats" component={BoulderStatsScreen} />
-      <BoulderStack.Screen
-        name="ReportBoulder"
-        component={ReportBoulderScreen}
-      />
-      <BoulderStack.Screen
-        name="BoulderUserSends"
-        component={BoulderUserSendsScreen}
-      />
-    </BoulderStack.Group>
+  <BoulderStack.Navigator
+    initialRouteName="Boulder"
+    screenOptions={{ headerShown: false }}
+  >
+    <BoulderStack.Screen name="Boulder" component={BoulderScreen} />
+    <BoulderStack.Screen name="EditBoulder" component={EditBoulderScreen} />
+    <BoulderStack.Screen name="PreviewEdit" component={PreviewEditScreen} />
+    <BoulderStack.Screen name="SendBoulder" component={SendBoulderScreen} />
+    <BoulderStack.Screen name="BoulderStats" component={BoulderStatsScreen} />
+    <BoulderStack.Screen name="ReportBoulder" component={ReportBoulderScreen} />
+    <BoulderStack.Screen
+      name="BoulderUserSends"
+      component={BoulderUserSendsScreen}
+    />
   </BoulderStack.Navigator>
 );
 

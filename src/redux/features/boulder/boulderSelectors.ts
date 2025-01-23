@@ -5,5 +5,5 @@ export const selectBoulders = (state: RootState) => {
 };
 
 export const selectBoulder = (state: RootState, id: number) => {
-  return state.boulder.objects.find((boulder) => boulder.id === id);
+  return state.boulder.objects.find((boulder) => boulder.id === id)!;
 };

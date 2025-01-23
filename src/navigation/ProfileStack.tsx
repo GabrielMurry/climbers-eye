@@ -41,7 +41,11 @@ const ProfileNavigator = () => {
         <ProfileStack.Screen name="EditName" component={EditNameScreen} />
         <ProfileStack.Screen name="CropImage" component={CropImageScreen} />
         <ProfileStack.Screen name="SwitchGym" component={SwitchGymScreen} />
-        <ProfileStack.Screen name="ProfileUser" component={ProfileScreen} />
+        <ProfileStack.Screen
+          name="ProfileUser"
+          component={ProfileScreen}
+          options={{ headerShown: false }}
+        />
         <ProfileStack.Screen name="Boulder" component={BoulderScreen} />
         <ProfileStack.Screen name="Logbook" component={LogbookScreen} />
         <ProfileStack.Screen name="Bookmarks" component={BookmarksScreen} />

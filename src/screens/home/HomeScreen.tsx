@@ -1,19 +1,14 @@
 import { StyleSheet, FlatList, SafeAreaView } from "react-native";
-import React, { useState } from "react";
+import React from "react";
 import BoulderCard from "../../components/common/BoulderCard";
-import ErrorCard from "../../components/common/ErrorCard";
-import ModalOptions from "../../components/custom/ModalOptions";
-import { useNavigation } from "@react-navigation/native";
 import { useBoulderData } from "../../hooks/useBoulderData";
-import Header from "../../components/home/Header";
 import SearchAndFilters from "../../components/home/SearchAndFilters";
 import Footer from "../../components/home/Footer";
 import Empty from "../../components/home/Empty";
+import FlatListSpraywalls from "../../components/home/FlatListSpraywalls";
+import HomeHeader from "../../components/home/HomeHeader";
 
 const HomeScreen = () => {
-  const navigation = useNavigation();
-
-  const [isModalVisible, setIsModalVisible] = useState(false);
   const hasEditPermission = true;
 
   const {
@@ -25,16 +20,13 @@ const HomeScreen = () => {
     nextPageBoulders,
   } = useBoulderData();
 
-  const handleEditGymPress = () => {
-    setIsModalVisible(false);
-    navigation.navigate("GymStack", { screen: "EditGym" });
-  };
-
   return (
     <SafeAreaView style={styles.container}>
-      <Header
-        setIsModalVisible={setIsModalVisible}
+      <HomeHeader />
+      <FlatListSpraywalls
+        highlight={true}
         hasEditPermission={hasEditPermission}
+        height={100}
       />
       <FlatList
         data={boulders}
@@ -49,18 +41,6 @@ const HomeScreen = () => {
         ListEmptyComponent={() => <Empty isLoading={isInitialPageLoading} />}
         onRefresh={refreshBoulders}
         refreshing={isInitialPageLoading}
-      />
-      <ModalOptions
-        isModalVisible={isModalVisible}
-        setIsModalVisible={setIsModalVisible}
-        optionsData={[
-          { title: "Edit Gym", onPress: handleEditGymPress, color: "black" },
-          {
-            title: "Cancel",
-            onPress: () => setIsModalVisible(false),
-            color: "gray",
-          },
-        ]}
       />
     </SafeAreaView>
   );

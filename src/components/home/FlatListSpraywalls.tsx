@@ -1,4 +1,4 @@
-import { FlatList, Text } from "react-native";
+import { FlatList, Text, View } from "react-native";
 import React, { memo } from "react";
 import SpraywallCard from "./SpraywallCard";
 import AddSpraywallCard from "./AddSpraywallCard";
@@ -31,15 +31,21 @@ const FlatListSpraywalls: React.FC<FlatListSpraywallsProps> = ({
   const renderFooter = () => <AddSpraywallCard />;
 
   return (
-    <FlatList
-      data={spraywalls}
-      renderItem={renderSpraywall}
-      keyExtractor={(item) => item.id.toString()}
-      contentContainerStyle={{ gap: 10, height: height }}
-      horizontal
-      ListFooterComponent={hasEditPermission ? renderFooter : null}
-      showsHorizontalScrollIndicator={false}
-    />
+    <View style={{ paddingBottom: 10 }}>
+      <FlatList
+        data={spraywalls}
+        renderItem={renderSpraywall}
+        keyExtractor={(item) => item.id.toString()}
+        contentContainerStyle={{
+          gap: 10,
+          height: height,
+          paddingHorizontal: 20,
+        }}
+        horizontal
+        ListFooterComponent={hasEditPermission ? renderFooter : null}
+        showsHorizontalScrollIndicator={false}
+      />
+    </View>
   );
 };
 

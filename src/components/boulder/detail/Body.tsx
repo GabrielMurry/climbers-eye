@@ -1,4 +1,3 @@
-import { View, Text } from "react-native";
 import React from "react";
 import ImageDisplay from "./ImageDisplay";
 import DraftNotif from "../DraftNotif";
@@ -16,7 +15,6 @@ type BodyProps = {
   chartData: ChartData[];
   userSendsData: UserSendsData[];
   user: User;
-  setImageFullScreen: (isFullScreen: boolean) => void;
 };
 
 const Body: React.FC<BodyProps> = ({
@@ -24,11 +22,10 @@ const Body: React.FC<BodyProps> = ({
   chartData,
   userSendsData,
   user,
-  setImageFullScreen,
 }) => {
   return (
     <>
-      <ImageDisplay image={boulder} setImageFullScreen={setImageFullScreen} />
+      <ImageDisplay image={boulder} />
       <DraftNotif boulder={boulder} />
       <InfoRow1 boulder={boulder} userID={user.id} />
       <InfoRow2

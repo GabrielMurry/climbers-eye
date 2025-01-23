@@ -31,9 +31,9 @@ import CameraNavigator, {
 import AuthNavigator from "./src/navigation/AuthStack";
 import { checkCredentials } from "./src/utils/auth";
 import MapStack, { MapStackParamList } from "./src/navigation/MapStack";
-import CustomModal from "./src/screens/modal/ModalScreen";
-import { TransitionPresets } from "@react-navigation/bottom-tabs";
 import ModalScreen from "./src/screens/modal/ModalScreen";
+import { ModalOptionsProvider } from "./src/contexts/ModalOptionsContext";
+import { ModalFullScreenImageProvider } from "./src/contexts/ModalFullScreenImageContext";
 
 export type RootStackParamList = {
   AuthStack: NavigatorScreenParams<AuthStackParamList>;
@@ -79,65 +79,53 @@ export default function App() {
       <ActionSheetProvider>
         <Provider store={store}>
           <PersistGate loading={null} persistor={persistor}>
-            <NavigationContainer>
-              <StatusBar barStyle={"dark-content"} />
-              <RootStack.Navigator initialRouteName={"AuthStack"}>
-                <RootStack.Screen
-                  name="AuthStack"
-                  component={AuthNavigator}
-                  options={{ headerShown: false }}
-                />
-                <RootStack.Screen
-                  name="TabsStack"
-                  component={TabsStack}
-                  options={{ headerShown: false }}
-                />
-                <RootStack.Screen
-                  name="GymStack"
-                  component={GymStack}
-                  options={{ headerShown: false }}
-                />
-                <RootStack.Screen
-                  name="SpraywallStack"
-                  component={SpraywallStack}
-                  options={{ headerShown: false }}
-                />
-                <RootStack.Screen
-                  name="CameraStack"
-                  component={CameraNavigator}
-                  options={{ headerShown: false }}
-                />
-                <RootStack.Screen
-                  name="BoulderStack"
-                  component={BoulderStack}
-                  options={{ headerShown: false }}
-                />
-                <RootStack.Screen
-                  name="ProfileStack"
-                  component={ProfileStack}
-                  options={{ headerShown: false }}
-                />
-                <RootStack.Screen
-                  name="CircuitStack"
-                  component={CircuitStack}
-                  options={{ headerShown: false }}
-                />
-                <RootStack.Screen
-                  name="MapStack"
-                  component={MapStack}
-                  options={{ headerShown: false }}
-                />
-                <RootStack.Screen
-                  name="Modal"
-                  component={ModalScreen}
-                  options={{
-                    headerShown: false,
-                    presentation: "transparentModal",
-                    animation: "fade",
-                  }}
-                />
-              </RootStack.Navigator>
-            </NavigationContainer>
+            <ModalOptionsProvider>
+              <ModalFullScreenImageProvider>
+                <NavigationContainer>
+                  <StatusBar barStyle={"dark-content"} />
+                  <RootStack.Navigator
+                    initialRouteName={"AuthStack"}
+                    screenOptions={{ headerShown: false }}
+                  >
+                    <RootStack.Screen
+                      name="AuthStack"
+                      component={AuthNavigator}
+                    />
+                    <RootStack.Screen name="TabsStack" component={TabsStack} />
+                    <RootStack.Screen name="GymStack" component={GymStack} />
+                    <RootStack.Screen
+                      name="SpraywallStack"
+                      component={SpraywallStack}
+                    />
+                    <RootStack.Screen
+                      name="CameraStack"
+                      component={CameraNavigator}
+                    />
+                    <RootStack.Screen
+                      name="BoulderStack"
+                      component={BoulderStack}
+                    />
+                    <RootStack.Screen
+                      name="ProfileStack"
+                      component={ProfileStack}
+                    />
+                    <RootStack.Screen
+                      name="CircuitStack"
+                      component={CircuitStack}
+                    />
+                    <RootStack.Screen name="MapStack" component={MapStack} />
+                    <RootStack.Screen
+                      name="Modal"
+                      component={ModalScreen}
+                      options={{
+                        presentation: "transparentModal",
+                        animation: "fade",
+                      }}
+                    />
+                  </RootStack.Navigator>
+                </NavigationContainer>
+              </ModalFullScreenImageProvider>
+            </ModalOptionsProvider>
           </PersistGate>
         </Provider>
       </ActionSheetProvider>

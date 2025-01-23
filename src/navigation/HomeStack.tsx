@@ -14,21 +14,16 @@ const HomeStack = createNativeStackNavigator<HomeStackParamsList>();
 const HomeNavigator = () => {
   return (
     <NavigationProvider value={StackName.HomeStack}>
-      <HomeStack.Navigator initialRouteName="HomeList">
-        <HomeStack.Group>
-          <HomeStack.Screen
-            name="HomeList"
-            component={HomeScreen}
-            options={{
-              headerShown: false,
-            }}
-          />
-          <HomeStack.Screen
-            name="FilterHomeList"
-            component={FilterHomeListScreen}
-          />
-          <HomeStack.Screen name="Boulder" component={BoulderScreen} />
-        </HomeStack.Group>
+      <HomeStack.Navigator
+        initialRouteName="HomeList"
+        screenOptions={{ headerShown: false }}
+      >
+        <HomeStack.Screen name="HomeList" component={HomeScreen} />
+        <HomeStack.Screen
+          name="FilterHomeList"
+          component={FilterHomeListScreen}
+        />
+        <HomeStack.Screen name="Boulder" component={BoulderScreen} />
       </HomeStack.Navigator>
     </NavigationProvider>
   );
