@@ -33,7 +33,6 @@ export const ModalOptionsProvider: React.FC<ModalOptionsProviderProps> = ({
   const [options, setOptions] = useState<Option[]>([]);
 
   const openModal = useCallback((newOptions: Option[]) => {
-    console.log("hi");
     setOptions(newOptions);
     setIsVisible(true);
   }, []);
@@ -48,7 +47,11 @@ export const ModalOptionsProvider: React.FC<ModalOptionsProviderProps> = ({
       value={{ isVisible, options, openModal, closeModal }}
     >
       {children}
-      <OptionsModal />
+      <OptionsModal
+        isVisible={isVisible}
+        options={options}
+        closeModal={closeModal}
+      />
     </ModalOptionsContext.Provider>
   );
 };

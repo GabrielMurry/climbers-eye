@@ -1,10 +1,18 @@
-import { View, Text, Modal, SafeAreaView, Pressable } from "react-native";
+import { Text, Modal, SafeAreaView, Pressable } from "react-native";
 import React from "react";
-import { useModalOptions } from "../../contexts/ModalOptionsContext";
+import { Option } from "../../utils/types/options";
 
-const OptionsModal = () => {
-  const { isVisible, options, closeModal } = useModalOptions();
+type OptionsModalProps = {
+  isVisible: boolean;
+  options: Option[];
+  closeModal: () => void;
+};
 
+const OptionsModal: React.FC<OptionsModalProps> = ({
+  isVisible,
+  options,
+  closeModal,
+}) => {
   return (
     <Modal visible={isVisible} animationType="fade" transparent={true}>
       {/* background darkened */}

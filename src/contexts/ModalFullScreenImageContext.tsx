@@ -51,7 +51,11 @@ export const ModalFullScreenImageProvider: React.FC<
       value={{ isVisible, image, openModal, closeModal }}
     >
       {children}
-      <FullScreenImageModal />
+      <FullScreenImageModal
+        isVisible={isVisible}
+        image={image}
+        closeModal={closeModal}
+      />
     </ModalFullScreenImageContext.Provider>
   );
 };

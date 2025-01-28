@@ -23,6 +23,7 @@ import { selectUser } from "../../redux/features/user/userSelectors";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { BoulderStackParamList } from "../../navigation/BoulderStack";
 import { useNavigation } from "@react-navigation/native";
+import SendHeader from "../../components/boulder/send/SendHeader";
 
 type SendBoulderScreenProps = NativeStackScreenProps<
   BoulderStackParamList,
@@ -53,11 +54,6 @@ const SendBoulderScreen: React.FC<SendBoulderScreenProps> = ({ route }) => {
   const [showDifficultyPicker, setShowDifficultyPicker] = useState(false);
   const [notes, setNotes] = useState("");
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
-
-  useCustomHeader({
-    backgroundColor: "rgba(245,245,245,255)",
-    title: "Log Ascent",
-  });
 
   const fadeAnim = useState(new Animated.Value(0))[0];
 
@@ -130,6 +126,7 @@ const SendBoulderScreen: React.FC<SendBoulderScreenProps> = ({ route }) => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "rgba(245,245,245,255)" }}>
+      <SendHeader />
       <TouchableWithoutFeedback onPress={dismissKeyboard}>
         <View style={styles.container}>
           <View style={{ gap: 5 }}>

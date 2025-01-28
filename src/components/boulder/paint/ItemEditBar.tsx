@@ -1,90 +1,58 @@
-import { View, StyleSheet, TouchableOpacity } from "react-native";
+import { View, StyleSheet } from "react-native";
 import React, { RefObject } from "react";
-import { FontAwesome } from "@expo/vector-icons";
 import { RefProps } from "../../canvas/CanvasBoard/types";
 import { Color } from "../../canvas/ColorButton/types";
+import UndoButton from "./UndoButton";
+import HandButton from "./HandButton";
+import ColorButton from "./ColorButton";
 
 type ItemEditBarProps = {
-  selectedColor: Color | null;
-  setSelectedColor: (item: Color | null) => void;
+  selectedColor: Color;
+  setSelectedColor: (item: Color) => void;
+  canMove: boolean;
+  setCanMove: (canMove: boolean) => void;
   canvasRef: RefObject<RefProps>;
 };
 
 const ItemEditBar: React.FC<ItemEditBarProps> = ({
   selectedColor,
   setSelectedColor,
+  canMove,
+  setCanMove,
   canvasRef,
 }) => {
   return (
     <View style={styles.editBarContainer}>
-      {/* Undo Button */}
-      <TouchableOpacity
-        style={styles.undoButton}
-        onPress={() => canvasRef.current?.undo()}
-      >
-        <FontAwesome name="undo" size={25} color="white" />
-      </TouchableOpacity>
-      {/* Eraser Button */}
-      <TouchableOpacity
-        style={
-          selectedColor
-            ? styles.handButtonUnselected
-            : styles.handButtonSelected
-        }
-        onPress={() => setSelectedColor(null)}
-      >
-        <FontAwesome
-          name={selectedColor ? "hand-stop-o" : "hand-grab-o"}
-          size={25}
-          color="white"
-        />
-      </TouchableOpacity>
-      {/* Green Button */}
-      <TouchableOpacity
-        style={
-          selectedColor === "green"
-            ? styles.colorButtonSelected
-            : styles.colorButtonUnselected
-        }
-        onPress={() => setSelectedColor("green")}
-      >
-        <View style={[styles.colorButton, { backgroundColor: "green" }]}></View>
-      </TouchableOpacity>
-      {/* Blue Button */}
-      <TouchableOpacity
-        style={
-          selectedColor === "blue"
-            ? styles.colorButtonSelected
-            : styles.colorButtonUnselected
-        }
-        onPress={() => setSelectedColor("blue")}
-      >
-        <View style={[styles.colorButton, { backgroundColor: "blue" }]}></View>
-      </TouchableOpacity>
-      {/* Purple Button */}
-      <TouchableOpacity
-        style={
-          selectedColor === "purple"
-            ? styles.colorButtonSelected
-            : styles.colorButtonUnselected
-        }
-        onPress={() => setSelectedColor("purple")}
-      >
-        <View
-          style={[styles.colorButton, { backgroundColor: "purple" }]}
-        ></View>
-      </TouchableOpacity>
-      {/* Red Button */}
-      <TouchableOpacity
-        style={
-          selectedColor === "red"
-            ? styles.colorButtonSelected
-            : styles.colorButtonUnselected
-        }
-        onPress={() => setSelectedColor("red")}
-      >
-        <View style={[styles.colorButton, { backgroundColor: "red" }]}></View>
-      </TouchableOpacity>
+      <UndoButton canvasRef={canvasRef} />
+      <HandButton canMove={canMove} setCanMove={setCanMove} />
+      <ColorButton
+        color="green"
+        selectedColor={selectedColor}
+        setSelectedColor={setSelectedColor}
+        canMove={canMove}
+        setCanMove={setCanMove}
+      />
+      <ColorButton
+        color="blue"
+        selectedColor={selectedColor}
+        setSelectedColor={setSelectedColor}
+        canMove={canMove}
+        setCanMove={setCanMove}
+      />
+      <ColorButton
+        color="purple"
+        selectedColor={selectedColor}
+        setSelectedColor={setSelectedColor}
+        canMove={canMove}
+        setCanMove={setCanMove}
+      />
+      <ColorButton
+        color="red"
+        selectedColor={selectedColor}
+        setSelectedColor={setSelectedColor}
+        canMove={canMove}
+        setCanMove={setCanMove}
+      />
     </View>
   );
 };

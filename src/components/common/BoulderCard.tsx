@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import React from "react";
-import { CheckIcon, LinkIcon, StarIcon } from "react-native-heroicons/outline";
+import { CheckIcon, LinkIcon } from "react-native-heroicons/outline";
 import { FontAwesome } from "@expo/vector-icons";
 import QualityRating from "../boulder/QualityRating";
 import { useNavigationContext } from "../../contexts/NavigationContext";

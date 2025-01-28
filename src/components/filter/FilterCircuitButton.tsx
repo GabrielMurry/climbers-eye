@@ -6,22 +6,23 @@ import {
   resetCircuit,
   setCircuit,
 } from "../../redux/features/filter/filterSlice";
-import { Filter } from "../../utils/types/filter";
+import { useAppSelector } from "../../redux/hooks";
+import { selectFilters } from "../../redux/features/filter/filterSelectors";
 
 type FilterCircuitButtonProps = {
   title: string;
   color: string;
-  filters: Filter;
   circuitId: number;
 };
 
 const FilterCircuitButton: React.FC<FilterCircuitButtonProps> = ({
   title,
   color,
-  filters,
   circuitId,
 }) => {
   const dispatch = useDispatch();
+
+  const filters = useAppSelector((state) => selectFilters(state));
 
   const isSelected = () => {
     return filters.circuit === circuitId;

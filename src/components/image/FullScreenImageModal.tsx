@@ -7,13 +7,22 @@ import {
 import React from "react";
 import ReactNativeZoomableView from "@openspacelabs/react-native-zoomable-view/src/ReactNativeZoomableView";
 import { Image } from "expo-image";
-import { useModalFullScreenImage } from "../../contexts/ModalFullScreenImageContext";
 import { Ionicons } from "@expo/vector-icons";
+import { ImageObjUri } from "../../utils/types/image";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
-const FullScreenImageModal = () => {
-  const { isVisible, image, closeModal } = useModalFullScreenImage();
+type FullScreenImageModalProps = {
+  isVisible: boolean;
+  image: ImageObjUri;
+  closeModal: () => void;
+};
+
+const FullScreenImageModal: React.FC<FullScreenImageModalProps> = ({
+  isVisible,
+  image,
+  closeModal,
+}) => {
   return (
     <Modal visible={isVisible} transparent>
       <SafeAreaView style={{ flex: 1, backgroundColor: "black" }}>

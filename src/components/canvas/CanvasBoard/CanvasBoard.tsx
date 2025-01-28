@@ -1,16 +1,27 @@
 import { Canvas, Path, Skia, useCanvasRef } from "@shopify/react-native-skia";
-import React, { forwardRef, Ref, useImperativeHandle, useState } from "react";
-import { SafeAreaView, StyleSheet, useWindowDimensions } from "react-native";
+import React, {
+  forwardRef,
+  Ref,
+  useEffect,
+  useImperativeHandle,
+  useState,
+} from "react";
+import {
+  SafeAreaView,
+  StyleSheet,
+  useWindowDimensions,
+  View,
+} from "react-native";
 import { GestureDetector, Gesture } from "react-native-gesture-handler";
 import { CanvasBoardProps, PathWithColorAndWidth, RefProps } from "./types";
 import { runOnJS } from "react-native-reanimated";
 
-const CanvasBoard: React.FC<CanvasBoardProps> = forwardRef(
+const CanvasBoard = forwardRef<RefProps, CanvasBoardProps>(
   (
     {
       width = useWindowDimensions().width,
       height = useWindowDimensions().height,
-      disableBrush = false,
+      enabled = true,
       color,
       strokeWidth,
       opacity,
@@ -49,13 +60,14 @@ const CanvasBoard: React.FC<CanvasBoardProps> = forwardRef(
     };
 
     const panGesture = Gesture.Pan()
+      .enabled(enabled)
       .onBegin((e) => {
-        if (!disableBrush) {
+        if (enabled) {
           runOnJS(onDrawingStart)(e.x, e.y);
         }
       })
       .onUpdate((e) => {
-        if (!disableBrush) {
+        if (enabled) {
           runOnJS(onDrawingActive)(e.x, e.y);
         }
       });
@@ -87,23 +99,21 @@ const CanvasBoard: React.FC<CanvasBoardProps> = forwardRef(
     }));
 
     return (
-      <SafeAreaView style={styles.container}>
-        <GestureDetector gesture={panGesture}>
-          <Canvas ref={cRef} style={{ width, height }}>
-            {paths.map((path, index) => (
-              <Path
-                key={index}
-                path={path.path}
-                color={path.color}
-                style={"stroke"}
-                strokeWidth={path.strokeWidth}
-                strokeCap="round"
-                opacity={opacity}
-              />
-            ))}
-          </Canvas>
-        </GestureDetector>
-      </SafeAreaView>
+      <GestureDetector gesture={panGesture}>
+        <Canvas ref={cRef} style={{ width, height }}>
+          {paths.map((path, index) => (
+            <Path
+              key={index}
+              path={path.path}
+              color={path.color}
+              style={"stroke"}
+              strokeWidth={path.strokeWidth}
+              strokeCap="round"
+              opacity={opacity}
+            />
+          ))}
+        </Canvas>
+      </GestureDetector>
     );
   }
 );

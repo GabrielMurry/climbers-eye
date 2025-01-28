@@ -4,7 +4,7 @@ import { Color } from "../ColorButton/types";
 export type CanvasBoardProps = {
   width?: number;
   height?: number;
-  disableBrush?: boolean;
+  enabled?: boolean;
   color: Color;
   strokeWidth: number;
   opacity: number;

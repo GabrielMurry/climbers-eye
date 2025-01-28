@@ -1,23 +1,20 @@
-import { StyleSheet, SafeAreaView, Dimensions, Text } from "react-native";
+import { StyleSheet, SafeAreaView, Dimensions } from "react-native";
 import React, { useEffect, useState } from "react";
 import * as Haptics from "expo-haptics";
 import { addBoulderToSpraywall } from "../../services/boulder/boulder";
 import { addNewBoulder } from "../../redux/features/boulder/boulderSlice";
 import { appendExcludeId } from "../../redux/features/filter/filterSlice";
 import FullScreenImage from "../../components/image/FullScreenImage";
-import useCustomHeader from "../../hooks/useCustomHeader";
 import PreviewInputData from "../../components/boulder/preview/PreviewInputData";
 import PreviewImage from "../../components/boulder/preview/PreviewImage";
 import PreviewPublishButtons from "../../components/boulder/preview/PreviewPublishButtons";
-import {
-  selectSpraywall,
-  selectSpraywalls,
-} from "../../redux/features/spraywall/spraywallSelectors";
+import { selectSpraywall } from "../../redux/features/spraywall/spraywallSelectors";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { selectUser } from "../../redux/features/user/userSelectors";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { BoulderStackParamList } from "../../navigation/BoulderStack";
 import { useNavigation } from "@react-navigation/native";
+import PreviewHeader from "../../components/boulder/preview/PreviewHeader";
 
 type PreviewEditScreenProps = NativeStackScreenProps<
   BoulderStackParamList,
@@ -33,12 +30,8 @@ const PreviewEditScreen: React.FC<PreviewEditScreenProps> = ({ route }) => {
 
   const dispatch = useAppDispatch();
 
-  const spraywalls = useAppSelector((state) => selectSpraywalls(state));
   const spraywall = useAppSelector((state) => selectSpraywall(state));
-  if (!spraywall) {
-    console.error("Spraywall not found.");
-    return <Text>Spraywall not found.</Text>;
-  }
+
   const user = useAppSelector((state) => selectUser(state));
 
   const { image } = route.params;
@@ -52,27 +45,6 @@ const PreviewEditScreen: React.FC<PreviewEditScreenProps> = ({ route }) => {
   const [isImageLoading, setIsImageLoading] = useState(true);
   const [error, setError] = useState(false);
 
-  useCustomHeader({
-    title: "Preview",
-  });
-
-  // export type RootStackParamList = {
-  //   BoulderStack: undefined; // or specific params for BoulderStack
-  //   Tabs: {
-  //     screen: keyof TabsStackParamList; // Reference to Tabs stack
-  //     params?: TabsStackParamList[keyof TabsStackParamList]; // Pass params specific to Tabs screens
-  //   };
-  // };
-
-  // export type TabsStackParamList = {
-  //   Home: {
-  //     screen: "Boulder"; // Target the 'Boulder' screen in 'Home'
-  //     params: {
-  //       boulderId: number;
-  //     };
-  //   };
-  // };
-
   const handleConfirm = async (isPublish: boolean) => {
     const data = {
       name,
@@ -85,9 +57,9 @@ const PreviewEditScreen: React.FC<PreviewEditScreenProps> = ({ route }) => {
       width: image.width,
       height: image.height,
       setter: user.id,
-      spraywall: spraywall.id,
+      spraywall: spraywall!.id,
     };
-    const pathParams = { spraywallId: spraywall.id };
+    const pathParams = { spraywallId: spraywall!.id };
     const response = await addBoulderToSpraywall(pathParams, data);
     if (response) {
       dispatch(addNewBoulder(response.data));
@@ -114,6 +86,7 @@ const PreviewEditScreen: React.FC<PreviewEditScreenProps> = ({ route }) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <PreviewHeader />
       <PreviewImage
         SCREEN_WIDTH={SCREEN_WIDTH}
         SCREEN_HEIGHT={SCREEN_HEIGHT}

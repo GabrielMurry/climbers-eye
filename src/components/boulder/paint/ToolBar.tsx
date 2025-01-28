@@ -6,10 +6,12 @@ import { Color } from "../../canvas/ColorButton/types";
 import { RefProps } from "../../canvas/CanvasBoard/types";
 
 type ToolBarProps = {
-  selectedColor: Color | null;
-  setSelectedColor: (item: Color | null) => void;
+  selectedColor: Color;
+  setSelectedColor: (item: Color) => void;
   strokeWidth: number;
   setStrokeWidth: (width: number) => void;
+  canMove: boolean;
+  setCanMove: (canMove: boolean) => void;
   canvasRef: RefObject<RefProps>;
 };
 
@@ -18,6 +20,8 @@ const ToolBar: React.FC<ToolBarProps> = ({
   setSelectedColor,
   strokeWidth,
   setStrokeWidth,
+  canMove,
+  setCanMove,
   canvasRef,
 }) => {
   return (
@@ -26,6 +30,8 @@ const ToolBar: React.FC<ToolBarProps> = ({
       <ItemEditBar
         selectedColor={selectedColor}
         setSelectedColor={setSelectedColor}
+        canMove={canMove}
+        setCanMove={setCanMove}
         canvasRef={canvasRef}
       />
 

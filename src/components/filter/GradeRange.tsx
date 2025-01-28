@@ -1,101 +1,76 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
-import Slider from "@react-native-community/slider";
-import {
-  setMaxGradeIndex,
-  setMinGradeIndex,
-} from "../../redux/features/filter/filterSlice";
-import { useDispatch } from "react-redux";
-import { Filter } from "../../utils/types/filter";
+import { CheckIcon } from "react-native-heroicons/outline";
+import { boulderGrades } from "../../utils/constants/boulderConstants";
+import { useAppSelector } from "../../redux/hooks";
+import { selectFilters } from "../../redux/features/filter/filterSelectors";
+import GradeRangeSliders from "./GradeRangeSliders";
 
-type GradeRangeProps = {
-  boulderGrades: string[];
-  filters: Filter;
-};
+const GradeRange = () => {
+  const filters = useAppSelector((state) => selectFilters(state));
 
-const GradeRange: React.FC<GradeRangeProps> = ({ boulderGrades, filters }) => {
-  const dispatch = useDispatch();
-  const [min, setMin] = useState(filters.minGradeIndex);
-  const [max, setMax] = useState(filters.maxGradeIndex);
+  const [gradeSlidersVisible, setGradeSlidersVisible] = useState(false);
 
-  const handleMinValueChange = (value: number) => {
-    if (value <= max) {
-      setMin(value);
-    } else {
-      setMin(max);
-    }
-  };
-
-  const handleMaxValueChange = (value: number) => {
-    if (value >= min) {
-      setMax(value);
-    } else {
-      setMax(min);
-    }
-  };
-
-  const handleMinSlidingComplete = (value: number) => {
-    dispatch(setMinGradeIndex(value));
-  };
-
-  const handleMaxSlidingComplete = (value: number) => {
-    dispatch(setMaxGradeIndex(value));
+  const handleGradeRangePress = () => {
+    setGradeSlidersVisible(!gradeSlidersVisible);
   };
 
   return (
-    <View style={styles.sliderContainer}>
-      <View style={styles.sliderWrapper}>
-        <Text style={styles.sliderLabel}>Min Grade: {boulderGrades[min]}</Text>
-        <Slider
-          style={styles.slider}
-          minimumValue={0}
-          maximumValue={boulderGrades.length - 1}
-          upperLimit={max}
-          value={min}
-          onValueChange={handleMinValueChange}
-          onSlidingComplete={handleMinSlidingComplete}
-          step={1}
-          maximumTrackTintColor={"#4E9152"}
-          minimumTrackTintColor={"lightgray"}
-        />
+    <>
+      <View
+        style={{
+          width: "100%",
+          backgroundColor: "white",
+        }}
+      >
+        <View
+          style={{
+            backgroundColor: "white",
+            width: "100%",
+            height: 40,
+            justifyContent: "center",
+            padding: 10,
+            borderBottomWidth: 1,
+            borderColor: "rgba(245,245,245,255)",
+          }}
+        >
+          <Text
+            style={{
+              fontWeight: "bold",
+              color: "black",
+            }}
+          >
+            Grade Range
+          </Text>
+        </View>
+        <TouchableOpacity
+          style={{
+            flexDirection: "row",
+            width: "100%",
+            height: 40,
+            justifyContent: "space-between",
+            alignItems: "center",
+            padding: 10,
+          }}
+          onPress={handleGradeRangePress}
+        >
+          <Text
+            style={{
+              color: "black",
+            }}
+          >{`${boulderGrades[filters.minGradeIndex]} - ${
+            boulderGrades[filters.maxGradeIndex]
+          }`}</Text>
+          <CheckIcon size={20} color={"black"} />
+        </TouchableOpacity>
       </View>
-      <View style={styles.sliderWrapper}>
-        <Text style={styles.sliderLabel}>Max Grade: {boulderGrades[max]}</Text>
-        <Slider
-          style={styles.slider}
-          minimumValue={0}
-          maximumValue={boulderGrades.length - 1}
-          lowerLimit={min}
-          value={max}
-          onValueChange={handleMaxValueChange}
-          onSlidingComplete={handleMaxSlidingComplete}
-          step={1}
-          maximumTrackTintColor={"lightgray"}
-          minimumTrackTintColor={"#4E9152"}
-        />
-      </View>
-    </View>
+      <GradeRangeSliders
+        boulderGrades={boulderGrades}
+        filters={filters}
+        isVisible={gradeSlidersVisible}
+      />
+    </>
   );
 };
 
 export default GradeRange;
-
-const styles = StyleSheet.create({
-  sliderContainer: {
-    backgroundColor: "white",
-    padding: 10,
-    paddingTop: 20,
-    marginTop: -10,
-  },
-  sliderWrapper: {
-    marginBottom: 16,
-  },
-  sliderLabel: {
-    fontSize: 14,
-    color: "black",
-    marginBottom: 8,
-  },
-  slider: {
-    width: "100%",
-  },
-});

@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View, Text, useWindowDimensions } from "react-native";
 import React from "react";
 
 type HeaderCenterProps = {
@@ -7,8 +7,14 @@ type HeaderCenterProps = {
 
 const HeaderCenter: React.FC<HeaderCenterProps> = ({ centerText }) => {
   return (
-    <View>
-      <Text>{centerText}</Text>
+    <View
+      style={{
+        position: "absolute",
+        width: useWindowDimensions().width,
+        alignItems: "center",
+      }}
+    >
+      <Text style={{ fontWeight: "bold", fontSize: 16 }}>{centerText}</Text>
     </View>
   );
 };
