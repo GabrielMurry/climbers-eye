@@ -1,25 +1,13 @@
-import {
-  ActivityIndicator,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { Callout, Marker } from "react-native-maps";
 import { colors } from "../../utils/styles";
 import { MapMarker } from "../../screens/map/MapScreen";
 
 type GymMapMarkerProps = {
   marker: MapMarker;
-  handleConfirmMyGymPress: (gymID: number) => void;
-  isLoadingConfirmGym: boolean;
 };
 
-const GymMapMarker: React.FC<GymMapMarkerProps> = ({
-  marker,
-  handleConfirmMyGymPress,
-  isLoadingConfirmGym,
-}) => {
+const GymMapMarker: React.FC<GymMapMarkerProps> = ({ marker }) => {
   return (
     <Marker
       coordinate={{
@@ -33,7 +21,7 @@ const GymMapMarker: React.FC<GymMapMarkerProps> = ({
             <Text style={styles.gymName}>{marker.gym.name}</Text>
             <Text style={styles.gymAddress}>{marker.gym.address}</Text>
           </View>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={styles.okButton}
             onPress={() => handleConfirmMyGymPress(marker.gym.id)}
           >
@@ -42,7 +30,7 @@ const GymMapMarker: React.FC<GymMapMarkerProps> = ({
             ) : (
               <Text style={styles.okButtonText}>OK</Text>
             )}
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </Callout>
     </Marker>

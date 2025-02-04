@@ -3,10 +3,10 @@ import React from "react";
 import BoulderCard from "../../components/common/BoulderCard";
 import { useBoulderData } from "../../hooks/useBoulderData";
 import SearchAndFilters from "../../components/home/SearchAndFilters";
-import Footer from "../../components/home/Footer";
-import Empty from "../../components/home/Empty";
+import Footer from "../../components/common/flatList/Footer";
 import FlatListSpraywalls from "../../components/home/FlatListSpraywalls";
 import HomeHeader from "../../components/home/HomeHeader";
+import Empty from "../../components/common/flatList/Empty";
 
 const HomeScreen = () => {
   const hasEditPermission = true;
@@ -37,8 +37,8 @@ const HomeScreen = () => {
         onEndReachedThreshold={0.2} // represents the number of screen lengths you should be from the bottom before it fires the event
         ListHeaderComponent={<SearchAndFilters />}
         ListHeaderComponentStyle={{ paddingHorizontal: 20 }}
-        ListFooterComponent={() => <Footer isLoading={isNextPageLoading} />}
-        ListEmptyComponent={() => <Empty isLoading={isInitialPageLoading} />}
+        ListFooterComponent={<Footer isLoading={isNextPageLoading} />}
+        ListEmptyComponent={<Empty isLoading={isInitialPageLoading} />}
         onRefresh={refreshBoulders}
         refreshing={isInitialPageLoading}
       />

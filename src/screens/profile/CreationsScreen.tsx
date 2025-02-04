@@ -1,20 +1,14 @@
-import {
-  View,
-  Text,
-  FlatList,
-  StyleSheet,
-  ActivityIndicator,
-} from "react-native";
+import { Text, FlatList, ActivityIndicator, SafeAreaView } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import { getCreationList } from "../../services/profile";
 import BoulderCard from "../../components/common/BoulderCard";
-import useCustomHeader from "../../hooks/useCustomHeader";
-import EmptyCard from "../../components/common/EmptyCard";
+import EmptyCard from "../../components/common/flatList/EmptyCard";
 import ErrorCard from "../../components/common/ErrorCard";
 import { useNavigation } from "@react-navigation/native";
 import { selectSpraywall } from "../../redux/features/spraywall/spraywallSelectors";
 import { useAppSelector } from "../../redux/hooks";
 import { Boulder } from "../../utils/types/boulder";
+import CreationsHeader from "../../components/profile/CreationsHeader";
 
 const INITIAL_PAGE = 1;
 
@@ -74,12 +68,14 @@ const CreationsScreen = () => {
   //   return <ErrorCard message={"Error retrieving boulders."} />;
   // }
 
-  useCustomHeader({
-    title: "Creations",
-  });
-
   return (
-    <View style={styles.container}>
+    <SafeAreaView
+      style={{
+        flex: 1,
+        backgroundColor: "white",
+      }}
+    >
+      <CreationsHeader />
       <FlatList
         data={data}
         renderItem={renderBoulderCard}
@@ -93,15 +89,8 @@ const CreationsScreen = () => {
         onRefresh={onRefresh}
         refreshing={refreshing}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 
 export default CreationsScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "white",
-  },
-});

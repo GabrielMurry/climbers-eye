@@ -1,5 +1,5 @@
 import { View, StyleSheet, ScrollView, SafeAreaView } from "react-native";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { getBoulderDetail } from "../../services/boulder/boulder";
 import { updateBoulder } from "../../redux/features/boulder/boulderSlice";

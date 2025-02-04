@@ -1,6 +1,6 @@
 import { ActivityIndicator } from "react-native";
 import React from "react";
-import EmptyCard from "../common/EmptyCard";
+import EmptyCard from "./EmptyCard";
 
 type EmptyProps = {
   isLoading: boolean;

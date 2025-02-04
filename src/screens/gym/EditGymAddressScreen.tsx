@@ -7,16 +7,14 @@ import {
   StyleSheet,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import useCustomHeader from "../../hooks/useCustomHeader";
 import AddressTextInput from "../../components/googlePlacesAutoComplete/AddressTextInput";
 import { getGeoLocation } from "../../services/googleMapsAPI/geocoder";
 import { updateGymInfo } from "../../services/gym";
 import { updateGym } from "../../redux/features/gym/gymSlice";
-import { useFetch } from "../../hooks/useFetch";
 import { useNavigation } from "@react-navigation/native";
-import { RootNavigationProp } from "../../navigation/types/navigation";
 import { selectGym } from "../../redux/features/gym/gymSelectors";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import EditGymAddressHeader from "../../components/gym/EditGymAddressHeader";
 
 const CHAR_LIMIT = 100;
 
@@ -69,11 +67,6 @@ const EditGymAddressScreen = () => {
     setIsLoading(false);
   };
 
-  useCustomHeader({
-    backgroundColor: "rgba(245,245,245,255)",
-    title: "Edit Gym Address",
-  });
-
   return (
     <SafeAreaView
       style={{
@@ -81,6 +74,7 @@ const EditGymAddressScreen = () => {
         backgroundColor: "rgba(245,245,245,255)",
       }}
     >
+      <EditGymAddressHeader />
       <View
         style={{
           paddingHorizontal: 20,

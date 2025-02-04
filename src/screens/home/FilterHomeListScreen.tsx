@@ -1,9 +1,6 @@
 import { View, StyleSheet, ScrollView, SafeAreaView } from "react-native";
 import React, { useState } from "react";
 import GradeRange from "../../components/filter/GradeRange";
-import useCustomHeader from "../../hooks/useCustomHeader";
-import { useAppSelector } from "../../redux/hooks";
-import { selectFilters } from "../../redux/features/filter/filterSelectors";
 import SortBy from "../../components/filter/SortBy";
 import Activity from "../../components/filter/Activity";
 import Circuits from "../../components/filter/Circuits";
@@ -12,14 +9,7 @@ import Status from "../../components/filter/Status";
 import FilterHeader from "../../components/filter/FilterHeader";
 
 const FilterHomeListScreen = () => {
-  const filters = useAppSelector((state) => selectFilters(state));
-
   const [showGradeRange, setShowGradeRange] = useState(false);
-
-  useCustomHeader({
-    backgroundColor: "rgba(245,245,245,255)",
-    title: "Filters",
-  });
 
   const handleGradeRangePress = () => {
     setShowGradeRange(!showGradeRange);
@@ -27,6 +17,7 @@ const FilterHomeListScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <FilterHeader />
       <ScrollView
         contentContainerStyle={{
           gap: 10,
@@ -34,7 +25,6 @@ const FilterHomeListScreen = () => {
           paddingHorizontal: 10,
         }}
       >
-        <FilterHeader />
         <SortBy />
         <GradeRange />
         <Activity />

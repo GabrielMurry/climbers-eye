@@ -1,22 +1,18 @@
-import {
-  View,
-  Text,
-  FlatList,
-  StyleSheet,
-  ActivityIndicator,
-} from "react-native";
+import { View, Text, FlatList, StyleSheet, SafeAreaView } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import { getLogbookList } from "../../services/profile";
 import BoulderCard from "../../components/common/BoulderCard";
 import ErrorCard from "../../components/common/ErrorCard";
-import EmptyCard from "../../components/common/EmptyCard";
+import EmptyCard from "../../components/common/flatList/EmptyCard";
 import BarChartHorizontal from "../../components/barChart/BarChartHorizontal";
-import useCustomHeader from "../../hooks/useCustomHeader";
 import { colors } from "../../utils/styles";
 import { useAppSelector } from "../../redux/hooks";
 import { selectSpraywall } from "../../redux/features/spraywall/spraywallSelectors";
 import { LogbookBoulder } from "../../utils/types/logbook";
 import { ChartData } from "../boulder/BoulderScreen";
+import Empty from "../../components/common/flatList/Empty";
+import Footer from "../../components/common/flatList/Footer";
+import LogbookHeader from "../../components/profile/LogbookHeader";
 
 const INITIAL_PAGE = 1;
 
@@ -104,33 +100,24 @@ const LogbookScreen = () => {
     );
   };
 
-  // if (isErrorList) {
-  //   return <ErrorCard message={"Error retrieving boulders."} />;
-  // }
-
-  useCustomHeader({
-    title: "Logbook",
-  });
-
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
+      <LogbookHeader />
       <FlatList
         data={data}
         renderItem={renderBoulderCard}
         keyExtractor={(item) => item.unique_id.toString()}
         onEndReached={onEndReached}
         // onEndReachedThreshold={0.2} // represents the number of screen lengths you should be from the bottom before it fires the event
-        ListEmptyComponent={() =>
-          !isLoadingList && <EmptyCard message={"No boulders found."} />
-        }
-        ListFooterComponent={() => isLoadingList && <ActivityIndicator />}
+        ListEmptyComponent={<Empty isLoading={isLoadingList} />}
+        ListFooterComponent={<Footer isLoading={isLoadingList} />}
         ListHeaderComponent={
-          data.length !== 0 ? <BarChartHorizontal data={chartData} /> : null
+          chartData && <BarChartHorizontal data={chartData} />
         }
         onRefresh={onRefresh}
         refreshing={refreshing}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 

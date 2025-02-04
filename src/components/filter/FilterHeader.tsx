@@ -18,7 +18,13 @@ const FilterHeader = () => {
     </TouchableOpacity>
   );
 
-  return <Header leftIcon={<BackIcon />} rightIcon={rightText} />;
+  return (
+    <Header
+      leftIcon={<BackIcon />}
+      centerText="Filters"
+      rightIcon={rightText}
+    />
+  );
 };
 
 export default FilterHeader;

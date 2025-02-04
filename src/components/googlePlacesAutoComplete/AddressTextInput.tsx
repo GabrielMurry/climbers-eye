@@ -9,6 +9,7 @@ import React, { useState } from "react";
 import { colors } from "../../utils/styles";
 import { getAddressSuggestions } from "../../services/googleMapsAPI/placeAutocomplete";
 import { AddressTextInputProps, Suggestion } from "./types";
+import { opacity } from "react-native-reanimated/lib/typescript/Colors";
 
 const AddressTextInput = (props: AddressTextInputProps) => {
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
@@ -36,7 +37,18 @@ const AddressTextInput = (props: AddressTextInputProps) => {
   );
 
   return (
-    <View>
+    <View style={{ alignSelf: "stretch" }}>
+      {props.title && (
+        <Text
+          style={{
+            fontSize: 18,
+            fontWeight: "bold",
+            marginBottom: 10,
+          }}
+        >
+          {props.title}
+        </Text>
+      )}
       <TextInput
         style={{
           borderWidth: 1,
@@ -45,6 +57,7 @@ const AddressTextInput = (props: AddressTextInputProps) => {
           paddingVertical: 10,
           paddingHorizontal: 20,
           fontSize: 16,
+          opacity: props.opacity,
         }}
         placeholder={props.placeholder}
         value={props.address}

@@ -9,7 +9,6 @@ import {
   Pressable,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import useCustomHeader from "../../hooks/useCustomHeader";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import { updateSpraywallAPI } from "../../services/spraywall";
 import { updateSpraywall } from "../../redux/features/spraywall/spraywallSlice";
@@ -19,6 +18,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { SpraywallStackParamList } from "../../navigation/SpraywallStack";
 import { ImageObjUrl } from "../../utils/types/image";
 import { getImageFromLibrary } from "../../utils/imageLibrary";
+import EditSpraywallHeader from "../../components/spraywall/EditSpraywallHeader";
 
 type EditSpraywallImageScreenProps = NativeStackScreenProps<
   SpraywallStackParamList,
@@ -127,11 +127,6 @@ const EditSpraywallImageScreen: React.FC<EditSpraywallImageScreenProps> = ({
     );
   };
 
-  useCustomHeader({
-    backgroundColor: "rgba(245,245,245,255)",
-    title: "Edit Spray Wall Image",
-  });
-
   return (
     <SafeAreaView
       style={{
@@ -139,6 +134,7 @@ const EditSpraywallImageScreen: React.FC<EditSpraywallImageScreenProps> = ({
         justifyContent: "space-between",
       }}
     >
+      <EditSpraywallHeader />
       <View
         style={{
           paddingHorizontal: 20,

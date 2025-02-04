@@ -5,7 +5,6 @@ import {
   BoulderUserSendsScreen,
   EditBoulderScreen,
   PreviewEditScreen,
-  ReportBoulderScreen,
   SendBoulderScreen,
 } from "../screens/boulder";
 import { UserSendsData } from "../screens/boulder/types";
@@ -19,7 +18,6 @@ export type BoulderStackParamList = {
   PreviewEdit: { image: ImageObjUri };
   SendBoulder: { boulder: Boulder; userSendsData: UserSendsData[] };
   BoulderStats: { boulder: Boulder; chartData: ChartData[] };
-  ReportBoulder: undefined;
   BoulderUserSends: { userSendsData: UserSendsData[] };
 };
 
@@ -35,7 +33,6 @@ const BoulderNavigator = () => (
     <BoulderStack.Screen name="PreviewEdit" component={PreviewEditScreen} />
     <BoulderStack.Screen name="SendBoulder" component={SendBoulderScreen} />
     <BoulderStack.Screen name="BoulderStats" component={BoulderStatsScreen} />
-    <BoulderStack.Screen name="ReportBoulder" component={ReportBoulderScreen} />
     <BoulderStack.Screen
       name="BoulderUserSends"
       component={BoulderUserSendsScreen}

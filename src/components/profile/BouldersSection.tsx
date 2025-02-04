@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View } from "react-native";
 import React from "react";
 import {
   BookmarkIcon,
@@ -6,7 +6,6 @@ import {
   HeartIcon,
   PencilIcon,
 } from "react-native-heroicons/outline";
-import { useSelector } from "react-redux";
 import SectionCard from "./SectionCard";
 import SectionTitle from "./SectionTitle";
 import { useNavigation } from "@react-navigation/native";
@@ -16,9 +15,11 @@ import { selectUser } from "../../redux/features/user/userSelectors";
 
 const BouldersSection = () => {
   const navigation = useNavigation();
-  const { stackName } = useNavigationContext();
+
+  // const profileStack = useNavigationContext();
 
   const user = useAppSelector((state) => selectUser(state));
+
   return (
     <View
       style={{
@@ -37,31 +38,33 @@ const BouldersSection = () => {
           <SectionCard
             icon={<CheckIcon color={"black"} size={20} />}
             title={"Logbook"}
-            data={user.logbookCount}
+            data={0}
             onPress={() =>
-              navigation.navigate(stackName, { screen: "Logbook" })
+              navigation.navigate("ProfileStack", { screen: "Logbook" })
             }
           />
           <SectionCard
             icon={<HeartIcon color={"black"} size={20} />}
             title={"Likes"}
-            data={user.likesCount}
-            onPress={() => navigation.navigate(stackName, { screen: "Likes" })}
+            data={0}
+            onPress={() =>
+              navigation.navigate("ProfileStack", { screen: "Likes" })
+            }
           />
           <SectionCard
             icon={<BookmarkIcon color={"black"} size={20} />}
             title={"Bookmarks"}
-            data={user.bookmarksCount}
+            data={0}
             onPress={() =>
-              navigation.navigate(stackName, { screen: "Bookmarks" })
+              navigation.navigate("ProfileStack", { screen: "Bookmarks" })
             }
           />
           <SectionCard
             icon={<PencilIcon color={"black"} size={20} />}
             title={"Creations"}
-            data={user.creationsCount}
+            data={0}
             onPress={() =>
-              navigation.navigate(stackName, { screen: "Creations" })
+              navigation.navigate("ProfileStack", { screen: "Creations" })
             }
           />
         </View>

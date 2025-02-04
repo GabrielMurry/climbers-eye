@@ -1,12 +1,11 @@
-import { View, Text } from "react-native";
+import { View, Text, SafeAreaView } from "react-native";
 import React from "react";
-import useCustomHeader from "../../hooks/useCustomHeader";
-import { useSelector } from "react-redux";
 import SettingsButton from "../../components/custom/SettingsButton";
 import DeleteSpraywall from "../../components/spraywall/DeleteSpraywall";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { SpraywallStackParamList } from "../../navigation/SpraywallStack";
 import { useNavigation } from "@react-navigation/native";
+import EditSpraywallHeader from "../../components/spraywall/EditSpraywallHeader";
 
 type EditSpraywallScreenProps = NativeStackScreenProps<
   SpraywallStackParamList,
@@ -17,19 +16,15 @@ const EditSpraywallScreen: React.FC<EditSpraywallScreenProps> = ({ route }) => {
   const navigation = useNavigation();
   const spraywall = route.params.spraywall;
 
-  useCustomHeader({
-    backgroundColor: "rgba(245,245,245,255)",
-    title: `Edit Spray Wall`,
-  });
-
   return (
-    <View
+    <SafeAreaView
       style={{
         flex: 1,
         backgroundColor: "rgba(245,245,245,255)",
         paddingHorizontal: 10,
       }}
     >
+      <EditSpraywallHeader />
       <View
         style={{
           paddingHorizontal: 15,
@@ -60,7 +55,7 @@ const EditSpraywallScreen: React.FC<EditSpraywallScreenProps> = ({ route }) => {
         />
       </View>
       <DeleteSpraywall spraywall={spraywall} />
-    </View>
+    </SafeAreaView>
   );
 };
 

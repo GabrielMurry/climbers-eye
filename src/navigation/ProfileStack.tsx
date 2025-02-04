@@ -4,7 +4,6 @@ import {
   CropImageScreen,
   EditNameScreen,
   EditProfileScreen,
-  SwitchGymScreen,
 } from "../screens/profile";
 import LogbookScreen from "../screens/profile/LogbookScreen";
 import { BoulderScreen } from "../screens/boulder";
@@ -23,7 +22,6 @@ export type ProfileStackParamList = {
     height: number;
     isPortrait: boolean;
   };
-  SwitchGym: undefined;
   Boulder: { boulderId: number };
   Logbook: undefined;
   Bookmarks: undefined;
@@ -36,11 +34,13 @@ const ProfileStack = createNativeStackNavigator<ProfileStackParamList>();
 const ProfileNavigator = () => {
   return (
     <NavigationProvider value={StackName.ProfileStack}>
-      <ProfileStack.Navigator initialRouteName="ProfileUser">
+      <ProfileStack.Navigator
+        initialRouteName="ProfileUser"
+        screenOptions={{ headerShown: false }}
+      >
         <ProfileStack.Screen name="EditProfile" component={EditProfileScreen} />
         <ProfileStack.Screen name="EditName" component={EditNameScreen} />
         <ProfileStack.Screen name="CropImage" component={CropImageScreen} />
-        <ProfileStack.Screen name="SwitchGym" component={SwitchGymScreen} />
         <ProfileStack.Screen
           name="ProfileUser"
           component={ProfileScreen}

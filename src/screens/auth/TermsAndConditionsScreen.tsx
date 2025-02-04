@@ -10,15 +10,12 @@ import {
   handleExpoPress,
   handlePrivacyPolicyGeneratorPress,
 } from "../../utils/linksToWebPages";
-import useCustomHeader from "../../hooks/useCustomHeader";
+import TermsAndConditionsHeader from "../../components/auth/TermsAndConditionsHeader";
 
 const TermsAndConditionsScreen = () => {
-  useCustomHeader({
-    title: "Terms and Conditions",
-  });
-
   return (
     <SafeAreaView style={{ backgroundColor: "white" }}>
+      <TermsAndConditionsHeader />
       <ScrollView style={{ paddingVertical: 10, paddingHorizontal: 20 }}>
         <View style={{ gap: 10 }}>
           {/* Terms and Conditions */}

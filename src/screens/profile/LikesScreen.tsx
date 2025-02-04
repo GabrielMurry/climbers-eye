@@ -1,22 +1,14 @@
-import {
-  View,
-  Text,
-  FlatList,
-  StyleSheet,
-  ActivityIndicator,
-} from "react-native";
+import { Text, FlatList, ActivityIndicator, SafeAreaView } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import { getLikeList } from "../../services/profile";
-import { useSelector } from "react-redux";
 import BoulderCard from "../../components/common/BoulderCard";
-import { useFetch } from "../../hooks/useFetch";
-import EmptyCard from "../../components/common/EmptyCard";
-import useCustomHeader from "../../hooks/useCustomHeader";
+import EmptyCard from "../../components/common/flatList/EmptyCard";
 import ErrorCard from "../../components/common/ErrorCard";
 import { useNavigation } from "@react-navigation/native";
 import { useAppSelector } from "../../redux/hooks";
 import { selectSpraywall } from "../../redux/features/spraywall/spraywallSelectors";
 import { Boulder } from "../../utils/types/boulder";
+import LikesHeader from "../../components/profile/LikesHeader";
 
 const INITIAL_PAGE = 1;
 
@@ -77,12 +69,14 @@ const LikesScreen = () => {
   //   return <ErrorCard message={"Error retrieving boulders."} />;
   // }
 
-  useCustomHeader({
-    title: "Likes",
-  });
-
   return (
-    <View style={styles.container}>
+    <SafeAreaView
+      style={{
+        flex: 1,
+        backgroundColor: "white",
+      }}
+    >
+      <LikesHeader />
       <FlatList
         data={data}
         renderItem={renderBoulderCard}
@@ -96,15 +90,8 @@ const LikesScreen = () => {
         onRefresh={onRefresh}
         refreshing={refreshing}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 
 export default LikesScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "white",
-  },
-});

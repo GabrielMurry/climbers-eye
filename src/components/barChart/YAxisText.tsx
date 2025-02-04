@@ -1,12 +1,16 @@
 import React from "react";
-import { SkFont, Text, useFont } from "@shopify/react-native-skia";
-import { useDerivedValue, withTiming } from "react-native-reanimated";
+import { SkFont, Text } from "@shopify/react-native-skia";
+import {
+  SharedValue,
+  useDerivedValue,
+  withTiming,
+} from "react-native-reanimated";
 
 type YAxisTextProps = {
   x: number;
   y?: number;
   text: string;
-  selectedBarText: string | null;
+  selectedBar: SharedValue<string | null>;
   BAR_WIDTH: number;
   CANVAS_PADDING_HOR: number;
   font: SkFont | null;
@@ -17,23 +21,25 @@ const YAxisText: React.FC<YAxisTextProps> = ({
   x,
   y,
   text,
-  selectedBarText,
+  selectedBar,
   BAR_WIDTH,
   CANVAS_PADDING_HOR,
   font,
   maxTextWidth,
 }) => {
+  if (!font) return;
+
   const color = useDerivedValue(() => {
-    if (selectedBarText === text) {
+    if (selectedBar.value === text) {
       return withTiming("#111111");
-    } else if (selectedBarText === null) {
+    } else if (selectedBar.value === null) {
       return withTiming("#111111");
     } else {
       return withTiming("#d1d0c5");
     }
   });
   // find font size and use that to get font width and subtract half of font width from x value to center each label
-  const fontSize = font!.measureText(text);
+  const fontSize = font.measureText(text);
   const alignTextRight = maxTextWidth - fontSize.width;
 
   return (

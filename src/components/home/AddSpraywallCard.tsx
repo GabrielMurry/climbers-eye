@@ -1,45 +1,38 @@
 import { View, TouchableOpacity } from "react-native";
-import React, { useState } from "react";
+import React from "react";
 import { colors } from "../../utils/styles";
 import { PlusIcon } from "react-native-heroicons/outline";
-// import CustomModal from "../../screens/modal/ModalScreen";
+import { useNavigation } from "@react-navigation/native";
 
 const AddSpraywallCard = () => {
-  const [modalVisible, setModalVisible] = useState(false);
-  const toggleModal = () => {
-    setModalVisible(!modalVisible);
-  };
+  const navigation = useNavigation();
+
   return (
-    <>
-      <TouchableOpacity
+    <TouchableOpacity
+      style={{
+        height: "100%",
+        aspectRatio: 1,
+        padding: 5,
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+      onPress={() =>
+        navigation.navigate("SpraywallStack", { screen: "AddNewSprayWall" })
+      }
+    >
+      <View
         style={{
-          height: "100%",
+          height: "110%",
           aspectRatio: 1,
-          padding: 5,
-          justifyContent: "center",
-          alignItems: "center",
+          position: "absolute",
+          borderRadius: 2,
+          backgroundColor: colors.primaryLight,
+          borderColor: colors.primaryLight,
+          borderWidth: 2,
         }}
-        onPress={toggleModal}
-      >
-        <View
-          style={{
-            height: "110%",
-            aspectRatio: 1,
-            position: "absolute",
-            borderRadius: 2,
-            backgroundColor: colors.primaryLight,
-            borderColor: colors.primaryLight,
-            borderWidth: 2,
-          }}
-        />
-        <PlusIcon color={colors.primary} />
-      </TouchableOpacity>
-      {/* <CustomModal
-        isVisible={modalVisible}
-        onClose={toggleModal}
-        isBoulder={false}
-      /> */}
-    </>
+      />
+      <PlusIcon color={colors.primary} />
+    </TouchableOpacity>
   );
 };
 

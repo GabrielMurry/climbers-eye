@@ -1,16 +1,13 @@
 import { View, Text, SafeAreaView } from "react-native";
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import * as ImagePicker from "expo-image-picker";
-import useCustomHeader from "../../hooks/useCustomHeader";
-// import ModalOptions from "../../components/custom/ModalOptions";
 import SettingsButton from "../../components/custom/SettingsButton";
-import { useFetch } from "../../hooks/useFetch";
 import { updateProfileInfo } from "../../services/profile";
 import { updateUser } from "../../redux/features/user/userSlice";
 import { useNavigation } from "@react-navigation/native";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { selectUser } from "../../redux/features/user/userSelectors";
+import EditProfileHeader from "../../components/profile/EditProfileHeader";
 
 const EditProfileScreen = () => {
   const navigation = useNavigation();
@@ -98,11 +95,6 @@ const EditProfileScreen = () => {
     setOptionsData(createOptionsData());
   }, []);
 
-  useCustomHeader({
-    backgroundColor: "rgba(245,245,245,255)",
-    title: "Edit Profile",
-  });
-
   return (
     <SafeAreaView
       style={{
@@ -110,6 +102,7 @@ const EditProfileScreen = () => {
         backgroundColor: "rgba(245,245,245,255)",
       }}
     >
+      <EditProfileHeader />
       {/* profile settings */}
       <View style={{ paddingHorizontal: 10 }}>
         <View

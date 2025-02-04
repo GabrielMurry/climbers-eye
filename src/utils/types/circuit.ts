@@ -10,3 +10,16 @@ export type Circuit = {
   person: number;
   spraywall: number;
 };
+
+export const CircuitColors = [
+  "green",
+  "blue",
+  "yellow",
+  "pink",
+  "orange",
+  "red",
+  "purple",
+  "black",
+] as const;
+
+export type CircuitColor = (typeof CircuitColors)[number];

@@ -11,7 +11,7 @@
   "include": [
     "**/*.ts",
     "**/*.tsx",
-    "src/screens/boulder/BoulderStatsScreen.js",
+    "src/screens/boulder/BoulderStatsScreen.tsx",
     "src/screens/boulder/ReportBoulderScreen.js"
   ],
   "exclude": ["node_modules"],

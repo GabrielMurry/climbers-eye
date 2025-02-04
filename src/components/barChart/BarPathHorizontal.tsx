@@ -1,14 +1,18 @@
 import React from "react";
 import { Path, Skia } from "@shopify/react-native-skia";
-import { useDerivedValue, withTiming } from "react-native-reanimated";
+import {
+  SharedValue,
+  useDerivedValue,
+  withTiming,
+} from "react-native-reanimated";
 
 type BarPathHorizontalProps = {
   x: number;
   y?: number;
   BAR_WIDTH: number;
-  progress: number;
+  progress: SharedValue<number>;
   label: string;
-  selectedBarText: string | null;
+  selectedBar: SharedValue<string | null>;
   maxTextWidth: number;
   LABEL_TO_BAR_PADDING: number;
   CANVAS_PADDING_HOR: number;
@@ -21,16 +25,16 @@ const BarPathHorizontal: React.FC<BarPathHorizontalProps> = ({
   BAR_WIDTH,
   progress,
   label,
-  selectedBarText,
+  selectedBar,
   maxTextWidth,
   LABEL_TO_BAR_PADDING,
   CANVAS_PADDING_HOR,
   BAR_CORNER_RADIUS,
 }) => {
   const color = useDerivedValue(() => {
-    if (selectedBarText === label) {
+    if (selectedBar.value === label) {
       return withTiming("#ff6346");
-    } else if (selectedBarText === null) {
+    } else if (selectedBar.value === null) {
       return withTiming("#ff6346");
     } else {
       return withTiming("#d1d0c5");
@@ -43,7 +47,7 @@ const BarPathHorizontal: React.FC<BarPathHorizontalProps> = ({
       rect: {
         x: 0 + maxTextWidth + CANVAS_PADDING_HOR + LABEL_TO_BAR_PADDING,
         y: y ? y - BAR_WIDTH / 2 : 0,
-        width: x * progress,
+        width: x * progress.value,
         height: BAR_WIDTH, // We can animate the height of the bar by multiplying it by the value of the progress
       },
       rx: BAR_CORNER_RADIUS,

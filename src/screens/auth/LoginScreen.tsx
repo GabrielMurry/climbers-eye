@@ -146,7 +146,6 @@ const LoginScreen = () => {
           placeholder="Username"
           secureTextEntry={false}
           width="90%"
-          autoCapitalize="none"
           // icon={<UserIcon size={20} color={colors.textInputDark} />}
         />
         <CustomInput

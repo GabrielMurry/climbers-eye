@@ -10,4 +10,6 @@ export type AddressTextInputProps = {
   charLimit: number;
   description: string;
   setPlaceID: (id: number) => void;
+  title?: string;
+  opacity?: number;
 };

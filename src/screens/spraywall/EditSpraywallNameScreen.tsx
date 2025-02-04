@@ -8,13 +8,13 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import SettingsTextInput from "../../components/custom/SettingsTextInput";
-import useCustomHeader from "../../hooks/useCustomHeader";
 import { updateSpraywallAPI } from "../../services/spraywall";
 import { updateSpraywall } from "../../redux/features/spraywall/spraywallSlice";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { SpraywallStackParamList } from "../../navigation/SpraywallStack";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import EditSpraywallHeader from "../../components/spraywall/EditSpraywallHeader";
 
 type EditSpraywallNameScreenProps = NativeStackScreenProps<
   SpraywallStackParamList,
@@ -56,11 +56,6 @@ const EditSpraywallNameScreen: React.FC<EditSpraywallNameScreenProps> = ({
     setIsLoading(false);
   };
 
-  useCustomHeader({
-    backgroundColor: "rgba(245,245,245,255)",
-    title: "Edit Spray Wall Name",
-  });
-
   return (
     <SafeAreaView
       style={{
@@ -68,6 +63,7 @@ const EditSpraywallNameScreen: React.FC<EditSpraywallNameScreenProps> = ({
         backgroundColor: "rgba(245,245,245,255)",
       }}
     >
+      <EditSpraywallHeader />
       <View
         style={{
           paddingHorizontal: 20,

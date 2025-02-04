@@ -1,19 +1,20 @@
-import { View, Text, TouchableOpacity } from "react-native";
-import React, { useState } from "react";
+import { View, Text, TouchableOpacity, Keyboard } from "react-native";
+import React, { RefObject, useState } from "react";
 import { MagnifyingGlassIcon, XMarkIcon } from "react-native-heroicons/outline";
 import { BottomSheetTextInput } from "@gorhom/bottom-sheet";
 import { StyleSheet } from "react-native";
+import { BottomSheetMethods } from "@gorhom/bottom-sheet/lib/typescript/types";
 
 type MapSearchQueryProps = {
   searchQuery: string;
   setSearchQuery: (text: string) => void;
-  handleCancelSearchPress: () => void;
+  bottomSheetRef: RefObject<BottomSheetMethods>;
 };
 
 const MapSearchQuery: React.FC<MapSearchQueryProps> = ({
   searchQuery,
   setSearchQuery,
-  handleCancelSearchPress,
+  bottomSheetRef,
 }) => {
   const [isTextInputFocused, setIsTextInputFocused] = useState(false);
 
@@ -23,6 +24,15 @@ const MapSearchQuery: React.FC<MapSearchQueryProps> = ({
 
   const handleTextInputBlur = () => {
     setIsTextInputFocused(false);
+  };
+
+  const handleCancelSearchPress = () => {
+    // bug in bottom-sheet pkg - can't dismiss keyboard and snap to index at same time
+    setTimeout(() => {
+      setSearchQuery("");
+      bottomSheetRef.current?.snapToIndex(1);
+    }, 35);
+    Keyboard.dismiss();
   };
 
   return (

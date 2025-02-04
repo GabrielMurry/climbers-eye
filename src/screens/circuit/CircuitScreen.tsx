@@ -1,13 +1,12 @@
 import { View, Text, SafeAreaView, FlatList, StyleSheet } from "react-native";
 import React from "react";
 import CircuitCard from "../../components/circuit/CircuitCard";
-import useCustomHeader from "../../hooks/useCustomHeader";
-import { useNavigation } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { CircuitStackParamList } from "../../navigation/CircuitStack";
 import { useAppSelector } from "../../redux/hooks";
 import { selectCircuits } from "../../redux/features/circuit/circuitSelectors";
 import { Circuit } from "../../utils/types/circuit";
+import CircuitHeader from "../../components/circuit/CircuitHeader";
 
 type CircuitScreenProps = NativeStackScreenProps<
   CircuitStackParamList,
@@ -15,19 +14,10 @@ type CircuitScreenProps = NativeStackScreenProps<
 >;
 
 const CircuitScreen: React.FC<CircuitScreenProps> = ({ route }) => {
-  const navigation = useNavigation();
-
   const circuits = useAppSelector((state) => selectCircuits(state));
   const { boulder } = route.params;
 
   const CIRCUIT_ITEM_HEIGHT = 45;
-
-  useCustomHeader({
-    title: "Add to Circuit",
-    headerRightOnPress: () =>
-      navigation.navigate("CircuitStack", { screen: "AddNewCircuit" }),
-    screenName: route.name,
-  });
 
   const renderCircuitCards = ({ item }: { item: Circuit }) => {
     return (
@@ -54,16 +44,15 @@ const CircuitScreen: React.FC<CircuitScreenProps> = ({ route }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.flatListContainer}>
-        <FlatList
-          contentContainerStyle={styles.flatList}
-          data={circuits}
-          renderItem={renderCircuitCards}
-          keyExtractor={(item) => item.id.toString()}
-          ListFooterComponent={renderFooter}
-          ListEmptyComponent={renderEmptyList}
-        />
-      </View>
+      <CircuitHeader />
+      <FlatList
+        contentContainerStyle={styles.flatList}
+        data={circuits}
+        renderItem={renderCircuitCards}
+        keyExtractor={(item) => item.id.toString()}
+        ListFooterComponent={renderFooter}
+        ListEmptyComponent={renderEmptyList}
+      />
     </SafeAreaView>
   );
 };
@@ -74,10 +63,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
-  },
-  flatListContainer: {
-    marginTop: 15,
-    flex: 1,
   },
   flatList: {
     gap: 15,

@@ -1,4 +1,4 @@
-export { default as AddGymScreen } from "./AddGymScreen";
+export { default as CreateGymScreen } from "./CreateGymScreen";
 export { default as EditGymAddressScreen } from "./EditGymAddressScreen";
 export { default as EditGymNameScreen } from "./EditGymNameScreen";
 export { default as EditGymScreen } from "./EditGymScreen";

@@ -6,16 +6,9 @@ import { MapMarker } from "../../screens/map/MapScreen";
 type MapProps = {
   mapRef: Ref<MapView>;
   marker: MapMarker | null;
-  handleConfirmMyGymPress: (gymID: number) => void;
-  isLoadingConfirmGym: boolean;
 };
 
-const Map: React.FC<MapProps> = ({
-  mapRef,
-  marker,
-  handleConfirmMyGymPress,
-  isLoadingConfirmGym,
-}) => {
+const Map: React.FC<MapProps> = ({ mapRef, marker }) => {
   const initialRegion = {
     latitude: 38.575764,
     longitude: -121.478851,
@@ -25,13 +18,7 @@ const Map: React.FC<MapProps> = ({
 
   return (
     <MapView ref={mapRef} initialRegion={initialRegion} style={{ flex: 1 }}>
-      {marker ? (
-        <GymMapMarker
-          marker={marker}
-          handleConfirmMyGymPress={handleConfirmMyGymPress}
-          isLoadingConfirmGym={isLoadingConfirmGym}
-        />
-      ) : null}
+      {marker ? <GymMapMarker marker={marker} /> : null}
     </MapView>
   );
 };

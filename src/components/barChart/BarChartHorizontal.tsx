@@ -14,7 +14,6 @@ import { useSharedValue, withTiming } from "react-native-reanimated";
 import BarPathHorizontal from "./BarPathHorizontal";
 import YAxisText from "./YAxisText";
 import { ChartData } from "../../screens/boulder/BoulderScreen";
-import { useFonts } from "../../contexts/FontContext";
 
 type BarChartHorizontalProps = {
   data: ChartData[];
@@ -82,7 +81,7 @@ const BarChartHorizontal: React.FC<BarChartHorizontalProps> = ({
   const CANVAS_WIDTH = canvasWidth || width;
   const CANVAS_HEIGHT = canvasHeight || 450;
   const LABEL_TO_BAR_PADDING = labelToBarPadding || 2;
-  const CANVAS_PADDING_HOR = canvasPaddingHorizontal || 10;
+  const CANVAS_PADDING_HOR = canvasPaddingHorizontal || 25;
   const SCREEN_PADDING = screenPadding || 20;
   const GRAPH_WIDTH =
     CANVAS_WIDTH -
@@ -102,6 +101,7 @@ const BarChartHorizontal: React.FC<BarChartHorizontalProps> = ({
   const progress = useSharedValue(0);
   const selectedValue = useSharedValue(0);
   const totalValue = data.reduce((acc, cur) => acc + cur.value, 0);
+
   // Creating a state to store the selected label
   const [selectedLabel, setSelectedLabel] = useState("Total");
   // Creating a sharedValue to store the selected label (bar)
@@ -112,7 +112,7 @@ const BarChartHorizontal: React.FC<BarChartHorizontalProps> = ({
   const xDomain = maxDataValue > 0 ? [0, maxDataValue] : [0, 1];
 
   const yRange = [0, GRAPH_HEIGHT];
-  const yDomain = data.map((dataPoint) => Object.keys(dataPoint)[0]);
+  const yDomain = data.map((dataPoint) => dataPoint.label);
 
   const x = d3.scaleLinear().domain(xDomain).range(xRange);
 
@@ -182,10 +182,7 @@ const BarChartHorizontal: React.FC<BarChartHorizontalProps> = ({
         <View onTouchStart={handleResetBarInfo} style={styles.textContainer}>
           {/* <Text style={styles.textTitle}>Logbook</Text> */}
           <Text style={styles.textSteps}>{selectedLabel} Boulders Climbed</Text>
-          <AnimatedText
-            selectedValueNum={selectedValue.value}
-            fontTotal={fontTotal}
-          />
+          <AnimatedText selectedValue={selectedValue} fontTotal={fontTotal} />
         </View>
       ) : null}
       <Canvas
@@ -198,32 +195,34 @@ const BarChartHorizontal: React.FC<BarChartHorizontalProps> = ({
           height: CANVAS_HEIGHT,
         }}
       >
-        {data.map((dataPoint, index) => (
-          <Group key={index}>
-            <BarPathHorizontal
-              x={x(dataPoint.value)}
-              y={y(dataPoint.label)}
-              BAR_WIDTH={BAR_WIDTH}
-              progress={progress.value}
-              label={Object.keys(dataPoint)[0]}
-              selectedBarText={selectedBar.value}
-              maxTextWidth={maxTextWidth}
-              LABEL_TO_BAR_PADDING={LABEL_TO_BAR_PADDING}
-              CANVAS_PADDING_HOR={CANVAS_PADDING_HOR}
-              BAR_CORNER_RADIUS={BAR_CORNER_RADIUS}
-            />
-            <YAxisText
-              x={0}
-              y={y(dataPoint.label)}
-              text={Object.keys(dataPoint)[0]}
-              selectedBarText={selectedBar.value}
-              BAR_WIDTH={BAR_WIDTH}
-              CANVAS_PADDING_HOR={CANVAS_PADDING_HOR}
-              font={font}
-              maxTextWidth={maxTextWidth}
-            />
-          </Group>
-        ))}
+        {data.map((dataPoint, index) => {
+          return (
+            <Group key={index}>
+              <BarPathHorizontal
+                x={x(dataPoint.value)}
+                y={y(dataPoint.label)}
+                BAR_WIDTH={BAR_WIDTH}
+                progress={progress}
+                label={dataPoint.label}
+                selectedBar={selectedBar}
+                maxTextWidth={maxTextWidth}
+                LABEL_TO_BAR_PADDING={LABEL_TO_BAR_PADDING}
+                CANVAS_PADDING_HOR={CANVAS_PADDING_HOR}
+                BAR_CORNER_RADIUS={BAR_CORNER_RADIUS}
+              />
+              <YAxisText
+                x={0}
+                y={y(dataPoint.label)}
+                text={dataPoint.label}
+                selectedBar={selectedBar}
+                BAR_WIDTH={BAR_WIDTH}
+                CANVAS_PADDING_HOR={CANVAS_PADDING_HOR}
+                font={font}
+                maxTextWidth={maxTextWidth}
+              />
+            </Group>
+          );
+        })}
       </Canvas>
     </SafeAreaView>
   );

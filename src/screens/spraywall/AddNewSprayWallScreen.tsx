@@ -9,18 +9,16 @@ import {
   ActivityIndicator,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import useCustomHeader from "../../hooks/useCustomHeader";
 import { colors } from "../../utils/styles";
 import { createSpraywall } from "../../services/spraywall";
 import { appendSpraywall } from "../../redux/features/spraywall/spraywallSlice";
-import { useFetch } from "../../hooks/useFetch";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { SpraywallStackParamList } from "../../navigation/SpraywallStack";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { selectGym } from "../../redux/features/gym/gymSelectors";
 import { createImageFormData } from "../../utils/formData";
 import { useNavigation } from "@react-navigation/native";
+import CreateSpraywallHeader from "../../components/spraywall/CreateSpraywallHeader";
 
 type AddNewSpraywallScreenProps = NativeStackScreenProps<
   SpraywallStackParamList,
@@ -41,11 +39,6 @@ const AddNewSprayWallScreen: React.FC<AddNewSpraywallScreenProps> = ({
   const [sprayWallName, setSprayWallName] = useState("");
   const [isDisabled, setIsDisabled] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
-
-  useCustomHeader({
-    backgroundColor: "rgba(245,245,245,255)",
-    title: "Add New Spray Wall",
-  });
 
   useEffect(() => {
     if (sprayWallName && image) {
@@ -83,6 +76,7 @@ const AddNewSprayWallScreen: React.FC<AddNewSpraywallScreenProps> = ({
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "rgba(245,245,245,255)" }}>
+      <CreateSpraywallHeader />
       <View style={styles.addNewSprayWallContainer}>
         <View style={styles.inputAndAddContainer}>
           <Text style={styles.label}>Spray Wall Name:</Text>

@@ -11,15 +11,12 @@ import {
   handlePrivacyPolicyGeneratorPress,
   handlePrivacyPolicyTemplatePress,
 } from "../../utils/linksToWebPages";
-import useCustomHeader from "../../hooks/useCustomHeader";
+import PrivacyPolicyHeader from "../../components/auth/PrivacyPolicyHeader";
 
 const PrivacyPolicyScreen = () => {
-  useCustomHeader({
-    title: "Privacy Policy",
-  });
-
   return (
     <SafeAreaView style={{ backgroundColor: "white" }}>
+      <PrivacyPolicyHeader />
       <ScrollView style={{ paddingVertical: 10, paddingHorizontal: 20 }}>
         <View style={{ gap: 10 }}>
           {/* privacy policy */}

@@ -8,8 +8,6 @@ import {
   StyleSheet,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import SettingsTextInput from "../../components/custom/SettingsTextInput";
-import useCustomHeader from "../../hooks/useCustomHeader";
 import { updateGymInfo } from "../../services/gym";
 import { updateGym } from "../../redux/features/gym/gymSlice";
 import { useNavigation } from "@react-navigation/native";
@@ -17,6 +15,7 @@ import { RootNavigationProp } from "../../navigation/types/navigation";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { selectGym } from "../../redux/features/gym/gymSelectors";
 import { GymType } from "../../utils/types/gym";
+import EditGymTypeHeader from "../../components/gym/EditGymTypeHeader";
 
 const EditGymTypeScreen = () => {
   const navigation = useNavigation<RootNavigationProp>();
@@ -52,11 +51,6 @@ const EditGymTypeScreen = () => {
     setIsLoading(false);
   };
 
-  useCustomHeader({
-    backgroundColor: "rgba(245,245,245,255)",
-    title: "Edit Gym Type",
-  });
-
   return (
     <SafeAreaView
       style={{
@@ -64,6 +58,7 @@ const EditGymTypeScreen = () => {
         backgroundColor: "rgba(245,245,245,255)",
       }}
     >
+      <EditGymTypeHeader />
       <View
         style={{
           paddingHorizontal: 20,

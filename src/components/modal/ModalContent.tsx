@@ -42,8 +42,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 10,
     borderRadius: 10,
-    position: "absolute", //Here is the trick
-    bottom: 90, //Here is the trick
+    position: "absolute",
+    bottom: 90,
     alignSelf: "center",
     borderWidth: 1,
     borderColor: colors.primary,

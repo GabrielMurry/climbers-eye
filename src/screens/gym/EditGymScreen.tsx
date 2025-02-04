@@ -1,24 +1,18 @@
 import { ScrollView, SafeAreaView } from "react-native";
 import React from "react";
-import useCustomHeader from "../../hooks/useCustomHeader";
 import GymSection from "../../components/gym/GymSection";
 import DeleteGym from "../../components/gym/DeleteGym";
 import SpraywallSection from "../../components/spraywall/SpraywallSection";
-import { useNavigation } from "@react-navigation/native";
-import { RootNavigationProp } from "../../navigation/types/navigation";
+import EditGymHeader from "../../components/gym/EditGymHeader";
 
 const EditGymScreen = () => {
-  useCustomHeader({
-    backgroundColor: "rgba(245,245,245,255)",
-    title: "Edit Gym",
-  });
-
   return (
     <SafeAreaView
       style={{
         flex: 1,
       }}
     >
+      <EditGymHeader />
       <ScrollView
         style={{
           flex: 1,

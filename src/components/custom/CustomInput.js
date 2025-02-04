@@ -1,4 +1,10 @@
-import { View, TextInput, StyleSheet, DimensionValue } from "react-native";
+import {
+  View,
+  TextInput,
+  StyleSheet,
+  DimensionValue,
+  Text,
+} from "react-native";
 import React from "react";
 
 type CustomInputProps = {
@@ -8,10 +14,10 @@ type CustomInputProps = {
   secureTextEntry?: boolean;
   width?: DimensionValue;
   error?: boolean;
-  autoCapitalize?: string;
   bgColor?: string;
   bordered?: boolean;
   rounded?: boolean;
+  title?: string;
 };
 
 const CustomInput: React.FC<CustomInputProps> = ({
@@ -21,35 +27,32 @@ const CustomInput: React.FC<CustomInputProps> = ({
   secureTextEntry,
   width = "100%",
   error = false,
-  autoCapitalize = "sentences",
   bgColor = "white",
-  // icon = null,
-  // button = null,
   bordered,
   rounded,
+  title,
 }) => {
   return (
-    <View
-      style={{
-        width: width,
-        flexDirection: "row",
-        borderColor: error ? "red" : "#e8e8e8",
-        borderBottomWidth: bordered ? undefined : 2,
-        borderWidth: bordered ? 1 : undefined,
-        alignItems: "center",
-        borderRadius: rounded ? 5 : undefined,
-      }}
-    >
-      {/* {icon} */}
+    <View style={{ gap: 5, width: width }}>
+      {title && (
+        <Text style={{ fontSize: 18, fontWeight: "bold" }}>{title}</Text>
+      )}
       <TextInput
         value={value}
         onChangeText={setValue}
         placeholder={placeholder}
-        style={[styles.input, { backgroundColor: bgColor }]}
+        style={{
+          width: "100%",
+          borderWidth: bordered ? 1 : undefined,
+          borderBottomWidth: bordered ? undefined : 2,
+          borderColor: error ? "red" : "#ccc",
+          borderRadius: rounded ? 5 : undefined,
+          paddingVertical: 10,
+          paddingHorizontal: 20,
+          fontSize: 16,
+        }}
         secureTextEntry={secureTextEntry}
-        // autoCapitalize={autoCapitalize}
       />
-      {/* {button} */}
     </View>
   );
 };

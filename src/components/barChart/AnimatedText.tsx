@@ -1,21 +1,22 @@
 import React from "react";
 import { Canvas, SkFont, Text } from "@shopify/react-native-skia";
-import { useDerivedValue } from "react-native-reanimated";
+import { SharedValue, useDerivedValue } from "react-native-reanimated";
 
 type AnimatedTextProps = {
-  selectedValueNum: number;
+  selectedValue: SharedValue<number>;
   fontTotal: SkFont | null;
 };
 
 const AnimatedText: React.FC<AnimatedTextProps> = ({
-  selectedValueNum,
+  selectedValue,
   fontTotal,
 }) => {
   const animatedText = useDerivedValue(() => {
-    return `${Math.round(selectedValueNum)}`;
+    return `${Math.round(selectedValue.value)}`;
   });
 
-  const fontSize = fontTotal!.measureText("0");
+  // const fontSize = fontTotal!.measureText("0");
+  const fontSize = { height: 50 };
 
   const VERT_PADDING = 20;
 
