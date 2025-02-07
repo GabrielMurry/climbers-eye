@@ -1,5 +1,6 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
+import { colors } from "../../../utils/styles";
 
 type ModalButtonProps = {
   onPress: () => void;
@@ -15,9 +16,20 @@ const ModalButton: React.FC<ModalButtonProps> = ({
   isEmphasized,
 }) => {
   return (
-    <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity
+      onPress={onPress}
+      style={{
+        width: 100,
+        height: 100,
+        justifyContent: "center",
+        alignItems: "center",
+        borderRadius: 5,
+        borderWidth: 1,
+        borderColor: colors.primary,
+      }}
+    >
       {icon}
-      <Text>{label}</Text>
+      <Text style={{ color: "black" }}>{label}</Text>
     </TouchableOpacity>
   );
 };

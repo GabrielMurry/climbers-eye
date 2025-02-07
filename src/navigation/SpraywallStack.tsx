@@ -3,13 +3,12 @@ import {
   EditSpraywallScreen,
   EditSpraywallNameScreen,
   EditSpraywallImageScreen,
-  AddNewSprayWallScreen,
+  CreateSpraywallScreen,
 } from "../screens/spraywall";
-import { ImageObjUrl } from "../utils/types/image";
 import { Spraywall } from "../utils/types/spraywall";
 
 export type SpraywallStackParamList = {
-  AddNewSprayWall: { image: ImageObjUrl };
+  CreateSpraywall: undefined;
   EditSpraywall: { spraywall: Spraywall };
   EditSpraywallName: { spraywall: Spraywall };
   EditSpraywallImage: { spraywall: Spraywall };
@@ -18,25 +17,26 @@ export type SpraywallStackParamList = {
 const SpraywallStack = createNativeStackNavigator<SpraywallStackParamList>();
 
 const SpraywallNavigator = () => (
-  <SpraywallStack.Navigator initialRouteName="AddNewSprayWall">
-    <SpraywallStack.Group>
-      <SpraywallStack.Screen
-        name="AddNewSprayWall"
-        component={AddNewSprayWallScreen}
-      />
-      <SpraywallStack.Screen
-        name="EditSpraywall"
-        component={EditSpraywallScreen}
-      />
-      <SpraywallStack.Screen
-        name="EditSpraywallName"
-        component={EditSpraywallNameScreen}
-      />
-      <SpraywallStack.Screen
-        name="EditSpraywallImage"
-        component={EditSpraywallImageScreen}
-      />
-    </SpraywallStack.Group>
+  <SpraywallStack.Navigator
+    initialRouteName="CreateSpraywall"
+    screenOptions={{ headerShown: false }}
+  >
+    <SpraywallStack.Screen
+      name="CreateSpraywall"
+      component={CreateSpraywallScreen}
+    />
+    <SpraywallStack.Screen
+      name="EditSpraywall"
+      component={EditSpraywallScreen}
+    />
+    <SpraywallStack.Screen
+      name="EditSpraywallName"
+      component={EditSpraywallNameScreen}
+    />
+    <SpraywallStack.Screen
+      name="EditSpraywallImage"
+      component={EditSpraywallImageScreen}
+    />
   </SpraywallStack.Navigator>
 );
 

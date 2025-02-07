@@ -1,6 +1,6 @@
 import React from "react";
-import ModalBackground from "../../components/modal/ModalBackground";
-import ModalContent from "../../components/modal/ModalContent";
+import ModalBackground from "../../components/modal/addBoulder/ModalBackground";
+import ModalContent from "../../components/modal/addBoulder/ModalContent";
 
 const ModalScreen = () => {
   return (

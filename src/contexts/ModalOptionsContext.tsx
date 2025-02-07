@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useCallback } from "react";
 import { Option } from "../utils/types/options";
-import OptionsModal from "../components/options/OptionsModal";
+import OptionsModal from "../components/modal/options/OptionsModal";
 
 type ModalOptionsProviderProps = {
   children: React.JSX.Element;
@@ -17,10 +17,10 @@ const defaultValues: ModalOptionsContext = {
   isVisible: false,
   options: [],
   openModal: () => {
-    console.warn("openModal is not implemented");
+    console.warn("openModal is not implemented.");
   },
   closeModal: () => {
-    console.warn("closeModal is not implemented");
+    console.warn("closeModal is not implemented.");
   },
 };
 

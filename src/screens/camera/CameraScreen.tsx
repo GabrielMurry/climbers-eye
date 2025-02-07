@@ -25,18 +25,18 @@ const CameraScreen = ({ navigation }: Props) => {
 
   const cameraRef = useRef<CameraView>(null);
 
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerTitle: () => <></>,
-      headerLeft: () => (
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <XMarkIcon size={30} color={"white"} />
-        </TouchableOpacity>
-      ),
-      headerRight: () => "",
-      headerStyle: { backgroundColor: "black" },
-    });
-  }, [navigation]);
+  // useLayoutEffect(() => {
+  //   navigation.setOptions({
+  //     headerTitle: () => <></>,
+  //     headerLeft: () => (
+  //       <TouchableOpacity onPress={() => navigation.goBack()}>
+  //         <XMarkIcon size={30} color={"white"} />
+  //       </TouchableOpacity>
+  //     ),
+  //     headerRight: () => "",
+  //     headerStyle: { backgroundColor: "black" },
+  //   });
+  // }, [navigation]);
 
   if (!permission) {
     // Camera permissions are still loading.
@@ -46,7 +46,12 @@ const CameraScreen = ({ navigation }: Props) => {
   if (!permission.granted) {
     // Camera permissions are not granted yet.
     return (
-      <View style={styles.container}>
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: "black",
+        }}
+      >
         <Text>We need your permission to show the camera.</Text>
         <Button onPress={requestPermission} title="grant permission" />
       </View>
@@ -97,7 +102,12 @@ const CameraScreen = ({ navigation }: Props) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView
+      style={{
+        flex: 1,
+        backgroundColor: "black",
+      }}
+    >
       {image ? (
         <ImagePreview image={image} />
       ) : (
@@ -114,10 +124,3 @@ const CameraScreen = ({ navigation }: Props) => {
 };
 
 export default CameraScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "black",
-  },
-});

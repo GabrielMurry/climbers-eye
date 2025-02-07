@@ -1,9 +1,9 @@
 import { View, Text, StyleSheet } from "react-native";
 import { Image } from "expo-image";
 import React from "react";
-import { useAppSelector } from "../../redux/hooks";
-import { selectSpraywall } from "../../redux/features/spraywall/spraywallSelectors";
-import { colors } from "../../utils/styles";
+import { useAppSelector } from "../../../redux/hooks";
+import { selectSpraywall } from "../../../redux/features/spraywall/spraywallSelectors";
+import { colors } from "../../../utils/styles";
 import ModalTitle from "./ModalTitle";
 import ModalButtons from "./ModalButtons";
 

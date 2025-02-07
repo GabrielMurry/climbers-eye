@@ -1,6 +1,6 @@
 import { Text, Modal, SafeAreaView, Pressable } from "react-native";
 import React from "react";
-import { Option } from "../../utils/types/options";
+import { Option } from "../../../utils/types/options";
 
 type OptionsModalProps = {
   isVisible: boolean;

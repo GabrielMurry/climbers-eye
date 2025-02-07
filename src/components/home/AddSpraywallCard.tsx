@@ -17,7 +17,7 @@ const AddSpraywallCard = () => {
         alignItems: "center",
       }}
       onPress={() =>
-        navigation.navigate("SpraywallStack", { screen: "AddNewSprayWall" })
+        navigation.navigate("SpraywallStack", { screen: "CreateSpraywall" })
       }
     >
       <View

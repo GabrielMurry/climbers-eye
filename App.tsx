@@ -34,6 +34,7 @@ import MapStack, { MapStackParamList } from "./src/navigation/MapStack";
 import ModalScreen from "./src/screens/modal/ModalScreen";
 import { ModalOptionsProvider } from "./src/contexts/ModalOptionsContext";
 import { ModalFullScreenImageProvider } from "./src/contexts/ModalFullScreenImageContext";
+import { CameraProvider } from "./src/contexts/CameraContext";
 
 export type RootStackParamList = {
   AuthStack: NavigatorScreenParams<AuthStackParamList>;
@@ -81,49 +82,54 @@ export default function App() {
           <PersistGate loading={null} persistor={persistor}>
             <ModalOptionsProvider>
               <ModalFullScreenImageProvider>
-                <NavigationContainer>
-                  <StatusBar barStyle={"dark-content"} />
-                  <RootStack.Navigator
-                    initialRouteName={"AuthStack"}
-                    screenOptions={{ headerShown: false }}
-                  >
-                    <RootStack.Screen
-                      name="AuthStack"
-                      component={AuthNavigator}
-                    />
-                    <RootStack.Screen name="TabsStack" component={TabsStack} />
-                    <RootStack.Screen name="GymStack" component={GymStack} />
-                    <RootStack.Screen
-                      name="SpraywallStack"
-                      component={SpraywallStack}
-                    />
-                    <RootStack.Screen
-                      name="CameraStack"
-                      component={CameraNavigator}
-                    />
-                    <RootStack.Screen
-                      name="BoulderStack"
-                      component={BoulderStack}
-                    />
-                    <RootStack.Screen
-                      name="ProfileStack"
-                      component={ProfileStack}
-                    />
-                    <RootStack.Screen
-                      name="CircuitStack"
-                      component={CircuitStack}
-                    />
-                    <RootStack.Screen name="MapStack" component={MapStack} />
-                    <RootStack.Screen
-                      name="Modal"
-                      component={ModalScreen}
-                      options={{
-                        presentation: "transparentModal",
-                        animation: "fade",
-                      }}
-                    />
-                  </RootStack.Navigator>
-                </NavigationContainer>
+                <CameraProvider>
+                  <NavigationContainer>
+                    <StatusBar barStyle={"dark-content"} />
+                    <RootStack.Navigator
+                      initialRouteName={"AuthStack"}
+                      screenOptions={{ headerShown: false }}
+                    >
+                      <RootStack.Screen
+                        name="AuthStack"
+                        component={AuthNavigator}
+                      />
+                      <RootStack.Screen
+                        name="TabsStack"
+                        component={TabsStack}
+                      />
+                      <RootStack.Screen name="GymStack" component={GymStack} />
+                      <RootStack.Screen
+                        name="SpraywallStack"
+                        component={SpraywallStack}
+                      />
+                      <RootStack.Screen
+                        name="CameraStack"
+                        component={CameraNavigator}
+                      />
+                      <RootStack.Screen
+                        name="BoulderStack"
+                        component={BoulderStack}
+                      />
+                      <RootStack.Screen
+                        name="ProfileStack"
+                        component={ProfileStack}
+                      />
+                      <RootStack.Screen
+                        name="CircuitStack"
+                        component={CircuitStack}
+                      />
+                      <RootStack.Screen name="MapStack" component={MapStack} />
+                      <RootStack.Screen
+                        name="Modal"
+                        component={ModalScreen}
+                        options={{
+                          presentation: "transparentModal",
+                          animation: "fade",
+                        }}
+                      />
+                    </RootStack.Navigator>
+                  </NavigationContainer>
+                </CameraProvider>
               </ModalFullScreenImageProvider>
             </ModalOptionsProvider>
           </PersistGate>

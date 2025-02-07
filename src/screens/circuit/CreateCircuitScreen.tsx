@@ -71,7 +71,6 @@ const CreateCircuitScreen = () => {
       <View
         style={{
           paddingHorizontal: 20,
-          paddingVertical: 10,
           justifyContent: "space-between",
           flex: 1,
         }}
