@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { SafeAreaView, StyleSheet, Text } from "react-native";
-import CustomInput from "../../components/custom/CustomInput";
+import CustomInput from "../../components/custom/inputs/CustomInput";
 import CustomButton from "../../components/custom/CustomButton";
 // import SocialSignInButtons from "../../components/custom/SocialSignInButtons";
 

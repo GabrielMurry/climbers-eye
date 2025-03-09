@@ -9,6 +9,9 @@ import { Boulder } from "../../../utils/types/boulder";
 import { ChartData } from "../../../screens/boulder/BoulderScreen";
 import { UserSendsData } from "../../../screens/boulder/types";
 import { User } from "../../../utils/types/user";
+import BoulderImage from "../BoulderImage";
+import { useAppSelector } from "../../../redux/hooks";
+import { selectSpraywall } from "../../../redux/features/spraywall/spraywallSelectors";
 
 type BodyProps = {
   boulder: Boulder;
@@ -23,9 +26,22 @@ const Body: React.FC<BodyProps> = ({
   userSendsData,
   user,
 }) => {
+  const spraywall = useAppSelector((state) => selectSpraywall(state));
+  if (!spraywall) {
+    return;
+  }
+
+  boulder.url;
+
   return (
     <>
-      <ImageDisplay image={boulder} />
+      <BoulderImage
+        boulderUri={boulder.url}
+        spraywallUri={spraywall.url}
+        width={boulder.width}
+        height={boulder.height}
+        shrinkScale={0.4}
+      />
       <DraftNotif boulder={boulder} />
       <InfoRow1 boulder={boulder} userID={user.id} />
       <InfoRow2

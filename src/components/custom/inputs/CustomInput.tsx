@@ -6,37 +6,33 @@ import {
   Text,
 } from "react-native";
 import React from "react";
+import Title from "./Title";
+import { styles } from "./styles";
 
-type CustomInputProps = {
+type CustomTextInputProps = {
   value: string;
   setValue: (val: string) => void;
   placeholder?: string;
   secureTextEntry?: boolean;
-  width?: DimensionValue;
   error?: boolean;
-  bgColor?: string;
   bordered?: boolean;
   rounded?: boolean;
   title?: string;
 };
 
-const CustomInput: React.FC<CustomInputProps> = ({
+const CustomTextInput: React.FC<CustomTextInputProps> = ({
   value,
   setValue,
   placeholder,
   secureTextEntry,
-  width = "100%",
   error = false,
-  bgColor = "white",
   bordered,
   rounded,
   title,
 }) => {
   return (
-    <View style={{ gap: 5, width: width }}>
-      {title && (
-        <Text style={{ fontSize: 18, fontWeight: "bold" }}>{title}</Text>
-      )}
+    <View style={styles.container}>
+      <Title title={title} />
       <TextInput
         value={value}
         onChangeText={setValue}
@@ -57,13 +53,4 @@ const CustomInput: React.FC<CustomInputProps> = ({
   );
 };
 
-export default CustomInput;
-
-const styles = StyleSheet.create({
-  input: {
-    height: 50,
-    padding: 5,
-    justifyContent: "center",
-    flex: 1,
-  },
-});
+export default CustomTextInput;

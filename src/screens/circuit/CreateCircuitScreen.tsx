@@ -1,6 +1,5 @@
 import { View, Text, SafeAreaView } from "react-native";
 import React, { useEffect, useState } from "react";
-import CustomInput from "../../components/custom/CustomInput";
 import CustomButton from "../../components/custom/CustomButton";
 import { colors } from "../../utils/styles";
 import { createCircuit } from "../../services/circuit";
@@ -13,6 +12,7 @@ import CreateCircuitHeader from "../../components/circuit/CreateCircuitHeader";
 import CircuitColorInput from "../../components/circuit/CircuitColorInput";
 import PrivateCircuitInput from "../../components/circuit/PrivateCircuitInput";
 import { CircuitColor } from "../../utils/types/circuit";
+import CustomTextInput from "../../components/custom/inputs/CustomInput";
 
 const CreateCircuitScreen = () => {
   const navigation = useNavigation();
@@ -76,7 +76,7 @@ const CreateCircuitScreen = () => {
         }}
       >
         <View style={{ gap: 10 }}>
-          <CustomInput
+          <CustomTextInput
             value={newCircuitName}
             setValue={(value) => setNewCircuitName(value)}
             placeholder="Circuit Name"
@@ -85,7 +85,7 @@ const CreateCircuitScreen = () => {
             rounded={true}
             title="Circuit Name"
           />
-          <CustomInput
+          <CustomTextInput
             value={newCircuitDescription}
             setValue={(value) => setNewCircuitDescription(value)}
             placeholder="Circuit Description"

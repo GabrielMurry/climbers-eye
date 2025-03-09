@@ -77,6 +77,9 @@ const BoulderHeader: React.FC<BoulderHeaderProps> = ({ boulderId }) => {
   };
 
   const getOptions = () => {
+    if (!boulder) {
+      return;
+    }
     const options: Option[] = [
       // { title: "Share", onPress: () => shareInfo(boulder) },
       // { title: "Report", onPress: handleReportPress },

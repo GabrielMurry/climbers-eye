@@ -1,67 +1,38 @@
-import {
-  View,
-  Text,
-  Pressable,
-  Image,
-  ActivityIndicator,
-  StyleSheet,
-} from "react-native";
 import React from "react";
+import { Image } from "expo-image";
+import BoulderImage from "../BoulderImage";
+import { View } from "react-native";
 
 type PreviewImageProps = {
-  SCREEN_WIDTH: number;
-  SCREEN_HEIGHT: number;
-  SHRINK_SCALE: number;
-  setImageFullScreen: (isFullScreen: boolean) => void;
-  resultImageUri: string;
-  isImageLoading: boolean;
-  setIsImageLoading: (isLoading: boolean) => void;
+  boulderUri: string;
+  spraywallUri: string;
+  width: number;
+  height: number;
 };
 
 const PreviewImage: React.FC<PreviewImageProps> = ({
-  SCREEN_WIDTH,
-  SCREEN_HEIGHT,
-  SHRINK_SCALE,
-  setImageFullScreen,
-  resultImageUri,
-  isImageLoading,
-  setIsImageLoading,
+  boulderUri,
+  spraywallUri,
+  width,
+  height,
 }) => {
   return (
-    <Pressable
-      style={[
-        styles.container,
-        { width: SCREEN_WIDTH, height: SCREEN_HEIGHT * SHRINK_SCALE },
-      ]}
-      onPress={() => setImageFullScreen(true)}
+    <View
+      style={{
+        padding: 5,
+        justifyContent: "center",
+        alignItems: "center",
+      }}
     >
-      <Image
-        source={{ uri: resultImageUri }}
-        style={styles.image}
-        resizeMode="contain"
-        onLoadStart={() => setIsImageLoading(true)}
-        onLoadEnd={() => setIsImageLoading(false)}
+      <BoulderImage
+        boulderUri={boulderUri}
+        spraywallUri={spraywallUri}
+        width={width}
+        height={height}
+        shrinkScale={0.15}
       />
-      {isImageLoading ?? (
-        <ActivityIndicator size="large" style={styles.loadingIndicator} />
-      )}
-    </Pressable>
+    </View>
   );
 };
 
 export default PreviewImage;
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 10,
-  },
-  image: {
-    width: "100%",
-    height: "100%",
-  },
-  loadingIndicator: {
-    width: "100%",
-    height: "100%",
-    position: "absolute",
-  },
-});

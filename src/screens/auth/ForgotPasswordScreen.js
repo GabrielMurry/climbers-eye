@@ -7,7 +7,7 @@ import {
 } from "react-native-heroicons/outline";
 import { colors } from "../../utils/styles";
 import SVGImg from "../../assets/ClimbersEyeLogoShapes.svg";
-import CustomInput from "../../components/custom/CustomInput";
+import CustomInput from "../../components/custom/inputs/CustomInput";
 
 const ForgotPasswordScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");

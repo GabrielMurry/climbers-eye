@@ -1,6 +1,6 @@
 import { View, Pressable, Text } from "react-native";
 import { Image } from "expo-image";
-import React, { memo } from "react";
+import React, { memo, useEffect } from "react";
 import { colors } from "../../utils/styles";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { selectSpraywall } from "../../redux/features/spraywall/spraywallSelectors";
@@ -22,6 +22,8 @@ const SpraywallCard: React.FC<SpraywallCardProps> = ({
     console.error("Selected spray wall not found.");
     return <Text>Selected spray wall not found.</Text>;
   }
+
+  console.log(spraywall.url);
 
   return (
     <Pressable
@@ -62,11 +64,4 @@ const SpraywallCard: React.FC<SpraywallCardProps> = ({
   );
 };
 
-// If both the image id and url are the same between prevProps and nextProps, the function returns true, which tells React.memo that the SpraywallCard component should not re-render.
-// If either the image id or url changes, the function returns false, and the SpraywallCard will re-render to reflect the updated props.
-export default memo(
-  SpraywallCard,
-  (prevProps, nextProps) =>
-    prevProps.spraywallCard.id === nextProps.spraywallCard.id &&
-    prevProps.spraywallCard.url === nextProps.spraywallCard.url
-);
+export default SpraywallCard;

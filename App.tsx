@@ -25,9 +25,6 @@ import CircuitStack, {
   CircuitStackParamList,
 } from "./src/navigation/CircuitStack";
 import { useEffect, useState } from "react";
-import CameraNavigator, {
-  CameraStackParamList,
-} from "./src/navigation/CameraStack";
 import AuthNavigator from "./src/navigation/AuthStack";
 import { checkCredentials } from "./src/utils/auth";
 import MapStack, { MapStackParamList } from "./src/navigation/MapStack";
@@ -40,7 +37,6 @@ export type RootStackParamList = {
   AuthStack: NavigatorScreenParams<AuthStackParamList>;
   GymStack: NavigatorScreenParams<GymStackParamsList>;
   SpraywallStack: NavigatorScreenParams<SpraywallStackParamList>;
-  CameraStack: NavigatorScreenParams<CameraStackParamList>;
   TabsStack: NavigatorScreenParams<TabsStackParamList>;
   BoulderStack: NavigatorScreenParams<BoulderStackParamList>;
   ProfileStack: NavigatorScreenParams<ProfileStackParamList>;
@@ -101,10 +97,6 @@ export default function App() {
                       <RootStack.Screen
                         name="SpraywallStack"
                         component={SpraywallStack}
-                      />
-                      <RootStack.Screen
-                        name="CameraStack"
-                        component={CameraNavigator}
                       />
                       <RootStack.Screen
                         name="BoulderStack"

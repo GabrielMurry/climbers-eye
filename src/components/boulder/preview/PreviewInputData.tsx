@@ -1,6 +1,6 @@
 import { View, Text, TextInput, Switch, StyleSheet } from "react-native";
 import React from "react";
-import CustomInput from "../../custom/CustomInput";
+import CustomTextInput from "../../custom/inputs/CustomInput";
 
 type PreviewInputDataProps = {
   name: string;
@@ -31,7 +31,7 @@ const PreviewInputData: React.FC<PreviewInputDataProps> = ({
 }) => {
   return (
     <View style={styles.container}>
-      <CustomInput
+      <CustomTextInput
         value={name}
         setValue={(value) => setName(value)}
         placeholder="Boulder Name"

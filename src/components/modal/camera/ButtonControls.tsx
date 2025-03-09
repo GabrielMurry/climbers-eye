@@ -1,6 +1,6 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { ImageObjUrl } from "../../utils/types/image";
+import { ImageObjUrl } from "../../../utils/types/image";
 
 type ButtonControlsProps = {
   image: ImageObjUrl | null;
@@ -21,7 +21,13 @@ const ButtonControls: React.FC<ButtonControlsProps> = ({
   return (
     <View style={styles.buttonContainer}>
       {image ? (
-        <>
+        <View
+          style={{
+            flex: 1,
+            flexDirection: "row",
+            justifyContent: "space-evenly",
+          }}
+        >
           <TouchableOpacity
             style={styles.button}
             onPress={() => setImage(null)}
@@ -31,7 +37,7 @@ const ButtonControls: React.FC<ButtonControlsProps> = ({
           <TouchableOpacity style={styles.button} onPress={handleSubmitImage}>
             <Text style={styles.text}>Submit</Text>
           </TouchableOpacity>
-        </>
+        </View>
       ) : (
         <TouchableOpacity onPress={handleImageTaken}>
           <Ionicons

@@ -1,7 +1,7 @@
 import axiosInstance from "./axiosInstance";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { REFERER } from "@env";
-import { AxiosResponse } from "axios";
+import { AxiosRequestConfig } from "axios";
 
 const request = async (
   method: string,
@@ -9,16 +9,17 @@ const request = async (
   data?: object | FormData
 ) => {
   try {
-    console.log(method, endpoint, data);
+    console.log(method, endpoint);
     // grab csrf token, access token, and refresh token from storage
     const csrfToken = await AsyncStorage.getItem("csrfToken");
     const accessToken = await AsyncStorage.getItem("accessToken");
 
-    if (data instanceof FormData) {
-      axiosInstance.defaults.headers["Content-Type"] = "multipart/form-data";
-    } else {
-      axiosInstance.defaults.headers["Content-Type"] = "application/json";
-    }
+    // if (data instanceof FormData) {
+    //   console.log("FORM DATA");
+    //   axiosInstance.defaults.headers["Content-Type"] = "multipart/form-data";
+    // } else {
+    //   axiosInstance.defaults.headers["Content-Type"] = "application/json";
+    // }
 
     // attach csrf token to request header
     // Including the actual CSRF token in GET requests is generally not a common practice and is not required for CSRF protection.
@@ -30,12 +31,59 @@ const request = async (
     if (accessToken) {
       axiosInstance.defaults.headers["Authorization"] = `Bearer ${accessToken}`;
     }
+
     // EXECUTE request method to backend endpoint with or without data
-    const response = await axiosInstance({
-      method: method,
-      url: `/${endpoint}`,
-      data: data,
-    });
+    // const response = await axiosInstance({
+    //   method: method,
+    //   url: `/${endpoint}`,
+    //   data: data,
+    //   headers: {
+    //     "Content-Type": "multipart/form-data",
+    //     // if backend supports u can use gzip request encoding
+    //     // "Content-Encoding": "gzip",
+    //   },
+    //   transformRequest: (data, headers) => {
+    //     // !!! override data to return formData
+    //     // since axios converts that to string
+    //     return formData;
+    //   },
+    // });
+
+    let config: AxiosRequestConfig = {};
+
+    if (data instanceof FormData) {
+      config = {
+        method: method,
+        url: `/${endpoint}`,
+        headers: {
+          "Content-Type": "multipart/form-data",
+
+          // if backend supports u can use gzip request encoding
+          // "Content-Encoding": "gzip",
+        },
+        transformRequest: (d) => d,
+        data: data,
+      };
+    } else {
+      config = {
+        method: method,
+        url: `/${endpoint}`,
+        headers: {
+          "Content-Type": "application/json",
+
+          // if backend supports u can use gzip request encoding
+          // "Content-Encoding": "gzip",
+        },
+        data: data,
+      };
+    }
+
+    console.log("config:", config);
+
+    console.log("test1");
+
+    const response = await axiosInstance(config);
+    console.log("test2");
 
     // const response = await axiosInstance[req.method](
     //   `/${req.endpoint}`,

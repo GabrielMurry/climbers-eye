@@ -1,5 +1,5 @@
 import { Image, StyleSheet } from "react-native";
-import { ImageObjUrl } from "../../utils/types/image";
+import { ImageObjUrl } from "../../../utils/types/image";
 
 type ImagePreviewProps = {
   image: ImageObjUrl;

@@ -16,9 +16,16 @@ export type PathWithColorAndWidth = {
   strokeWidth: number;
 };
 
+type LocalFile = {
+  uri: string;
+  width: number;
+  height: number;
+};
+
 export type RefProps = {
   clearCanvas: () => void;
   getPaths: () => PathWithColorAndWidth[];
   undo: () => void;
   saveAsBase64: () => Promise<string | undefined>;
+  saveAsLocalFile: () => Promise<LocalFile | undefined>;
 };

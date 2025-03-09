@@ -22,7 +22,7 @@ export const compositeBoulder = async (data: FormData) => {
   return await request("post", "boulder/composite/", data);
 };
 
-export const addBoulderToSpraywall = async (path: Path, data: Data) => {
+export const addBoulderToSpraywall = async (path: Path, data: FormData) => {
   return await request("post", `boulder/list/${path.spraywallId}`, data);
 };
 

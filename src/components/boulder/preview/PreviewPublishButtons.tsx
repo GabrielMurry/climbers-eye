@@ -20,14 +20,14 @@ const PreviewPublishButtons: React.FC<PreviewPublishButtonsProps> = ({
         type="TERTIARY"
         width="45%"
         bgColor={"rgba(245, 245, 245, 255)"}
-        disabled={isLoading}
+        // disabled={isLoading}
       />
       <CustomButton
         onPress={() => handleConfirm(true)}
         text="Publish"
         width="45%"
         bgColor={colors.primary}
-        disabled={isLoading}
+        // disabled={isLoading}
       />
     </View>
   );

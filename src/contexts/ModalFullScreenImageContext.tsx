@@ -8,14 +8,14 @@ type ModalFullScreenImageProviderProps = {
 
 type ModalFullScreenImageContext = {
   isVisible: boolean;
-  image: ImageObjUri;
-  openModal: (uri: string, width: number, height: number) => void;
+  // openModal: (uri: string, width: number, height: number) => void;
+  openModal: () => void;
   closeModal: () => void;
 };
 
 const DEFAULT_VAL: ModalFullScreenImageContext = {
   isVisible: false,
-  image: { uri: "", width: 0, height: 0 },
+  // image: { uri: "", width: 0, height: 0 },
   openModal: () => {
     console.warn("openModal is not implemented");
   },
@@ -31,31 +31,25 @@ export const ModalFullScreenImageProvider: React.FC<
   ModalFullScreenImageProviderProps
 > = ({ children }) => {
   const [isVisible, setIsVisible] = useState(false);
-  const [image, setImage] = useState<ImageObjUri>(DEFAULT_VAL.image);
+  // const [image, setImage] = useState<ImageObjUri>(DEFAULT_VAL.image);
+  // const [image, setImage] = useState<React.JSX.Element>(DEFAULT_VAL.image);
 
-  const openModal = useCallback(
-    (uri: string, width: number, height: number) => {
-      setImage({ uri, width, height });
-      setIsVisible(true);
-    },
-    []
-  );
+  const openModal = useCallback(() => {
+    // setImage(img);
+    setIsVisible(true);
+  }, []);
 
   const closeModal = useCallback(() => {
     setIsVisible(false);
-    setImage(DEFAULT_VAL.image);
+    // setImage(DEFAULT_VAL.image);
   }, []);
 
   return (
     <ModalFullScreenImageContext.Provider
-      value={{ isVisible, image, openModal, closeModal }}
+      value={{ isVisible, openModal, closeModal }}
     >
       {children}
-      <FullScreenImageModal
-        isVisible={isVisible}
-        image={image}
-        closeModal={closeModal}
-      />
+      <FullScreenImageModal isVisible={isVisible} closeModal={closeModal} />
     </ModalFullScreenImageContext.Provider>
   );
 };

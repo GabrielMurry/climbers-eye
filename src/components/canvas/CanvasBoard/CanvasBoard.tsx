@@ -1,20 +1,17 @@
-import { Canvas, Path, Skia, useCanvasRef } from "@shopify/react-native-skia";
-import React, {
-  forwardRef,
-  Ref,
-  useEffect,
-  useImperativeHandle,
-  useState,
-} from "react";
 import {
-  SafeAreaView,
-  StyleSheet,
-  useWindowDimensions,
-  View,
-} from "react-native";
+  Canvas,
+  ImageFormat,
+  Path,
+  Skia,
+  useCanvasRef,
+} from "@shopify/react-native-skia";
+import React, { forwardRef, Ref, useImperativeHandle, useState } from "react";
+import { Image, useWindowDimensions } from "react-native";
 import { GestureDetector, Gesture } from "react-native-gesture-handler";
 import { CanvasBoardProps, PathWithColorAndWidth, RefProps } from "./types";
 import { runOnJS } from "react-native-reanimated";
+import * as FileSystem from "expo-file-system";
+import uuid from "react-native-uuid";
 
 const CanvasBoard = forwardRef<RefProps, CanvasBoardProps>(
   (
@@ -31,6 +28,7 @@ const CanvasBoard = forwardRef<RefProps, CanvasBoardProps>(
     const [paths, setPaths] = useState<PathWithColorAndWidth[]>([]);
 
     const cRef = useCanvasRef();
+    const cRefColorMask = useCanvasRef();
 
     const onDrawingStart = (x: number, y: number) => {
       setPaths((currentPaths) => {
@@ -83,11 +81,27 @@ const CanvasBoard = forwardRef<RefProps, CanvasBoardProps>(
       try {
         const image = await cRef.current?.makeImageSnapshotAsync();
         if (image) {
-          const bytes = image.encodeToBase64();
-          return bytes;
+          return image.encodeToBase64(ImageFormat.JPEG);
         }
       } catch (error) {
-        console.error("Handle save as base64 error:", error);
+        throw new Error(`Save as base64 error: ${error}`);
+      }
+    };
+
+    const handleSaveAsLocalFile = async () => {
+      try {
+        const image = await cRefColorMask.current?.makeImageSnapshotAsync();
+        if (image) {
+          const base64 = image.encodeToBase64(ImageFormat.PNG);
+          const uri = FileSystem.documentDirectory + `${uuid.v4()}.png`;
+          await FileSystem.writeAsStringAsync(uri, base64, {
+            encoding: FileSystem.EncodingType.Base64,
+          });
+          const { width, height } = await Image.getSize(uri);
+          return { uri, width, height };
+        }
+      } catch (error) {
+        throw new Error(`Save as local file error: ${error}`);
       }
     };
 
@@ -96,11 +110,32 @@ const CanvasBoard = forwardRef<RefProps, CanvasBoardProps>(
       getPaths: () => paths,
       undo: handleUndo,
       saveAsBase64: handleSaveAsBase64,
+      saveAsLocalFile: handleSaveAsLocalFile,
     }));
 
     return (
-      <GestureDetector gesture={panGesture}>
-        <Canvas ref={cRef} style={{ width, height }}>
+      <>
+        {/* Main canvas (visible) */}
+        <GestureDetector gesture={panGesture}>
+          <Canvas ref={cRef} style={{ width, height }}>
+            {paths.map((path, index) => (
+              <Path
+                key={index}
+                path={path.path}
+                color={path.color}
+                style={"stroke"}
+                strokeWidth={path.strokeWidth}
+                strokeCap="round"
+                opacity={opacity}
+              />
+            ))}
+          </Canvas>
+        </GestureDetector>
+        {/* Hidden canvas - does not have low opacity - used to send as the boulder mask to backend */}
+        <Canvas
+          ref={cRefColorMask}
+          style={{ width, height, position: "absolute", left: -9999 }}
+        >
           {paths.map((path, index) => (
             <Path
               key={index}
@@ -109,19 +144,13 @@ const CanvasBoard = forwardRef<RefProps, CanvasBoardProps>(
               style={"stroke"}
               strokeWidth={path.strokeWidth}
               strokeCap="round"
-              opacity={opacity}
+              opacity={1}
             />
           ))}
         </Canvas>
-      </GestureDetector>
+      </>
     );
   }
 );
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
 
 export default CanvasBoard;

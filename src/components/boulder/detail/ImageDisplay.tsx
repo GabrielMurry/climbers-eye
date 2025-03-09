@@ -1,14 +1,9 @@
-import {
-  Pressable,
-  Image,
-  Dimensions,
-  StyleSheet,
-  View,
-  Animated,
-} from "react-native";
+import { Pressable, Dimensions, Animated } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { ImageObjUrl } from "../../../utils/types/image";
 import { useModalFullScreenImage } from "../../../contexts/ModalFullScreenImageContext";
+import MaskedView from "@react-native-masked-view/masked-view";
+import { Image } from "expo-image";
 
 type ImageDisplayProps = {
   image: ImageObjUrl;
@@ -22,7 +17,7 @@ const ImageDisplay: React.FC<ImageDisplayProps> = ({ image }) => {
   const { openModal } = useModalFullScreenImage();
   const [imageHeight, setImageHeight] = useState(0);
 
-  const [isImageLoaded, setIsImageLoaded] = useState(false);
+  // const [isImageLoaded, setIsImageLoaded] = useState(false);
 
   useEffect(() => {
     const scaledHeight = image.height * (SCREEN_WIDTH / image.width);
@@ -34,83 +29,89 @@ const ImageDisplay: React.FC<ImageDisplayProps> = ({ image }) => {
     }
   }, []);
 
-  const animation = useRef(new Animated.Value(1)).current;
+  // const animation = useRef(new Animated.Value(1)).current;
 
-  useEffect(() => {
-    if (!isImageLoaded) {
-      Animated.loop(
-        Animated.sequence([
-          Animated.timing(animation, {
-            toValue: 1.1,
-            duration: 500,
-            useNativeDriver: true,
-          }),
-          Animated.timing(animation, {
-            toValue: 1,
-            duration: 500,
-            useNativeDriver: true,
-          }),
-        ])
-      ).start();
-    } else {
-      animation.stopAnimation();
-    }
-  }, [isImageLoaded]);
+  // useEffect(() => {
+  //   if (!isImageLoaded) {
+  //     Animated.loop(
+  //       Animated.sequence([
+  //         Animated.timing(animation, {
+  //           toValue: 1.1,
+  //           duration: 500,
+  //           useNativeDriver: true,
+  //         }),
+  //         Animated.timing(animation, {
+  //           toValue: 1,
+  //           duration: 500,
+  //           useNativeDriver: true,
+  //         }),
+  //       ])
+  //     ).start();
+  //   } else {
+  //     animation.stopAnimation();
+  //   }
+  // }, [isImageLoaded]);
+
+  const imageElement = (
+    <>
+      <Image
+        source={require("../../../../images/photo.jpg")}
+        style={{
+          width: "100%",
+          height: "100%",
+          opacity: 0.5,
+        }}
+        contentFit="contain"
+      />
+      <MaskedView
+        style={{ position: "absolute", width: "100%", height: "100%" }}
+        maskElement={
+          <Image
+            source={require("../../../../images/test1.png")}
+            style={{
+              width: "100%",
+              height: "100%",
+              opacity: 1,
+            }}
+            contentFit="contain"
+          />
+        }
+      >
+        <Image
+          source={require("../../../../images/photo.jpg")}
+          style={{
+            width: "100%",
+            height: "100%",
+            opacity: 1,
+          }}
+          contentFit="contain"
+        />
+      </MaskedView>
+      <Image
+        source={require("../../../../images/test1.png")}
+        style={{
+          width: "100%",
+          height: "100%",
+          position: "absolute",
+          opacity: 0.5,
+        }}
+        contentFit="contain"
+      />
+    </>
+  );
 
   return (
     <Pressable
       style={{
         width: SCREEN_WIDTH,
-        height: imageHeight, // SCREEN_HEIGHT * 0.6 or image.height * (SCREEN_WIDTH / image.width)
-        padding: 2,
+        // height: imageHeight, //  SCREEN_HEIGHT * 0.6 or image.height * (SCREEN_WIDTH / image.width)
+        height: imageHeight,
+        backgroundColor: "black",
       }}
-      onPress={() => openModal(image.url, image.width, image.height)}
     >
-      {!isImageLoaded && (
-        <View
-          style={{
-            width: "100%",
-            height: "100%",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Animated.Image
-            source={require("../../../assets/images/icon-transparent.png")}
-            style={{
-              width: "75%",
-              height: "75%",
-              transform: [{ scale: animation }],
-            }}
-            resizeMode="contain"
-          />
-        </View>
-      )}
-      <Image
-        source={{
-          uri: image.url,
-        }}
-        resizeMode="contain"
-        // onLoadStart={() => setIsLoading(true)}
-        // onLoadEnd={() => setIsLoading(false)}
-        style={styles.image}
-        onLoad={() => setIsImageLoaded(true)}
-      />
+      {imageElement}
     </Pressable>
   );
 };
 
 export default ImageDisplay;
-
-const styles = StyleSheet.create({
-  placeholder: {
-    ...StyleSheet.absoluteFillObject, // Fills the container
-    backgroundColor: "#ddd", // Background color for the placeholder
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  image: {
-    width: "100%",
-    height: "100%",
-  },
-});

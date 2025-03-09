@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import CustomInput from "../../components/custom/CustomInput";
 import CustomButton from "../../components/custom/CustomButton";
 import { colors } from "../../utils/styles";
 import {
@@ -23,6 +22,7 @@ import { setGym } from "../../redux/features/gym/gymSlice";
 import { setSpraywalls } from "../../redux/features/spraywall/spraywallSlice";
 import { useAppDispatch } from "../../redux/hooks";
 import { useNavigation } from "@react-navigation/native";
+import CustomTextInput from "../../components/custom/inputs/CustomInput";
 
 const LoginScreen = () => {
   const navigation = useNavigation();
@@ -102,7 +102,12 @@ const LoginScreen = () => {
   );
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView
+      style={{
+        backgroundColor: "white",
+        flex: 1,
+      }}
+    >
       <View
         style={{
           width: "100%",
@@ -133,27 +138,25 @@ const LoginScreen = () => {
       </View>
       <View
         style={{
-          width: "100%",
           height: 350,
           alignItems: "center",
           justifyContent: "center",
           gap: 30,
+          paddingHorizontal: 20,
         }}
       >
-        <CustomInput
+        <CustomTextInput
           value={username}
           setValue={(value: string) => setUsername(value)}
           placeholder="Username"
           secureTextEntry={false}
-          width="90%"
           // icon={<UserIcon size={20} color={colors.textInputDark} />}
         />
-        <CustomInput
+        <CustomTextInput
           value={password}
           setValue={(value: string) => setPassword(value)}
           placeholder="Password"
           secureTextEntry={!showPassword}
-          width="90%"
           // icon={<LockClosedIcon size={20} color={colors.textInputDark} />}
           // button={<ShowPasswordButton />}
         />
@@ -220,13 +223,5 @@ const LoginScreen = () => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "white",
-    flex: 1,
-    alignItems: "center",
-  },
-});
 
 export default LoginScreen;

@@ -1,10 +1,19 @@
-import { View, Text, Modal, SafeAreaView, Button } from "react-native";
+import {
+  View,
+  Text,
+  Modal,
+  SafeAreaView,
+  Button,
+  TouchableOpacity,
+} from "react-native";
 import React, { useRef, useState } from "react";
-import ButtonControls from "../../camera/ButtonControls";
-import ImagePreview from "../../camera/ImagePreview";
-import Camera from "../../camera/Camera";
+import ButtonControls from "./ButtonControls";
+import ImagePreview from "./ImagePreview";
+import Camera from "./Camera";
 import { ImageObjUrl } from "../../../utils/types/image";
 import { CameraView, useCameraPermissions } from "expo-camera";
+import Header from "../../common/header/Header";
+import { XMarkIcon } from "react-native-heroicons/outline";
 
 type CameraModalProps = {
   image: ImageObjUrl | null;
@@ -63,36 +72,24 @@ const CameraModal: React.FC<CameraModalProps> = ({
   };
 
   const handleSubmitImage = async () => {
-    // if (parentNav?.getId() === 'EditBoulder') {
-    //   parentNav.navigate('')
-    // }
-    // switch (nextScreen) {
-    //   case "EditBoulder":
-    //     navigation.replace("BoulderStack", {
-    //       screen: "EditBoulder",
-    //       params: { image: image },
-    //     });
-    //     break;
-    //   case "AddNewSprayWall":
-    //     navigation.navigate("SpraywallStack", {
-    //       screen: "AddNewSprayWall",
-    //       params: { image: image },
-    //     });
-    //     break;
-    //   default:
-    //     console.error("Invalid navigation name.");
-    // }
     closeCamera();
   };
 
+  const LeftIcon = (
+    <TouchableOpacity onPress={() => closeCamera()}>
+      <XMarkIcon size={30} color={"white"} />
+    </TouchableOpacity>
+  );
+
   return (
-    <Modal visible={isVisible}>
+    <Modal visible={isVisible} animationType="slide">
       <SafeAreaView
         style={{
           flex: 1,
           backgroundColor: "black",
         }}
       >
+        <Header leftIcon={LeftIcon} />
         {image ? (
           <ImagePreview image={image} />
         ) : (

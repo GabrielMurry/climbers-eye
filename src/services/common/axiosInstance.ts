@@ -9,9 +9,9 @@ console.log("--");
 const axiosInstance = axios.create({
   baseURL: BASE_URL,
   withCredentials: true,
-  headers: {
-    Accept: "application/json",
-  },
+  // headers: {
+  //   Accept: "application/json",
+  // },
 });
 
 // INTERCEPTOR - for expired access token

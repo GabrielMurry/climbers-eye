@@ -15,7 +15,7 @@ import { ChartData } from "../screens/boulder/BoulderScreen";
 export type BoulderStackParamList = {
   Boulder: { boulderId: number };
   EditBoulder: { image: ImageObjUrl };
-  PreviewEdit: { image: ImageObjUri };
+  PreviewEdit: { uri: string; width: number; height: number };
   SendBoulder: { boulder: Boulder; userSendsData: UserSendsData[] };
   BoulderStats: { boulder: Boulder; chartData: ChartData[] };
   BoulderUserSends: { userSendsData: UserSendsData[] };

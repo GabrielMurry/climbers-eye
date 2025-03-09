@@ -1,8 +1,8 @@
 import { View, Text } from "react-native";
 import React from "react";
 import SelectGymType from "./SelectGymType";
-import CustomInput from "../custom/CustomInput";
 import AddressTextInput from "../googlePlacesAutoComplete/AddressTextInput";
+import CustomTextInput from "../custom/inputs/CustomInput";
 
 type CreateGymBodyProps = {
   isCommercialGym: boolean;
@@ -31,7 +31,7 @@ const CreateGymBody: React.FC<CreateGymBodyProps> = ({
         isCommercialGym={isCommercialGym}
         setIsCommercialGym={setIsCommercialGym}
       />
-      <CustomInput
+      <CustomTextInput
         value={gymName}
         setValue={setGymName}
         placeholder={isCommercialGym ? "Enter gym name" : "Enter home name"}

@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import CustomInput from "../../components/custom/CustomInput";
 import CustomButton from "../../components/custom/CustomButton";
 // import SocialSignInButtons from "../../components/custom/SocialSignInButtons";
 // import SVGImg from "../../assets/ClimbersEyeLogoShapes.svg";
@@ -22,6 +21,7 @@ import { signupUser } from "../../services/auth";
 import { setUser } from "../../redux/features/user/userSlice";
 import { useAppDispatch } from "../../redux/hooks";
 import { useNavigation } from "@react-navigation/native";
+import CustomTextInput from "../../components/custom/inputs/CustomInput";
 
 const SignupScreen = () => {
   const navigation = useNavigation();
@@ -124,37 +124,33 @@ const SignupScreen = () => {
           gap: 10,
         }}
       >
-        <CustomInput
+        <CustomTextInput
           value={username}
           setValue={(value) => setUsername(value)}
           placeholder="Username"
           secureTextEntry={false}
-          width="90%"
           autoCapitalize="none"
           // icon={<UserIcon size={20} color={colors.textInputDark} />}
         />
-        <CustomInput
+        <CustomTextInput
           value={email}
           setValue={setEmail}
           placeholder="Email"
           secureTextEntry={false}
-          width="90%"
           // icon={<EnvelopeIcon size={20} color={colors.textInputDark} />}
         />
-        <CustomInput
+        <CustomTextInput
           value={password}
           setValue={setPassword}
           placeholder="Password"
           secureTextEntry={true}
-          width="90%"
           // icon={<LockClosedIcon size={20} color={colors.textInputDark} />}
         />
-        <CustomInput
+        <CustomTextInput
           value={passwordRepeat}
           setValue={setPasswordRepeat}
           placeholder="Re-Enter Password"
           secureTextEntry={true}
-          width="90%"
           // icon={<LockClosedIcon size={20} color={colors.textInputDark} />}
         />
         <View

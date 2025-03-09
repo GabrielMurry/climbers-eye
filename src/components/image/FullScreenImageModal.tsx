@@ -14,13 +14,12 @@ const SCREEN_WIDTH = Dimensions.get("window").width;
 
 type FullScreenImageModalProps = {
   isVisible: boolean;
-  image: ImageObjUri;
+  // image: ImageObjUri;
   closeModal: () => void;
 };
 
 const FullScreenImageModal: React.FC<FullScreenImageModalProps> = ({
   isVisible,
-  image,
   closeModal,
 }) => {
   return (
@@ -41,21 +40,6 @@ const FullScreenImageModal: React.FC<FullScreenImageModalProps> = ({
         >
           <Ionicons name="close" size={40} color="white" />
         </TouchableOpacity>
-        <ReactNativeZoomableView
-          maxZoom={10}
-          minZoom={1}
-          initialZoom={1}
-          visualTouchFeedbackEnabled={false}
-        >
-          <Image
-            source={{ uri: image?.uri }}
-            style={{
-              width: SCREEN_WIDTH,
-              height: image.height * (SCREEN_WIDTH / image.width),
-            }}
-            cachePolicy={"none"}
-          />
-        </ReactNativeZoomableView>
       </SafeAreaView>
     </Modal>
   );

@@ -15,6 +15,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { BoulderStackParamList } from "../../navigation/BoulderStack";
 import { useNavigation } from "@react-navigation/native";
 import PreviewHeader from "../../components/boulder/preview/PreviewHeader";
+import BoulderImage from "../../components/boulder/BoulderImage";
 
 type PreviewEditScreenProps = NativeStackScreenProps<
   BoulderStackParamList,
@@ -31,10 +32,13 @@ const PreviewEditScreen: React.FC<PreviewEditScreenProps> = ({ route }) => {
   const dispatch = useAppDispatch();
 
   const spraywall = useAppSelector((state) => selectSpraywall(state));
+  if (!spraywall) {
+    return;
+  }
 
   const user = useAppSelector((state) => selectUser(state));
 
-  const { image } = route.params;
+  const { uri, width, height } = route.params;
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -46,21 +50,28 @@ const PreviewEditScreen: React.FC<PreviewEditScreenProps> = ({ route }) => {
   const [error, setError] = useState(false);
 
   const handleConfirm = async (isPublish: boolean) => {
-    const data = {
-      name,
-      description,
-      publish: isPublish,
-      matching: isMatching,
-      feetFollowHands: isFeetFollowHands,
-      kickboardOn: isKickboardOn,
-      url: image.uri.split(",")[1], // using the default image has complete base64 as image.uri --> remove the 'data:image/png;base64' in the beginning of string
-      width: image.width,
-      height: image.height,
-      setter: user.id,
-      spraywall: spraywall!.id,
-    };
-    const pathParams = { spraywallId: spraywall!.id };
-    const response = await addBoulderToSpraywall(pathParams, data);
+    const formData = new FormData();
+    formData.append("image", {
+      uri: uri,
+      name: name,
+      type: `image/png`,
+    } as any);
+
+    formData.append("name", name);
+    formData.append("description", description);
+    formData.append("publish", isPublish.toString());
+    formData.append("matching", isMatching.toString());
+    formData.append("feetFollowHands", isFeetFollowHands.toString());
+    formData.append("kickboardOn", isKickboardOn.toString());
+    formData.append("width", width.toString());
+    formData.append("height", height.toString());
+    formData.append("setter", user.id.toString());
+    formData.append("spraywall", spraywall.id.toString());
+
+    const pathParams = { spraywallId: spraywall.id };
+
+    const response = await addBoulderToSpraywall(pathParams, formData);
+
     if (response) {
       dispatch(addNewBoulder(response.data));
       handleVibrate();
@@ -72,6 +83,32 @@ const PreviewEditScreen: React.FC<PreviewEditScreenProps> = ({ route }) => {
     } else {
       console.error("Failed to upload new boulder.");
     }
+    // const data = {
+    //   name,
+    //   description,
+    //   publish: isPublish,
+    //   matching: isMatching,
+    //   feetFollowHands: isFeetFollowHands,
+    //   kickboardOn: isKickboardOn,
+    //   url: image.uri.split(",")[1], // using the default image has complete base64 as image.uri --> remove the 'data:image/png;base64' in the beginning of string
+    //   width: image.width,
+    //   height: image.height,
+    //   setter: user.id,
+    //   spraywall: spraywall!.id,
+    // };
+    // const pathParams = { spraywallId: spraywall!.id };
+    // const response = await addBoulderToSpraywall(pathParams, data);
+    // if (response) {
+    //   dispatch(addNewBoulder(response.data));
+    //   handleVibrate();
+    //   navigation.navigate("TabsStack", {
+    //     screen: "HomeStack",
+    //     params: { screen: "Boulder", params: { boulderId: response.data.id } },
+    //   });
+    //   dispatch(appendExcludeId(response.data.id));
+    // } else {
+    //   console.error("Failed to upload new boulder.");
+    // }
   };
 
   const handleVibrate = () => {
@@ -88,13 +125,10 @@ const PreviewEditScreen: React.FC<PreviewEditScreenProps> = ({ route }) => {
     <SafeAreaView style={styles.container}>
       <PreviewHeader />
       <PreviewImage
-        SCREEN_WIDTH={SCREEN_WIDTH}
-        SCREEN_HEIGHT={SCREEN_HEIGHT}
-        SHRINK_SCALE={SHRINK_SCALE}
-        setImageFullScreen={setImageFullScreen}
-        resultImageUri={image.uri}
-        isImageLoading={isImageLoading}
-        setIsImageLoading={setIsImageLoading}
+        boulderUri={uri}
+        spraywallUri={spraywall.url}
+        width={width}
+        height={height}
       />
       <PreviewInputData
         name={name}
@@ -113,13 +147,13 @@ const PreviewEditScreen: React.FC<PreviewEditScreenProps> = ({ route }) => {
         handleConfirm={handleConfirm}
         isLoading={isImageLoading}
       />
-      <FullScreenImage
+      {/* <FullScreenImage
         imageFullScreen={imageFullScreen}
         url={image.uri}
         width={image.width}
         height={image.height}
         onRequestClose={() => setImageFullScreen(false)}
-      />
+      /> */}
     </SafeAreaView>
   );
 };
