@@ -11,11 +11,12 @@ import { UserSendsData } from "../screens/boulder/types";
 import { ImageObjUri, ImageObjUrl } from "../utils/types/image";
 import { Boulder } from "../utils/types/boulder";
 import { ChartData } from "../screens/boulder/BoulderScreen";
+import BoulderImageFullScreen from "../screens/boulder/BoulderImageFullScreen";
 
 export type BoulderStackParamList = {
-  Boulder: { boulderId: number };
+  // Boulder: { boulderId: number };
   EditBoulder: { image: ImageObjUrl };
-  PreviewEdit: { uri: string; width: number; height: number };
+  PreviewEdit: { boulderImage: ImageObjUri; wallImage: ImageObjUri };
   SendBoulder: { boulder: Boulder; userSendsData: UserSendsData[] };
   BoulderStats: { boulder: Boulder; chartData: ChartData[] };
   BoulderUserSends: { userSendsData: UserSendsData[] };
@@ -25,10 +26,10 @@ const BoulderStack = createNativeStackNavigator<BoulderStackParamList>();
 
 const BoulderNavigator = () => (
   <BoulderStack.Navigator
-    initialRouteName="Boulder"
+    // initialRouteName="Boulder"
     screenOptions={{ headerShown: false }}
   >
-    <BoulderStack.Screen name="Boulder" component={BoulderScreen} />
+    {/* <BoulderStack.Screen name="Boulder" component={BoulderScreen} /> */}
     <BoulderStack.Screen name="EditBoulder" component={EditBoulderScreen} />
     <BoulderStack.Screen name="PreviewEdit" component={PreviewEditScreen} />
     <BoulderStack.Screen name="SendBoulder" component={SendBoulderScreen} />

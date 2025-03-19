@@ -16,7 +16,7 @@ const Header: React.FC<HeaderProps> = ({ boulder }) => {
         <Text style={styles.gradeText}>
           {boulder?.grade ? boulder.grade : "Project"}
         </Text>
-        <QualityRating quality={boulder.quality} size={18} />
+        <QualityRating quality={boulder?.quality} size={18} />
       </View>
     </View>
   );

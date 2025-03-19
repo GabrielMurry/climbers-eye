@@ -8,7 +8,7 @@ type CameraProviderProps = {
 
 type CameraContext = {
   image: ImageObjUrl | null;
-  openCamera: () => void;
+  openCamera: (navigateTo?: NavigationOption) => void;
   closeCamera: () => void;
 };
 
@@ -20,12 +20,20 @@ const defaultValues: CameraContext = {
 
 const CameraContext = createContext<CameraContext>(defaultValues);
 
+export const NavigationOptions = ["EditBoulder"] as const;
+
+export type NavigationOption = (typeof NavigationOptions)[number];
+
 export const CameraProvider: React.FC<CameraProviderProps> = ({ children }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [image, setImage] = useState<ImageObjUrl | null>(null);
+  const [navigateTo, setNavigateTo] = useState<NavigationOption | undefined>(
+    undefined
+  );
 
-  const openCamera = useCallback(() => {
+  const openCamera = useCallback((navigateTo?: NavigationOption) => {
     setIsVisible(true);
+    setNavigateTo(navigateTo);
   }, []);
 
   const closeCamera = useCallback(() => {
@@ -40,6 +48,7 @@ export const CameraProvider: React.FC<CameraProviderProps> = ({ children }) => {
         setImage={setImage}
         isVisible={isVisible}
         closeCamera={closeCamera}
+        navigateTo={navigateTo}
       />
     </CameraContext.Provider>
   );

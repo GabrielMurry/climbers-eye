@@ -13,9 +13,14 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { selectUser } from "../../redux/features/user/userSelectors";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { BoulderStackParamList } from "../../navigation/BoulderStack";
-import { useNavigation } from "@react-navigation/native";
+import {
+  CommonActions,
+  StackActions,
+  useNavigation,
+} from "@react-navigation/native";
 import PreviewHeader from "../../components/boulder/preview/PreviewHeader";
 import BoulderImage from "../../components/boulder/BoulderImage";
+import { HomeStackParamsList } from "../../navigation/HomeStack";
 
 type PreviewEditScreenProps = NativeStackScreenProps<
   BoulderStackParamList,
@@ -38,7 +43,7 @@ const PreviewEditScreen: React.FC<PreviewEditScreenProps> = ({ route }) => {
 
   const user = useAppSelector((state) => selectUser(state));
 
-  const { uri, width, height } = route.params;
+  const { boulderImage, wallImage } = route.params;
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -52,10 +57,19 @@ const PreviewEditScreen: React.FC<PreviewEditScreenProps> = ({ route }) => {
   const handleConfirm = async (isPublish: boolean) => {
     const formData = new FormData();
     formData.append("image", {
-      uri: uri,
+      uri: boulderImage.uri,
       name: name,
       type: `image/png`,
     } as any);
+
+    // If user is uploading an alternative angle to the default spray wall, add that alternative wall image to form data.
+    if (wallImage.uri !== spraywall.url) {
+      formData.append("altWallImage", {
+        uri: wallImage.uri,
+        name: `alt-${spraywall.name}`,
+        type: `image/jpg`,
+      } as any);
+    }
 
     formData.append("name", name);
     formData.append("description", description);
@@ -63,8 +77,8 @@ const PreviewEditScreen: React.FC<PreviewEditScreenProps> = ({ route }) => {
     formData.append("matching", isMatching.toString());
     formData.append("feetFollowHands", isFeetFollowHands.toString());
     formData.append("kickboardOn", isKickboardOn.toString());
-    formData.append("width", width.toString());
-    formData.append("height", height.toString());
+    formData.append("width", boulderImage.width.toString());
+    formData.append("height", boulderImage.height.toString());
     formData.append("setter", user.id.toString());
     formData.append("spraywall", spraywall.id.toString());
 
@@ -75,14 +89,39 @@ const PreviewEditScreen: React.FC<PreviewEditScreenProps> = ({ route }) => {
     if (response) {
       dispatch(addNewBoulder(response.data));
       handleVibrate();
-      navigation.navigate("TabsStack", {
-        screen: "HomeStack",
-        params: { screen: "Boulder", params: { boulderId: response.data.id } },
+      navigation.dispatch(() => {
+        StackActions.popToTop();
+        return StackActions.replace("TabsStack", {
+          screen: "HomeStack",
+          params: {
+            screen: "Boulder",
+            params: { boulderId: response.data.id },
+          },
+        });
       });
-      dispatch(appendExcludeId(response.data.id));
+      // dispatch(appendExcludeId(response.data.id));
     } else {
       console.error("Failed to upload new boulder.");
     }
+    useEffect(() => {
+      // Function to log the current stack
+      const logCurrentStack = () => {
+        const currentRoute = navigation.getState()?.routes;
+        const routeNames = currentRoute?.map((route) => route.name);
+        console.log("Current Stack:", routeNames);
+      };
+
+      // Log the stack on component mount
+      logCurrentStack();
+
+      // Subscribe to navigation state changes
+      const unsubscribe = navigation.addListener("state", () => {
+        logCurrentStack();
+      });
+
+      // Unsubscribe on component unmount
+      return unsubscribe;
+    }, [navigation]);
     // const data = {
     //   name,
     //   description,
@@ -125,10 +164,10 @@ const PreviewEditScreen: React.FC<PreviewEditScreenProps> = ({ route }) => {
     <SafeAreaView style={styles.container}>
       <PreviewHeader />
       <PreviewImage
-        boulderUri={uri}
-        spraywallUri={spraywall.url}
-        width={width}
-        height={height}
+        boulderUri={boulderImage.uri}
+        spraywallUri={wallImage.uri}
+        width={boulderImage.width}
+        height={boulderImage.height}
       />
       <PreviewInputData
         name={name}

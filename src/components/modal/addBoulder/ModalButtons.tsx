@@ -12,9 +12,11 @@ import * as ImagePicker from "expo-image-picker";
 import ModalButton from "./ModalButton";
 import { colors } from "../../../utils/styles";
 import { getImageFromLibrary } from "../../../utils/imageLibrary";
+import { useCameraContext } from "../../../contexts/CameraContext";
 
 const ModalButtons = () => {
   const navigation = useNavigation();
+  const { openCamera } = useCameraContext();
 
   const spraywall = useAppSelector((state) => selectSpraywall(state));
   if (!spraywall) {
@@ -24,7 +26,7 @@ const ModalButtons = () => {
 
   const handleCameraPressed = () => {
     navigation.goBack();
-    navigation.navigate("CameraStack", { screen: "Camera" });
+    openCamera("EditBoulder");
   };
 
   const handleDefaultImagePressed = () => {
@@ -55,16 +57,6 @@ const ModalButtons = () => {
         },
       },
     });
-    // navigation.navigate("SpraywallStack", {
-    //   screen: "AddNewSprayWall",
-    //   params: {
-    //     image: {
-    //       url: image.uri,
-    //       width: image.width,
-    //       height: image.height,
-    //     },
-    //   },
-    // });
   };
 
   return (

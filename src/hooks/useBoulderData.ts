@@ -57,6 +57,9 @@ export const useBoulderData = () => {
   };
 
   useEffect(() => {
+    if (spraywalls.length === 0) {
+      return;
+    }
     fetchInitialPageBoulders();
     fetchCircuits();
   }, [filters, spraywalls, spraywall]);
@@ -83,7 +86,7 @@ export const useBoulderData = () => {
   };
 
   const getPath = () => {
-    return { spraywallId: spraywall!.id };
+    return { spraywallId: spraywall?.id };
   };
 
   const getQueries = (page: number) => {
@@ -95,7 +98,7 @@ export const useBoulderData = () => {
       activity: filters.activity,
       status: filters.climbStatus,
       circuit: filters.circuit,
-      excludeIds: filters.excludeIds,
+      excludeIds: [],
       page: page,
     };
   };

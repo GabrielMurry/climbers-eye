@@ -12,10 +12,17 @@ export const spraywallSlice = createSlice({
   reducers: {
     appendSpraywall: (state, action: PayloadAction<Spraywall>) => {
       state.objects.push(action.payload);
+      if (!state.selectedId) {
+        state.selectedId = action.payload.id;
+      }
     },
     setSpraywalls: (state, action: PayloadAction<Spraywall[]>) => {
-      state.objects = action.payload;
-      state.selectedId = action.payload[0].id;
+      if (action.payload.length === 0) {
+        state = initialState;
+      } else {
+        state.objects = action.payload;
+        state.selectedId = action.payload[0].id;
+      }
     },
     setSelectedSpraywallId: (state, action: PayloadAction<number>) => {
       state.selectedId = action.payload;

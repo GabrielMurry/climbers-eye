@@ -12,6 +12,8 @@ import { User } from "../../../utils/types/user";
 import BoulderImage from "../BoulderImage";
 import { useAppSelector } from "../../../redux/hooks";
 import { selectSpraywall } from "../../../redux/features/spraywall/spraywallSelectors";
+import { View } from "react-native";
+import InfoRow6 from "./InfoRow6";
 
 type BodyProps = {
   boulder: Boulder;
@@ -31,16 +33,18 @@ const Body: React.FC<BodyProps> = ({
     return;
   }
 
-  boulder.url;
+  if (!boulder) {
+    return;
+  }
 
   return (
-    <>
+    <View style={{ alignItems: "center" }}>
       <BoulderImage
         boulderUri={boulder.url}
         spraywallUri={spraywall.url}
         width={boulder.width}
         height={boulder.height}
-        shrinkScale={0.4}
+        // shrinkScale={0.3}
       />
       <DraftNotif boulder={boulder} />
       <InfoRow1 boulder={boulder} userID={user.id} />
@@ -51,7 +55,9 @@ const Body: React.FC<BodyProps> = ({
       />
       <InfoRow3 boulder={boulder} />
       <InfoRow4 boulder={boulder} />
-    </>
+      <InfoRow6 boulder={boulder} />
+      <View style={{ height: 50, width: "100%", backgroundColor: "red" }} />
+    </View>
   );
 };
 

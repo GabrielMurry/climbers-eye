@@ -22,6 +22,7 @@ const PreviewImage: React.FC<PreviewImageProps> = ({
         padding: 5,
         justifyContent: "center",
         alignItems: "center",
+        flex: 1,
       }}
     >
       <BoulderImage
@@ -29,7 +30,6 @@ const PreviewImage: React.FC<PreviewImageProps> = ({
         spraywallUri={spraywallUri}
         width={width}
         height={height}
-        shrinkScale={0.15}
       />
     </View>
   );

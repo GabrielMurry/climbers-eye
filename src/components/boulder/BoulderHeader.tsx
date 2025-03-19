@@ -27,6 +27,9 @@ const BoulderHeader: React.FC<BoulderHeaderProps> = ({ boulderId }) => {
   const dispatch = useAppDispatch();
 
   const boulder = useAppSelector((state) => selectBoulder(state, boulderId));
+  if (!boulder) {
+    return;
+  }
   const user = useAppSelector((state) => selectUser(state));
 
   const handleDeleteBoulder = () => {

@@ -8,8 +8,11 @@ type FooterProps = {
 };
 
 const Footer: React.FC<FooterProps> = ({ boulder }) => {
+  if (!boulder) {
+    return;
+  }
   return (
-    <>
+    <View style={{ backgroundColor: "blue" }}>
       {/* Tags? */}
       <InfoRow6 boulder={boulder} />
       {/* separator line */}
@@ -23,7 +26,7 @@ const Footer: React.FC<FooterProps> = ({ boulder }) => {
           }}
         />
       </View>
-    </>
+    </View>
   );
 };
 

@@ -14,12 +14,15 @@ import { ImageObjUrl } from "../../../utils/types/image";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import Header from "../../common/header/Header";
 import { XMarkIcon } from "react-native-heroicons/outline";
+import { NavigationOption } from "../../../contexts/CameraContext";
+import { useNavigation } from "@react-navigation/native";
 
 type CameraModalProps = {
   image: ImageObjUrl | null;
   setImage: (image: ImageObjUrl | null) => void;
   isVisible: boolean;
   closeCamera: () => void;
+  navigateTo?: NavigationOption;
 };
 
 const CameraModal: React.FC<CameraModalProps> = ({
@@ -27,7 +30,10 @@ const CameraModal: React.FC<CameraModalProps> = ({
   setImage,
   isVisible,
   closeCamera,
+  navigateTo,
 }) => {
+  const navigation = useNavigation();
+
   const [cameraReady, setCameraReady] = useState(false);
   const [permission, requestPermission] = useCameraPermissions();
 
@@ -73,6 +79,19 @@ const CameraModal: React.FC<CameraModalProps> = ({
 
   const handleSubmitImage = async () => {
     closeCamera();
+    if (navigateTo) {
+      switch (navigateTo) {
+        case "EditBoulder":
+          if (!image) return;
+          navigation.navigate("BoulderStack", {
+            screen: "EditBoulder",
+            params: { image },
+          });
+          break;
+        default:
+          console.error("Not a valid screen to navigate to.");
+      }
+    }
   };
 
   const LeftIcon = (

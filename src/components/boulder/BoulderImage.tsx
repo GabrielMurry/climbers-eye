@@ -1,13 +1,8 @@
-import { Pressable, Dimensions } from "react-native";
-import React from "react";
+import { Pressable, Dimensions, View } from "react-native";
+import React, { useState } from "react";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { Image } from "expo-image";
-import { useModalFullScreenImage } from "../../contexts/ModalFullScreenImageContext";
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from "react-native-reanimated";
+import { useNavigation } from "@react-navigation/native";
 
 type BoulderImageProps = {
   spraywallUri: string;
@@ -19,7 +14,9 @@ type BoulderImageProps = {
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const SCREEN_HEIGHT = Dimensions.get("window").height;
-const AnimatedImage = Animated.createAnimatedComponent(Image);
+
+const centerX = SCREEN_WIDTH / 2;
+const centerY = SCREEN_HEIGHT / 2;
 
 const BoulderImage: React.FC<BoulderImageProps> = ({
   spraywallUri,
@@ -28,86 +25,56 @@ const BoulderImage: React.FC<BoulderImageProps> = ({
   height,
   shrinkScale = 1,
 }) => {
-  const { openModal } = useModalFullScreenImage();
+  const navigation = useNavigation();
 
   const normalWidth = width * shrinkScale;
   const normalHeight = height * shrinkScale;
   const enlargedWidth = SCREEN_WIDTH;
   const enlargedHeight = height * (SCREEN_WIDTH / width);
 
-  const animatedWidth = useSharedValue(normalWidth);
-  const animatedHeight = useSharedValue(normalHeight);
-  const isFullScreen = useSharedValue(false);
-
-  //   const animatedStyle = useAnimatedStyle(() => {
-  //     return {
-  //       width: size.value,
-  //       height: size.value,
-  //     };
-  //   });
-
-  const handleIncreaseSize = () => {
-    animatedWidth.value = withTiming(enlargedWidth, {
-      duration: 250,
-    });
-    animatedHeight.value = withTiming(enlargedHeight, {
-      duration: 250,
-    });
-  };
-
-  const handleDecreaseSize = () => {
-    animatedWidth.value = withTiming(normalWidth, {
-      duration: 250,
-    });
-    animatedHeight.value = withTiming(normalHeight, {
-      duration: 250,
-    });
-  };
-
-  const toggleFullScreen = () => {
-    if (isFullScreen.get()) {
-      handleDecreaseSize();
-    } else {
-      //   openModal();
-      handleIncreaseSize();
-    }
-    isFullScreen.value = !isFullScreen.value;
-  };
+  const [containerHeight, setContainerHeight] = useState(0);
 
   return (
-    <Pressable onPress={toggleFullScreen}>
-      <Animated.View
+    <Pressable
+      onPress={() =>
+        navigation.navigate("BoulderImageFull", {
+          boulderUri,
+          spraywallUri,
+          width: enlargedWidth,
+          height: enlargedHeight,
+        })
+      }
+      onLayout={(event) => {
+        const { height } = event.nativeEvent.layout;
+        setContainerHeight(height);
+      }}
+      style={{
+        alignItems: "center",
+        width: containerHeight * (width / height),
+      }}
+    >
+      <View
         style={{
           backgroundColor: "black",
-          width: animatedWidth,
-          height: animatedHeight,
+          width: containerHeight * (width / height),
+          height: containerHeight,
+          position: "absolute",
         }}
-      >
-        <Image
-          source={spraywallUri}
-          style={{
-            width: "100%",
-            height: "100%",
-            opacity: 0.5,
-          }}
-          contentFit="contain"
-        />
-        <MaskedView
-          style={{ position: "absolute", width: "100%", height: "100%" }}
-          maskElement={
-            <Image
-              source={boulderUri}
-              style={{
-                width: "100%",
-                height: "100%",
-                opacity: 1,
-              }}
-              contentFit="contain"
-            />
-          }
-        >
+      />
+      <Image
+        source={spraywallUri}
+        style={{
+          width: "100%",
+          height: "100%",
+          opacity: 0.5,
+        }}
+        contentFit="contain"
+      />
+      <MaskedView
+        style={{ position: "absolute", width: "100%", height: "100%" }}
+        maskElement={
           <Image
-            source={spraywallUri}
+            source={boulderUri}
             style={{
               width: "100%",
               height: "100%",
@@ -115,18 +82,28 @@ const BoulderImage: React.FC<BoulderImageProps> = ({
             }}
             contentFit="contain"
           />
-        </MaskedView>
+        }
+      >
         <Image
-          source={boulderUri}
+          source={spraywallUri}
           style={{
             width: "100%",
             height: "100%",
-            position: "absolute",
-            opacity: 0.5,
+            opacity: 1,
           }}
           contentFit="contain"
         />
-      </Animated.View>
+      </MaskedView>
+      <Image
+        source={boulderUri}
+        style={{
+          width: "100%",
+          height: "100%",
+          position: "absolute",
+          opacity: 0.5,
+        }}
+        contentFit="contain"
+      />
     </Pressable>
   );
 };

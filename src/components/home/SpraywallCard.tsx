@@ -23,8 +23,6 @@ const SpraywallCard: React.FC<SpraywallCardProps> = ({
     return <Text>Selected spray wall not found.</Text>;
   }
 
-  console.log(spraywall.url);
-
   return (
     <Pressable
       style={{

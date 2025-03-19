@@ -2,6 +2,9 @@ import { request } from "../common/apiRequest";
 import { Data, Path, Queries } from "./types";
 import { BASE_URL } from "@env";
 
+console.log(BASE_URL);
+console.log("--");
+
 export const getBoulderList = async (path: Path, queries: Queries) => {
   return await request(
     "get",
@@ -16,10 +19,6 @@ export const getNextPageBoulderList = async (nextPage: string) => {
 
 export const getBoulderDetail = async (path: Path) => {
   return await request("get", `boulder/detail/${path.boulderId}`);
-};
-
-export const compositeBoulder = async (data: FormData) => {
-  return await request("post", "boulder/composite/", data);
 };
 
 export const addBoulderToSpraywall = async (path: Path, data: FormData) => {

@@ -35,7 +35,9 @@ const FlatListSpraywalls: React.FC<FlatListSpraywallsProps> = ({
       <FlatList
         data={spraywalls}
         renderItem={renderSpraywall}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item, index) =>
+          item ? item.id.toString() : index.toString()
+        }
         contentContainerStyle={{
           gap: 10,
           height: height,

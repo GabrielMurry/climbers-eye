@@ -2,7 +2,6 @@ import React, { RefObject, useState } from "react";
 import Header from "../../common/header/Header";
 import BackIcon from "../../common/header/BackIcon";
 import { useNavigation } from "@react-navigation/native";
-import { compositeBoulder } from "../../../services/boulder/boulder";
 import { RefProps } from "../../canvas/CanvasBoard/types";
 import * as FileSystem from "expo-file-system";
 import { ImageObjUrl } from "../../../utils/types/image";
@@ -10,51 +9,37 @@ import { Text, TouchableOpacity } from "react-native";
 
 type EditBoulderHeaderProps = {
   canvasRef: RefObject<RefProps>;
-  image: ImageObjUrl;
+  wallImage: ImageObjUrl;
 };
 
 const EditBoulderHeader: React.FC<EditBoulderHeaderProps> = ({
   canvasRef,
-  image,
+  wallImage,
 }) => {
   const navigation = useNavigation();
 
   const handleDonePress = async () => {
     try {
-      const localFile = await canvasRef.current?.saveAsLocalFile();
-      if (!localFile) {
+      const boulderLocalFile = await canvasRef.current?.saveAsLocalFile();
+      if (!boulderLocalFile) {
         console.error("File URI not returned.");
         return;
       }
       navigation.navigate("BoulderStack", {
         screen: "PreviewEdit",
         params: {
-          uri: localFile.uri,
-          width: localFile.width,
-          height: localFile.height,
+          boulderImage: {
+            uri: boulderLocalFile.uri,
+            width: boulderLocalFile.width,
+            height: boulderLocalFile.height,
+          },
+          wallImage: {
+            uri: wallImage.url,
+            width: wallImage.width,
+            height: wallImage.height,
+          },
         },
       });
-      // console.log("------", fileUri);
-      // const formData = new FormData();
-      // formData.append("photo", {
-      //   uri: image.url,
-      //   name: "photo",
-      //   type: "image/jpeg",
-      // } as any);
-      // formData.append("canvas", {
-      //   uri: fileUri,
-      //   name: "canvas",
-      //   type: "image/png",
-      // } as any);
-      // const response = await compositeBoulder(formData);
-
-      // if (response) {
-      //   // "PreviewEdit", params: {image: response.data}
-      //   navigation.navigate("BoulderStack", {
-      //     screen: "PreviewEdit",
-      //     params: { image: response.data },
-      //   });
-      // }
     } catch (error) {
       console.error(error);
     }

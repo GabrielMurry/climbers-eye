@@ -25,7 +25,7 @@ const EditBoulderScreen: React.FC<EditBoulderScreenProps> = ({ route }) => {
   return (
     <View style={styles.container}>
       <SafeAreaView style={{ flex: 1 }}>
-        <EditBoulderHeader canvasRef={canvasRef} image={image} />
+        <EditBoulderHeader canvasRef={canvasRef} wallImage={image} />
         <ImageCanvas
           selectedColor={selectedColor}
           image={image}

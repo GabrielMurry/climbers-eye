@@ -5,6 +5,7 @@ export type Boulder = {
   url: string;
   width: number;
   height: number;
+  altWallUrl?: string | null;
   matching: boolean;
   publish: boolean;
   feetFollowHands: boolean;
