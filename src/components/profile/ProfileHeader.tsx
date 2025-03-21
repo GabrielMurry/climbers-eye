@@ -7,14 +7,16 @@ import { useModalOptions } from "../../contexts/ModalOptionsContext";
 import { logoutUser } from "../../services/auth";
 import { CommonActions, useNavigation } from "@react-navigation/native";
 import { selectUser } from "../../redux/features/user/userSelectors";
-import { useAppSelector } from "../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { Pressable } from "react-native";
 import { Image } from "expo-image";
 import { UserIcon } from "react-native-heroicons/outline";
 import * as SecureStore from "expo-secure-store";
+import { setIsSignedIn } from "../../redux/features/user/userSlice";
 
 const ProfileHeader = () => {
   const navigation = useNavigation();
+  const dispatch = useAppDispatch();
 
   const user = useAppSelector((state) => selectUser(state));
 
@@ -27,18 +29,10 @@ const ProfileHeader = () => {
       const data = { refresh: refreshToken };
       const response = await logoutUser(data);
       if (response.status === 200) {
-        // Clear tokens from storage
+        // Clear tokens from secure storage
         await SecureStore.deleteItemAsync("accessToken");
         await SecureStore.deleteItemAsync("refreshToken");
-        // Reset the navigation stack and navigate to the login screen
-        navigation.dispatch(
-          CommonActions.reset({
-            index: 0,
-            routes: [
-              { name: "AuthStack", state: { routes: [{ name: "Login" }] } },
-            ],
-          })
-        );
+        dispatch(setIsSignedIn(false));
       }
     } catch (error) {
       console.error("Failed to log out:", error);
