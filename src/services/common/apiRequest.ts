@@ -1,7 +1,7 @@
 import axiosInstance from "./axiosInstance";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { REFERER } from "@env";
 import { AxiosRequestConfig } from "axios";
+import * as SecureStore from "expo-secure-store";
 
 const request = async (
   method: string,
@@ -11,8 +11,8 @@ const request = async (
   try {
     console.log(method, endpoint);
     // grab csrf token, access token, and refresh token from storage
-    const csrfToken = await AsyncStorage.getItem("csrfToken");
-    const accessToken = await AsyncStorage.getItem("accessToken");
+    const csrfToken = await SecureStore.getItemAsync("csrfToken");
+    const accessToken = await SecureStore.getItemAsync("accessToken");
 
     // if (data instanceof FormData) {
     //   console.log("FORM DATA");
@@ -92,11 +92,14 @@ const request = async (
 
     // Update CSRF token if new one received - put in storage
     if (response.data.csrfToken) {
-      await AsyncStorage.setItem("csrfToken", response.data.csrfToken);
+      await SecureStore.setItemAsync("csrfToken", response.data.csrfToken);
     }
     if (response.data.accessToken && response.data.refreshToken) {
-      await AsyncStorage.setItem("accessToken", response.data.accessToken);
-      await AsyncStorage.setItem("refreshToken", response.data.refreshToken);
+      await SecureStore.setItemAsync("accessToken", response.data.accessToken);
+      await SecureStore.setItemAsync(
+        "refreshToken",
+        response.data.refreshToken
+      );
     }
 
     // return response object containing our status and data (data may be null)

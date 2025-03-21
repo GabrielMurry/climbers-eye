@@ -13,6 +13,9 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
+      "config": {
+        "usesNonExemptEncryption": false
+      },
       "supportsTablet": true,
       "bundleIdentifier": "com.gabrielmurry.Spray",
       "icon": "./src/assets/images/icon.png"
@@ -39,6 +42,13 @@
           "cameraPermission": "Allow Climber's Eye to open the camera.",
           "//": "Disables the microphone permission",
           "microphonePermission": false
+        }
+      ],
+      [
+        "expo-secure-store",
+        {
+          "configureAndroidBackup": true,
+          "faceIDPermission": "Allow Climber's Eye to access your Face ID biometric data."
         }
       ]
     ],

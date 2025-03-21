@@ -1,6 +1,6 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { BASE_URL, REFERER } from "@env";
+import * as SecureStore from "expo-secure-store";
 
 console.log(BASE_URL);
 console.log("--");
@@ -16,10 +16,13 @@ const axiosTokenInstance = axios.create({
   },
 });
 
-async function tokenRefreshService() {
-  const csrfToken = await AsyncStorage.getItem("csrfToken");
-  const currentAccessToken = await AsyncStorage.getItem("accessToken");
-  const currentRefreshToken = await AsyncStorage.getItem("refreshToken");
+async function tokenRefreshService(): Promise<{
+  accessToken: string;
+  refreshToken: string;
+}> {
+  const csrfToken = await SecureStore.getItemAsync("csrfToken");
+  const currentAccessToken = await SecureStore.getItemAsync("accessToken");
+  const currentRefreshToken = await SecureStore.getItemAsync("refreshToken");
 
   const data = { currentAccessToken, currentRefreshToken };
 

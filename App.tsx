@@ -33,6 +33,7 @@ import { ModalOptionsProvider } from "./src/contexts/ModalOptionsContext";
 import { ModalFullScreenImageProvider } from "./src/contexts/ModalFullScreenImageContext";
 import { CameraProvider } from "./src/contexts/CameraContext";
 import BoulderImageFullScreen from "./src/screens/boulder/BoulderImageFullScreen";
+import { useAppSelector } from "./src/redux/hooks";
 
 export type RootStackParamList = {
   AuthStack: NavigatorScreenParams<AuthStackParamList>;
@@ -55,13 +56,14 @@ export type RootStackParamList = {
 const RootStack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
+  const isSignedIn = useAppSelector((state) => state.user.isSignedIn);
   const [isLoading, setIsLoading] = useState(true);
-  const [hasCredentials, setHasCredentials] = useState(false);
 
   useEffect(() => {
-    const determineInitialRoute = async () => {
+    const bootstrapAsync = async () => {
+      setIsLoading(true);
       try {
-        setHasCredentials(await checkCredentials());
+        await checkCredentials();
       } catch (error) {
         console.error(error);
       } finally {
@@ -69,12 +71,11 @@ export default function App() {
       }
     };
 
-    determineInitialRoute();
+    bootstrapAsync();
   }, []);
 
   if (isLoading) {
-    // Render a loading screen while user's credentials are being determined
-    return <ActivityIndicator />;
+    return <></>;
   }
 
   return (
@@ -90,56 +91,60 @@ export default function App() {
                     <>
                       <StatusBar barStyle={"dark-content"} />
                       <RootStack.Navigator
-                        initialRouteName={"AuthStack"}
                         screenOptions={{ headerShown: false }}
                       >
-                        <RootStack.Screen
-                          name="AuthStack"
-                          component={AuthNavigator}
-                        />
-                        <RootStack.Screen
-                          name="TabsStack"
-                          component={TabsStack}
-                        />
-                        <RootStack.Screen
-                          name="GymStack"
-                          component={GymStack}
-                        />
-                        <RootStack.Screen
-                          name="SpraywallStack"
-                          component={SpraywallStack}
-                        />
-                        <RootStack.Screen
-                          name="BoulderStack"
-                          component={BoulderStack}
-                        />
-                        <RootStack.Screen
-                          name="ProfileStack"
-                          component={ProfileStack}
-                        />
-                        <RootStack.Screen
-                          name="CircuitStack"
-                          component={CircuitStack}
-                        />
-                        <RootStack.Screen
-                          name="MapStack"
-                          component={MapStack}
-                        />
-                        <RootStack.Screen
-                          name="Modal"
-                          component={ModalScreen}
-                          options={{
-                            presentation: "containedTransparentModal",
-                            animation: "fade",
-                          }}
-                        />
-                        <RootStack.Screen
-                          name="BoulderImageFull"
-                          component={BoulderImageFullScreen}
-                          options={{
-                            animation: "fade",
-                          }}
-                        />
+                        {!isSignedIn ? (
+                          <RootStack.Screen
+                            name="AuthStack"
+                            component={AuthNavigator}
+                          />
+                        ) : (
+                          <>
+                            <RootStack.Screen
+                              name="TabsStack"
+                              component={TabsStack}
+                            />
+                            <RootStack.Screen
+                              name="GymStack"
+                              component={GymStack}
+                            />
+                            <RootStack.Screen
+                              name="SpraywallStack"
+                              component={SpraywallStack}
+                            />
+                            <RootStack.Screen
+                              name="BoulderStack"
+                              component={BoulderStack}
+                            />
+                            <RootStack.Screen
+                              name="ProfileStack"
+                              component={ProfileStack}
+                            />
+                            <RootStack.Screen
+                              name="CircuitStack"
+                              component={CircuitStack}
+                            />
+                            <RootStack.Screen
+                              name="MapStack"
+                              component={MapStack}
+                            />
+                            <RootStack.Screen
+                              name="Modal"
+                              component={ModalScreen}
+                              options={{
+                                presentation: "containedTransparentModal",
+                                animation: "fade",
+                              }}
+                            />
+                            <RootStack.Screen
+                              name="BoulderImageFull"
+                              component={BoulderImageFullScreen}
+                              options={{
+                                animation: "fade",
+                              }}
+                            />
+                          </>
+                        )}
                       </RootStack.Navigator>
                     </>
                   </CameraProvider>

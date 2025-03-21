@@ -1,10 +1,13 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { jwtDecode } from "jwt-decode";
+import * as SecureStore from "expo-secure-store";
+import { useAppDispatch } from "../redux/hooks";
+import { setIsSignedIn } from "../redux/features/user/userSlice";
 
 export const checkCredentials = async () => {
+  const dispatch = useAppDispatch();
   // Checks expirations of tokens
-  const accessToken = await AsyncStorage.getItem("accessToken");
-  const refreshToken = await AsyncStorage.getItem("refreshToken");
+  const accessToken = await SecureStore.getItemAsync("accessToken");
+  const refreshToken = await SecureStore.getItemAsync("refreshToken");
 
   if (!accessToken || !refreshToken) {
     return false;
@@ -18,8 +21,9 @@ export const checkCredentials = async () => {
 
   // If both tokens have expired, return false
   if (accessExp < currentTime && refreshExp < currentTime) {
-    return false;
+    dispatch(setIsSignedIn(false));
+  } else {
+    console.log("HAS CREDENTIALS");
+    dispatch(setIsSignedIn(true));
   }
-
-  return false;
 };

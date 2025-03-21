@@ -17,7 +17,7 @@ import {
   UserIcon,
 } from "react-native-heroicons/outline";
 import { loginUser } from "../../services/auth";
-import { setUser } from "../../redux/features/user/userSlice";
+import { setIsSignedIn, setUser } from "../../redux/features/user/userSlice";
 import { setGym } from "../../redux/features/gym/gymSlice";
 import { setSpraywalls } from "../../redux/features/spraywall/spraywallSlice";
 import { useAppDispatch } from "../../redux/hooks";
@@ -60,19 +60,7 @@ const LoginScreen = () => {
         creationsCount: user.creationsCount,
       };
       dispatch(setUser(userInfo));
-      if (user.gym) {
-        dispatch(setGym(user.gym));
-        dispatch(setSpraywalls(user.spraywalls));
-        navigation.navigate("TabsStack", {
-          screen: "HomeStack",
-          params: { screen: "HomeList" },
-        });
-      } else {
-        navigation.navigate("TabsStack", {
-          screen: "MapStack",
-          params: { screen: "Map" },
-        });
-      }
+      dispatch(setIsSignedIn(true));
     }
     setIsLoading(false);
   };

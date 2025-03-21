@@ -1,8 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { User } from "../../../utils/types/user";
+import * as SecureStore from "expo-secure-store";
 
 const initialState = {
   object: {} as User,
+  isSignedIn: false,
 };
 
 export const userSlice = createSlice({
@@ -15,9 +17,12 @@ export const userSlice = createSlice({
     updateUser: (state, action) => {
       if (state.object) Object.assign(state.object, action.payload);
     },
+    setIsSignedIn: (state, action) => {
+      state.isSignedIn = action.payload;
+    },
   },
 });
 
-export const { setUser, updateUser } = userSlice.actions;
+export const { setUser, updateUser, setIsSignedIn } = userSlice.actions;
 
 export default userSlice.reducer;

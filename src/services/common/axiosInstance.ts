@@ -1,7 +1,7 @@
 import axios from "axios";
 import { BASE_URL } from "@env";
 import tokenRefreshService from "./tokenRefreshService";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as SecureStore from "expo-secure-store";
 
 console.log(BASE_URL);
 console.log("--");
@@ -29,12 +29,10 @@ axiosInstance.interceptors.response.use(
       originalRequest._retry = true; // mark the request that is a retry
       try {
         const { accessToken, refreshToken } = await tokenRefreshService(); // This service handles the token refresh logic
-        console.log(accessToken);
-        console.log(refreshToken);
         if (accessToken && refreshToken) {
-          // Store tokens in AsyncStorage (access token is new. Refresh token stays the same as previous)
-          await AsyncStorage.setItem("accessToken", accessToken);
-          await AsyncStorage.setItem("refreshToken", refreshToken);
+          // Store tokens in SecureStore (access token is new. Refresh token stays the same as previous)
+          await SecureStore.setItemAsync("accessToken", accessToken);
+          await SecureStore.setItemAsync("refreshToken", refreshToken);
 
           // Update the token on the original request and resend it
           axiosInstance.defaults.headers.common[
