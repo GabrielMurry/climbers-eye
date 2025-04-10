@@ -48,7 +48,11 @@ export const circuitSlice = createSlice({
         );
 
         if (circuit) {
-          circuit.boulders = [...circuit.boulders, boulderId];
+          circuit.boulderIds.push(boulderId);
+        } else {
+          console.warn(
+            "Attempted to add boulder to circuit. Circuit not found."
+          );
         }
       },
       prepare: (circuitId: number, boulderId: number) => {
@@ -66,8 +70,17 @@ export const circuitSlice = createSlice({
         );
 
         if (circuit) {
-          circuit.boulders = circuit.boulders.filter(
-            (circuitBoulderId) => circuitBoulderId !== boulderId
+          const index = circuit.boulderIds.indexOf(boulderId);
+          if (index > -1) {
+            circuit.boulderIds.splice(index, 1);
+          } else {
+            console.warn(
+              "Attempted to find index of boulder ID in circuit.boulderIds array. Index not found."
+            );
+          }
+        } else {
+          console.warn(
+            "Attempted to remove boulder from circuit. Circuit not found."
           );
         }
       },

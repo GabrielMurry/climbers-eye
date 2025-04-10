@@ -93,7 +93,7 @@ const CanvasBoard = forwardRef<RefProps, CanvasBoardProps>(
         const image = await cRefColorMask.current?.makeImageSnapshotAsync();
         if (image) {
           const base64 = image.encodeToBase64(ImageFormat.PNG);
-          const uri = FileSystem.documentDirectory + `${uuid.v4()}.png`;
+          const uri = FileSystem.cacheDirectory + `${uuid.v4()}.png`;
           await FileSystem.writeAsStringAsync(uri, base64, {
             encoding: FileSystem.EncodingType.Base64,
           });

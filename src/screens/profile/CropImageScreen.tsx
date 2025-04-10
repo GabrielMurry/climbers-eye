@@ -19,6 +19,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ProfileStackParamList } from "../../navigation/ProfileStack";
 import { ZoomableViewEvent } from "@openspacelabs/react-native-zoomable-view/src/typings";
 import { createImageFormData } from "../../utils/formData";
+import { deleteLocalFile } from "../../utils/localFile";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 

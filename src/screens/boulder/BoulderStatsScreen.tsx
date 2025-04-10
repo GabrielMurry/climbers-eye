@@ -1,10 +1,32 @@
 import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 // import BarChartHorizontal from "../../components/boulder/stats/BarChartHorizontal";
 import QualityRating from "../../components/boulder/QualityRating";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { BoulderStackParamList } from "../../navigation/BoulderStack";
+import { ChartData } from "./BoulderScreen";
+import { getBoulderDetail } from "../../services/boulder/boulder";
+import BarChartHorizontal from "../../components/barChart/BarChartHorizontal";
 
-const BoulderStatsScreen = () => {
-  const { boulder, chartData } = route.params;
+type BoulderStatsScreenProps = NativeStackScreenProps<
+  BoulderStackParamList,
+  "BoulderStats"
+>;
+
+const BoulderStatsScreen: React.FC<BoulderStatsScreenProps> = ({ route }) => {
+  const boulder = route.params.boulder;
+
+  const [chartData, setChartData] = useState<ChartData[]>([]);
+
+  useEffect(() => {
+    const fetchBoulderStats = async () => {
+      const path = { boulderId: boulder.id };
+      const response = await getBoulderDetail(path);
+      setChartData(response.data.boulderBarChartData);
+    };
+
+    fetchBoulderStats();
+  }, []);
 
   return (
     <View

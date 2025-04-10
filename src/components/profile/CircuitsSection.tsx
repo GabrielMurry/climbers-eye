@@ -69,7 +69,9 @@ const CircuitsSection = () => {
                   alignItems: "center",
                 }}
               >
-                <Text style={{ fontSize: 16 }}>{circuit.boulders.length}</Text>
+                <Text style={{ fontSize: 16 }}>
+                  {circuit.boulderIds.length}
+                </Text>
               </View>
               <View
                 style={{

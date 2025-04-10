@@ -2,11 +2,12 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { FilterHomeListScreen, HomeScreen } from "../screens/home";
 import { BoulderScreen } from "../screens/boulder";
 import { NavigationProvider, StackName } from "../contexts/NavigationContext";
+import { Boulder } from "../utils/types/boulder";
 
 export type HomeStackParamsList = {
   HomeList: undefined;
   FilterHomeList: undefined;
-  Boulder: { boulderId: number };
+  Boulder: { boulder: Boulder };
 };
 
 const HomeStack = createNativeStackNavigator<HomeStackParamsList>();

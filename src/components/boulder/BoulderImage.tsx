@@ -69,6 +69,7 @@ const BoulderImage: React.FC<BoulderImageProps> = ({
           opacity: 0.5,
         }}
         contentFit="contain"
+        cachePolicy={"memory-disk"}
       />
       <MaskedView
         style={{ position: "absolute", width: "100%", height: "100%" }}
@@ -81,6 +82,7 @@ const BoulderImage: React.FC<BoulderImageProps> = ({
               opacity: 1,
             }}
             contentFit="contain"
+            cachePolicy={"memory-disk"}
           />
         }
       >
@@ -92,6 +94,7 @@ const BoulderImage: React.FC<BoulderImageProps> = ({
             opacity: 1,
           }}
           contentFit="contain"
+          cachePolicy={"memory-disk"}
         />
       </MaskedView>
       <Image
@@ -103,6 +106,7 @@ const BoulderImage: React.FC<BoulderImageProps> = ({
           opacity: 0.5,
         }}
         contentFit="contain"
+        cachePolicy={"memory-disk"}
       />
     </Pressable>
   );

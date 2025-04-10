@@ -1,5 +1,5 @@
 import { StyleSheet, FlatList, SafeAreaView } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import BoulderCard from "../../components/common/BoulderCard";
 import { useBoulderData } from "../../hooks/useBoulderData";
 import SearchAndFilters from "../../components/home/SearchAndFilters";

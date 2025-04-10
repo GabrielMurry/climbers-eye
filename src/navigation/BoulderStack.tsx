@@ -18,7 +18,7 @@ export type BoulderStackParamList = {
   EditBoulder: { image: ImageObjUrl };
   PreviewEdit: { boulderImage: ImageObjUri; wallImage: ImageObjUri };
   SendBoulder: { boulder: Boulder; userSendsData: UserSendsData[] };
-  BoulderStats: { boulder: Boulder; chartData: ChartData[] };
+  BoulderStats: { boulder: Boulder };
   BoulderUserSends: { userSendsData: UserSendsData[] };
 };
 

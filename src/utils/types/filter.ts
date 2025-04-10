@@ -7,5 +7,4 @@ export type Filter = {
   climbType: string;
   climbStatus: string;
   circuit: number | null;
-  excludeIds: number[];
 };

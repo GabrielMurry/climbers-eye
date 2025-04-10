@@ -17,19 +17,20 @@ import { Option } from "../../utils/types/options";
 import BackIcon from "../common/header/BackIcon";
 import OptionsIcon from "../common/header/OptionsIcon";
 import { useOptions } from "../../hooks/useOptions";
+import { Boulder } from "../../utils/types/boulder";
 
 type BoulderHeaderProps = {
-  boulderId: number;
+  boulder: Boulder;
 };
 
-const BoulderHeader: React.FC<BoulderHeaderProps> = ({ boulderId }) => {
+const BoulderHeader: React.FC<BoulderHeaderProps> = ({ boulder }) => {
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
 
-  const boulder = useAppSelector((state) => selectBoulder(state, boulderId));
-  if (!boulder) {
-    return;
-  }
+  // const boulder = useAppSelector((state) => selectBoulder(state, boulderId));
+  // if (!boulder) {
+  //   return;
+  // }
   const user = useAppSelector((state) => selectUser(state));
 
   const handleDeleteBoulder = () => {

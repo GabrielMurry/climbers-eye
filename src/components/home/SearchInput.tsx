@@ -1,11 +1,13 @@
 import { View, TouchableOpacity, Keyboard, StyleSheet } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { MagnifyingGlassIcon, XMarkIcon } from "react-native-heroicons/outline";
 import { TextInput } from "react-native";
 import { colors } from "../../utils/styles";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { selectFilters } from "../../redux/features/filter/filterSelectors";
 import { setSearch } from "../../redux/features/filter/filterSlice";
+import { debounce } from "lodash";
+import { debounce_speed } from "../../utils/constants/debounce";
 
 const SearchInput = () => {
   const dispatch = useAppDispatch();
@@ -13,6 +15,7 @@ const SearchInput = () => {
   const filters = useAppSelector((state) => selectFilters(state));
 
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+  const [searchText, setSearchText] = useState(filters.search);
 
   // Add an event listener to detect changes in keyboard visibility
   useEffect(() => {
@@ -39,25 +42,30 @@ const SearchInput = () => {
     }
   };
 
+  const dispatchText = (value: string) => {
+    dispatch(setSearch(value));
+  };
+
+  const searchDebouncer = useCallback(
+    debounce(dispatchText, debounce_speed.MEDIUM),
+    []
+  );
+
+  const handleOnChangeText = (value: string) => {
+    setSearchText(value);
+    searchDebouncer(value);
+  };
+
   return (
     <View style={styles.SearchInputContainer}>
       <MagnifyingGlassIcon size={20} color="gray" />
       <TextInput
         style={styles.SearchInput}
-        value={filters.search}
-        // onChange doesn't exist in react native. use onChangeText
-        onChangeText={(value) => dispatch(setSearch(value))} // in react native, you don't have to do e.target.value
+        value={searchText}
+        onChangeText={handleOnChangeText}
         placeholder="Search (name, setter, or grade)"
         autoComplete="off"
       />
-      {filters.search ? (
-        <TouchableOpacity
-          style={styles.resetSearchQuery}
-          onPress={() => dispatch(setSearch(""))}
-        >
-          <XMarkIcon size={12} color={"white"} />
-        </TouchableOpacity>
-      ) : null}
     </View>
   );
 };

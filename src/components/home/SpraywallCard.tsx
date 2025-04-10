@@ -57,6 +57,7 @@ const SpraywallCard: React.FC<SpraywallCardProps> = ({
           borderRadius: 2,
           opacity: !highlight ? 1 : spraywallCard.id === spraywall.id ? 1 : 0.8,
         }}
+        cachePolicy={"memory-disk"}
       />
     </Pressable>
   );

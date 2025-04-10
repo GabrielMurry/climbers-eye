@@ -78,12 +78,7 @@ const request = async (
       };
     }
 
-    console.log("config:", config);
-
-    console.log("test1");
-
     const response = await axiosInstance(config);
-    console.log("test2");
 
     // const response = await axiosInstance[req.method](
     //   `/${req.endpoint}`,

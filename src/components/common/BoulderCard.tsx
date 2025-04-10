@@ -18,7 +18,7 @@ const BoulderCard = React.memo((props: BoulderCardProps) => {
   const handleOnPress = () => {
     navigation.navigate("TabsStack", {
       screen: stackName,
-      params: { screen: "Boulder", params: { boulderId: props.boulder.id } },
+      params: { screen: "Boulder", params: { boulder: props.boulder } },
     });
   };
 

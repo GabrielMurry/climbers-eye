@@ -19,6 +19,8 @@ import InfoRow2 from "../../components/boulder/detail/InfoRow2";
 import InfoRow3 from "../../components/boulder/detail/InfoRow3";
 import InfoRow4 from "../../components/boulder/detail/InfoRow4";
 import InfoRow6 from "../../components/boulder/detail/InfoRow6";
+import { SCREEN_WIDTH } from "@gorhom/bottom-sheet";
+import { Image } from "expo-image";
 
 export type ChartData = {
   label: string;
@@ -31,13 +33,20 @@ type BoulderScreenProps = NativeStackScreenProps<
 >;
 
 const BoulderScreen: React.FC<BoulderScreenProps> = ({ route }) => {
-  const boulderId = route.params.boulderId;
+  const navigation = useNavigation();
+  const routedBoulder = route.params.boulder;
 
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => selectUser(state));
 
-  const boulder = useAppSelector((state) => selectBoulder(state, boulderId));
+  const boulder = useAppSelector((state) =>
+    selectBoulder(state, routedBoulder.id)
+  );
   if (!boulder) {
+    return;
+  }
+  const spraywall = useAppSelector((state) => selectSpraywall(state));
+  if (!spraywall) {
     return;
   }
 
@@ -58,25 +67,16 @@ const BoulderScreen: React.FC<BoulderScreenProps> = ({ route }) => {
   //   }, [])
   // );
 
-  const spraywall = useAppSelector((state) => selectSpraywall(state));
-  if (!spraywall) {
-    return;
-  }
-
-  if (!boulder) {
-    return;
-  }
-
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
-      <BoulderHeader boulderId={boulderId} />
+      <BoulderHeader boulder={boulder} />
       <ScrollView
         contentContainerStyle={{
           alignItems: "center",
         }}
       >
         <Header boulder={boulder} />
-        <View style={{ backgroundColor: "blue", height: 500 }}>
+        <View style={{ height: 500 }}>
           <BoulderImage
             boulderUri={boulder.url}
             spraywallUri={
@@ -84,7 +84,6 @@ const BoulderScreen: React.FC<BoulderScreenProps> = ({ route }) => {
             }
             width={boulder.width}
             height={boulder.height}
-            // shrinkScale={0.3}
           />
         </View>
         <DraftNotif boulder={boulder} />

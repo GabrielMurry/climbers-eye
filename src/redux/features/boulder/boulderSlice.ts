@@ -24,7 +24,7 @@ export const boulderSlice = createSlice({
         state,
         action: PayloadAction<{ id: number; updates: Partial<Boulder> }>
       ) => {
-        const { id, updates } = action.payload; // Destructure payload prepared by 'prepare'
+        const { id, updates } = action.payload;
         const boulder = state.objects.find((boulder) => boulder.id === id);
 
         if (boulder) {

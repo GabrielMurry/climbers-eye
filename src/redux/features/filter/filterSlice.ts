@@ -11,7 +11,6 @@ const defaultFilters: Filter = {
   climbType: "boulder",
   climbStatus: "all",
   circuit: null,
-  excludeIds: [],
 };
 
 const initialState = {
@@ -49,12 +48,6 @@ export const filterSlice = createSlice({
     resetCircuit: (state) => {
       state.object.circuit = initialState.object.circuit;
     },
-    appendExcludeId: (state, action: PayloadAction<number>) => {
-      state.object.excludeIds.push(action.payload);
-    },
-    resetExcludeIds: (state) => {
-      state.object.excludeIds = initialState.object.excludeIds;
-    },
     resetFilters: (state) => {
       // Mutating each field back to its initial value
       state.object.search = initialState.object.search;
@@ -65,7 +58,6 @@ export const filterSlice = createSlice({
       state.object.climbType = initialState.object.climbType;
       state.object.climbStatus = initialState.object.climbStatus;
       state.object.circuit = initialState.object.circuit;
-      state.object.excludeIds = initialState.object.excludeIds;
     },
   },
 });
@@ -80,8 +72,6 @@ export const {
   setClimbStatus,
   setCircuit,
   resetCircuit,
-  appendExcludeId,
-  resetExcludeIds,
   resetFilters,
 } = filterSlice.actions;
 

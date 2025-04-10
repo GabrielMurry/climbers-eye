@@ -26,10 +26,12 @@ import ReanimatedSwipeable, {
   SwipeableMethods,
 } from "react-native-gesture-handler/ReanimatedSwipeable";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import Reanimated, {
+import Animated, {
   SharedValue,
   useAnimatedStyle,
+  useSharedValue,
 } from "react-native-reanimated";
+import { updateBoulder } from "../../redux/features/boulder/boulderSlice";
 
 type CircuitCardProps = {
   circuit: Circuit;
@@ -51,13 +53,13 @@ const CircuitCard: React.FC<CircuitCardProps> = ({
   const swipeableRef = useRef<SwipeableMethods>(null);
 
   const isBoulderInCircuit = () => {
-    return circuit.boulders.some(
-      (circuitBoulder) => circuitBoulder.id === boulder.id
+    return circuit.boulderIds.some(
+      (circBoulderId) => circBoulderId === boulder.id
     );
   };
 
   useEffect(() => {
-    setIsChecked(isBoulderInCircuit);
+    setIsChecked(isBoulderInCircuit());
   }, [circuit]);
 
   const performRequest = async (method: string) => {
@@ -75,14 +77,9 @@ const CircuitCard: React.FC<CircuitCardProps> = ({
   };
 
   const handleCircuitPressed = async () => {
-    const method = handleIsBoulderInCircuit() ? "delete" : "post";
+    const method = isBoulderInCircuit() ? "delete" : "post";
+    dispatch(updateBoulder(boulder.id, { inCircuit: !isBoulderInCircuit() }));
     performRequest(method);
-  };
-
-  const handleIsBoulderInCircuit = () => {
-    return circuit.boulders.some(
-      (circuitBoulder) => circuitBoulder.id === boulder.id
-    );
   };
 
   const handleDelete = () => {
@@ -101,7 +98,7 @@ const CircuitCard: React.FC<CircuitCardProps> = ({
           onPress: async () => {
             const pathParams = { circuitId: circuit.id };
             dispatch(deleteCircuit(circuit.id));
-            await deleteCircuitAPI({ pathParams });
+            await deleteCircuitAPI(pathParams);
           },
           style: "destructive",
         },
@@ -116,9 +113,8 @@ const CircuitCard: React.FC<CircuitCardProps> = ({
         transform: [{ translateX: drag.value + SWIPE_COMP_WIDTH }],
       };
     });
-
     return (
-      <Reanimated.View style={styleAnimation}>
+      <Animated.View style={styleAnimation}>
         <TouchableOpacity
           onPress={handleDelete}
           style={{
@@ -131,33 +127,31 @@ const CircuitCard: React.FC<CircuitCardProps> = ({
         >
           <Text style={{ color: "white", fontWeight: "bold" }}>Delete</Text>
         </TouchableOpacity>
-      </Reanimated.View>
+      </Animated.View>
     );
   }
 
   return (
-    <GestureHandlerRootView>
-      <ReanimatedSwipeable
-        friction={2}
-        enableTrackpadTwoFingerGesture
-        rightThreshold={25}
-        renderRightActions={RightAction}
-        ref={swipeableRef}
+    <ReanimatedSwipeable
+      friction={2}
+      enableTrackpadTwoFingerGesture
+      rightThreshold={25}
+      renderRightActions={RightAction}
+      ref={swipeableRef}
+    >
+      <Pressable
+        onPress={handleCircuitPressed}
+        style={[styles.container, { height: height }]}
       >
-        <Pressable
-          onPress={handleCircuitPressed}
-          style={[styles.container, { height: height }]}
-        >
-          <View style={[styles.color, { backgroundColor: circuit.color }]} />
-          <View style={styles.cardInfoContainer}>
-            <Text>{circuit.name}</Text>
-            {isChecked ? (
-              <CheckIcon size={25} color={"black"} style={{ marginRight: 5 }} />
-            ) : null}
-          </View>
-        </Pressable>
-      </ReanimatedSwipeable>
-    </GestureHandlerRootView>
+        <View style={[styles.color, { backgroundColor: circuit.color }]} />
+        <View style={styles.cardInfoContainer}>
+          <Text>{circuit.name}</Text>
+          {isChecked ? (
+            <CheckIcon size={25} color={"black"} style={{ marginRight: 5 }} />
+          ) : null}
+        </View>
+      </Pressable>
+    </ReanimatedSwipeable>
   );
 };
 

@@ -1,5 +1,5 @@
 import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
-import React, { useMemo } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { LinkIcon } from "react-native-heroicons/outline";
 import { FontAwesome } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
@@ -16,6 +16,7 @@ import { updateBoulder } from "../../../redux/features/boulder/boulderSlice";
 import { Boulder } from "../../../utils/types/boulder";
 import { useNavigation } from "@react-navigation/native";
 import { useAppDispatch } from "../../../redux/hooks";
+import { debounce_speed } from "../../../utils/constants/debounce";
 
 type InfoRow1Props = {
   boulder: Boulder;
@@ -26,6 +27,9 @@ const InfoRow1: React.FC<InfoRow1Props> = ({ boulder, userID }) => {
   const navigation = useNavigation();
 
   const dispatch = useAppDispatch();
+
+  const [curLike, setCurLike] = useState(boulder.isLiked);
+  const [curBookmark, setCurBookmark] = useState(boulder.isBookmarked);
 
   const performLikeRequest = async (method: string) => {
     const pathParams = { boulderId: boulder.id };
@@ -40,30 +44,30 @@ const InfoRow1: React.FC<InfoRow1Props> = ({ boulder, userID }) => {
     }
   };
 
-  const debouncedHandleLikePressed = useMemo(
-    () =>
-      debounce(async (currentLike: boolean) => {
-        if (boulder.isLiked === currentLike) {
-          return;
-        }
-        const method = currentLike ? "post" : "delete";
-        const response = await performLikeRequest(method);
-        // Success! 201 == created and 204 == deleted
-        if (response?.status === 201 || response?.status === 204) {
-          return;
-        }
-        dispatch(updateBoulder(boulder.id, { isLiked: currentLike }));
-      }, 500),
-    [boulder.isLiked]
-  ); // Adjust the delay (in milliseconds) as needed
+  const likePressed = async (newLike: boolean) => {
+    if (newLike === curLike) {
+      return;
+    }
+    const method = newLike ? "post" : "delete";
+    const response = await performLikeRequest(method);
+    // Success! 201 (created) or 204 (deleted)
+    if (response?.status === 201 || response?.status === 204) {
+      setCurLike(newLike);
+      return;
+    }
+  };
+
+  const likeDebouncer = useCallback(
+    debounce(likePressed, debounce_speed.MEDIUM),
+    [curLike]
+  );
 
   const handleLikePressed = () => {
     // Optimistic updating
-    const currentLike = !boulder.isLiked;
-    dispatch(updateBoulder(boulder.id, { isLiked: currentLike }));
+    const newLike = !boulder.isLiked;
+    dispatch(updateBoulder(boulder.id, { isLiked: newLike }));
+    likeDebouncer(newLike);
     handleVibrate();
-    // Call the debounced function to handle the like/unlike action after a delay
-    debouncedHandleLikePressed(currentLike);
   };
 
   const performBookmarkRequest = async (method: string) => {
@@ -79,30 +83,30 @@ const InfoRow1: React.FC<InfoRow1Props> = ({ boulder, userID }) => {
     }
   };
 
-  const debouncedHandleBookmarkPressed = useMemo(
-    () =>
-      debounce(async (currentBookmark: boolean) => {
-        if (boulder.isBookmarked === currentBookmark) {
-          return;
-        }
-        const method = currentBookmark ? "post" : "delete";
-        const response = await performBookmarkRequest(method);
-        // Success! 201 == created and 204 == deleted
-        if (response?.status === 201 || response?.status === 204) {
-          return;
-        }
-        dispatch(updateBoulder(boulder.id, { isBookmarked: currentBookmark }));
-      }, 500),
-    [boulder.isBookmarked]
-  ); // Adjust the delay (in milliseconds) as needed
+  const bookmarkPressed = async (newBookmark: boolean) => {
+    if (newBookmark === curBookmark) {
+      return;
+    }
+    const method = newBookmark ? "post" : "delete";
+    const response = await performBookmarkRequest(method);
+    // Success! 201 (created) or 204 (deleted)
+    if (response?.status === 201 || response?.status === 204) {
+      setCurBookmark(newBookmark);
+      return;
+    }
+  };
+
+  const bookmarkDebouncer = useCallback(
+    debounce(bookmarkPressed, debounce_speed.MEDIUM),
+    [curBookmark]
+  );
 
   const handleBookmarkPressed = () => {
     // Optimistic updating
-    const currentBookmark = !boulder.isBookmarked;
-    dispatch(updateBoulder(boulder.id, { isBookmarked: currentBookmark }));
+    const newBookmark = !boulder.isBookmarked;
+    dispatch(updateBoulder(boulder.id, { isBookmarked: newBookmark }));
+    bookmarkDebouncer(newBookmark);
     handleVibrate();
-    // Call the debounced function to handle the like/unlike action after a delay
-    debouncedHandleBookmarkPressed(currentBookmark);
   };
 
   const handleCircuitPressed = () => {

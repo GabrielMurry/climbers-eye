@@ -8,7 +8,7 @@ type EmptyProps = {
 
 const Empty: React.FC<EmptyProps> = ({ isLoading }) => {
   if (isLoading) {
-    return <ActivityIndicator />;
+    return;
   }
   // <ErrorCard message={"Error retrieving boulders."} />
   else {

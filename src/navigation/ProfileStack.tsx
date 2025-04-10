@@ -11,6 +11,7 @@ import { NavigationProvider, StackName } from "../contexts/NavigationContext";
 import BookmarksScreen from "../screens/profile/BookmarksScreen";
 import LikesScreen from "../screens/profile/LikesScreen";
 import CreationsScreen from "../screens/profile/CreationsScreen";
+import { Boulder } from "../utils/types/boulder";
 
 export type ProfileStackParamList = {
   ProfileUser: undefined;
@@ -22,7 +23,7 @@ export type ProfileStackParamList = {
     height: number;
     isPortrait: boolean;
   };
-  Boulder: { boulderId: number };
+  Boulder: { boulder: Boulder };
   Logbook: undefined;
   Bookmarks: undefined;
   Likes: undefined;

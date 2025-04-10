@@ -1,40 +1,26 @@
-import { StyleSheet, SafeAreaView, Dimensions } from "react-native";
+import { StyleSheet, SafeAreaView } from "react-native";
 import React, { useEffect, useState } from "react";
 import * as Haptics from "expo-haptics";
 import { addBoulderToSpraywall } from "../../services/boulder/boulder";
-import { addNewBoulder } from "../../redux/features/boulder/boulderSlice";
-import { appendExcludeId } from "../../redux/features/filter/filterSlice";
-import FullScreenImage from "../../components/image/FullScreenImage";
 import PreviewInputData from "../../components/boulder/preview/PreviewInputData";
 import PreviewImage from "../../components/boulder/preview/PreviewImage";
 import PreviewPublishButtons from "../../components/boulder/preview/PreviewPublishButtons";
 import { selectSpraywall } from "../../redux/features/spraywall/spraywallSelectors";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { useAppSelector } from "../../redux/hooks";
 import { selectUser } from "../../redux/features/user/userSelectors";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { BoulderStackParamList } from "../../navigation/BoulderStack";
-import {
-  CommonActions,
-  StackActions,
-  useNavigation,
-} from "@react-navigation/native";
+import { StackActions, useNavigation } from "@react-navigation/native";
 import PreviewHeader from "../../components/boulder/preview/PreviewHeader";
-import BoulderImage from "../../components/boulder/BoulderImage";
-import { HomeStackParamsList } from "../../navigation/HomeStack";
+import { deleteLocalFile } from "../../utils/localFile";
 
 type PreviewEditScreenProps = NativeStackScreenProps<
   BoulderStackParamList,
   "PreviewEdit"
 >;
 
-const SCREEN_WIDTH = Dimensions.get("window").width;
-const SCREEN_HEIGHT = Dimensions.get("window").height;
-const SHRINK_SCALE = 0.3;
-
 const PreviewEditScreen: React.FC<PreviewEditScreenProps> = ({ route }) => {
   const navigation = useNavigation();
-
-  const dispatch = useAppDispatch();
 
   const spraywall = useAppSelector((state) => selectSpraywall(state));
   if (!spraywall) {
@@ -50,7 +36,6 @@ const PreviewEditScreen: React.FC<PreviewEditScreenProps> = ({ route }) => {
   const [isMatching, setIsMatching] = useState(true);
   const [isFeetFollowHands, setIsFeetFollowHands] = useState(true);
   const [isKickboardOn, setIsKickboardOn] = useState(false);
-  const [imageFullScreen, setImageFullScreen] = useState(false);
   const [isImageLoading, setIsImageLoading] = useState(true);
   const [error, setError] = useState(false);
 
@@ -87,7 +72,6 @@ const PreviewEditScreen: React.FC<PreviewEditScreenProps> = ({ route }) => {
     const response = await addBoulderToSpraywall(pathParams, formData);
 
     if (response) {
-      dispatch(addNewBoulder(response.data));
       handleVibrate();
       navigation.dispatch(() => {
         StackActions.popToTop();
@@ -95,59 +79,14 @@ const PreviewEditScreen: React.FC<PreviewEditScreenProps> = ({ route }) => {
           screen: "HomeStack",
           params: {
             screen: "Boulder",
-            params: { boulderId: response.data.id },
+            params: { boulder: response.data },
           },
         });
       });
-      // dispatch(appendExcludeId(response.data.id));
+      await deleteLocalFile(boulderImage.uri);
     } else {
       console.error("Failed to upload new boulder.");
     }
-    useEffect(() => {
-      // Function to log the current stack
-      const logCurrentStack = () => {
-        const currentRoute = navigation.getState()?.routes;
-        const routeNames = currentRoute?.map((route) => route.name);
-        console.log("Current Stack:", routeNames);
-      };
-
-      // Log the stack on component mount
-      logCurrentStack();
-
-      // Subscribe to navigation state changes
-      const unsubscribe = navigation.addListener("state", () => {
-        logCurrentStack();
-      });
-
-      // Unsubscribe on component unmount
-      return unsubscribe;
-    }, [navigation]);
-    // const data = {
-    //   name,
-    //   description,
-    //   publish: isPublish,
-    //   matching: isMatching,
-    //   feetFollowHands: isFeetFollowHands,
-    //   kickboardOn: isKickboardOn,
-    //   url: image.uri.split(",")[1], // using the default image has complete base64 as image.uri --> remove the 'data:image/png;base64' in the beginning of string
-    //   width: image.width,
-    //   height: image.height,
-    //   setter: user.id,
-    //   spraywall: spraywall!.id,
-    // };
-    // const pathParams = { spraywallId: spraywall!.id };
-    // const response = await addBoulderToSpraywall(pathParams, data);
-    // if (response) {
-    //   dispatch(addNewBoulder(response.data));
-    //   handleVibrate();
-    //   navigation.navigate("TabsStack", {
-    //     screen: "HomeStack",
-    //     params: { screen: "Boulder", params: { boulderId: response.data.id } },
-    //   });
-    //   dispatch(appendExcludeId(response.data.id));
-    // } else {
-    //   console.error("Failed to upload new boulder.");
-    // }
   };
 
   const handleVibrate = () => {
@@ -186,13 +125,6 @@ const PreviewEditScreen: React.FC<PreviewEditScreenProps> = ({ route }) => {
         handleConfirm={handleConfirm}
         isLoading={isImageLoading}
       />
-      {/* <FullScreenImage
-        imageFullScreen={imageFullScreen}
-        url={image.uri}
-        width={image.width}
-        height={image.height}
-        onRequestClose={() => setImageFullScreen(false)}
-      /> */}
     </SafeAreaView>
   );
 };
