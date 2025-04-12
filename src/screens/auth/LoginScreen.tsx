@@ -23,6 +23,9 @@ import { setSpraywalls } from "../../redux/features/spraywall/spraywallSlice";
 import { useAppDispatch } from "../../redux/hooks";
 import { useNavigation } from "@react-navigation/native";
 import CustomTextInput from "../../components/custom/inputs/CustomInput";
+import axios from "axios";
+import { Gym } from "../../utils/types/gym";
+import { Spraywall } from "../../utils/types/spraywall";
 
 const LoginScreen = () => {
   const navigation = useNavigation();
@@ -35,34 +38,80 @@ const LoginScreen = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = async () => {
-    setIsLoading(true);
-    const data = { username, password };
-    const response = await loginUser(data);
-    if (response.status !== 200) {
-      console.log(response.status);
-      setHasError(true);
-      setIsLoading(false);
-      return;
-    }
-    if (response.data) {
-      const user = response.data.user;
-      const userInfo = {
-        id: user.id,
-        username: user.username,
-        name: user.name,
-        email: user.email,
-        profilePicUrl: user.profilePicUrl,
-        profilePicWidth: user.profilePicWidth,
-        profilePicHeight: user.profilePicHeight,
-        logbookCount: user.logbookCount,
-        likesCount: user.likesCount,
-        bookmarksCount: user.bookmarksCount,
-        creationsCount: user.creationsCount,
-      };
-      dispatch(setUser(userInfo));
-      dispatch(setIsSignedIn(true));
-    }
-    setIsLoading(false);
+    axios
+      .post("http://192.168.50.195:8000/auth/login/", {
+        username: "gabriel",
+        password: "12345",
+      })
+      .then(async (res) => {
+        // Set user
+        const user = res.data.user;
+        const userInfo = {
+          id: user.id,
+          username: user.username,
+          name: user.name,
+          email: user.email,
+          profilePicUrl: user.profilePicUrl,
+          profilePicWidth: user.profilePicWidth,
+          profilePicHeight: user.profilePicHeight,
+          logbookCount: user.logbookCount,
+          likesCount: user.likesCount,
+          bookmarksCount: user.bookmarksCount,
+          creationsCount: user.creationsCount,
+        };
+        dispatch(setUser(userInfo));
+        // Set gym
+        const gym = res.data.user.gym;
+        const gymInfo: Gym = {
+          address: gym.address,
+          date_created: gym.date_created,
+          id: gym.id,
+          latitude: gym.latitude,
+          longitude: gym.longitude,
+          name: gym.name,
+          place_id: gym.place_id,
+          type: gym.type,
+        };
+        dispatch(setGym(gymInfo));
+        // Set spraywalls
+        const spraywalls = res.data.user.spraywalls;
+        dispatch(setSpraywalls(spraywalls));
+        // Set isSignedIn
+        dispatch(setIsSignedIn(true));
+      })
+      .catch((err) => {
+        console.log("Login failed", err.message); // should say 'Network Error'
+        console.log("Error config:", err.config);
+        console.log("Error request:", err.request); // useful: might show failed URL
+      });
+    // setIsLoading(true);
+    // const data = { username, password };
+    // const response = await loginUser(data);
+    // if (response.status !== 200) {
+    //   console.log(response.status);
+    //   setHasError(true);
+    //   setIsLoading(false);
+    //   return;
+    // }
+    // if (response.data) {
+    //   const user = response.data.user;
+    //   const userInfo = {
+    //     id: user.id,
+    //     username: user.username,
+    //     name: user.name,
+    //     email: user.email,
+    //     profilePicUrl: user.profilePicUrl,
+    //     profilePicWidth: user.profilePicWidth,
+    //     profilePicHeight: user.profilePicHeight,
+    //     logbookCount: user.logbookCount,
+    //     likesCount: user.likesCount,
+    //     bookmarksCount: user.bookmarksCount,
+    //     creationsCount: user.creationsCount,
+    //   };
+    //   dispatch(setUser(userInfo));
+    //   dispatch(setIsSignedIn(true));
+    // }
+    // setIsLoading(false);
   };
 
   // const handleForgotPassword = () => {
