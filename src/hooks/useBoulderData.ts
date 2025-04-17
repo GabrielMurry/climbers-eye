@@ -53,6 +53,7 @@ export const useBoulderData = () => {
 
   const fetchCircuits = async () => {
     const circuitResponse = await getCircuitList(getPath());
+    console.log(circuitResponse.data);
     dispatch(setCircuits(circuitResponse.data));
   };
 
@@ -98,7 +99,6 @@ export const useBoulderData = () => {
       activity: filters.activity,
       status: filters.climbStatus,
       circuit: filters.circuit,
-      excludeIds: [],
       page: page,
     };
   };

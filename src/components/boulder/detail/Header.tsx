@@ -10,7 +10,7 @@ type HeaderProps = {
 const Header: React.FC<HeaderProps> = ({ boulder }) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.boulderName}>{boulder?.name}</Text>
+      <Text style={styles.boulderName}>{boulder.name}</Text>
       {/* Row containing grade and stars */}
       <View style={styles.gradeQualityContainer}>
         <Text style={styles.gradeText}>
@@ -27,7 +27,7 @@ export default Header;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center", // Center the content horizontally
+    alignItems: "center",
     paddingBottom: 10,
     rowGap: 5,
   },
@@ -37,10 +37,10 @@ const styles = StyleSheet.create({
   },
   gradeQualityContainer: {
     flexDirection: "row",
-    alignItems: "center", // Vertically align the grade and stars
+    alignItems: "center",
   },
   gradeText: {
     fontSize: 18,
-    marginRight: 8, // Add some space between the grade and the stars
+    marginRight: 8,
   },
 });

@@ -16,92 +16,55 @@ const CircuitsSection = () => {
   return (
     <View
       style={{
-        alignItems: "center",
-        marginTop: 10,
+        backgroundColor: "white",
+        borderRadius: 20,
       }}
     >
       <View
         style={{
-          width: "100%",
+          paddingHorizontal: 30,
+          marginTop: 10,
+          flexDirection: "row",
+          height: 30,
+          alignItems: "center",
         }}
       >
-        <View style={{ backgroundColor: "lightgray", height: 3 }} />
-        <View
-          style={{
-            paddingHorizontal: 30,
-            marginTop: 10,
-            flexDirection: "row",
-            height: 30,
-            alignItems: "center",
-          }}
-        >
-          {/* section title */}
-          <Text style={{ fontWeight: "bold", fontSize: 18 }}>Circuits</Text>
-        </View>
-        <View style={{ paddingLeft: 30 }}>
-          {circuits.map((circuit, index) => (
-            <TouchableOpacity
-              key={circuit.id}
-              style={{
-                borderBottomWidth: 1,
-                borderColor: "lightgray",
-                height: 60,
-                alignItems: "center",
-                flexDirection: "row",
-              }}
-              // onPress={() =>
-              //   navigation.navigate('CircuitStack', {screen: 'Circuit', params: {Circuit: }})
-              // }
-            >
-              <View style={{ width: 30 }}>
-                <LinkIcon color={circuit.color} size={20} />
-              </View>
-              <View
-                style={{
-                  flex: 1,
-                }}
-              >
-                <Text style={{ fontSize: 16 }}>{circuit.name}</Text>
-              </View>
-              <View
-                style={{
-                  width: 75,
-                  alignItems: "center",
-                }}
-              >
-                <Text style={{ fontSize: 16 }}>
-                  {circuit.boulderIds.length}
-                </Text>
-              </View>
-              <View
-                style={{
-                  width: 50,
-                  alignItems: "center",
-                }}
-              >
-                <ChevronRightIcon color={"black"} size={20} />
-              </View>
-            </TouchableOpacity>
-          ))}
+        {/* section title */}
+        <Text style={{ fontWeight: "bold", fontSize: 18 }}>Circuits</Text>
+      </View>
+      <View style={{ paddingLeft: 30 }}>
+        {circuits.map((circuit, index) => (
           <TouchableOpacity
+            key={circuit.id}
             style={{
               height: 60,
               alignItems: "center",
               flexDirection: "row",
             }}
             onPress={() =>
-              navigation.navigate("CircuitStack", { screen: "AddNewCircuit" })
+              navigation.navigate("CircuitStack", {
+                screen: "CircuitBoulders",
+                params: { circuitId: circuit.id },
+              })
             }
           >
             <View style={{ width: 30 }}>
-              <PlusIcon color={"black"} size={20} />
+              <LinkIcon color={circuit.color} size={20} />
             </View>
             <View
               style={{
                 flex: 1,
               }}
             >
-              <Text style={{ fontSize: 16 }}>Create a New Circuit</Text>
+              <Text style={{ fontSize: 16 }}>{circuit.name}</Text>
+            </View>
+            <View
+              style={{
+                width: 75,
+                alignItems: "center",
+              }}
+            >
+              <Text style={{ fontSize: 16 }}>{circuit.boulderIds?.length}</Text>
             </View>
             <View
               style={{
@@ -112,7 +75,36 @@ const CircuitsSection = () => {
               <ChevronRightIcon color={"black"} size={20} />
             </View>
           </TouchableOpacity>
-        </View>
+        ))}
+        <TouchableOpacity
+          style={{
+            height: 60,
+            alignItems: "center",
+            flexDirection: "row",
+          }}
+          onPress={() =>
+            navigation.navigate("CircuitStack", { screen: "CreateCircuit" })
+          }
+        >
+          <View style={{ width: 30 }}>
+            <PlusIcon color={"black"} size={20} />
+          </View>
+          <View
+            style={{
+              flex: 1,
+            }}
+          >
+            <Text style={{ fontSize: 16 }}>Create a New Circuit</Text>
+          </View>
+          <View
+            style={{
+              width: 50,
+              alignItems: "center",
+            }}
+          >
+            <ChevronRightIcon color={"black"} size={20} />
+          </View>
+        </TouchableOpacity>
       </View>
     </View>
   );

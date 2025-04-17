@@ -6,6 +6,10 @@ import QualityRating from "../boulder/QualityRating";
 import { useNavigationContext } from "../../contexts/NavigationContext";
 import { useNavigation } from "@react-navigation/native";
 import { Boulder } from "../../utils/types/boulder";
+import BoulderImage from "../boulder/BoulderImage";
+import { useAppSelector } from "../../redux/hooks";
+import { selectSpraywall } from "../../redux/features/spraywall/spraywallSelectors";
+import { Image } from "expo-image";
 
 type BoulderCardProps = {
   boulder: Boulder;
@@ -15,6 +19,11 @@ const BoulderCard = React.memo((props: BoulderCardProps) => {
   const navigation = useNavigation();
   const stackName = useNavigationContext();
 
+  const spraywall = useAppSelector((state) => selectSpraywall(state));
+  if (!spraywall) {
+    return;
+  }
+
   const handleOnPress = () => {
     navigation.navigate("TabsStack", {
       screen: stackName,
@@ -23,7 +32,7 @@ const BoulderCard = React.memo((props: BoulderCardProps) => {
   };
 
   return (
-    <TouchableOpacity onPress={handleOnPress} style={{ paddingHorizontal: 10 }}>
+    <TouchableOpacity onPress={handleOnPress}>
       <View style={styles.boulder}>
         <View style={styles.boulderLeftWrapper}>
           <Text style={{ fontSize: 18, fontWeight: "bold" }}>

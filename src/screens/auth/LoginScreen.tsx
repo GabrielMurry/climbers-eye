@@ -26,6 +26,7 @@ import CustomTextInput from "../../components/custom/inputs/CustomInput";
 import axios from "axios";
 import { Gym } from "../../utils/types/gym";
 import { Spraywall } from "../../utils/types/spraywall";
+import * as SecureStore from "expo-secure-store";
 
 const LoginScreen = () => {
   const navigation = useNavigation();
@@ -44,6 +45,10 @@ const LoginScreen = () => {
         password: "12345",
       })
       .then(async (res) => {
+        // Set tokens
+        await SecureStore.setItemAsync("accessToken", res.data.accessToken);
+        await SecureStore.setItemAsync("refreshToken", res.data.refreshToken);
+        await SecureStore.setItemAsync("csrfToken", res.data.csrfToken);
         // Set user
         const user = res.data.user;
         const userInfo = {

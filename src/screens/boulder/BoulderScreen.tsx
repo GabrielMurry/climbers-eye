@@ -1,4 +1,10 @@
-import { ScrollView, SafeAreaView, View } from "react-native";
+import {
+  ScrollView,
+  SafeAreaView,
+  View,
+  Dimensions,
+  StyleSheet,
+} from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { getBoulderDetail } from "../../services/boulder/boulder";
@@ -19,8 +25,9 @@ import InfoRow2 from "../../components/boulder/detail/InfoRow2";
 import InfoRow3 from "../../components/boulder/detail/InfoRow3";
 import InfoRow4 from "../../components/boulder/detail/InfoRow4";
 import InfoRow6 from "../../components/boulder/detail/InfoRow6";
-import { SCREEN_WIDTH } from "@gorhom/bottom-sheet";
 import { Image } from "expo-image";
+import { BlurView } from "expo-blur";
+import Animated, { FadeIn } from "react-native-reanimated";
 
 export type ChartData = {
   label: string;
@@ -31,6 +38,9 @@ type BoulderScreenProps = NativeStackScreenProps<
   HomeStackParamsList,
   "Boulder"
 >;
+
+const SCREEN_WIDTH = Dimensions.get("window").width;
+const SCREEN_HEIGHT = Dimensions.get("window").height;
 
 const BoulderScreen: React.FC<BoulderScreenProps> = ({ route }) => {
   const navigation = useNavigation();
@@ -76,7 +86,7 @@ const BoulderScreen: React.FC<BoulderScreenProps> = ({ route }) => {
         }}
       >
         <Header boulder={boulder} />
-        <View style={{ height: 500 }}>
+        <View style={{ height: 500, width: "100%" }}>
           <BoulderImage
             boulderUri={boulder.url}
             spraywallUri={

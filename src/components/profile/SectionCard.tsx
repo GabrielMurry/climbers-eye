@@ -18,8 +18,6 @@ const SectionCard: React.FC<SectionCardProps> = ({
   return (
     <TouchableOpacity
       style={{
-        borderBottomWidth: title === "Creations" ? 0 : 1,
-        borderColor: "lightgray",
         height: 60,
         alignItems: "center",
         flexDirection: "row",

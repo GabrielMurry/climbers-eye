@@ -4,13 +4,7 @@ import {
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
-import {
-  ActivityIndicator,
-  ImageSourcePropType,
-  StatusBar,
-  Text,
-  View,
-} from "react-native";
+import { ActivityIndicator, StatusBar } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import TabsStack, { TabsStackParamList } from "./tabs/TabsStack";
 import { AuthStackParamList } from "./AuthStack";
@@ -32,11 +26,6 @@ import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { setIsSignedIn } from "../redux/features/user/userSlice";
 import OneScreen from "../screens/OneScreen";
 import TwoScreen from "../screens/TwoScreen";
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from "react-native-reanimated";
 
 export type RootStackParamList = {
   AuthStack: NavigatorScreenParams<AuthStackParamList>;
@@ -54,65 +43,11 @@ export type RootStackParamList = {
     width: number;
     height: number;
   };
-  Main: NavigatorScreenParams<InnerStackParamList>;
+  One: undefined;
+  Two: undefined;
 };
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();
-
-export type InnerStackParamList = {
-  One: undefined;
-  Two: {
-    source: ImageSourcePropType;
-    start: { x: number; y: number; width: number; height: number };
-  };
-};
-
-const InnerStack = createNativeStackNavigator<InnerStackParamList>();
-
-const GreenSquare = ({ transition }: { transition: boolean }) => {
-  const height = useSharedValue(100);
-
-  // When transition value changes
-  useEffect(() => {
-    if (transition) {
-      height.value = withTiming(200);
-    } else {
-      height.value = withTiming(100);
-    }
-  }, [transition]);
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    height: height.value,
-  }));
-
-  return (
-    // <Animated.View
-    //   style={[
-    //     {
-    //       position: "absolute",
-    //       bottom: 0,
-    //       left: 0,
-    //       right: 0,
-    //     },
-    //     animatedStyle,
-    //   ]}
-    // />
-    <Animated.Image
-      source={require("../../images/photo.jpg")}
-      style={[
-        {
-          width: 100,
-          position: "absolute",
-          bottom: 0,
-          right: 0,
-          left: 0,
-        },
-        animatedStyle,
-      ]}
-      resizeMode={"contain"}
-    />
-  );
-};
 
 export default function AppNavigator() {
   const dispatch = useAppDispatch();
@@ -139,58 +74,7 @@ export default function AppNavigator() {
     return <ActivityIndicator />;
   }
 
-  const InnerStackNavigator = () => {
-    const [transition, setTransition] = useState(false);
-
-    return (
-      <>
-        <InnerStack.Navigator
-          // screenListeners={{
-          //   transitionStart: () => {
-          //     console.log("starting");
-          //     setTransition(true);
-          //   },
-          //   transitionEnd: () => setTransition(false),
-          // }}
-          screenOptions={{ headerShown: false }}
-        >
-          <InnerStack.Screen
-            name="One"
-            component={OneScreen}
-            listeners={{
-              focus: () => setTransition(false),
-            }}
-          />
-          <InnerStack.Screen
-            name="Two"
-            component={TwoScreen}
-            options={
-              {
-                // presentation: "containedTransparentModal",
-                // animation: "fade",
-              }
-            }
-            listeners={{
-              focus: () => setTransition(true),
-            }}
-          />
-        </InnerStack.Navigator>
-        <GreenSquare transition={transition} />
-      </>
-    );
-  };
-
-  const InnerComponent = () => {
-    return (
-      <View style={{ flex: 1 }}>
-        {/* Stack that controls the screen above the green square */}
-        <InnerStackNavigator />
-      </View>
-    );
-  };
-
   return (
-    // ReactNativeActionSheet uses React context to allow your components to invoke the menu
     <GestureHandlerRootView style={{ flex: 1 }}>
       <ActionSheetProvider>
         <ModalOptionsProvider>
@@ -207,10 +91,8 @@ export default function AppNavigator() {
                       />
                     ) : (
                       <>
-                        {/* <RootStack.Screen
-                          name="Main"
-                          component={InnerComponent}
-                        /> */}
+                        {/* <RootStack.Screen name="One" component={OneScreen} />
+                        <RootStack.Screen name="Two" component={TwoScreen} /> */}
                         <RootStack.Screen
                           name="TabsStack"
                           component={TabsStack}
@@ -251,7 +133,6 @@ export default function AppNavigator() {
                           name="BoulderImageFull"
                           component={BoulderImageFullScreen}
                           options={{
-                            animationDuration: 100,
                             animation: "fade",
                           }}
                         />

@@ -15,9 +15,6 @@ type BoulderImageProps = {
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const SCREEN_HEIGHT = Dimensions.get("window").height;
 
-const centerX = SCREEN_WIDTH / 2;
-const centerY = SCREEN_HEIGHT / 2;
-
 const BoulderImage: React.FC<BoulderImageProps> = ({
   spraywallUri,
   boulderUri,
@@ -27,8 +24,6 @@ const BoulderImage: React.FC<BoulderImageProps> = ({
 }) => {
   const navigation = useNavigation();
 
-  const normalWidth = width * shrinkScale;
-  const normalHeight = height * shrinkScale;
   const enlargedWidth = SCREEN_WIDTH;
   const enlargedHeight = height * (SCREEN_WIDTH / width);
 
@@ -49,33 +44,44 @@ const BoulderImage: React.FC<BoulderImageProps> = ({
         setContainerHeight(height);
       }}
       style={{
+        flex: 1,
         alignItems: "center",
-        width: containerHeight * (width / height),
       }}
     >
       <View
         style={{
-          backgroundColor: "black",
           width: containerHeight * (width / height),
           height: containerHeight,
-          position: "absolute",
+          backgroundColor: "black",
         }}
-      />
-      <Image
-        source={spraywallUri}
-        style={{
-          width: "100%",
-          height: "100%",
-          opacity: 0.5,
-        }}
-        contentFit="contain"
-        cachePolicy={"memory-disk"}
-      />
-      <MaskedView
-        style={{ position: "absolute", width: "100%", height: "100%" }}
-        maskElement={
+      >
+        <Image
+          source={spraywallUri}
+          style={{
+            width: "100%",
+            height: "100%",
+            opacity: 0.5,
+          }}
+          contentFit="contain"
+          cachePolicy={"memory-disk"}
+        />
+        <MaskedView
+          style={{ position: "absolute", width: "100%", height: "100%" }}
+          maskElement={
+            <Image
+              source={boulderUri}
+              style={{
+                width: "100%",
+                height: "100%",
+                opacity: 1,
+              }}
+              contentFit="contain"
+              cachePolicy={"memory-disk"}
+            />
+          }
+        >
           <Image
-            source={boulderUri}
+            source={spraywallUri}
             style={{
               width: "100%",
               height: "100%",
@@ -84,30 +90,19 @@ const BoulderImage: React.FC<BoulderImageProps> = ({
             contentFit="contain"
             cachePolicy={"memory-disk"}
           />
-        }
-      >
+        </MaskedView>
         <Image
-          source={spraywallUri}
+          source={boulderUri}
           style={{
             width: "100%",
             height: "100%",
-            opacity: 1,
+            position: "absolute",
+            opacity: 0.5,
           }}
           contentFit="contain"
           cachePolicy={"memory-disk"}
         />
-      </MaskedView>
-      <Image
-        source={boulderUri}
-        style={{
-          width: "100%",
-          height: "100%",
-          position: "absolute",
-          opacity: 0.5,
-        }}
-        contentFit="contain"
-        cachePolicy={"memory-disk"}
-      />
+      </View>
     </Pressable>
   );
 };

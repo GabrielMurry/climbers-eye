@@ -11,28 +11,26 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "config": {
         "usesNonExemptEncryption": false
       },
       "supportsTablet": true,
       "bundleIdentifier": "com.gabrielmurry.climberseye",
-      "icon": "./src/assets/images/icon.png"
+      "icon": "./src/assets/images/icon.png",
+      "usesAppleSignIn": true
     },
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#ffffff"
       },
-      "permissions": [
-        "android.permission.CAMERA"
-      ],
+      "permissions": ["android.permission.CAMERA"],
       "package": "com.gabrielmurry.climberseye"
     },
     "web": {},
     "plugins": [
+      "expo-apple-authentication",
       [
         "expo-camera",
         {

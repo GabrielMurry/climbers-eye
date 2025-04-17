@@ -41,7 +41,6 @@ const FlatListSpraywalls: React.FC<FlatListSpraywallsProps> = ({
         contentContainerStyle={{
           gap: 10,
           height: height,
-          paddingHorizontal: 20,
         }}
         horizontal
         ListFooterComponent={hasEditPermission ? renderFooter : null}

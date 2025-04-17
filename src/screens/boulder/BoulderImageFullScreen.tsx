@@ -26,7 +26,7 @@ const BoulderImageFullScreen: React.FC<BoulderImageFullScreenProps> = ({
     <View
       style={{
         flex: 1,
-        backgroundColor: "black",
+        // backgroundColor: "black",
       }}
     >
       <SafeAreaView

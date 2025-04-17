@@ -12,6 +12,7 @@ import BookmarksScreen from "../screens/profile/BookmarksScreen";
 import LikesScreen from "../screens/profile/LikesScreen";
 import CreationsScreen from "../screens/profile/CreationsScreen";
 import { Boulder } from "../utils/types/boulder";
+import { PlusIcon } from "react-native-heroicons/outline";
 
 export type ProfileStackParamList = {
   ProfileUser: undefined;
@@ -42,11 +43,7 @@ const ProfileNavigator = () => {
         <ProfileStack.Screen name="EditProfile" component={EditProfileScreen} />
         <ProfileStack.Screen name="EditName" component={EditNameScreen} />
         <ProfileStack.Screen name="CropImage" component={CropImageScreen} />
-        <ProfileStack.Screen
-          name="ProfileUser"
-          component={ProfileScreen}
-          options={{ headerShown: false }}
-        />
+        <ProfileStack.Screen name="ProfileUser" component={ProfileScreen} />
         <ProfileStack.Screen name="Boulder" component={BoulderScreen} />
         <ProfileStack.Screen name="Logbook" component={LogbookScreen} />
         <ProfileStack.Screen name="Bookmarks" component={BookmarksScreen} />

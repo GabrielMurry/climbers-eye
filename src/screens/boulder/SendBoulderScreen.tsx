@@ -1,5 +1,5 @@
 import React from "react";
-import { SafeAreaView } from "react-native";
+import { SafeAreaView, ScrollView } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { BoulderStackParamList } from "../../navigation/BoulderStack";
 import SendHeader from "../../components/boulder/send/SendHeader";
@@ -16,7 +16,9 @@ const SendBoulderScreen: React.FC<SendBoulderScreenProps> = ({ route }) => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "rgba(245,245,245,255)" }}>
       <SendHeader />
-      <SendBody boulder={boulder} userSendsData={userSendsData} />
+      <ScrollView>
+        <SendBody boulder={boulder} userSendsData={userSendsData} />
+      </ScrollView>
     </SafeAreaView>
   );
 };

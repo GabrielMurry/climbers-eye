@@ -19,42 +19,35 @@ const GymSection = () => {
   return (
     <View
       style={{
-        alignItems: "center",
-        marginTop: 10,
+        backgroundColor: "white",
+        borderRadius: 20,
       }}
     >
       <View
         style={{
-          width: "100%",
+          paddingHorizontal: 30,
+          marginTop: 10,
+          flexDirection: "row",
+          height: 30,
+          alignItems: "center",
         }}
       >
-        <View style={{ backgroundColor: "lightgray", height: 3 }} />
-        <View
-          style={{
-            paddingHorizontal: 30,
-            marginTop: 10,
-            flexDirection: "row",
-            height: 30,
-            alignItems: "center",
-          }}
-        >
-          {/* section title */}
-          <Text style={{ fontWeight: "bold", fontSize: 18 }}>{gym.name}</Text>
-        </View>
-        <FlatList
-          data={spraywalls}
-          renderItem={renderSpraywallCard}
-          keyExtractor={(item) => item.id.toString()}
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{
-            gap: 10,
-            height: 150,
-            paddingVertical: 10,
-            paddingHorizontal: 30,
-          }}
-        />
+        {/* section title */}
+        <Text style={{ fontWeight: "bold", fontSize: 18 }}>{gym.name}</Text>
       </View>
+      <FlatList
+        data={spraywalls}
+        renderItem={renderSpraywallCard}
+        keyExtractor={(item) => item.id.toString()}
+        horizontal={true}
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={{
+          gap: 10,
+          height: 150,
+          paddingVertical: 10,
+          paddingHorizontal: 30,
+        }}
+      />
     </View>
   );
 };

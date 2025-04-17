@@ -178,13 +178,13 @@ const BarChartHorizontal: React.FC<BarChartHorizontalProps> = ({
 
   return (
     <SafeAreaView style={styles.container}>
-      {DISPLAY_HEADER ? (
+      {DISPLAY_HEADER && (
         <View onTouchStart={handleResetBarInfo} style={styles.textContainer}>
           {/* <Text style={styles.textTitle}>Logbook</Text> */}
           <Text style={styles.textSteps}>{selectedLabel} Boulders Climbed</Text>
           <AnimatedText selectedValue={selectedValue} fontTotal={fontTotal} />
         </View>
-      ) : null}
+      )}
       <Canvas
         // We want to confirm if it is a touch or a scroll. If user is scrolling, don't confirm the touch
         onTouchStart={handleTouchStart}

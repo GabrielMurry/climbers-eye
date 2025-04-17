@@ -8,12 +8,12 @@ console.log("--");
 export const getBoulderList = async (path: Path, queries: Queries) => {
   return await request(
     "get",
-    `boulder/list/${path.spraywallId}?search=${queries.searchQuery}&grade_min=${queries.minGradeIndex}&grade_max=${queries.maxGradeIndex}&sort=${queries.sortBy}&activity=${queries.activity}&status=${queries.status}&circuit=${queries.circuit}&exclude_ids=${queries.excludeIds}&page=${queries.page}`
+    `boulder/list/${path.spraywallId}?search=${queries.searchQuery}&grade_min=${queries.minGradeIndex}&grade_max=${queries.maxGradeIndex}&sort=${queries.sortBy}&activity=${queries.activity}&status=${queries.status}&circuit=${queries.circuit}&page=${queries.page}`
   );
 };
 
 export const getNextPageBoulderList = async (nextPage: string) => {
-  const trimmedEndpoint = nextPage.replace(BASE_URL, "");
+  const trimmedEndpoint = nextPage.replace(BASE_URL + "/", "");
   return await request("get", trimmedEndpoint);
 };
 
