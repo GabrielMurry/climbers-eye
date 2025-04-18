@@ -12,7 +12,12 @@ import { Pressable } from "react-native";
 import { Image } from "expo-image";
 import { UserIcon } from "react-native-heroicons/outline";
 import * as SecureStore from "expo-secure-store";
-import { setIsSignedIn } from "../../redux/features/user/userSlice";
+import { resetUser, setIsSignedIn } from "../../redux/features/user/userSlice";
+import { removeGym } from "../../redux/features/gym/gymSlice";
+import { removeSpraywalls } from "../../redux/features/spraywall/spraywallSlice";
+import { resetFilters } from "../../redux/features/filter/filterSlice";
+import { resetCircuits } from "../../redux/features/circuit/circuitSlice";
+import { resetBoulders } from "../../redux/features/boulder/boulderSlice";
 
 const ProfileHeader = () => {
   const navigation = useNavigation();
@@ -32,6 +37,13 @@ const ProfileHeader = () => {
         // Clear tokens from secure storage
         await SecureStore.deleteItemAsync("accessToken");
         await SecureStore.deleteItemAsync("refreshToken");
+        await SecureStore.deleteItemAsync("csrfToken");
+        dispatch(removeGym());
+        dispatch(removeSpraywalls());
+        dispatch(resetUser());
+        dispatch(resetFilters());
+        dispatch(resetCircuits());
+        dispatch(resetBoulders());
         dispatch(setIsSignedIn(false));
       }
     } catch (error) {
@@ -68,7 +80,7 @@ const ProfileHeader = () => {
   return (
     <Header
       leftIcon={userIcon}
-      leftText={user.username}
+      // leftText={user.username}
       rightIcon={<OptionsIcon options={options} />}
     />
   );

@@ -245,22 +245,23 @@ const LoginScreen = () => {
           justifyContent: "flex-end",
         }}
       >
-        <View
+        <TouchableOpacity
           style={{
             height: 50,
             alignItems: "center",
             flexDirection: "row",
           }}
+          onPress={() => navigation.navigate("AuthStack", { screen: "Signup" })}
         >
           <Text style={{ color: "gray", fontWeight: "bold" }}>
-            Don't have an account?{" "}
+            Don't have an account?
           </Text>
           {/* <TouchableOpacity onPress={handleCreateAccount}>
             <Text style={{ color: colors.primary, fontWeight: "bold" }}>
               Create one
             </Text>
           </TouchableOpacity> */}
-        </View>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );

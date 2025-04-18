@@ -22,6 +22,7 @@ import { setUser } from "../../redux/features/user/userSlice";
 import { useAppDispatch } from "../../redux/hooks";
 import { useNavigation } from "@react-navigation/native";
 import CustomTextInput from "../../components/custom/inputs/CustomInput";
+import AppleSignUpButton from "../../components/auth/AppleSignUpButton";
 
 const SignupScreen = () => {
   const navigation = useNavigation();
@@ -51,7 +52,7 @@ const SignupScreen = () => {
       // in dispatch, we enter the action "setUserID" along with the "userID" value (doing this for username also)
       dispatch(setUser(response.data.user));
     }
-    navigation.navigate("TabsStack", { screen: "MapStack" });
+    // navigation.navigate("TabsStack", { screen: "MapStack" });
     setIsLoading(false);
   };
 
@@ -129,7 +130,7 @@ const SignupScreen = () => {
           setValue={(value) => setUsername(value)}
           placeholder="Username"
           secureTextEntry={false}
-          autoCapitalize="none"
+          // autoCapitalize="none"
           // icon={<UserIcon size={20} color={colors.textInputDark} />}
         />
         <CustomTextInput
@@ -170,6 +171,7 @@ const SignupScreen = () => {
           />
         </View>
       </View>
+      <AppleSignUpButton />
       <View
         style={{
           flexDirection: "row",

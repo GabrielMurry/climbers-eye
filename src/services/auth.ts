@@ -15,6 +15,10 @@ type SignupData = {
   password: string;
 };
 
+type AppleSignupData = {
+  identityToken: string;
+};
+
 export const getTempCsrfToken = async () => {
   return await request("get", "auth/temp_csrf_token/");
 };
@@ -29,4 +33,8 @@ export const logoutUser = async (data: LogoutData) => {
 
 export const signupUser = async (data: SignupData) => {
   return await request("post", "auth/signup/", data);
+};
+
+export const appleSignup = async (data: AppleSignupData) => {
+  return await request("post", "auth/apple/", data);
 };
