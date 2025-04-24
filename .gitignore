@@ -11,7 +11,7 @@ npm-debug.*
 web-build/
 .env
 ios
-andriod
+android
 eas.json
 
 # macOS

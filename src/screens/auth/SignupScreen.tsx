@@ -23,6 +23,8 @@ import { useAppDispatch } from "../../redux/hooks";
 import { useNavigation } from "@react-navigation/native";
 import CustomTextInput from "../../components/custom/inputs/CustomInput";
 import AppleSignUpButton from "../../components/auth/AppleSignUpButton";
+import GoogleSignUpButton from "../../components/auth/GoogleSignUpButton";
+import axios from "axios";
 
 const SignupScreen = () => {
   const navigation = useNavigation();
@@ -172,6 +174,7 @@ const SignupScreen = () => {
         </View>
       </View>
       <AppleSignUpButton />
+      <GoogleSignUpButton />
       <View
         style={{
           flexDirection: "row",

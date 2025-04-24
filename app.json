@@ -11,22 +11,35 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "scheme": "climberseye",
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "config": {
         "usesNonExemptEncryption": false
       },
       "supportsTablet": true,
-      "bundleIdentifier": "com.gabrielmurry.climberseye",
+      "bundleIdentifier": "com.climberseye",
       "icon": "./src/assets/images/icon.png",
-      "usesAppleSignIn": true
+      "usesAppleSignIn": true,
+      "infoPlist": {
+        "CFBundleURLTypes": [
+          {
+            "CFBundleURLSchemes": [
+              "com.googleusercontent.apps.825318508897-91e6dg0h1gh1nvls663stnuhakliiigd"
+            ]
+          }
+        ],
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": true
+        }
+      }
     },
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#ffffff"
       },
       "permissions": ["android.permission.CAMERA"],
-      "package": "com.gabrielmurry.climberseye"
+      "package": "com.climberseye"
     },
     "web": {},
     "plugins": [
@@ -51,6 +64,12 @@
         {
           "configureAndroidBackup": true,
           "faceIDPermission": "Allow Climber's Eye to access your Face ID biometric data."
+        }
+      ],
+      [
+        "@react-native-google-signin/google-signin",
+        {
+          "iosUrlScheme": "com.googleusercontent.apps.825318508897-91e6dg0h1gh1nvls663stnuhakliiigd"
         }
       ]
     ],
