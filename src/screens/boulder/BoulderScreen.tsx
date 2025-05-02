@@ -1,10 +1,4 @@
-import {
-  ScrollView,
-  SafeAreaView,
-  View,
-  Dimensions,
-  StyleSheet,
-} from "react-native";
+import { ScrollView, View, Dimensions, StyleSheet } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { getBoulderDetail } from "../../services/boulder/boulder";
@@ -28,6 +22,7 @@ import InfoRow6 from "../../components/boulder/detail/InfoRow6";
 import { Image } from "expo-image";
 import { BlurView } from "expo-blur";
 import Animated, { FadeIn } from "react-native-reanimated";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export type ChartData = {
   label: string;
@@ -86,7 +81,13 @@ const BoulderScreen: React.FC<BoulderScreenProps> = ({ route }) => {
         }}
       >
         <Header boulder={boulder} />
-        <View style={{ height: 500, width: "100%" }}>
+        <View
+          style={{
+            height: 500,
+            width: "100%",
+            paddingHorizontal: 20,
+          }}
+        >
           <BoulderImage
             boulderUri={boulder.url}
             spraywallUri={
@@ -95,6 +96,11 @@ const BoulderScreen: React.FC<BoulderScreenProps> = ({ route }) => {
             width={boulder.width}
             height={boulder.height}
           />
+          {/* <Image
+            source={{ uri: spraywall.url }}
+            contentFit="contain"
+            style={{ width: "100%", height: 500 }}
+          /> */}
         </View>
         <DraftNotif boulder={boulder} />
         <InfoRow1 boulder={boulder} userID={user.id} />

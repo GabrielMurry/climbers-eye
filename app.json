@@ -11,7 +11,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "scheme": "climberseye",
+    "scheme": "climbers-eye",
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "config": {
@@ -70,6 +70,15 @@
         "@react-native-google-signin/google-signin",
         {
           "iosUrlScheme": "com.googleusercontent.apps.825318508897-91e6dg0h1gh1nvls663stnuhakliiigd"
+        }
+      ],
+      [
+        "react-native-fbsdk-next",
+        {
+          "appID": "646538911551366",
+          "clientToken": "b226977153a32462fd44f784ceb1f410",
+          "displayName": "Climbers Eye",
+          "scheme": "fb646538911551366"
         }
       ]
     ],

@@ -32,15 +32,16 @@ const HomeNavigator = () => {
         <HomeStack.Screen
           name="HomeList"
           component={HomeScreen}
-          options={{
-            headerTitle: gym.name,
-            headerLargeTitle: true,
-            headerShadowVisible: false,
-            headerSearchBarOptions: {
-              placeholder: "search",
-              hideWhenScrolling: true,
-            },
-          }}
+          // options={{
+          //   headerTitle: gym.name,
+          //   headerLargeTitle: true,
+          //   headerShadowVisible: false,
+          //   headerSearchBarOptions: {
+          //     placeholder: "search",
+          //     hideWhenScrolling: true,
+          //   },
+          // }}
+          options={{ headerShown: false }}
         />
         <HomeStack.Screen
           name="FilterHomeList"

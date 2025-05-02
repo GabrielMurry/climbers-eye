@@ -24,8 +24,10 @@ import { CameraProvider } from "../contexts/CameraContext";
 import BoulderImageFullScreen from "../screens/boulder/BoulderImageFullScreen";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { setIsSignedIn } from "../redux/features/user/userSlice";
-import OneScreen from "../screens/OneScreen";
-import TwoScreen from "../screens/TwoScreen";
+import {
+  initialWindowMetrics,
+  SafeAreaProvider,
+} from "react-native-safe-area-context";
 
 export type RootStackParamList = {
   AuthStack: NavigatorScreenParams<AuthStackParamList>;
@@ -43,8 +45,6 @@ export type RootStackParamList = {
     width: number;
     height: number;
   };
-  One: undefined;
-  Two: undefined;
 };
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();
@@ -75,76 +75,73 @@ export default function AppNavigator() {
   }
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <ActionSheetProvider>
-        <ModalOptionsProvider>
-          <ModalFullScreenImageProvider>
-            <NavigationContainer>
-              <CameraProvider>
-                <>
-                  <StatusBar barStyle={"dark-content"} />
-                  <RootStack.Navigator screenOptions={{ headerShown: false }}>
-                    {!isSignedIn ? (
-                      <RootStack.Screen
-                        name="AuthStack"
-                        component={AuthNavigator}
-                      />
-                    ) : (
-                      <>
-                        {/* <RootStack.Screen name="One" component={OneScreen} />
-                        <RootStack.Screen name="Two" component={TwoScreen} /> */}
+    <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <ActionSheetProvider>
+          <ModalOptionsProvider>
+            <ModalFullScreenImageProvider>
+              <NavigationContainer>
+                <CameraProvider>
+                  <>
+                    <StatusBar barStyle={"dark-content"} />
+                    <RootStack.Navigator screenOptions={{ headerShown: false }}>
+                      {!isSignedIn ? (
                         <RootStack.Screen
-                          name="TabsStack"
-                          component={TabsStack}
+                          name="AuthStack"
+                          component={AuthNavigator}
                         />
-                        <RootStack.Screen
-                          name="GymStack"
-                          component={GymStack}
-                        />
-                        <RootStack.Screen
-                          name="SpraywallStack"
-                          component={SpraywallStack}
-                        />
-                        <RootStack.Screen
-                          name="BoulderStack"
-                          component={BoulderStack}
-                        />
-                        <RootStack.Screen
-                          name="ProfileStack"
-                          component={ProfileStack}
-                        />
-                        <RootStack.Screen
-                          name="CircuitStack"
-                          component={CircuitStack}
-                        />
-                        <RootStack.Screen
-                          name="MapStack"
-                          component={MapStack}
-                        />
-                        <RootStack.Screen
-                          name="Modal"
-                          component={ModalScreen}
-                          options={{
-                            presentation: "containedTransparentModal",
-                            animation: "fade",
-                          }}
-                        />
-                        <RootStack.Screen
-                          name="BoulderImageFull"
-                          component={BoulderImageFullScreen}
-                          options={{
-                            animation: "fade",
-                          }}
-                        />
-                      </>
-                    )}
-                  </RootStack.Navigator>
-                </>
-              </CameraProvider>
-            </NavigationContainer>
-          </ModalFullScreenImageProvider>
-        </ModalOptionsProvider>
-      </ActionSheetProvider>
-    </GestureHandlerRootView>
+                      ) : (
+                        <>
+                          <RootStack.Screen
+                            name="TabsStack"
+                            component={TabsStack}
+                          />
+                          <RootStack.Screen
+                            name="GymStack"
+                            component={GymStack}
+                          />
+                          <RootStack.Screen
+                            name="SpraywallStack"
+                            component={SpraywallStack}
+                          />
+                          <RootStack.Screen
+                            name="BoulderStack"
+                            component={BoulderStack}
+                          />
+                          <RootStack.Screen
+                            name="ProfileStack"
+                            component={ProfileStack}
+                          />
+                          <RootStack.Screen
+                            name="CircuitStack"
+                            component={CircuitStack}
+                          />
+                          <RootStack.Screen
+                            name="MapStack"
+                            component={MapStack}
+                          />
+                          <RootStack.Screen
+                            name="Modal"
+                            component={ModalScreen}
+                            options={{
+                              presentation: "containedTransparentModal",
+                              animation: "fade",
+                            }}
+                          />
+                          <RootStack.Screen
+                            name="BoulderImageFull"
+                            component={BoulderImageFullScreen}
+                          />
+                        </>
+                      )}
+                    </RootStack.Navigator>
+                  </>
+                </CameraProvider>
+              </NavigationContainer>
+            </ModalFullScreenImageProvider>
+          </ModalOptionsProvider>
+        </ActionSheetProvider>
+      </GestureHandlerRootView>
+    </SafeAreaProvider>
   );
 }

@@ -173,8 +173,8 @@ const SignupScreen = () => {
           />
         </View>
       </View>
-      <AppleSignUpButton />
-      <GoogleSignUpButton />
+      {/* <AppleSignUpButton />
+      <GoogleSignUpButton /> */}
       <View
         style={{
           flexDirection: "row",

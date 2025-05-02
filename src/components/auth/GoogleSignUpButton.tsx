@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
 import {
   GoogleSignin,
@@ -12,12 +12,19 @@ import { setIsSignedIn, setUser } from "../../redux/features/user/userSlice";
 import { removeGym } from "../../redux/features/gym/gymSlice";
 import { removeSpraywalls } from "../../redux/features/spraywall/spraywallSlice";
 import { BASE_URL, GOOGLE_IOS_CLIENT_ID } from "@env";
+import { Image } from "expo-image";
+
+type GoogleSignUpButtonProps = {
+  color: string;
+};
 
 GoogleSignin.configure({
   iosClientId: GOOGLE_IOS_CLIENT_ID,
 });
 
-const GoogleSignUpButton = () => {
+const GoogleSignUpButton: React.FC<GoogleSignUpButtonProps> = ({
+  color = "white",
+}) => {
   const dispatch = useAppDispatch();
 
   const signIn = async () => {
@@ -25,7 +32,7 @@ const GoogleSignUpButton = () => {
       await GoogleSignin.hasPlayServices();
       const response = await GoogleSignin.signIn();
       axios
-        .post(BASE_URL, {
+        .post(`${BASE_URL}/auth/google/`, {
           identityToken: response.data?.idToken,
           firstName: response.data?.user.givenName,
           lastName: response.data?.user.familyName,
@@ -56,6 +63,9 @@ const GoogleSignUpButton = () => {
           dispatch(setIsSignedIn(true));
         })
         .catch((err) => {
+          if (response.type === "cancelled") {
+            return;
+          }
           console.log("Login failed", err.message); // should say 'Network Error'
           console.log("Error config:", err.config);
           console.log("Error request:", err.request); // useful: might show failed URL
@@ -66,10 +76,35 @@ const GoogleSignUpButton = () => {
   };
 
   return (
-    <GoogleSigninButton
-      size={GoogleSigninButton.Size.Standard}
+    <TouchableOpacity
+      style={{
+        width: "100%",
+        height: 50,
+        borderRadius: 100,
+        backgroundColor: color,
+        justifyContent: "center",
+      }}
       onPress={signIn}
-    />
+    >
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "center",
+          width: "100%",
+          height: "100%",
+        }}
+      >
+        <Image
+          source={require("../../assets/images/google_icon.png")}
+          style={{ width: 30, height: 30, position: "absolute", left: 20 }}
+          contentFit="contain"
+        />
+        <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+          Continue with Google
+        </Text>
+      </View>
+    </TouchableOpacity>
   );
 };
 

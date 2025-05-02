@@ -61,9 +61,7 @@ function TabNavigator() {
       <TabStack.Screen
         name="ProfileStack"
         component={ProfileStack}
-        options={{
-          headerShown: false,
-        }}
+        options={{ headerShown: false }}
       />
     </TabStack.Navigator>
   );
