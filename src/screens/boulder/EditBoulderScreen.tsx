@@ -7,6 +7,7 @@ import { RefProps } from "../../components/canvas/CanvasBoard/types";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Color } from "../../components/canvas/ColorButton/types";
 import EditBoulderHeader from "../../components/boulder/paint/EditBoulderHeader";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 type EditBoulderScreenProps = NativeStackScreenProps<
   BoulderStackParamList,
@@ -16,6 +17,8 @@ type EditBoulderScreenProps = NativeStackScreenProps<
 const EditBoulderScreen: React.FC<EditBoulderScreenProps> = ({ route }) => {
   const { image } = route.params;
 
+  const insets = useSafeAreaInsets();
+
   const canvasRef = useRef<RefProps>(null);
 
   const [selectedColor, setSelectedColor] = useState<Color>("green");
@@ -23,7 +26,13 @@ const EditBoulderScreen: React.FC<EditBoulderScreenProps> = ({ route }) => {
   const [canMove, setCanMove] = useState(false);
 
   return (
-    <View style={styles.container}>
+    <View
+      style={{
+        paddingTop: insets.top,
+        backgroundColor: "rgba(23,23,23,255)",
+        flex: 1,
+      }}
+    >
       <SafeAreaView style={{ flex: 1 }}>
         <EditBoulderHeader canvasRef={canvasRef} wallImage={image} />
         <ImageCanvas
@@ -48,10 +57,3 @@ const EditBoulderScreen: React.FC<EditBoulderScreenProps> = ({ route }) => {
 };
 
 export default EditBoulderScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "rgba(23,23,23,255)",
-  },
-});

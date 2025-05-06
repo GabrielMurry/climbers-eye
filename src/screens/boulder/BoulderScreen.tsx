@@ -1,4 +1,10 @@
-import { ScrollView, View, Dimensions, StyleSheet } from "react-native";
+import {
+  ScrollView,
+  View,
+  Dimensions,
+  StyleSheet,
+  ActivityIndicator,
+} from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { getBoulderDetail } from "../../services/boulder/boulder";
@@ -19,10 +25,18 @@ import InfoRow2 from "../../components/boulder/detail/InfoRow2";
 import InfoRow3 from "../../components/boulder/detail/InfoRow3";
 import InfoRow4 from "../../components/boulder/detail/InfoRow4";
 import InfoRow6 from "../../components/boulder/detail/InfoRow6";
-import { Image } from "expo-image";
+// import { Image } from "expo-image";
 import { BlurView } from "expo-blur";
 import Animated, { FadeIn } from "react-native-reanimated";
-import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
+import { Image as ExpoImage } from "expo-image";
+
+// const sprayWallImages = [
+//   "https://climberseye.s3.amazonaws.com/spraywall/Wall-eb8d3f60-e9cf-4330-b26c-706231104d5e.jpg",
+// ];
 
 export type ChartData = {
   label: string;
@@ -40,6 +54,7 @@ const SCREEN_HEIGHT = Dimensions.get("window").height;
 const BoulderScreen: React.FC<BoulderScreenProps> = ({ route }) => {
   const navigation = useNavigation();
   const routedBoulder = route.params.boulder;
+  const insets = useSafeAreaInsets();
 
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => selectUser(state));
@@ -72,8 +87,16 @@ const BoulderScreen: React.FC<BoulderScreenProps> = ({ route }) => {
   //   }, [])
   // );
 
+  // useEffect(() => {
+  //   const preloadImages = async () => {
+  //     await Promise.all(sprayWallImages.map(uri => Image.prefetch(uri)));
+  //     setReady(true);
+  //   };
+
+  //   preloadImages();
+  // }, []);
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
+    <View style={{ flex: 1, backgroundColor: "white", paddingTop: insets.top }}>
       <BoulderHeader boulder={boulder} />
       <ScrollView
         contentContainerStyle={{
@@ -96,9 +119,10 @@ const BoulderScreen: React.FC<BoulderScreenProps> = ({ route }) => {
             width={boulder.width}
             height={boulder.height}
           />
-          {/* <Image
-            source={{ uri: spraywall.url }}
+          {/* <ExpoImage
+            source={spraywall.url}
             contentFit="contain"
+            cachePolicy="memory-disk"
             style={{ width: "100%", height: 500 }}
           /> */}
         </View>
@@ -113,7 +137,7 @@ const BoulderScreen: React.FC<BoulderScreenProps> = ({ route }) => {
         <InfoRow4 boulder={boulder} />
         <InfoRow6 boulder={boulder} />
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 

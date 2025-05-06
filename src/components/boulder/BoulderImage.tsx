@@ -14,38 +14,42 @@ type BoulderImageProps = {
   boulderUri: string;
   width: number;
   height: number;
-  shrinkScale?: number;
 };
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const SCREEN_HEIGHT = Dimensions.get("window").height;
+
+const prefetchImage = async (url: string) => {
+  try {
+    await Image.prefetch(url);
+    console.log(`Image prefetched successfully: ${url}`);
+  } catch (error) {
+    console.error(`Error prefetching image: ${url}`, error);
+  }
+};
 
 const BoulderImage: React.FC<BoulderImageProps> = ({
   spraywallUri,
   boulderUri,
   width,
   height,
-  shrinkScale = 1,
 }) => {
   const navigation = useNavigation();
+
   const [ready, setReady] = useState(false);
+  const [boulderReady, setBoulderReady] = useState(false);
+  const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
+  const [displayedSize, setDisplayedSize] = useState({ width: 0, height: 0 });
 
   const boulderOpacity = useSharedValue(0);
   const spraywallOpacity = useSharedValue(1);
 
-  const animatedBoulderStyle = useAnimatedStyle(() => ({
-    opacity: boulderOpacity.value,
-  }));
-
   useEffect(() => {
-    if (ready) {
+    if (ready && boulderReady) {
       spraywallOpacity.value = withTiming(0.75, { duration: 1000 });
       boulderOpacity.value = withTiming(0.5, { duration: 1000 });
     }
-  }, [ready]);
-
-  const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
-  const [displayedSize, setDisplayedSize] = useState({ width: 0, height: 0 });
+  }, [ready, boulderReady]);
 
   useEffect(() => {
     if (containerSize.width && containerSize.height && width && height) {
@@ -67,6 +71,10 @@ const BoulderImage: React.FC<BoulderImageProps> = ({
       setDisplayedSize({ width: scaledWidth, height: scaledHeight });
     }
   }, [containerSize, width, height]);
+
+  useEffect(() => {
+    prefetchImage(boulderUri);
+  }, [boulderUri]);
 
   return (
     <Pressable
@@ -91,7 +99,6 @@ const BoulderImage: React.FC<BoulderImageProps> = ({
             width: Math.round(displayedSize.width),
             height: Math.round(displayedSize.height),
             backgroundColor: "black",
-            opacity: 1,
           }}
         />
       )}
@@ -119,39 +126,26 @@ const BoulderImage: React.FC<BoulderImageProps> = ({
           onLoad={() => setReady(true)}
         />
       </Animated.View>
-      {ready && (
-        <>
-          <Animated.View
-            style={[
-              {
-                position: "absolute",
-                width: SCREEN_WIDTH,
-                height: 500,
-                backgroundColor: "transparent",
-              },
-            ]}
-          >
-            <MaskedView
-              style={{
-                position: "absolute",
-                width: SCREEN_WIDTH,
-                height: 500,
-              }}
-              maskElement={
-                <Image
-                  source={boulderUri}
-                  style={{
-                    width: SCREEN_WIDTH,
-                    height: 500,
-                    opacity: 1,
-                  }}
-                  contentFit="contain"
-                  cachePolicy={"memory-disk"}
-                />
-              }
-            >
+      {ready && boulderReady && (
+        <Animated.View
+          style={[
+            {
+              position: "absolute",
+              width: SCREEN_WIDTH,
+              height: 500,
+              backgroundColor: "transparent",
+            },
+          ]}
+        >
+          <MaskedView
+            style={{
+              position: "absolute",
+              width: SCREEN_WIDTH,
+              height: 500,
+            }}
+            maskElement={
               <Image
-                source={spraywallUri}
+                source={boulderUri}
                 style={{
                   width: SCREEN_WIDTH,
                   height: 500,
@@ -160,29 +154,41 @@ const BoulderImage: React.FC<BoulderImageProps> = ({
                 contentFit="contain"
                 cachePolicy={"memory-disk"}
               />
-            </MaskedView>
-          </Animated.View>
-          <Animated.View
-            style={[
-              {
-                position: "absolute",
-                width: SCREEN_WIDTH,
-                height: 500,
-                backgroundColor: "transparent",
-              },
-              animatedBoulderStyle,
-            ]}
+            }
           >
             <Image
-              source={boulderUri}
+              source={spraywallUri}
               style={{
                 width: SCREEN_WIDTH,
                 height: 500,
+                opacity: 1,
               }}
               contentFit="contain"
+              cachePolicy={"memory-disk"}
             />
-          </Animated.View>
-        </>
+          </MaskedView>
+        </Animated.View>
+      )}
+      {ready && (
+        <Animated.View
+          style={{
+            position: "absolute",
+            width: SCREEN_WIDTH,
+            height: 500,
+            backgroundColor: "transparent",
+            opacity: boulderOpacity,
+          }}
+        >
+          <Image
+            source={boulderUri}
+            style={{
+              width: SCREEN_WIDTH,
+              height: 500,
+            }}
+            contentFit="contain"
+            onLoad={() => setBoulderReady(true)}
+          />
+        </Animated.View>
       )}
     </Pressable>
   );

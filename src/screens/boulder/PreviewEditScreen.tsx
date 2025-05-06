@@ -1,4 +1,4 @@
-import { StyleSheet, SafeAreaView } from "react-native";
+import { StyleSheet, SafeAreaView, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import * as Haptics from "expo-haptics";
 import { addBoulderToSpraywall } from "../../services/boulder/boulder";
@@ -13,6 +13,7 @@ import { BoulderStackParamList } from "../../navigation/BoulderStack";
 import { StackActions, useNavigation } from "@react-navigation/native";
 import PreviewHeader from "../../components/boulder/preview/PreviewHeader";
 import { deleteLocalFile } from "../../utils/localFile";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 type PreviewEditScreenProps = NativeStackScreenProps<
   BoulderStackParamList,
@@ -21,6 +22,8 @@ type PreviewEditScreenProps = NativeStackScreenProps<
 
 const PreviewEditScreen: React.FC<PreviewEditScreenProps> = ({ route }) => {
   const navigation = useNavigation();
+
+  const insets = useSafeAreaInsets();
 
   const spraywall = useAppSelector((state) => selectSpraywall(state));
   if (!spraywall) {
@@ -100,7 +103,7 @@ const PreviewEditScreen: React.FC<PreviewEditScreenProps> = ({ route }) => {
   }, [name]);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={{ paddingTop: insets.top, flex: 1 }}>
       <PreviewHeader />
       <PreviewImage
         boulderUri={boulderImage.uri}
@@ -125,15 +128,8 @@ const PreviewEditScreen: React.FC<PreviewEditScreenProps> = ({ route }) => {
         handleConfirm={handleConfirm}
         isLoading={isImageLoading}
       />
-    </SafeAreaView>
+    </View>
   );
 };
 
 export default PreviewEditScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "white",
-  },
-});

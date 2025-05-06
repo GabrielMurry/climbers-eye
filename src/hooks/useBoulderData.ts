@@ -16,6 +16,7 @@ import {
 import { getCircuitList } from "../services/circuit";
 import { setCircuits } from "../redux/features/circuit/circuitSlice";
 import { selectBoulders } from "../redux/features/boulder/boulderSelectors";
+import { Image as ExpoImage } from "expo-image";
 
 const INITIAL_PAGE: number = 1;
 
@@ -35,6 +36,9 @@ export const useBoulderData = () => {
     setIsInitialPageLoading(true);
     setError(null);
     dispatch(resetBoulders());
+    if (spraywall) {
+      await ExpoImage.prefetch(spraywall.url);
+    }
 
     try {
       const response = await getBoulderList(

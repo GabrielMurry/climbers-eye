@@ -31,7 +31,7 @@ const QualityRating: React.FC<QualityRatingProps> = ({ quality, size }) => {
         }
       >
         {/* Gold background visible within the stars */}
-        {quality ? (
+        {quality > 0 ? (
           <View
             style={{
               height: "100%",
