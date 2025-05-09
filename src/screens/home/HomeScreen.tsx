@@ -31,7 +31,7 @@ const HomeScreen = () => {
     //     hasEditPermission={hasEditPermission}
     //     height={100}
     //   />
-    <View style={{ paddingTop: insets.top }}>
+    <View>
       <FlatList
         data={boulders}
         renderItem={({ item }) => <BoulderCard boulder={item} />}
@@ -45,6 +45,7 @@ const HomeScreen = () => {
         refreshing={isInitialPageLoading}
         style={{ backgroundColor: "white", paddingHorizontal: 10 }}
         contentContainerStyle={{ gap: 5 }}
+        contentInsetAdjustmentBehavior="automatic"
       />
     </View>
   );

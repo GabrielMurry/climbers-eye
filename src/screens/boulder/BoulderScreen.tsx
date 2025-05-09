@@ -4,6 +4,7 @@ import {
   Dimensions,
   StyleSheet,
   ActivityIndicator,
+  InteractionManager,
 } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
@@ -108,7 +109,6 @@ const BoulderScreen: React.FC<BoulderScreenProps> = ({ route }) => {
           style={{
             height: 500,
             width: "100%",
-            paddingHorizontal: 20,
           }}
         >
           <BoulderImage

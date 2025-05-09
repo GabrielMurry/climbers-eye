@@ -1,7 +1,5 @@
 import {
   Canvas,
-  Circle,
-  Group,
   ImageFormat,
   notifyChange,
   Path,
@@ -16,25 +14,12 @@ import React, {
   useImperativeHandle,
   useState,
 } from "react";
-import { Image, useWindowDimensions, View } from "react-native";
+import { Image, useWindowDimensions } from "react-native";
 import { GestureDetector, Gesture } from "react-native-gesture-handler";
-import { CanvasBoardProps, PathWithColorAndWidth, RefProps } from "./types";
-import {
-  runOnJS,
-  SharedValue,
-  useDerivedValue,
-  useSharedValue,
-  withRepeat,
-  withTiming,
-} from "react-native-reanimated";
+import { CanvasBoardProps, PathObj, Point, RefProps } from "./types";
+import { runOnJS, useSharedValue } from "react-native-reanimated";
 import * as FileSystem from "expo-file-system";
 import uuid from "react-native-uuid";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-
-type Point = {
-  x: number;
-  y: number;
-};
 
 const CanvasBoard = forwardRef<RefProps, CanvasBoardProps>(
   (
@@ -44,81 +29,79 @@ const CanvasBoard = forwardRef<RefProps, CanvasBoardProps>(
       enabled = true,
       color,
       strokeWidth,
-      opacity,
     },
     ref: Ref<RefProps>
   ) => {
     const cRef = useCanvasRef();
+    const cRefColorMask = useCanvasRef();
 
-    const currentPath = useSharedValue(Skia.Path.Make());
-    const smoothPath = useSharedValue(Skia.Path.Make());
     const startPoint = useSharedValue<Point>({ x: 0, y: 0 });
-    const allPaths = useSharedValue<SkPath[]>([]);
+    // Current path when drawing is handled on UI thread for performance
+    const currentPath = useSharedValue(Skia.Path.Make());
+    const [allPaths, setAllPaths] = useState<PathObj[]>([
+      { path: Skia.Path.Make(), color: color, strokeWidth: strokeWidth },
+    ]);
+
+    useEffect(() => {
+      // We want pathState to update first, then reset the currentPath shared value.
+      // This prevents flickering
+      currentPath.value.reset();
+    }, [allPaths]);
+
+    const updateState = (path: SkPath) => {
+      setAllPaths((prev) => [
+        ...prev,
+        { path: path, color: color, strokeWidth: strokeWidth },
+      ]);
+    };
 
     const gesture = Gesture.Pan()
+      .enabled(enabled)
       .averageTouches(true)
       .maxPointers(1)
       .onBegin((e) => {
+        // When user first presses down on screen - make a dot and get that start point
         startPoint.value = { x: e.x, y: e.y };
         currentPath.value.moveTo(e.x, e.y);
         currentPath.value.lineTo(e.x, e.y);
         notifyChange(currentPath);
       })
       .onChange((e) => {
+        // Drawing
         currentPath.value.lineTo(e.x, e.y);
         notifyChange(currentPath);
       })
-      .onEnd((e) => {
-        // Post-process smoothing
-        const startP = startPoint.get();
-        currentPath.get().moveTo(startP.x, startP.y);
-        smoothPath.get().moveTo(startP.x, startP.y);
+      .onFinalize(() => {
         const pointsLength = currentPath.get().countPoints();
+        const startP = startPoint.get();
+        // Make a separate Skia Path and move it to start point
         const smooth = Skia.Path.Make();
         smooth.moveTo(startP.x, startP.y);
-        for (let i = 1; i < pointsLength - 2; i++) {
-          const p0 = currentPath.get().getPoint(i);
-          const p1 = currentPath.get().getPoint(i + 1);
-          const midX = (p0.x + p1.x) / 2;
-          const midY = (p0.y + p1.y) / 2;
+        if (pointsLength > 2) {
+          // Post-process smoothing
+          for (let i = 1; i < pointsLength - 2; i++) {
+            const p0 = currentPath.get().getPoint(i);
+            const p1 = currentPath.get().getPoint(i + 1);
+            const midX = (p0.x + p1.x) / 2;
+            const midY = (p0.y + p1.y) / 2;
 
-          smooth.quadTo(p0.x, p0.y, midX, midY);
+            smooth.quadTo(p0.x, p0.y, midX, midY);
+          }
+        } else {
+          // User just tapped screen (drew a dot)
+          smooth.lineTo(startP.x, startP.y);
         }
-        allPaths.modify((value) => {
-          "worklet";
-          value.push(smooth);
-          return value;
-        });
-        smoothPath.value.addPath(smooth);
-        currentPath.value.reset();
+        runOnJS(updateState)(smooth);
         notifyChange(currentPath);
-      })
-      .onTouchesCancelled(() => {
-        console.log("hi");
       });
-    // .onTouchesUp(() => {
-
-    // });
 
     const handleUndo = () => {
-      smoothPath.value = smoothPath.value.reset();
-      const length = allPaths.get().length;
-      const newPath = Skia.Path.Make();
-      for (let i = 0; i < length - 1; i++) {
-        newPath.addPath(allPaths.value[i]);
-      }
-      allPaths.modify((value) => {
-        "worklet";
-        value.pop();
-        return value;
-      });
-      smoothPath.value.addPath(newPath);
-      notifyChange(smoothPath);
+      setAllPaths((prev) => prev.slice(0, -1));
     };
 
     const handleSaveAsBase64 = async () => {
       try {
-        const image = await cRef.current?.makeImageSnapshotAsync();
+        const image = await cRefColorMask.current?.makeImageSnapshotAsync();
         if (image) {
           return image.encodeToBase64(ImageFormat.JPEG);
         }
@@ -129,7 +112,8 @@ const CanvasBoard = forwardRef<RefProps, CanvasBoardProps>(
 
     const handleSaveAsLocalFile = async () => {
       try {
-        const image = await cRef.current?.makeImageSnapshotAsync();
+        // Taking snapshot of the hidden canvas drawing since we need the drawing completely visible / opaque
+        const image = await cRefColorMask.current?.makeImageSnapshotAsync();
         if (image) {
           const base64 = image.encodeToBase64(ImageFormat.PNG);
           const uri = FileSystem.cacheDirectory + `${uuid.v4()}.png`;
@@ -153,24 +137,48 @@ const CanvasBoard = forwardRef<RefProps, CanvasBoardProps>(
     }));
 
     return (
-      <GestureDetector gesture={gesture}>
-        <Canvas ref={cRef} style={{ flex: 1 }}>
-          <Path
-            path={currentPath}
-            color="green"
-            style="stroke"
-            strokeWidth={10}
-            strokeCap="round"
-          />
-          <Path
-            path={smoothPath}
-            color="green"
-            style="stroke"
-            strokeWidth={10}
-            strokeCap="round"
-          />
+      <>
+        <GestureDetector gesture={gesture}>
+          <Canvas ref={cRef} style={{ width: width, height }}>
+            {allPaths.map((data, index) => (
+              <Path
+                key={index}
+                path={data.path}
+                color={data.color}
+                style="stroke"
+                strokeWidth={data.strokeWidth}
+                strokeCap="round"
+                opacity={0.5}
+              />
+            ))}
+            <Path
+              path={currentPath}
+              color={color}
+              style="stroke"
+              strokeWidth={strokeWidth}
+              strokeCap="round"
+              opacity={0.5}
+            />
+          </Canvas>
+        </GestureDetector>
+        {/* Hidden canvas for taking snapshot since we need the drawing to be fully opaque */}
+        <Canvas
+          ref={cRefColorMask}
+          style={{ width, height, position: "absolute", left: -9999 }}
+        >
+          {allPaths.map((data, index) => (
+            <Path
+              key={index}
+              path={data.path}
+              color={data.color}
+              style={"stroke"}
+              strokeWidth={data.strokeWidth}
+              strokeCap="round"
+              opacity={1}
+            />
+          ))}
         </Canvas>
-      </GestureDetector>
+      </>
     );
   }
 );

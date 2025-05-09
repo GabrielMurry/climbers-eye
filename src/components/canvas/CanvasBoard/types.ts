@@ -7,13 +7,17 @@ export type CanvasBoardProps = {
   enabled?: boolean;
   color: Color;
   strokeWidth: number;
-  opacity: number;
 };
 
-export type PathWithColorAndWidth = {
+export type PathObj = {
   path: SkPath;
   color: Color;
   strokeWidth: number;
+};
+
+export type Point = {
+  x: number;
+  y: number;
 };
 
 type LocalFile = {
@@ -24,7 +28,7 @@ type LocalFile = {
 
 export type RefProps = {
   clearCanvas: () => void;
-  getPaths: () => PathWithColorAndWidth[];
+  getPaths: () => PathObj[];
   undo: () => void;
   saveAsBase64: () => Promise<string | undefined>;
   saveAsLocalFile: () => Promise<LocalFile | undefined>;

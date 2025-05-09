@@ -1,6 +1,7 @@
 import { View, Text, TextInput, Switch, StyleSheet } from "react-native";
 import React from "react";
 import CustomTextInput from "../../custom/inputs/CustomInput";
+import CommonTextInput from "../../common/CommonTextInput";
 
 type PreviewInputDataProps = {
   name: string;
@@ -31,7 +32,13 @@ const PreviewInputData: React.FC<PreviewInputDataProps> = ({
 }) => {
   return (
     <View style={styles.container}>
-      <CustomTextInput
+      <CommonTextInput value={name} setValue={setName} title="Boulder Name" />
+      <CommonTextInput
+        value={description}
+        setValue={setDescription}
+        title="Boulder Description"
+      />
+      {/* <CustomTextInput
         value={name}
         setValue={(value) => setName(value)}
         placeholder="Boulder Name"
@@ -39,15 +46,15 @@ const PreviewInputData: React.FC<PreviewInputDataProps> = ({
         error={error}
         bordered={true}
         rounded={true}
-      />
-      <TextInput
+      /> */}
+      {/* <TextInput
         value={description}
         onChangeText={(value) => setDescription(value)}
         placeholder={"Boulder Description (optional)"}
         keyboardType="default"
         style={styles.textInput}
         multiline={true}
-      />
+      /> */}
       <View style={styles.switchContainer}>
         <Text>Matching Allowed</Text>
         <Switch value={isMatching} onValueChange={setIsMatching} />

@@ -34,26 +34,24 @@ const ImageCanvas: React.FC<ImageCanvasProps> = ({
   const [zoomLevel, setZoomLevel] = useState(INITIAL_ZOOM);
 
   return (
-    // <ReactNativeZoomableView
-    //   zoomEnabled={canMove}
-    //   panEnabled={canMove}
-    //   maxZoom={10}
-    //   minZoom={1}
-    //   visualTouchFeedbackEnabled={false}
-    //   disableMomentum={!canMove} // Weird jitter when user paints on canvas. Enable momentum only when user can move the image and canvas. Disable when painting.
-    //   initialZoom={zoomLevel} // Component is rerendering every time 'canMove' changes. Rerendering makes initialZoom 1. So if user is zoomed in, it will zoom out to original. We reinitialize initialZoom to whatever the new zoom is to fix this issue.
-    //   onZoomEnd={(event, gestureState, zoomableViewEventObj) =>
-    //     setZoomLevel(zoomableViewEventObj.zoomLevel)
-    //   }
-    // >
-    <View style={{ flex: 1 }}>
+    <ReactNativeZoomableView
+      zoomEnabled={canMove}
+      panEnabled={canMove}
+      maxZoom={10}
+      minZoom={1}
+      visualTouchFeedbackEnabled={false}
+      disableMomentum={!canMove} // Weird jitter when user paints on canvas. Enable momentum only when user can move the image and canvas. Disable when painting.
+      initialZoom={zoomLevel} // Component is rerendering every time 'canMove' changes. Rerendering makes initialZoom 1. So if user is zoomed in, it will zoom out to original. We reinitialize initialZoom to whatever the new zoom is to fix this issue.
+      onZoomEnd={(event, gestureState, zoomableViewEventObj) =>
+        setZoomLevel(zoomableViewEventObj.zoomLevel)
+      }
+    >
       <CanvasBoard
         enabled={!canMove}
         color={selectedColor}
         strokeWidth={strokeWidth}
         width={scaledWidth}
         height={scaledHeight}
-        opacity={0.5}
         ref={canvasRef}
       />
       <Image
@@ -65,8 +63,7 @@ const ImageCanvas: React.FC<ImageCanvasProps> = ({
           zIndex: -1,
         }}
       />
-    </View>
-    // </ReactNativeZoomableView>
+    </ReactNativeZoomableView>
   );
 };
 

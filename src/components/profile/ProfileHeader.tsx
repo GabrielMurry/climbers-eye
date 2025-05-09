@@ -80,7 +80,7 @@ const ProfileHeader = () => {
   return (
     <Header
       leftIcon={userIcon}
-      // leftText={user.username}
+      leftText={user.username}
       rightIcon={<OptionsIcon options={options} />}
     />
   );

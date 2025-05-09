@@ -7,7 +7,7 @@ import { selectGym } from "../redux/features/gym/gymSelectors";
 import { useAppSelector } from "../redux/hooks";
 import { selectFilters } from "../redux/features/filter/filterSelectors";
 import { useState } from "react";
-import { Pressable } from "react-native";
+import { Pressable, View } from "react-native";
 import { PlusIcon } from "react-native-heroicons/outline";
 
 export type HomeStackParamsList = {
@@ -32,16 +32,15 @@ const HomeNavigator = () => {
         <HomeStack.Screen
           name="HomeList"
           component={HomeScreen}
-          // options={{
-          //   headerTitle: gym.name,
-          //   headerLargeTitle: true,
-          //   headerShadowVisible: false,
-          //   headerSearchBarOptions: {
-          //     placeholder: "search",
-          //     hideWhenScrolling: true,
-          //   },
-          // }}
-          options={{ headerShown: false }}
+          options={{
+            headerTitle: gym.name,
+            headerLargeTitle: true,
+            headerShadowVisible: false,
+            headerSearchBarOptions: {
+              placeholder: "search",
+              hideWhenScrolling: true,
+            },
+          }}
         />
         <HomeStack.Screen
           name="FilterHomeList"

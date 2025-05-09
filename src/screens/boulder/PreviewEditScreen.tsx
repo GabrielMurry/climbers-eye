@@ -103,7 +103,9 @@ const PreviewEditScreen: React.FC<PreviewEditScreenProps> = ({ route }) => {
   }, [name]);
 
   return (
-    <View style={{ paddingTop: insets.top, flex: 1 }}>
+    <View
+      style={{ paddingTop: insets.top, paddingBottom: insets.bottom, flex: 1 }}
+    >
       <PreviewHeader />
       <PreviewImage
         boulderUri={boulderImage.uri}
