@@ -31,7 +31,7 @@ const HomeScreen = () => {
     //     hasEditPermission={hasEditPermission}
     //     height={100}
     //   />
-    <View>
+    <View style={{ flex: 1 }}>
       <FlatList
         data={boulders}
         renderItem={({ item }) => <BoulderCard boulder={item} />}
@@ -43,8 +43,8 @@ const HomeScreen = () => {
         ListEmptyComponent={<Empty isLoading={isInitialPageLoading} />}
         onRefresh={refreshBoulders}
         refreshing={isInitialPageLoading}
-        style={{ backgroundColor: "white", paddingHorizontal: 10 }}
-        contentContainerStyle={{ gap: 5 }}
+        style={{ backgroundColor: "white", paddingHorizontal: 20 }}
+        contentContainerStyle={{ gap: 20 }}
         contentInsetAdjustmentBehavior="automatic"
       />
     </View>

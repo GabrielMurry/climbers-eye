@@ -44,7 +44,7 @@ const PreviewEditScreen: React.FC<PreviewEditScreenProps> = ({ route }) => {
 
   const handleConfirm = async (isPublish: boolean) => {
     const formData = new FormData();
-    formData.append("image", {
+    formData.append("boulderImage", {
       uri: boulderImage.uri,
       name: name,
       type: `image/png`,

@@ -99,18 +99,7 @@ const CanvasBoard = forwardRef<RefProps, CanvasBoardProps>(
       setAllPaths((prev) => prev.slice(0, -1));
     };
 
-    const handleSaveAsBase64 = async () => {
-      try {
-        const image = await cRefColorMask.current?.makeImageSnapshotAsync();
-        if (image) {
-          return image.encodeToBase64(ImageFormat.JPEG);
-        }
-      } catch (error) {
-        throw new Error(`Save as base64 error: ${error}`);
-      }
-    };
-
-    const handleSaveAsLocalFile = async () => {
+    const handleSaveDrawingLocally = async () => {
       try {
         // Taking snapshot of the hidden canvas drawing since we need the drawing completely visible / opaque
         const image = await cRefColorMask.current?.makeImageSnapshotAsync();
@@ -132,8 +121,7 @@ const CanvasBoard = forwardRef<RefProps, CanvasBoardProps>(
       clearCanvas: () => [],
       getPaths: () => [],
       undo: handleUndo,
-      saveAsBase64: handleSaveAsBase64,
-      saveAsLocalFile: handleSaveAsLocalFile,
+      saveDrawingLocally: handleSaveDrawingLocally,
     }));
 
     return (

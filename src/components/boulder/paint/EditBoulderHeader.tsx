@@ -20,8 +20,8 @@ const EditBoulderHeader: React.FC<EditBoulderHeaderProps> = ({
 
   const handleDonePress = async () => {
     try {
-      const boulderLocalFile = await canvasRef.current?.saveAsLocalFile();
-      if (!boulderLocalFile) {
+      const boulder = await canvasRef.current?.saveDrawingLocally();
+      if (!boulder) {
         console.error("File URI not returned.");
         return;
       }
@@ -29,9 +29,9 @@ const EditBoulderHeader: React.FC<EditBoulderHeaderProps> = ({
         screen: "PreviewEdit",
         params: {
           boulderImage: {
-            uri: boulderLocalFile.uri,
-            width: boulderLocalFile.width,
-            height: boulderLocalFile.height,
+            uri: boulder.uri,
+            width: boulder.width,
+            height: boulder.height,
           },
           wallImage: {
             uri: wallImage.url,

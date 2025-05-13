@@ -1,7 +1,7 @@
 import { Pressable, Dimensions, View, StyleSheet, Text } from "react-native";
 import React, { useEffect, useState } from "react";
 import MaskedView from "@react-native-masked-view/masked-view";
-import { Image } from "expo-image";
+import { Image, ImageBackground } from "expo-image";
 import { useNavigation } from "@react-navigation/native";
 import Animated, {
   useAnimatedStyle,
@@ -87,6 +87,7 @@ const BoulderImage: React.FC<BoulderImageProps> = ({
 
   useEffect(() => {
     prefetchImage(boulderUri);
+    prefetchImage(spraywallUri);
   }, [boulderUri]);
 
   return (

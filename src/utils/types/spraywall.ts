@@ -4,5 +4,6 @@ export type Spraywall = {
   url: string;
   width: number;
   height: number;
+  thumbnailUrl: string;
   gym: number;
 };

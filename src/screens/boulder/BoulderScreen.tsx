@@ -82,20 +82,7 @@ const BoulderScreen: React.FC<BoulderScreenProps> = ({ route }) => {
   //   dispatch(updateBoulder(boulder.id, response.data));
   // };
 
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     fetchBoulderDetail();
-  //   }, [])
-  // );
-
-  // useEffect(() => {
-  //   const preloadImages = async () => {
-  //     await Promise.all(sprayWallImages.map(uri => Image.prefetch(uri)));
-  //     setReady(true);
-  //   };
-
-  //   preloadImages();
-  // }, []);
+  console.log(boulder.altWallUrl);
   return (
     <View style={{ flex: 1, backgroundColor: "white", paddingTop: insets.top }}>
       <BoulderHeader boulder={boulder} />
@@ -120,7 +107,7 @@ const BoulderScreen: React.FC<BoulderScreenProps> = ({ route }) => {
             height={boulder.height}
           />
           {/* <ExpoImage
-            source={spraywall.url}
+            source={boulder.thumbnailUrl}
             contentFit="contain"
             cachePolicy="memory-disk"
             style={{ width: "100%", height: 500 }}
