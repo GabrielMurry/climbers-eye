@@ -1,8 +1,8 @@
 import { Pressable, Dimensions, View, StyleSheet, Text } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { Image, ImageBackground } from "expo-image";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -55,14 +55,31 @@ const BoulderImage: React.FC<BoulderImageProps> = ({
     if (displayedSize) {
       spraywallOpacity.value = withTiming(0.75, { duration: ANIM_DURATION });
       boulderOpacity.value = withTiming(0.5, { duration: ANIM_DURATION });
-      const timer = setTimeout(() => {
-        setMountMask(true);
-        maskOpacity.value = withTiming(1, { duration: ANIM_DURATION });
-      }, 750);
+      // const timerId = setTimeout(() => {
+      //   setMountMask(true);
+      //   maskOpacity.value = withTiming(1, { duration: ANIM_DURATION });
+      // }, 750);
 
-      return () => clearTimeout(timer);
+      // return () => clearTimeout(timerId);
     }
   }, [displayedSize]);
+
+  const perform = useCallback(() => {
+    if (displayedSize) {
+      const timerId = setTimeout(() => {
+        setMountMask(true);
+        console.log("MOUNTING");
+        maskOpacity.value = withTiming(1, { duration: ANIM_DURATION });
+      }, 750);
+      return () => {
+        console.log("NOT");
+        clearTimeout(timerId);
+        maskOpacity.value = 0;
+      };
+    }
+  }, [displayedSize]);
+
+  useFocusEffect(perform);
 
   useEffect(() => {
     if (containerSize.width && containerSize.height && width && height) {
@@ -145,11 +162,6 @@ const BoulderImage: React.FC<BoulderImageProps> = ({
               }}
             >
               <MaskedView
-                // style={{
-                //   position: "absolute",
-                //   width: Math.round(displayedSize.width),
-                //   height: Math.round(displayedSize.height),
-                // }}
                 maskElement={
                   <Image
                     source={boulderUri}

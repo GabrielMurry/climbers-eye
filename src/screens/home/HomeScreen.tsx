@@ -1,16 +1,26 @@
-import { StyleSheet, FlatList, View } from "react-native";
-import React from "react";
-import BoulderCard from "../../components/common/BoulderCard";
+import { FlatList, View } from "react-native";
+import React, { useRef } from "react";
+import BoulderCard from "../../components/common/boulderCard/BoulderCard";
 import { useBoulderData } from "../../hooks/useBoulderData";
 import Footer from "../../components/common/flatList/Footer";
 import Empty from "../../components/common/flatList/Empty";
-import {
-  SafeAreaView,
-  useSafeAreaInsets,
-} from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import Animated, {
+  useAnimatedScrollHandler,
+  useAnimatedStyle,
+  useSharedValue,
+} from "react-native-reanimated";
+import HomeHeader from "../../components/home/HomeHeader";
+
+const HEADER_HEIGHT = 50;
+const TEXT_INPUT_HEIGHT = 40;
+const HOME_HEADER = HEADER_HEIGHT + TEXT_INPUT_HEIGHT;
+const PADDING = 20;
+const CONTENT_INSET_TOP = HOME_HEADER + PADDING;
 
 const HomeScreen = () => {
   const hasEditPermission = true;
+  const insets = useSafeAreaInsets();
 
   const {
     boulders,
@@ -21,18 +31,20 @@ const HomeScreen = () => {
     nextPageBoulders,
   } = useBoulderData();
 
-  const insets = useSafeAreaInsets();
+  const flatListRef = useRef<FlatList>(null);
+
+  const scrollY = useSharedValue(0);
+
+  const scrollHandler = useAnimatedScrollHandler({
+    onScroll: (event) => {
+      scrollY.value = event.contentOffset.y + CONTENT_INSET_TOP;
+    },
+  });
 
   return (
-    // <SafeAreaView style={styles.container}>
-    //   <HomeHeader />
-    //   <FlatListSpraywalls
-    //     highlight={true}
-    //     hasEditPermission={hasEditPermission}
-    //     height={100}
-    //   />
-    <View style={{ flex: 1 }}>
-      <FlatList
+    <View style={{ flex: 1, paddingTop: insets.top, backgroundColor: "white" }}>
+      <HomeHeader scrollY={scrollY} flatListRef={flatListRef} />
+      <Animated.FlatList
         data={boulders}
         renderItem={({ item }) => <BoulderCard boulder={item} />}
         keyExtractor={(item) => item.id.toString()}
@@ -43,24 +55,17 @@ const HomeScreen = () => {
         ListEmptyComponent={<Empty isLoading={isInitialPageLoading} />}
         onRefresh={refreshBoulders}
         refreshing={isInitialPageLoading}
-        style={{ backgroundColor: "white", paddingHorizontal: 20 }}
-        contentContainerStyle={{ gap: 20 }}
-        contentInsetAdjustmentBehavior="automatic"
+        style={{
+          backgroundColor: "white",
+          paddingHorizontal: PADDING,
+        }}
+        contentContainerStyle={{ gap: PADDING }}
+        onScroll={scrollHandler}
+        ref={flatListRef}
+        contentInset={{ top: CONTENT_INSET_TOP }}
       />
     </View>
   );
 };
 
 export default HomeScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  button: {
-    width: 200,
-    height: 44,
-  },
-});

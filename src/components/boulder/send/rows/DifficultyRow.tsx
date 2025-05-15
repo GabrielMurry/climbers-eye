@@ -34,7 +34,7 @@ const DifficultyRow: React.FC<DifficultyRowProps> = ({ value, setValue }) => {
             color: "#333",
           }}
         >
-          Attempts:
+          Grade:
         </Text>
         <View
           style={{

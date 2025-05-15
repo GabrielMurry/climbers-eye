@@ -27,30 +27,14 @@ const HomeNavigator = () => {
     <NavigationProvider value={StackName.HomeStack}>
       <HomeStack.Navigator
         initialRouteName="HomeList"
-        // screenOptions={{ headerShown: false }}
+        screenOptions={{ headerShown: false }}
       >
-        <HomeStack.Screen
-          name="HomeList"
-          component={HomeScreen}
-          options={{
-            headerTitle: gym.name,
-            headerLargeTitle: true,
-            headerShadowVisible: false,
-            headerSearchBarOptions: {
-              placeholder: "search",
-              hideWhenScrolling: true,
-            },
-          }}
-        />
+        <HomeStack.Screen name="HomeList" component={HomeScreen} />
         <HomeStack.Screen
           name="FilterHomeList"
           component={FilterHomeListScreen}
         />
-        <HomeStack.Screen
-          name="Boulder"
-          component={BoulderScreen}
-          options={{ headerShown: false }}
-        />
+        <HomeStack.Screen name="Boulder" component={BoulderScreen} />
       </HomeStack.Navigator>
     </NavigationProvider>
   );

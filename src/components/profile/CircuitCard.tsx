@@ -11,7 +11,7 @@ import {
   ChevronLeftIcon,
 } from "react-native-heroicons/outline";
 import { Circuit } from "../../utils/types/circuit";
-import BoulderCard from "../common/BoulderCard";
+import BoulderCard from "../common/boulderCard/BoulderCard";
 
 type CircuitCardProps = {
   circuit: Circuit;

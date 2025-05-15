@@ -1,7 +1,7 @@
 import { Text, FlatList, ActivityIndicator, SafeAreaView } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import { getBookmarkList } from "../../services/profile";
-import BoulderCard from "../../components/common/BoulderCard";
+import BoulderCard from "../../components/common/boulderCard/BoulderCard";
 import EmptyCard from "../../components/common/flatList/EmptyCard";
 import ErrorCard from "../../components/common/ErrorCard";
 import { selectSpraywall } from "../../redux/features/spraywall/spraywallSelectors";

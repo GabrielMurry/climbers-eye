@@ -1,7 +1,7 @@
 import { View, Text, FlatList, StyleSheet, SafeAreaView } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import { getLogbookList } from "../../services/profile";
-import BoulderCard from "../../components/common/BoulderCard";
+import BoulderCard from "../../components/common/boulderCard/BoulderCard";
 import ErrorCard from "../../components/common/ErrorCard";
 import EmptyCard from "../../components/common/flatList/EmptyCard";
 import BarChartHorizontal from "../../components/barChart/BarChartHorizontal";
@@ -13,10 +13,14 @@ import { ChartData } from "../boulder/BoulderScreen";
 import Empty from "../../components/common/flatList/Empty";
 import Footer from "../../components/common/flatList/Footer";
 import LogbookHeader from "../../components/profile/LogbookHeader";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const INITIAL_PAGE = 1;
+const PADDING = 20;
 
 const LogbookScreen = () => {
+  const insets = useSafeAreaInsets();
+
   const spraywall = useAppSelector((state) => selectSpraywall(state));
 
   if (!spraywall) {
@@ -101,7 +105,7 @@ const LogbookScreen = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={{ paddingTop: insets.top, flex: 1 }}>
       <LogbookHeader />
       <FlatList
         data={data}
@@ -114,10 +118,15 @@ const LogbookScreen = () => {
         ListHeaderComponent={
           chartData && <BarChartHorizontal data={chartData} />
         }
+        style={{
+          backgroundColor: "white",
+          paddingHorizontal: PADDING,
+        }}
+        contentContainerStyle={{ gap: PADDING }}
         onRefresh={onRefresh}
         refreshing={refreshing}
       />
-    </SafeAreaView>
+    </View>
   );
 };
 
