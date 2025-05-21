@@ -2,15 +2,16 @@ import { View, Text } from "react-native";
 import React from "react";
 import Swatch from "./Swatch";
 import { CircuitColor, CircuitColors } from "../../utils/types/circuit";
+import { NewCircuit } from "../../screens/circuit/CreateCircuitScreen";
 
 type CircuitColorInputProps = {
-  chosenColor: CircuitColor;
-  setChosenColor: (color: CircuitColor) => void;
+  newCircuit: NewCircuit;
+  setNewCircuit: (value: React.SetStateAction<NewCircuit>) => void;
 };
 
 const CircuitColorInput: React.FC<CircuitColorInputProps> = ({
-  chosenColor,
-  setChosenColor,
+  newCircuit,
+  setNewCircuit,
 }) => {
   return (
     <View style={{ gap: 5 }}>
@@ -25,8 +26,10 @@ const CircuitColorInput: React.FC<CircuitColorInputProps> = ({
         {CircuitColors.map((color, index) => (
           <Swatch
             swatchColor={color}
-            chosenColor={chosenColor}
-            setChosenColor={setChosenColor}
+            chosenColor={newCircuit.color}
+            setChosenColor={(color) =>
+              setNewCircuit((prev) => ({ ...prev, color: color }))
+            }
             key={index}
           />
         ))}

@@ -55,17 +55,19 @@ const SCREEN_HEIGHT = Dimensions.get("window").height;
 const BoulderScreen: React.FC<BoulderScreenProps> = ({ route }) => {
   const navigation = useNavigation();
   const routedBoulder = route.params.boulder;
+  console.log(routedBoulder);
   const insets = useSafeAreaInsets();
 
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => selectUser(state));
 
-  const boulder = useAppSelector((state) =>
-    selectBoulder(state, routedBoulder.id)
-  );
-  if (!boulder) {
-    return;
-  }
+  // const boulder = useAppSelector((state) =>
+  //   selectBoulder(state, routedBoulder.id)
+  // );
+  // if (!boulder) {
+  //   return;
+  // }
+  const boulder = routedBoulder;
   const spraywall = useAppSelector((state) => selectSpraywall(state));
   if (!spraywall) {
     return;
@@ -82,7 +84,6 @@ const BoulderScreen: React.FC<BoulderScreenProps> = ({ route }) => {
   //   dispatch(updateBoulder(boulder.id, response.data));
   // };
 
-  console.log(boulder.altWallUrl);
   return (
     <View style={{ flex: 1, backgroundColor: "white", paddingTop: insets.top }}>
       <BoulderHeader boulder={boulder} />
@@ -106,12 +107,6 @@ const BoulderScreen: React.FC<BoulderScreenProps> = ({ route }) => {
             width={boulder.width}
             height={boulder.height}
           />
-          {/* <ExpoImage
-            source={boulder.thumbnailUrl}
-            contentFit="contain"
-            cachePolicy="memory-disk"
-            style={{ width: "100%", height: 500 }}
-          /> */}
         </View>
         <DraftNotif boulder={boulder} />
         <InfoRow1 boulder={boulder} userID={user.id} />

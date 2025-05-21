@@ -55,31 +55,14 @@ const BoulderImage: React.FC<BoulderImageProps> = ({
     if (displayedSize) {
       spraywallOpacity.value = withTiming(0.75, { duration: ANIM_DURATION });
       boulderOpacity.value = withTiming(0.5, { duration: ANIM_DURATION });
-      // const timerId = setTimeout(() => {
-      //   setMountMask(true);
-      //   maskOpacity.value = withTiming(1, { duration: ANIM_DURATION });
-      // }, 750);
-
-      // return () => clearTimeout(timerId);
-    }
-  }, [displayedSize]);
-
-  const perform = useCallback(() => {
-    if (displayedSize) {
       const timerId = setTimeout(() => {
         setMountMask(true);
-        console.log("MOUNTING");
         maskOpacity.value = withTiming(1, { duration: ANIM_DURATION });
       }, 750);
-      return () => {
-        console.log("NOT");
-        clearTimeout(timerId);
-        maskOpacity.value = 0;
-      };
+
+      return () => clearTimeout(timerId);
     }
   }, [displayedSize]);
-
-  useFocusEffect(perform);
 
   useEffect(() => {
     if (containerSize.width && containerSize.height && width && height) {

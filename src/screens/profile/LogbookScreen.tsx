@@ -76,6 +76,7 @@ const LogbookScreen = () => {
           paddingHorizontal: 20,
           backgroundColor: colors.textInputLight,
           paddingVertical: 2,
+          borderRadius: 20,
         }}
       >
         <Text>{sendDate}</Text>

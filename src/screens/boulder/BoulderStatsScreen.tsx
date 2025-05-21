@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
 // import BarChartHorizontal from "../../components/boulder/stats/BarChartHorizontal";
 import QualityRating from "../../components/boulder/QualityRating";
@@ -7,6 +7,7 @@ import { BoulderStackParamList } from "../../navigation/BoulderStack";
 import { ChartData } from "./BoulderScreen";
 import { getBoulderDetail } from "../../services/boulder/boulder";
 import BarChartHorizontal from "../../components/barChart/BarChartHorizontal";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 type BoulderStatsScreenProps = NativeStackScreenProps<
   BoulderStackParamList,
@@ -14,6 +15,7 @@ type BoulderStatsScreenProps = NativeStackScreenProps<
 >;
 
 const BoulderStatsScreen: React.FC<BoulderStatsScreenProps> = ({ route }) => {
+  const insets = useSafeAreaInsets();
   const boulder = route.params.boulder;
 
   const [chartData, setChartData] = useState<ChartData[]>([]);
@@ -33,43 +35,49 @@ const BoulderStatsScreen: React.FC<BoulderStatsScreenProps> = ({ route }) => {
       style={{
         flex: 1,
         backgroundColor: "white",
-        padding: 10,
+        paddingTop: insets.top,
       }}
     >
-      <View style={styles.row}>
-        <Text style={styles.label}>Boulder:</Text>
-        <Text style={styles.info}>{boulder.name}</Text>
-      </View>
-      <View style={styles.row}>
-        <Text style={styles.label}>Setter:</Text>
-        <Text style={styles.info}>{boulder.setter}</Text>
-      </View>
-      <View style={styles.row}>
-        <Text style={styles.label}>First Ascent:</Text>
-        <Text style={styles.info}>
-          {boulder.firstAscensionist ? boulder.firstAscensionist : "-"}
-        </Text>
-      </View>
-      <View style={styles.row}>
-        <Text style={styles.label}>Quality:</Text>
-        <View style={styles.info}>
-          <QualityRating quality={boulder.quality} size={18} />
-          <Text>({boulder.quality} / 3)</Text>
+      <ScrollView style={{ paddingHorizontal: 10 }}>
+        <View style={styles.row}>
+          <Text style={styles.label}>Boulder:</Text>
+          <Text style={styles.info}>{boulder.name}</Text>
         </View>
-      </View>
-      <View style={styles.row}>
-        <Text style={styles.label}>Total Sends:</Text>
-        <Text style={styles.info}>{boulder.sends}</Text>
-      </View>
-      <View style={styles.row}>
-        <Text style={styles.label}>Your Sends:</Text>
-        <Text style={styles.info}>{boulder.userSendsCount}</Text>
-      </View>
-      <View style={styles.row}>
-        <Text style={styles.label}>Published:</Text>
-        <Text style={styles.info}>{boulder.date}</Text>
-      </View>
-      <BarChartHorizontal data={chartData} displayHeader={false} />
+        <View style={styles.row}>
+          <Text style={styles.label}>Setter:</Text>
+          <Text style={styles.info}>{boulder.setter}</Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.label}>First Ascent:</Text>
+          <Text style={styles.info}>
+            {boulder.firstAscensionist ? boulder.firstAscensionist : "-"}
+          </Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.label}>Quality:</Text>
+          <View style={styles.info}>
+            <QualityRating quality={boulder.quality} size={18} />
+            <Text>({boulder.quality} / 3)</Text>
+          </View>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.label}>Total Sends:</Text>
+          <Text style={styles.info}>{boulder.sends}</Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.label}>Your Sends:</Text>
+          <Text style={styles.info}>{boulder.userSendsCount}</Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.label}>Published:</Text>
+          <Text style={styles.info}>{boulder.date}</Text>
+        </View>
+        <BarChartHorizontal
+          data={chartData}
+          displayHeader={false}
+          touchForDetails={false}
+        />
+      </ScrollView>
     </View>
   );
 };

@@ -124,7 +124,7 @@ export default function AppNavigator() {
                             name="Modal"
                             component={ModalScreen}
                             options={{
-                              presentation: "containedTransparentModal",
+                              presentation: "transparentModal",
                               animation: "fade",
                             }}
                           />

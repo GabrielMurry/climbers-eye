@@ -9,6 +9,7 @@ import { useAppSelector } from "../../redux/hooks";
 import { selectSpraywall } from "../../redux/features/spraywall/spraywallSelectors";
 import { Boulder } from "../../utils/types/boulder";
 import LikesHeader from "../../components/profile/LikesHeader";
+import { padding } from "../../utils/styles";
 
 const INITIAL_PAGE = 1;
 
@@ -89,6 +90,7 @@ const LikesScreen = () => {
         ListFooterComponent={() => isLoadingList && <ActivityIndicator />}
         onRefresh={onRefresh}
         refreshing={refreshing}
+        style={{ paddingHorizontal: padding.general }}
       />
     </SafeAreaView>
   );

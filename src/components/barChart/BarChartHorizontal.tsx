@@ -25,6 +25,7 @@ type BarChartHorizontalProps = {
   barWidth?: number;
   barCornerRadius?: number;
   displayHeader?: boolean;
+  touchForDetails?: boolean;
 };
 
 type StartTouchPosition = {
@@ -42,6 +43,7 @@ const BarChartHorizontal: React.FC<BarChartHorizontalProps> = ({
   barWidth = null,
   barCornerRadius = null,
   displayHeader = true,
+  touchForDetails = true,
 }) => {
   const { width } = useWindowDimensions();
 
@@ -162,6 +164,7 @@ const BarChartHorizontal: React.FC<BarChartHorizontalProps> = ({
   };
 
   const handleTouchEnd = (e: GestureResponderEvent) => {
+    if (!touchForDetails) return;
     if (!isScrolling) {
       // Handle touch as a press if it wasn't a scroll
       onTouchPress(e.nativeEvent.locationX, e.nativeEvent.locationY);
@@ -177,7 +180,7 @@ const BarChartHorizontal: React.FC<BarChartHorizontalProps> = ({
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       {DISPLAY_HEADER && (
         <View onTouchStart={handleResetBarInfo} style={styles.textContainer}>
           {/* <Text style={styles.textTitle}>Logbook</Text> */}
@@ -224,7 +227,7 @@ const BarChartHorizontal: React.FC<BarChartHorizontalProps> = ({
           );
         })}
       </Canvas>
-    </SafeAreaView>
+    </View>
   );
 };
 

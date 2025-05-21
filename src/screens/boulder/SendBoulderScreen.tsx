@@ -20,7 +20,6 @@ const SendBoulderScreen: React.FC<SendBoulderScreenProps> = ({ route }) => {
       style={{
         flex: 1,
         backgroundColor: "rgba(245,245,245,255)",
-        paddingTop: insets.top,
       }}
     >
       <SendHeader />

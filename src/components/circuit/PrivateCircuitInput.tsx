@@ -1,14 +1,15 @@
 import { View, Text, Switch } from "react-native";
 import React from "react";
+import { NewCircuit } from "../../screens/circuit/CreateCircuitScreen";
 
 type PrivateCircuitInputProps = {
-  isPrivate: boolean;
-  setIsPrivate: (isPrivate: boolean) => void;
+  newCircuit: NewCircuit;
+  setNewCircuit: (value: React.SetStateAction<NewCircuit>) => void;
 };
 
 const PrivateCircuitInput: React.FC<PrivateCircuitInputProps> = ({
-  isPrivate,
-  setIsPrivate,
+  newCircuit,
+  setNewCircuit,
 }) => {
   return (
     <View
@@ -28,8 +29,10 @@ const PrivateCircuitInput: React.FC<PrivateCircuitInputProps> = ({
         Private Circuit
       </Text>
       <Switch
-        value={isPrivate}
-        onValueChange={() => setIsPrivate(!isPrivate)}
+        value={newCircuit.private}
+        onValueChange={() =>
+          setNewCircuit((prev) => ({ ...prev, private: !prev.private }))
+        }
       />
     </View>
   );

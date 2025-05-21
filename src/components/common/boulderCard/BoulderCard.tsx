@@ -41,9 +41,13 @@ const BoulderCard: React.FC<BoulderCardProps> = React.memo(
     const [isBoulderLoading, setIsBoulderLoading] = useState(true);
 
     const handleOnPress = () => {
-      navigation.navigate("TabsStack", {
-        screen: stackName,
-        params: { screen: "Boulder", params: { boulder } },
+      // navigation.navigate("TabsStack", {
+      //   screen: stackName,
+      //   params: { screen: "Boulder", params: { boulder } },
+      // });
+      navigation.navigate("BoulderStack", {
+        screen: "Boulder",
+        params: { boulder },
       });
     };
 

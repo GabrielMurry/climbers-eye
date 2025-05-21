@@ -34,7 +34,7 @@ const HomeNavigator = () => {
           name="FilterHomeList"
           component={FilterHomeListScreen}
         />
-        <HomeStack.Screen name="Boulder" component={BoulderScreen} />
+        {/* <HomeStack.Screen name="Boulder" component={BoulderScreen} /> */}
       </HomeStack.Navigator>
     </NavigationProvider>
   );

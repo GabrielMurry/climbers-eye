@@ -9,20 +9,28 @@ export type CircuitStackParamList = {
   CircuitBoulders: { circuitId: number };
 };
 
-const Stack = createNativeStackNavigator<CircuitStackParamList>();
+const CircuitStack = createNativeStackNavigator<CircuitStackParamList>();
 
 const CircuitNavigator = () => (
-  <Stack.Navigator
-    initialRouteName="Circuit"
+  <CircuitStack.Navigator
+    // initialRouteName="Circuit"
     screenOptions={{ headerShown: false }}
   >
-    <Stack.Screen name="Circuit" component={CircuitScreen} />
-    <Stack.Screen name="CreateCircuit" component={CreateCircuitScreen} />
-    <Stack.Screen
+    {/* <CircuitStack.Screen
+      name="Circuit"
+      component={CircuitScreen}
+      options={{ presentation: "modal", animation: "slide_from_bottom" }}
+    /> */}
+    <CircuitStack.Screen
+      name="CreateCircuit"
+      component={CreateCircuitScreen}
+      options={{ presentation: "modal", animation: "slide_from_bottom" }}
+    />
+    <CircuitStack.Screen
       name="CircuitBoulders"
       component={CircuitBouldersListScreen}
     />
-  </Stack.Navigator>
+  </CircuitStack.Navigator>
 );
 
 export default CircuitNavigator;

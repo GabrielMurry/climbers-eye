@@ -1,5 +1,6 @@
 import { Text, TextInput, View } from "react-native";
-import React from "react";
+import React, { RefAttributes, RefObject, useRef } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 
 type InputBehavior = "email";
 
@@ -9,6 +10,7 @@ type CommonTextInputProps = {
   setValue: (val: string) => void;
   title?: string;
   error?: string | null;
+  inputRef?: RefObject<TextInput>;
 };
 
 const CommonTextInput: React.FC<CommonTextInputProps> = ({
@@ -17,6 +19,7 @@ const CommonTextInput: React.FC<CommonTextInputProps> = ({
   title,
   error,
   behavior,
+  inputRef,
 }) => {
   return (
     <View style={{ gap: 5 }}>
@@ -36,6 +39,7 @@ const CommonTextInput: React.FC<CommonTextInputProps> = ({
         autoComplete={behavior === "email" ? "email" : undefined}
         textContentType={behavior === "email" ? "emailAddress" : undefined}
         autoCapitalize={behavior === "email" ? "none" : undefined}
+        ref={inputRef}
       />
       {error && <Text style={{ color: "red" }}>{error}</Text>}
     </View>

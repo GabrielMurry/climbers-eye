@@ -11,19 +11,13 @@ const CircuitHeader = () => {
   const RightIcon = (
     <TouchableOpacity
       onPress={() =>
-        navigation.navigate("CircuitStack", { screen: "CreateCircuit" })
+        navigation.navigate("BoulderStack", { screen: "CreateCircuit" })
       }
     >
       <PlusIcon size={25} color={"black"} />
     </TouchableOpacity>
   );
-  return (
-    <Header
-      leftIcon={<BackIcon />}
-      centerText="Add to Circuit"
-      rightIcon={RightIcon}
-    />
-  );
+  return <Header centerText="Add to Circuit" rightIcon={RightIcon} />;
 };
 
 export default CircuitHeader;

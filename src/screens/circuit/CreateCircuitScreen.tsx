@@ -1,24 +1,25 @@
-import { View, Text, SafeAreaView } from "react-native";
-import React, { useEffect, useState } from "react";
-import CustomButton from "../../components/custom/CustomButton";
-import { colors } from "../../utils/styles";
-import { createCircuit } from "../../services/circuit";
-import { addNewCircuit } from "../../redux/features/circuit/circuitSlice";
-import { useNavigation } from "@react-navigation/native";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { View, Text, SafeAreaView, TextInput } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { useAppSelector } from "../../redux/hooks";
 import { selectUser } from "../../redux/features/user/userSelectors";
 import { selectSpraywall } from "../../redux/features/spraywall/spraywallSelectors";
 import CreateCircuitHeader from "../../components/circuit/CreateCircuitHeader";
 import CircuitColorInput from "../../components/circuit/CircuitColorInput";
 import PrivateCircuitInput from "../../components/circuit/PrivateCircuitInput";
 import { CircuitColor } from "../../utils/types/circuit";
-import CustomTextInput from "../../components/custom/inputs/CustomInput";
+import CommonTextInput from "../../components/common/CommonTextInput";
+import { useFocusEffect } from "@react-navigation/native";
+
+export type NewCircuit = {
+  name: string;
+  description: string;
+  color: CircuitColor;
+  private: boolean;
+  person: number;
+  spraywall: number;
+};
 
 const CreateCircuitScreen = () => {
-  const navigation = useNavigation();
-
-  const dispatch = useAppDispatch();
-
   const user = useAppSelector((state) => selectUser(state));
   const spraywall = useAppSelector((state) => selectSpraywall(state));
   if (!spraywall) {
@@ -26,48 +27,27 @@ const CreateCircuitScreen = () => {
     return <Text>Selected spray wall not found.</Text>;
   }
 
-  const [newCircuitName, setNewCircuitName] = useState("");
-  const [newCircuitDescription, setNewCircuitDescription] = useState("");
-  const [newCircuitColor, setNewCircuitColor] = useState<CircuitColor>("green");
-  const [isNewCircuitPrivate, setIsNewCircuitPrivate] = useState(false);
-  const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
+  const [newCircuit, setNewCircuit] = useState<NewCircuit>({
+    name: "",
+    description: "",
+    color: "green",
+    private: false,
+    person: user.id,
+    spraywall: spraywall.id,
+  });
 
-  const handleAddNewCircuitPress = async () => {
-    const data = {
-      name: newCircuitName,
-      description: newCircuitDescription,
-      color: newCircuitColor,
-      private: isNewCircuitPrivate,
-      person: user.id,
-      spraywall: spraywall.id,
-    };
-    const pathParams = { spraywallId: spraywall.id };
-    const response = await createCircuit(pathParams, data);
-    if (response.status === 201) {
-      dispatch(addNewCircuit(response.data));
-      navigation.goBack();
-    } else {
-      console.error(response.status);
-      return;
-    }
-  };
+  const inputRef = useRef<TextInput>(null);
 
   useEffect(() => {
-    if (newCircuitName !== "") {
-      setIsSubmitDisabled(false);
-    } else {
-      setIsSubmitDisabled(true);
-    }
-  }, [newCircuitName]);
+    const id = setTimeout(() => {
+      inputRef.current?.focus();
+    }, 100);
+    return () => clearTimeout(id);
+  }, []);
 
   return (
-    <SafeAreaView
-      style={{
-        backgroundColor: "white",
-        flex: 1,
-      }}
-    >
-      <CreateCircuitHeader />
+    <View style={{ flex: 1, backgroundColor: "white" }}>
+      <CreateCircuitHeader newCircuit={newCircuit} />
       <View
         style={{
           paddingHorizontal: 20,
@@ -76,41 +56,38 @@ const CreateCircuitScreen = () => {
         }}
       >
         <View style={{ gap: 10 }}>
-          <CustomTextInput
-            value={newCircuitName}
-            setValue={(value) => setNewCircuitName(value)}
-            placeholder="Circuit Name"
-            secureTextEntry={false}
-            bordered={true}
-            rounded={true}
+          <CommonTextInput
+            value={newCircuit.name}
+            setValue={(value) =>
+              setNewCircuit({
+                ...newCircuit,
+                name: value,
+              })
+            }
             title="Circuit Name"
+            inputRef={inputRef}
           />
-          <CustomTextInput
-            value={newCircuitDescription}
-            setValue={(value) => setNewCircuitDescription(value)}
-            placeholder="Circuit Description"
-            secureTextEntry={false}
-            bordered={true}
-            rounded={true}
+          <CommonTextInput
+            value={newCircuit.description}
+            setValue={(value) =>
+              setNewCircuit({
+                ...newCircuit,
+                description: value,
+              })
+            }
             title="Circuit Description"
           />
           <CircuitColorInput
-            chosenColor={newCircuitColor}
-            setChosenColor={setNewCircuitColor}
+            newCircuit={newCircuit}
+            setNewCircuit={setNewCircuit}
           />
           <PrivateCircuitInput
-            isPrivate={isNewCircuitPrivate}
-            setIsPrivate={setIsNewCircuitPrivate}
+            newCircuit={newCircuit}
+            setNewCircuit={setNewCircuit}
           />
         </View>
-        <CustomButton
-          onPress={handleAddNewCircuitPress}
-          text="Create"
-          disabled={isSubmitDisabled}
-          bgColor={colors.primary}
-        />
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 

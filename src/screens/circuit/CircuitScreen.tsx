@@ -7,10 +7,11 @@ import { useAppSelector } from "../../redux/hooks";
 import { selectCircuits } from "../../redux/features/circuit/circuitSelectors";
 import { Circuit } from "../../utils/types/circuit";
 import CircuitHeader from "../../components/circuit/CircuitHeader";
+import { BoulderStackParamList } from "../../navigation/BoulderStack";
 
 type CircuitScreenProps = NativeStackScreenProps<
-  CircuitStackParamList,
-  "Circuit"
+  BoulderStackParamList,
+  "AddBoulderToCircuit"
 >;
 
 const CircuitScreen: React.FC<CircuitScreenProps> = ({ route }) => {
@@ -43,7 +44,7 @@ const CircuitScreen: React.FC<CircuitScreenProps> = ({ route }) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <CircuitHeader />
       <FlatList
         contentContainerStyle={styles.flatList}
@@ -53,7 +54,7 @@ const CircuitScreen: React.FC<CircuitScreenProps> = ({ route }) => {
         ListFooterComponent={renderFooter}
         ListEmptyComponent={renderEmptyList}
       />
-    </SafeAreaView>
+    </View>
   );
 };
 

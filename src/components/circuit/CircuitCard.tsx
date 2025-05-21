@@ -110,7 +110,7 @@ const CircuitCard: React.FC<CircuitCardProps> = ({
   function RightAction(_: SharedValue<number>, drag: SharedValue<number>) {
     const styleAnimation = useAnimatedStyle(() => {
       return {
-        transform: [{ translateX: drag.value + SWIPE_COMP_WIDTH }],
+        transform: [{ translateX: drag.get() + SWIPE_COMP_WIDTH }],
       };
     });
     return (

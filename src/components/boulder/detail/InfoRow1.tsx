@@ -110,9 +110,9 @@ const InfoRow1: React.FC<InfoRow1Props> = ({ boulder, userID }) => {
   };
 
   const handleCircuitPressed = () => {
-    navigation.navigate("CircuitStack", {
-      screen: "Circuit",
-      params: { boulder: boulder },
+    navigation.navigate("BoulderStack", {
+      screen: "AddBoulderToCircuit",
+      params: { boulder },
     });
   };
 

@@ -5,3 +5,7 @@ export const colors = {
   textInputDark: "rgb(200, 200, 200)",
   textInputLight: "rgb(235, 235, 235)",
 };
+
+export const padding = {
+  general: 20,
+};

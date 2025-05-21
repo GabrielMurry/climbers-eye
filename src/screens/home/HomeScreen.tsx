@@ -1,4 +1,4 @@
-import { FlatList, View } from "react-native";
+import { FlatList, TextInput, View } from "react-native";
 import React, { useRef } from "react";
 import BoulderCard from "../../components/common/boulderCard/BoulderCard";
 import { useBoulderData } from "../../hooks/useBoulderData";
@@ -10,13 +10,14 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from "react-native-reanimated";
+import HomeSearchInput from "../../components/home/HomeSearchInput";
 import HomeHeader from "../../components/home/HomeHeader";
 
 const HEADER_HEIGHT = 50;
 const TEXT_INPUT_HEIGHT = 40;
 const HOME_HEADER = HEADER_HEIGHT + TEXT_INPUT_HEIGHT;
 const PADDING = 20;
-const CONTENT_INSET_TOP = HOME_HEADER + PADDING;
+const CONTENT_INSET_TOP = TEXT_INPUT_HEIGHT + PADDING;
 
 const HomeScreen = () => {
   const hasEditPermission = true;
@@ -32,6 +33,7 @@ const HomeScreen = () => {
   } = useBoulderData();
 
   const flatListRef = useRef<FlatList>(null);
+  const inputRef = useRef<TextInput>(null);
 
   const scrollY = useSharedValue(0);
 
@@ -43,7 +45,17 @@ const HomeScreen = () => {
 
   return (
     <View style={{ flex: 1, paddingTop: insets.top, backgroundColor: "white" }}>
-      <HomeHeader scrollY={scrollY} flatListRef={flatListRef} />
+      {/* <HomeHeader scrollY={scrollY} flatListRef={flatListRef} /> */}
+      <HomeHeader
+        inputRef={inputRef}
+        flatListRef={flatListRef}
+        scrollY={scrollY}
+      />
+      <HomeSearchInput
+        inputRef={inputRef}
+        flatListRef={flatListRef}
+        scrollY={scrollY}
+      />
       <Animated.FlatList
         data={boulders}
         renderItem={({ item }) => <BoulderCard boulder={item} />}
