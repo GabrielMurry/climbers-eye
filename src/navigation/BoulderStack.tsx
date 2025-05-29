@@ -43,10 +43,15 @@ const BoulderNavigator = () => (
         animation: "slide_from_bottom",
       }}
     />
-    <BoulderStack.Screen name="BoulderStats" component={BoulderStatsScreen} />
+    <BoulderStack.Screen
+      name="BoulderStats"
+      component={BoulderStatsScreen}
+      options={{ presentation: "modal", animation: "slide_from_bottom" }}
+    />
     <BoulderStack.Screen
       name="BoulderUserSends"
       component={BoulderUserSendsScreen}
+      options={{ presentation: "modal", animation: "slide_from_bottom" }}
     />
     <BoulderStack.Screen
       name="AddBoulderToCircuit"

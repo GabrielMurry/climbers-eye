@@ -4,6 +4,7 @@ import MaskedView from "@react-native-masked-view/masked-view";
 import { Image, ImageBackground } from "expo-image";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import Animated, {
+  SharedValue,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
@@ -14,6 +15,7 @@ type BoulderImageProps = {
   boulderUri: string;
   width: number;
   height: number;
+  boulderOpacity: SharedValue<number>;
 };
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
@@ -39,22 +41,21 @@ const BoulderImage: React.FC<BoulderImageProps> = ({
   boulderUri,
   width,
   height,
+  boulderOpacity,
 }) => {
-  const navigation = useNavigation();
-
   const [isSpraywallLoaded, setIsSpraywallLoaded] = useState(false);
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
   const [displayedSize, setDisplayedSize] = useState<Size | null>(null);
   const [mountMask, setMountMask] = useState(false);
 
-  const boulderOpacity = useSharedValue(0);
+  // const boulderOpacity = useSharedValue(0);
   const spraywallOpacity = useSharedValue(1);
   const maskOpacity = useSharedValue(0);
 
   useEffect(() => {
     if (displayedSize) {
       spraywallOpacity.value = withTiming(0.75, { duration: ANIM_DURATION });
-      boulderOpacity.value = withTiming(0.5, { duration: ANIM_DURATION });
+      // boulderOpacity.value = withTiming(0.5, { duration: ANIM_DURATION });
       const timerId = setTimeout(() => {
         setMountMask(true);
         maskOpacity.value = withTiming(1, { duration: ANIM_DURATION });
@@ -91,15 +92,7 @@ const BoulderImage: React.FC<BoulderImageProps> = ({
   }, [boulderUri]);
 
   return (
-    <Pressable
-      onPress={() =>
-        navigation.navigate("BoulderImageFull", {
-          boulderUri,
-          spraywallUri,
-          width: SCREEN_WIDTH,
-          height: height * (SCREEN_WIDTH / width),
-        })
-      }
+    <View
       style={{
         flex: 1,
         width: SCREEN_WIDTH,
@@ -184,7 +177,7 @@ const BoulderImage: React.FC<BoulderImageProps> = ({
           </Animated.View>
         </>
       )}
-    </Pressable>
+    </View>
   );
 };
 
