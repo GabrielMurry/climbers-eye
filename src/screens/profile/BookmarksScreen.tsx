@@ -8,6 +8,7 @@ import { selectSpraywall } from "../../redux/features/spraywall/spraywallSelecto
 import { useAppSelector } from "../../redux/hooks";
 import { Boulder } from "../../utils/types/boulder";
 import BookmarksHeader from "../../components/profile/BookmarksHeader";
+import { padding } from "../../utils/styles";
 
 const INITIAL_PAGE = 1;
 
@@ -84,6 +85,11 @@ const BookmarksScreen = () => {
         ListFooterComponent={() => isLoadingList && <ActivityIndicator />}
         onRefresh={onRefresh}
         refreshing={refreshing}
+        style={{
+          backgroundColor: "white",
+          paddingHorizontal: padding.general,
+        }}
+        contentContainerStyle={{ gap: padding.general }}
       />
     </SafeAreaView>
   );

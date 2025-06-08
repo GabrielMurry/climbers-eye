@@ -14,10 +14,12 @@ const TabLabels: React.FC<TabLabelsProps> = ({ name, focused }) => {
     switch (routeName) {
       case "HomeStack":
         return "Home";
-      case "MapStack":
-        return "Map";
+      case "GymStack":
+        return "Gym";
       case "AddBoulder":
         return "";
+      case "MapStack":
+        return "Map";
       case "ProfileStack":
         return "Profile";
     }

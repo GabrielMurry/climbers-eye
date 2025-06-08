@@ -6,6 +6,7 @@ import {
   EditGymScreen,
   EditGymTypeScreen,
 } from "../screens/gym";
+import GymScreen from "../screens/gym/GymScreen";
 
 export type GymStackParamsList = {
   CreateGym: undefined;
@@ -13,15 +14,17 @@ export type GymStackParamsList = {
   EditGymType: undefined;
   EditGymName: undefined;
   EditGymAddress: undefined;
+  Gym: undefined;
 };
 
 const GymStack = createNativeStackNavigator<GymStackParamsList>();
 
 const GymNavigator = () => (
   <GymStack.Navigator
-    initialRouteName="CreateGym"
+    initialRouteName="Gym"
     screenOptions={{ headerShown: false }}
   >
+    <GymStack.Screen name="Gym" component={GymScreen} />
     <GymStack.Screen name="CreateGym" component={CreateGymScreen} />
     <GymStack.Screen name="EditGym" component={EditGymScreen} />
     <GymStack.Screen name="EditGymType" component={EditGymTypeScreen} />

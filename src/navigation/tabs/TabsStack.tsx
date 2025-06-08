@@ -7,12 +7,14 @@ import { NavigatorScreenParams, useNavigation } from "@react-navigation/native";
 import { MapStackParamList } from "../MapStack";
 import { View } from "react-native";
 import TabLabels from "./TabLabels";
+import GymStack, { GymStackParamsList } from "../GymStack";
 
 export type TabsStackParamList = {
   HomeStack: NavigatorScreenParams<HomeStackParamsList>;
   MapStack: NavigatorScreenParams<MapStackParamList>;
   AddBoulder: undefined;
   ProfileStack: NavigatorScreenParams<ProfileStackParamList>;
+  GymStack: NavigatorScreenParams<GymStackParamsList>;
 };
 
 const TabStack = createBottomTabNavigator<TabsStackParamList>();
@@ -42,8 +44,8 @@ function TabNavigator() {
         }}
       />
       <TabStack.Screen
-        name="MapStack"
-        component={MapScreen}
+        name="GymStack"
+        component={GymStack}
         options={{
           headerShown: false,
         }}
@@ -57,6 +59,13 @@ function TabNavigator() {
             navigation.navigate("Modal");
           },
         })}
+      />
+      <TabStack.Screen
+        name="MapStack"
+        component={MapScreen}
+        options={{
+          headerShown: false,
+        }}
       />
       <TabStack.Screen
         name="ProfileStack"

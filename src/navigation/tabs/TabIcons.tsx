@@ -31,11 +31,11 @@ const TabIcons: React.FC<TabIconsProps> = ({ name, size, focused }) => {
         <HomeIcon size={size} color={"black"} />
       );
       break;
-    case "MapStack":
+    case "GymStack":
       iconSource = focused ? (
-        <MapPinIconSolid size={size} color={"black"} />
+        <HomeIconSolid size={size} color={"black"} />
       ) : (
-        <MapPinIcon size={size} color={"black"} />
+        <HomeIcon size={size} color={"black"} />
       );
       break;
     case "AddBoulder":
@@ -52,6 +52,13 @@ const TabIcons: React.FC<TabIconsProps> = ({ name, size, focused }) => {
         >
           <PlusIcon size={size} color={colors.primary} />
         </View>
+      );
+      break;
+    case "MapStack":
+      iconSource = focused ? (
+        <MapPinIconSolid size={size} color={"black"} />
+      ) : (
+        <MapPinIcon size={size} color={"black"} />
       );
       break;
     case "ProfileStack":

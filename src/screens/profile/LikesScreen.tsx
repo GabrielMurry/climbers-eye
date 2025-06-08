@@ -90,7 +90,11 @@ const LikesScreen = () => {
         ListFooterComponent={() => isLoadingList && <ActivityIndicator />}
         onRefresh={onRefresh}
         refreshing={refreshing}
-        style={{ paddingHorizontal: padding.general }}
+        style={{
+          backgroundColor: "white",
+          paddingHorizontal: padding.general,
+        }}
+        contentContainerStyle={{ gap: padding.general }}
       />
     </SafeAreaView>
   );
