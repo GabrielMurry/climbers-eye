@@ -3,6 +3,7 @@ import React from "react";
 import SelectGymType from "./SelectGymType";
 import AddressTextInput from "../googlePlacesAutoComplete/AddressTextInput";
 import CustomTextInput from "../custom/inputs/CustomInput";
+import CommonTextInput from "../common/CommonTextInput";
 
 type CreateGymBodyProps = {
   isCommercialGym: boolean;
@@ -26,18 +27,15 @@ const CreateGymBody: React.FC<CreateGymBodyProps> = ({
   setPlaceID,
 }) => {
   return (
-    <View style={{ paddingHorizontal: 20, gap: 15 }}>
+    <View style={{ gap: 15 }}>
       <SelectGymType
         isCommercialGym={isCommercialGym}
         setIsCommercialGym={setIsCommercialGym}
       />
-      <CustomTextInput
-        value={gymName}
+      <CommonTextInput
         setValue={setGymName}
-        placeholder={isCommercialGym ? "Enter gym name" : "Enter home name"}
+        value={gymName}
         title={isCommercialGym ? "Gym Name" : "Home Name"}
-        bordered={true}
-        rounded={true}
       />
       <AddressTextInput
         address={gymAddress}

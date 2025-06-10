@@ -7,7 +7,7 @@ import {
   StyleSheet,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import SettingsTextInput from "../../components/custom/SettingsTextInput";
+import SettingsTextInput from "../../components/common/settings/SettingsTextInput";
 import { updateGymInfo } from "../../services/gym";
 import { updateGym } from "../../redux/features/gym/gymSlice";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";

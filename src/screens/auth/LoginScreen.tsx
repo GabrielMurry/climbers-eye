@@ -2,31 +2,22 @@ import React, { useEffect, useState } from "react";
 import {
   Image,
   SafeAreaView,
-  StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
-import CustomButton from "../../components/custom/CustomButton";
 import { colors } from "../../utils/styles";
-import {
-  ArrowLongRightIcon,
-  EyeIcon,
-  EyeSlashIcon,
-  LockClosedIcon,
-  UserIcon,
-} from "react-native-heroicons/outline";
-import { loginUser } from "../../services/auth";
+import { EyeIcon, EyeSlashIcon } from "react-native-heroicons/outline";
 import { setIsSignedIn, setUser } from "../../redux/features/user/userSlice";
 import { setGym } from "../../redux/features/gym/gymSlice";
 import { setSpraywalls } from "../../redux/features/spraywall/spraywallSlice";
 import { useAppDispatch } from "../../redux/hooks";
 import { useNavigation } from "@react-navigation/native";
-import CustomTextInput from "../../components/custom/inputs/CustomInput";
 import axios from "axios";
 import { Gym } from "../../utils/types/gym";
-import { Spraywall } from "../../utils/types/spraywall";
 import * as SecureStore from "expo-secure-store";
+import CommonSubmitButton from "../../components/common/CommonSubmitButton";
+import CommonTextInput from "../../components/common/CommonTextInput";
 
 const LoginScreen = () => {
   const navigation = useNavigation();
@@ -187,20 +178,15 @@ const LoginScreen = () => {
           paddingHorizontal: 20,
         }}
       >
-        <CustomTextInput
+        <CommonTextInput
+          setValue={setUsername}
           value={username}
-          setValue={(value: string) => setUsername(value)}
-          placeholder="Username"
-          secureTextEntry={false}
-          // icon={<UserIcon size={20} color={colors.textInputDark} />}
+          title="Username"
         />
-        <CustomTextInput
+        <CommonTextInput
+          setValue={setPassword}
           value={password}
-          setValue={(value: string) => setPassword(value)}
-          placeholder="Password"
-          secureTextEntry={!showPassword}
-          // icon={<LockClosedIcon size={20} color={colors.textInputDark} />}
-          // button={<ShowPasswordButton />}
+          title="Password"
         />
         <View
           style={{
@@ -220,14 +206,7 @@ const LoginScreen = () => {
             paddingHorizontal: 20,
           }}
         >
-          <CustomButton
-            onPress={handleLogin}
-            text="LOGIN"
-            isLoading={isLoading}
-            width="50%"
-            bgColor={colors.primary}
-            // icon={<ArrowLongRightIcon size={25} color={"white"} />}
-          />
+          <CommonSubmitButton onPress={handleLogin} title="LOGIN" />
         </View>
         {hasError ? (
           <View style={{ marginTop: 10 }}>
@@ -256,11 +235,6 @@ const LoginScreen = () => {
           <Text style={{ color: "gray", fontWeight: "bold" }}>
             Don't have an account?
           </Text>
-          {/* <TouchableOpacity onPress={handleCreateAccount}>
-            <Text style={{ color: colors.primary, fontWeight: "bold" }}>
-              Create one
-            </Text>
-          </TouchableOpacity> */}
         </TouchableOpacity>
       </View>
     </SafeAreaView>

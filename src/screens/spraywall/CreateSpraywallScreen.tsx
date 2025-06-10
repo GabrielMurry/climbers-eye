@@ -1,6 +1,5 @@
 import { View, SafeAreaView } from "react-native";
 import React, { useState } from "react";
-import { colors } from "../../utils/styles";
 import { createSpraywall } from "../../services/spraywall";
 import { appendSpraywall } from "../../redux/features/spraywall/spraywallSlice";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -9,11 +8,11 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { selectGym } from "../../redux/features/gym/gymSelectors";
 import { useNavigation } from "@react-navigation/native";
 import CreateSpraywallHeader from "../../components/spraywall/CreateSpraywallHeader";
-import CustomButton from "../../components/custom/CustomButton";
 import { useCameraContext } from "../../contexts/CameraContext";
-import CustomImageInput from "../../components/custom/inputs/CustomImageInput";
-import CustomTextInput from "../../components/custom/inputs/CustomInput";
+import CustomImageInput from "../../components/common/CustomImageInput";
 import * as FileSystem from "expo-file-system";
+import CommonSubmitButton from "../../components/common/CommonSubmitButton";
+import CommonTextInput from "../../components/common/CommonTextInput";
 
 type CreateSpraywallScreenProps = NativeStackScreenProps<
   SpraywallStackParamList,
@@ -81,12 +80,9 @@ const CreateSpraywallScreen: React.FC<CreateSpraywallScreenProps> = () => {
           gap: 10,
         }}
       >
-        <CustomTextInput
-          value={spraywallName}
+        <CommonTextInput
           setValue={setSpraywallName}
-          placeholder="Enter spray wall name"
-          bordered={true}
-          rounded={true}
+          value={spraywallName}
           title="Spray Wall Name"
         />
         <CustomImageInput
@@ -100,12 +96,7 @@ const CreateSpraywallScreen: React.FC<CreateSpraywallScreenProps> = () => {
             justifyContent: "flex-end",
           }}
         >
-          <CustomButton
-            onPress={handleCreateSpraywall}
-            text="Create"
-            // disabled={isSubmitDisabled}
-            bgColor={colors.primary}
-          />
+          <CommonSubmitButton onPress={handleCreateSpraywall} />
         </View>
       </View>
     </SafeAreaView>

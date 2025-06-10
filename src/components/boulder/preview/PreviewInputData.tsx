@@ -1,7 +1,7 @@
 import { View, Text, TextInput, Switch, StyleSheet } from "react-native";
 import React from "react";
-import CustomTextInput from "../../custom/inputs/CustomInput";
 import CommonTextInput from "../../common/CommonTextInput";
+import { padding } from "../../../utils/styles";
 
 type PreviewInputDataProps = {
   name: string;
@@ -31,30 +31,19 @@ const PreviewInputData: React.FC<PreviewInputDataProps> = ({
   error,
 }) => {
   return (
-    <View style={styles.container}>
+    <View
+      style={{
+        justifyContent: "center",
+        gap: 10,
+        paddingHorizontal: padding.general,
+      }}
+    >
       <CommonTextInput value={name} setValue={setName} title="Boulder Name" />
       <CommonTextInput
         value={description}
         setValue={setDescription}
         title="Boulder Description"
       />
-      {/* <CustomTextInput
-        value={name}
-        setValue={(value) => setName(value)}
-        placeholder="Boulder Name"
-        secureTextEntry={false}
-        error={error}
-        bordered={true}
-        rounded={true}
-      /> */}
-      {/* <TextInput
-        value={description}
-        onChangeText={(value) => setDescription(value)}
-        placeholder={"Boulder Description (optional)"}
-        keyboardType="default"
-        style={styles.textInput}
-        multiline={true}
-      /> */}
       <View style={styles.switchContainer}>
         <Text>Matching Allowed</Text>
         <Switch value={isMatching} onValueChange={setIsMatching} />
@@ -80,11 +69,6 @@ const PreviewInputData: React.FC<PreviewInputDataProps> = ({
 export default PreviewInputData;
 
 const styles = StyleSheet.create({
-  container: {
-    paddingHorizontal: 10,
-    justifyContent: "center",
-    gap: 10,
-  },
   textInput: {
     borderColor: "#e8e8e8",
     borderWidth: 1,

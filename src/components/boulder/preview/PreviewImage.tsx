@@ -30,6 +30,7 @@ const PreviewImage: React.FC<PreviewImageProps> = ({
         spraywallUri={spraywallUri}
         width={width}
         height={height}
+        boulderOpacity={0.5}
       />
     </View>
   );

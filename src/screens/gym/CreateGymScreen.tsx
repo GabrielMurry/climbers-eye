@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { SafeAreaView, Alert } from "react-native";
+import { SafeAreaView, Alert, View } from "react-native";
 import { CommonActions, useNavigation } from "@react-navigation/native";
 import { getGeoLocation } from "../../services/googleMapsAPI/geocoder";
 import { createGym } from "../../services/gym";
@@ -8,10 +8,13 @@ import { setSpraywalls } from "../../redux/features/spraywall/spraywallSlice";
 import { useAppDispatch } from "../../redux/hooks";
 import CreateGymHeader from "../../components/gym/CreateGymHeader";
 import CreateGymBody from "../../components/gym/CreateGymBody";
-import CreateGymFooter from "../../components/gym/CreateGymFooter";
+import CommonSubmitButton from "../../components/common/CommonSubmitButton";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { padding } from "../../utils/styles";
 
 const CreateGymScreen = () => {
   const navigation = useNavigation();
+  const insets = useSafeAreaInsets();
 
   const dispatch = useAppDispatch();
 
@@ -21,7 +24,7 @@ const CreateGymScreen = () => {
   const [placeID, setPlaceID] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleAddGym = () => {
+  const handleCreateGym = () => {
     Alert.alert(
       "Add Gym",
       `Are you sure you want to add "${gymName}""?`,
@@ -62,28 +65,35 @@ const CreateGymScreen = () => {
   };
 
   return (
-    <SafeAreaView
+    <View
       style={{
         flex: 1,
         backgroundColor: "white",
+        paddingTop: insets.top,
       }}
     >
       <CreateGymHeader />
-      <CreateGymBody
-        isCommercialGym={isCommercialGym}
-        setIsCommercialGym={setIsCommercialGym}
-        gymName={gymName}
-        setGymName={setGymName}
-        gymAddress={gymAddress}
-        setGymAddress={setGymAddress}
-        setPlaceID={setPlaceID}
-      />
-      <CreateGymFooter
-        isCommercialGym={isCommercialGym}
-        handleAddGym={handleAddGym}
-        isLoading={isLoading}
-      />
-    </SafeAreaView>
+      <View style={{ flex: 1, paddingHorizontal: padding.general }}>
+        <CreateGymBody
+          isCommercialGym={isCommercialGym}
+          setIsCommercialGym={setIsCommercialGym}
+          gymName={gymName}
+          setGymName={setGymName}
+          gymAddress={gymAddress}
+          setGymAddress={setGymAddress}
+          setPlaceID={setPlaceID}
+        />
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "flex-end",
+            paddingBottom: insets.bottom,
+          }}
+        >
+          <CommonSubmitButton onPress={handleCreateGym} />
+        </View>
+      </View>
+    </View>
   );
 };
 

@@ -9,11 +9,10 @@ const MapHeader = () => {
 
   const RightIcon = (
     <TouchableOpacity
-      onPress={() =>
-        navigation.navigate("GymStack", {
-          screen: "AddGym",
-        })
-      }
+      onPress={() => {
+        console.log("test");
+        navigation.navigate("MapStack", { screen: "CreateGym" });
+      }}
     >
       <PlusIcon size={25} color={"black"} />
     </TouchableOpacity>

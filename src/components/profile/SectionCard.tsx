@@ -5,7 +5,7 @@ import { ChevronRightIcon } from "react-native-heroicons/outline";
 type SectionCardProps = {
   icon: React.JSX.Element;
   title: string;
-  data: number;
+  data?: number;
   onPress: () => void;
 };
 

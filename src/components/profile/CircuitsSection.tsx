@@ -60,14 +60,6 @@ const CircuitsSection = () => {
             </View>
             <View
               style={{
-                width: 75,
-                alignItems: "center",
-              }}
-            >
-              <Text style={{ fontSize: 16 }}>{circuit.boulderIds?.length}</Text>
-            </View>
-            <View
-              style={{
                 width: 50,
                 alignItems: "center",
               }}

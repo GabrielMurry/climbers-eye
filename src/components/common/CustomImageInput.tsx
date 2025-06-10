@@ -1,8 +1,6 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
-import { styles } from "./styles";
-import Title from "./Title";
-import { ImageObjUrl } from "../../../utils/types/image";
+import { ImageObjUrl } from "../../utils/types/image";
 import { Image } from "expo-image";
 import { PhotoIcon } from "react-native-heroicons/outline";
 
@@ -18,8 +16,8 @@ const CustomImageInput: React.FC<CustomImageInputProps> = ({
   title,
 }) => {
   return (
-    <View style={styles.container}>
-      <Title title={title} />
+    <View style={{ flex: 1 }}>
+      {/* <Title title={title} /> */}
       {image ? (
         <TouchableOpacity style={{ height: 400 }} onPress={() => openCamera()}>
           <Image

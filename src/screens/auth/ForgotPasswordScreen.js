@@ -1,10 +1,6 @@
 import React, { useState } from "react";
 import { SafeAreaView, StyleSheet, Text, View } from "react-native";
-import CustomButton from "../../components/custom/CustomButton";
-import {
-  ArrowLongRightIcon,
-  EnvelopeIcon,
-} from "react-native-heroicons/outline";
+import { EnvelopeIcon } from "react-native-heroicons/outline";
 import { colors } from "../../utils/styles";
 import SVGImg from "../../assets/ClimbersEyeLogoShapes.svg";
 import CustomInput from "../../components/custom/inputs/CustomInput";
@@ -61,14 +57,14 @@ const ForgotPasswordScreen = ({ navigation }) => {
             paddingHorizontal: 20,
           }}
         >
-          <CustomButton
+          {/* <CustomButton
             onPress={handleSendPress}
             text="SEND"
             isLoading={isLoading}
             width="50%"
             bgColor={colors.primary}
             icon={<ArrowLongRightIcon size={25} color={"white"} />}
-          />
+          /> */}
         </View>
         {hasError ? (
           <View style={{ marginTop: 10 }}>

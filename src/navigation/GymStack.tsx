@@ -1,6 +1,5 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import {
-  CreateGymScreen,
   EditGymAddressScreen,
   EditGymNameScreen,
   EditGymScreen,
@@ -9,7 +8,6 @@ import {
 import GymScreen from "../screens/gym/GymScreen";
 
 export type GymStackParamsList = {
-  CreateGym: undefined;
   EditGym: undefined;
   EditGymType: undefined;
   EditGymName: undefined;
@@ -25,7 +23,6 @@ const GymNavigator = () => (
     screenOptions={{ headerShown: false }}
   >
     <GymStack.Screen name="Gym" component={GymScreen} />
-    <GymStack.Screen name="CreateGym" component={CreateGymScreen} />
     <GymStack.Screen name="EditGym" component={EditGymScreen} />
     <GymStack.Screen name="EditGymType" component={EditGymTypeScreen} />
     <GymStack.Screen name="EditGymName" component={EditGymNameScreen} />

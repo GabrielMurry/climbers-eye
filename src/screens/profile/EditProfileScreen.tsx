@@ -1,7 +1,7 @@
 import { View, Text, SafeAreaView } from "react-native";
 import React, { useEffect, useState } from "react";
 import * as ImagePicker from "expo-image-picker";
-import SettingsButton from "../../components/custom/SettingsButton";
+import SettingsButton from "../../components/common/settings/SettingsButton";
 import { updateProfileInfo } from "../../services/profile";
 import { updateUser } from "../../redux/features/user/userSlice";
 import { useNavigation } from "@react-navigation/native";

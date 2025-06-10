@@ -9,7 +9,7 @@ import React, { useEffect, useLayoutEffect, useState } from "react";
 import { SafeAreaView } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { request } from "../../services/common/apiRequest";
-import SettingsTextInput from "../../components/custom/SettingsTextInput";
+import SettingsTextInput from "../../components/common/settings/SettingsTextInput";
 import { colors } from "../../utils/styles";
 import { setUser } from "../../redux/features/user/userSlice";
 import { useNavigation } from "@react-navigation/native";

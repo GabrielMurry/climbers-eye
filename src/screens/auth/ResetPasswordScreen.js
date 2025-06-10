@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import { SafeAreaView, StyleSheet, Text } from "react-native";
-import CustomInput from "../../components/custom/inputs/CustomInput";
-import CustomButton from "../../components/custom/CustomButton";
 
 const ResetPasswordScreen = ({ navigation }) => {
   const [newPassword, setNewPassword] = useState("");
@@ -18,7 +16,7 @@ const ResetPasswordScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Reset Your Password</Text>
-      <CustomInput
+      {/* <CustomInput
         value={newPassword}
         setValue={setNewPassword}
         placeholder="Enter Your New Password"
@@ -36,7 +34,7 @@ const ResetPasswordScreen = ({ navigation }) => {
         onPress={handleLogin}
         text="Back to Login"
         type="TERTIARY"
-      />
+      /> */}
     </SafeAreaView>
   );
 };

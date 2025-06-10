@@ -3,14 +3,20 @@ import React from "react";
 
 type CommonSubmitButtonProps = {
   onPress: () => void;
+  title?: string;
+  isSecondary?: boolean;
 };
 
-const CommonSubmitButton: React.FC<CommonSubmitButtonProps> = ({ onPress }) => {
+const CommonSubmitButton: React.FC<CommonSubmitButtonProps> = ({
+  onPress,
+  title,
+  isSecondary,
+}) => {
   return (
     <TouchableOpacity
       style={{
         borderRadius: 100,
-        backgroundColor: "#124D15",
+        backgroundColor: isSecondary ? "gray" : "#124D15",
         alignItems: "center",
         justifyContent: "center",
         width: "100%",
@@ -19,7 +25,7 @@ const CommonSubmitButton: React.FC<CommonSubmitButtonProps> = ({ onPress }) => {
       onPress={onPress}
     >
       <Text style={{ color: "white", fontWeight: "bold", fontSize: 16 }}>
-        Submit
+        {title ? title : "Submit"}
       </Text>
     </TouchableOpacity>
   );

@@ -4,7 +4,7 @@ import ProfileStack, { ProfileStackParamList } from "../ProfileStack";
 import HomeStack, { HomeStackParamsList } from "../HomeStack";
 import { MapScreen } from "../../screens/map";
 import { NavigatorScreenParams, useNavigation } from "@react-navigation/native";
-import { MapStackParamList } from "../MapStack";
+import MapStack, { MapStackParamList } from "../MapStack";
 import { View } from "react-native";
 import TabLabels from "./TabLabels";
 import GymStack, { GymStackParamsList } from "../GymStack";
@@ -62,7 +62,7 @@ function TabNavigator() {
       />
       <TabStack.Screen
         name="MapStack"
-        component={MapScreen}
+        component={MapStack}
         options={{
           headerShown: false,
         }}

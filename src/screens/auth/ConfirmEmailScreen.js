@@ -1,8 +1,5 @@
 import React, { useState } from "react";
 import { SafeAreaView, StyleSheet, Text } from "react-native";
-import CustomInput from "../../components/custom/inputs/CustomInput";
-import CustomButton from "../../components/custom/CustomButton";
-// import SocialSignInButtons from "../../components/custom/SocialSignInButtons";
 
 const ConfirmEmailScreen = ({ navigation }) => {
   const [code, setCode] = useState("");
@@ -20,7 +17,7 @@ const ConfirmEmailScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Confirm Your Email</Text>
-      <CustomInput
+      {/* <CustomInput
         value={code}
         setValue={setCode}
         placeholder="Enter Your Confirmation Code"
@@ -38,7 +35,7 @@ const ConfirmEmailScreen = ({ navigation }) => {
         onPress={handleLogin}
         text="Back to Login"
         type="TERTIARY"
-      />
+      /> */}
     </SafeAreaView>
   );
 };

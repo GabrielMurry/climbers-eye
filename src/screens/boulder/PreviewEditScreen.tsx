@@ -14,6 +14,7 @@ import { StackActions, useNavigation } from "@react-navigation/native";
 import PreviewHeader from "../../components/boulder/preview/PreviewHeader";
 import { deleteLocalFile } from "../../utils/localFile";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { padding } from "../../utils/styles";
 
 type PreviewEditScreenProps = NativeStackScreenProps<
   BoulderStackParamList,

@@ -17,12 +17,13 @@ import {
 } from "../../redux/features/spraywall/spraywallSelectors";
 import { Spraywall } from "../../utils/types/spraywall";
 import Header from "../../components/common/header/Header";
-import { padding } from "../../utils/styles";
+import { colors, padding } from "../../utils/styles";
 import { PlusIcon } from "react-native-heroicons/outline";
 import { setSelectedSpraywallId } from "../../redux/features/spraywall/spraywallSlice";
 import { useModalOptions } from "../../contexts/ModalOptionsContext";
 import { useOptions } from "../../hooks/useOptions";
 import OptionsIcon from "../../components/common/header/OptionsIcon";
+import SelectedWall from "../../components/gym/SelectedWall";
 
 const GymScreen = () => {
   const navigation = useNavigation();
@@ -30,6 +31,9 @@ const GymScreen = () => {
   const gym = useAppSelector((state) => selectGym(state));
   const spraywalls = useAppSelector((state) => selectSpraywalls(state));
   const spraywall = useAppSelector((state) => selectSpraywall(state));
+  if (!spraywall) {
+    return;
+  }
   const dispatch = useAppDispatch();
 
   const renderSpraywallItem = ({ item }: { item: Spraywall }) => {
@@ -38,8 +42,8 @@ const GymScreen = () => {
         style={{
           width: 110,
           height: 110,
-          backgroundColor: item.id === spraywall?.id ? "green" : "",
-          borderRadius: 20,
+          backgroundColor: item.id === spraywall.id ? colors.primary : "",
+          borderRadius: 5,
           alignItems: "center",
           justifyContent: "center",
         }}
@@ -47,7 +51,7 @@ const GymScreen = () => {
       >
         <Image
           source={{ uri: item.url }}
-          style={{ width: 100, height: 100, borderRadius: 20 }}
+          style={{ width: 100, height: 100, borderRadius: 5 }}
         />
       </Pressable>
     );
@@ -61,14 +65,14 @@ const GymScreen = () => {
           alignItems: "center",
           width: 100,
           height: 100,
-          borderRadius: 20,
+          borderRadius: 5,
           backgroundColor: "lightgray",
         }}
         onPress={() =>
           navigation.navigate("SpraywallStack", { screen: "CreateSpraywall" })
         }
       >
-        <PlusIcon />
+        <PlusIcon color={"black"} />
       </Pressable>
     );
   };
@@ -107,17 +111,7 @@ const GymScreen = () => {
           }}
         />
       </View>
-      <View
-        style={{
-          alignItems: "center",
-          paddingTop: padding.general,
-        }}
-      >
-        <Image
-          source={{ uri: spraywall?.url }}
-          style={{ width: 300, height: 300, borderRadius: 20 }}
-        />
-      </View>
+      <SelectedWall spraywall={spraywall} />
     </View>
   );
 };

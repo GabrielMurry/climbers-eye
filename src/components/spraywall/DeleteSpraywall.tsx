@@ -1,6 +1,6 @@
 import { View, Text, Alert } from "react-native";
 import React from "react";
-import SettingsButton from "../custom/SettingsButton";
+import SettingsButton from "../common/settings/SettingsButton";
 import { deleteSpraywallAPI } from "../../services/spraywall";
 import {
   deleteSpraywall,

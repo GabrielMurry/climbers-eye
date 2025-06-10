@@ -7,24 +7,13 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import CustomButton from "../../components/custom/CustomButton";
-// import SocialSignInButtons from "../../components/custom/SocialSignInButtons";
-// import SVGImg from "../../assets/ClimbersEyeLogoShapes.svg";
 import { colors } from "../../utils/styles";
-import {
-  ArrowLongRightIcon,
-  EnvelopeIcon,
-  LockClosedIcon,
-  UserIcon,
-} from "react-native-heroicons/outline";
 import { signupUser } from "../../services/auth";
 import { setUser } from "../../redux/features/user/userSlice";
 import { useAppDispatch } from "../../redux/hooks";
 import { useNavigation } from "@react-navigation/native";
-import CustomTextInput from "../../components/custom/inputs/CustomInput";
-import AppleSignUpButton from "../../components/auth/AppleSignUpButton";
-import GoogleSignUpButton from "../../components/auth/GoogleSignUpButton";
-import axios from "axios";
+import CommonSubmitButton from "../../components/common/CommonSubmitButton";
+import CommonTextInput from "../../components/common/CommonTextInput";
 
 const SignupScreen = () => {
   const navigation = useNavigation();
@@ -127,34 +116,26 @@ const SignupScreen = () => {
           gap: 10,
         }}
       >
-        <CustomTextInput
+        <CommonTextInput
+          setValue={setUsername}
           value={username}
-          setValue={(value) => setUsername(value)}
-          placeholder="Username"
-          secureTextEntry={false}
-          // autoCapitalize="none"
-          // icon={<UserIcon size={20} color={colors.textInputDark} />}
+          title="Username"
         />
-        <CustomTextInput
-          value={email}
+        <CommonTextInput
           setValue={setEmail}
-          placeholder="Email"
-          secureTextEntry={false}
-          // icon={<EnvelopeIcon size={20} color={colors.textInputDark} />}
+          value={email}
+          title="Email"
+          behavior="email"
         />
-        <CustomTextInput
-          value={password}
+        <CommonTextInput
           setValue={setPassword}
-          placeholder="Password"
-          secureTextEntry={true}
-          // icon={<LockClosedIcon size={20} color={colors.textInputDark} />}
+          value={password}
+          title="Password"
         />
-        <CustomTextInput
-          value={passwordRepeat}
+        <CommonTextInput
           setValue={setPasswordRepeat}
-          placeholder="Re-Enter Password"
-          secureTextEntry={true}
-          // icon={<LockClosedIcon size={20} color={colors.textInputDark} />}
+          value={passwordRepeat}
+          title="Re-Enter Password"
         />
         <View
           style={{
@@ -163,14 +144,7 @@ const SignupScreen = () => {
             paddingHorizontal: 20,
           }}
         >
-          <CustomButton
-            onPress={handleCreateAccount}
-            text="CREATE"
-            isLoading={isLoading}
-            width="50%"
-            bgColor={colors.primary}
-            // icon={<ArrowLongRightIcon size={25} color={"white"} />}
-          />
+          <CommonSubmitButton onPress={handleCreateAccount} title="CREATE" />
         </View>
       </View>
       {/* <AppleSignUpButton />

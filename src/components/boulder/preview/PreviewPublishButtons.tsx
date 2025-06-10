@@ -1,7 +1,7 @@
-import { View, StyleSheet } from "react-native";
+import { View } from "react-native";
 import React from "react";
-import CustomButton from "../../custom/CustomButton";
-import { colors } from "../../../utils/styles";
+import CommonSubmitButton from "../../common/CommonSubmitButton";
+import { padding } from "../../../utils/styles";
 
 type PreviewPublishButtonsProps = {
   handleConfirm: (value: boolean) => void;
@@ -13,33 +13,22 @@ const PreviewPublishButtons: React.FC<PreviewPublishButtonsProps> = ({
   isLoading,
 }) => {
   return (
-    <View style={styles.container}>
-      <CustomButton
+    <View
+      style={{
+        flex: 1,
+        justifyContent: "flex-end",
+        gap: 20,
+        paddingHorizontal: padding.general,
+      }}
+    >
+      <CommonSubmitButton
         onPress={() => handleConfirm(false)}
-        text="Drafts"
-        type="TERTIARY"
-        width="45%"
-        bgColor={"rgba(245, 245, 245, 255)"}
-        // disabled={isLoading}
+        title="Drafts"
+        isSecondary={true}
       />
-      <CustomButton
-        onPress={() => handleConfirm(true)}
-        text="Publish"
-        width="45%"
-        bgColor={colors.primary}
-        // disabled={isLoading}
-      />
+      <CommonSubmitButton onPress={() => handleConfirm(true)} title="Publish" />
     </View>
   );
 };
 
 export default PreviewPublishButtons;
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: "row",
-    alignItems: "flex-end",
-    justifyContent: "space-evenly",
-    flex: 1,
-  },
-});

@@ -1,6 +1,6 @@
 import { View, Text, SafeAreaView } from "react-native";
 import React from "react";
-import SettingsButton from "../../components/custom/SettingsButton";
+import SettingsButton from "../../components/common/settings/SettingsButton";
 import DeleteSpraywall from "../../components/spraywall/DeleteSpraywall";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { SpraywallStackParamList } from "../../navigation/SpraywallStack";

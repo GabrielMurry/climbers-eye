@@ -5,7 +5,6 @@ import DifficultyRow from "./rows/DifficultyRow";
 import AttemptsRow from "./rows/AttemptsRow";
 import QualityRow from "./rows/QualityRow";
 import NotesRow from "./rows/NotesRow";
-import CustomButton from "../../custom/CustomButton";
 import { useNavigation } from "@react-navigation/native";
 import * as Haptics from "expo-haptics";
 import { addSendToBoulder } from "../../../services/send";
@@ -13,7 +12,8 @@ import { Boulder } from "../../../utils/types/boulder";
 import { UserSendsData } from "../../../screens/boulder/types";
 import { useAppSelector } from "../../../redux/hooks";
 import { selectUser } from "../../../redux/features/user/userSelectors";
-import { colors } from "../../../utils/styles";
+import { colors, padding } from "../../../utils/styles";
+import CommonSubmitButton from "../../common/CommonSubmitButton";
 
 type SendBodyProps = {
   boulder: Boulder;
@@ -78,7 +78,6 @@ const SendBody: React.FC<SendBodyProps> = ({ boulder, userSendsData }) => {
         style={{
           flex: 1,
           padding: 10,
-          justifyContent: "space-between",
         }}
       >
         <View style={{ gap: 5 }}>
@@ -97,12 +96,9 @@ const SendBody: React.FC<SendBodyProps> = ({ boulder, userSendsData }) => {
           <QualityRow value={qualityCount} setValue={setQualityCount} />
           <NotesRow value={notes} setValue={setNotes} />
         </View>
-        <CustomButton
-          onPress={handleSubmit}
-          text="Submit"
-          disabled={isSubmitDisabled}
-          bgColor={colors.primary}
-        />
+        <View style={{ paddingTop: padding.general }}>
+          <CommonSubmitButton onPress={handleSubmit} />
+        </View>
       </View>
     </TouchableWithoutFeedback>
   );

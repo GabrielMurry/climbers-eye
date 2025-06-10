@@ -15,7 +15,7 @@ type BoulderImageProps = {
   boulderUri: string;
   width: number;
   height: number;
-  boulderOpacity: SharedValue<number>;
+  boulderOpacity: SharedValue<number> | number;
 };
 
 const SCREEN_WIDTH = Dimensions.get("window").width;

@@ -32,7 +32,6 @@ const BouldersSection = () => {
         <SectionCard
           icon={<CheckIcon color={"black"} size={20} />}
           title={"Logbook"}
-          data={0}
           onPress={() =>
             navigation.navigate("ProfileStack", { screen: "Logbook" })
           }
@@ -40,7 +39,6 @@ const BouldersSection = () => {
         <SectionCard
           icon={<HeartIcon color={"black"} size={20} />}
           title={"Likes"}
-          data={0}
           onPress={() =>
             navigation.navigate("ProfileStack", { screen: "Likes" })
           }
@@ -48,7 +46,6 @@ const BouldersSection = () => {
         <SectionCard
           icon={<BookmarkIcon color={"black"} size={20} />}
           title={"Bookmarks"}
-          data={0}
           onPress={() =>
             navigation.navigate("ProfileStack", { screen: "Bookmarks" })
           }
@@ -56,7 +53,6 @@ const BouldersSection = () => {
         <SectionCard
           icon={<PencilIcon color={"black"} size={20} />}
           title={"Creations"}
-          data={0}
           onPress={() =>
             navigation.navigate("ProfileStack", { screen: "Creations" })
           }

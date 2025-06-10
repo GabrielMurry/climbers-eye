@@ -1,6 +1,6 @@
 import { View, Text } from "react-native";
 import React from "react";
-import SettingsButton from "../custom/SettingsButton";
+import SettingsButton from "../common/settings/SettingsButton";
 import { useNavigation } from "@react-navigation/native";
 import { useAppSelector } from "../../redux/hooks";
 import { selectSpraywalls } from "../../redux/features/spraywall/spraywallSelectors";

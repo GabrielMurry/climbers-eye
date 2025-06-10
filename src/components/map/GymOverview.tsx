@@ -1,7 +1,6 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { XMarkIcon } from "react-native-heroicons/outline";
 import { colors } from "../../utils/styles";
-import CustomButton from "../custom/CustomButton";
 import { RefObject, useState } from "react";
 import FlatListSpraywalls from "../home/FlatListSpraywalls";
 import { MapMarker } from "../../screens/map/MapScreen";
@@ -11,6 +10,7 @@ import { userChooseGym } from "../../services/gym";
 import { setGym } from "../../redux/features/gym/gymSlice";
 import { setSpraywalls } from "../../redux/features/spraywall/spraywallSlice";
 import { useNavigation } from "@react-navigation/native";
+import CommonSubmitButton from "../common/CommonSubmitButton";
 
 type GymOverviewProps = {
   marker: MapMarker;
@@ -93,11 +93,9 @@ const GymOverview: React.FC<GymOverviewProps> = ({
           height={100}
         />
       </View>
-      <CustomButton
+      <CommonSubmitButton
         onPress={() => handleConfirmMyGymPress(marker.gym.id)}
-        text="Confirm"
-        isLoading={isLoadingSubmit}
-        bgColor={colors.primary}
+        title="Confirm"
       />
     </View>
   );

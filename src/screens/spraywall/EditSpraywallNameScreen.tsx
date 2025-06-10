@@ -7,7 +7,7 @@ import {
   StyleSheet,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import SettingsTextInput from "../../components/custom/SettingsTextInput";
+import SettingsTextInput from "../../components/common/settings/SettingsTextInput";
 import { updateSpraywallAPI } from "../../services/spraywall";
 import { updateSpraywall } from "../../redux/features/spraywall/spraywallSlice";
 import { useNavigation } from "@react-navigation/native";
