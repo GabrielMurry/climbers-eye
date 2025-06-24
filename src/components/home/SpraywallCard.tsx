@@ -1,5 +1,4 @@
-import { View, Pressable, Text } from "react-native";
-import { Image } from "expo-image";
+import { View, Pressable, Text, Image } from "react-native";
 import React, { memo, useEffect } from "react";
 import { colors } from "../../utils/styles";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
@@ -50,14 +49,13 @@ const SpraywallCard: React.FC<SpraywallCardProps> = ({
         }}
       />
       <Image
-        source={{ uri: spraywallCard.url }}
+        source={{ uri: spraywallCard.thumbnailUrl }}
         style={{
           width: "100%",
           height: "100%",
           borderRadius: 2,
           opacity: !highlight ? 1 : spraywallCard.id === spraywall.id ? 1 : 0.8,
         }}
-        cachePolicy={"memory-disk"}
       />
     </Pressable>
   );

@@ -8,6 +8,7 @@ import {
 import { useAppSelector } from "../../redux/hooks";
 import { selectCircuits } from "../../redux/features/circuit/circuitSelectors";
 import { useNavigation } from "@react-navigation/native";
+import { padding } from "../../utils/styles";
 
 const CircuitsSection = () => {
   const navigation = useNavigation();
@@ -22,7 +23,7 @@ const CircuitsSection = () => {
     >
       <View
         style={{
-          paddingHorizontal: 30,
+          paddingHorizontal: padding.general,
           marginTop: 10,
           flexDirection: "row",
           height: 30,
@@ -32,7 +33,7 @@ const CircuitsSection = () => {
         {/* section title */}
         <Text style={{ fontWeight: "bold", fontSize: 18 }}>Circuits</Text>
       </View>
-      <View style={{ paddingLeft: 30 }}>
+      <View style={{ paddingLeft: padding.general }}>
         {circuits.map((circuit, index) => (
           <TouchableOpacity
             key={circuit.id}
@@ -68,35 +69,6 @@ const CircuitsSection = () => {
             </View>
           </TouchableOpacity>
         ))}
-        <TouchableOpacity
-          style={{
-            height: 60,
-            alignItems: "center",
-            flexDirection: "row",
-          }}
-          onPress={() =>
-            navigation.navigate("CircuitStack", { screen: "CreateCircuit" })
-          }
-        >
-          <View style={{ width: 30 }}>
-            <PlusIcon color={"black"} size={20} />
-          </View>
-          <View
-            style={{
-              flex: 1,
-            }}
-          >
-            <Text style={{ fontSize: 16 }}>Create a New Circuit</Text>
-          </View>
-          <View
-            style={{
-              width: 50,
-              alignItems: "center",
-            }}
-          >
-            <ChevronRightIcon color={"black"} size={20} />
-          </View>
-        </TouchableOpacity>
       </View>
     </View>
   );

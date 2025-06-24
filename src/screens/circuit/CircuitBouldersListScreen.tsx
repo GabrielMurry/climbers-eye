@@ -1,5 +1,5 @@
 import { View, Text, SafeAreaView, FlatList } from "react-native";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { CircuitStackParamList } from "../../navigation/CircuitStack";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
@@ -10,6 +10,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import BoulderCard from "../../components/common/boulderCard/BoulderCard";
 import { padding } from "../../utils/styles";
 import Empty from "../../components/common/flatList/Empty";
+import { Boulder } from "../../utils/types/boulder";
 
 type CircuitBouldersListScreenProps = NativeStackScreenProps<
   CircuitStackParamList,
@@ -23,6 +24,7 @@ const CircuitBouldersListScreen: React.FC<CircuitBouldersListScreenProps> = ({
   const circuitId = route.params.circuitId;
   const dispatch = useAppDispatch();
   const filters = useAppSelector((state) => selectFilters(state));
+  const [isLoading, setIsLoading] = useState(true);
 
   const {
     boulders,
@@ -33,15 +35,24 @@ const CircuitBouldersListScreen: React.FC<CircuitBouldersListScreenProps> = ({
     nextPageBoulders,
   } = useBoulderData();
 
-  useEffect(() => {
-    dispatch(setCircuit(circuitId));
-  }, [circuitId]);
+  // useEffect(() => {
+  //   dispatch(setCircuit(circuitId));
+  // }, [circuitId]);
+
+  // useEffect(() => {
+  //   console.log(boulders);
+  // }, [boulders]);
+
+  const renderBoulderCard = ({ item }: { item: Boulder }) => {
+    // if (isLoading) return null;
+    return <BoulderCard boulder={item} />;
+  };
 
   return (
     <View style={{ paddingTop: insets.top, flex: 1, backgroundColor: "white" }}>
       <FlatList
         data={boulders}
-        renderItem={({ item }) => <BoulderCard boulder={item} />}
+        renderItem={renderBoulderCard}
         style={{ paddingHorizontal: padding.general }}
         ListEmptyComponent={<Empty isLoading={isInitialPageLoading} />}
       />

@@ -28,6 +28,7 @@ import {
   initialWindowMetrics,
   SafeAreaProvider,
 } from "react-native-safe-area-context";
+import ModalImageOptionsScreen from "../screens/modal/ModalImageOptionsScreen";
 
 export type RootStackParamList = {
   AuthStack: NavigatorScreenParams<AuthStackParamList>;
@@ -45,6 +46,7 @@ export type RootStackParamList = {
     width: number;
     height: number;
   };
+  ModalImageOptions: undefined;
 };
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();
@@ -123,6 +125,14 @@ export default function AppNavigator() {
                           <RootStack.Screen
                             name="Modal"
                             component={ModalScreen}
+                            options={{
+                              presentation: "transparentModal",
+                              animation: "fade",
+                            }}
+                          />
+                          <RootStack.Screen
+                            name="ModalImageOptions"
+                            component={ModalImageOptionsScreen}
                             options={{
                               presentation: "transparentModal",
                               animation: "fade",

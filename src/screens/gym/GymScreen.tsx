@@ -34,6 +34,7 @@ const GymScreen = () => {
   if (!spraywall) {
     return;
   }
+  console.log(spraywalls);
   const dispatch = useAppDispatch();
 
   const renderSpraywallItem = ({ item }: { item: Spraywall }) => {

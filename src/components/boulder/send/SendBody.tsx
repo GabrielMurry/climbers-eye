@@ -10,10 +10,11 @@ import * as Haptics from "expo-haptics";
 import { addSendToBoulder } from "../../../services/send";
 import { Boulder } from "../../../utils/types/boulder";
 import { UserSendsData } from "../../../screens/boulder/types";
-import { useAppSelector } from "../../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { selectUser } from "../../../redux/features/user/userSelectors";
 import { colors, padding } from "../../../utils/styles";
 import CommonSubmitButton from "../../common/CommonSubmitButton";
+import { updateBoulder } from "../../../redux/features/boulder/boulderSlice";
 
 type SendBodyProps = {
   boulder: Boulder;
@@ -22,6 +23,7 @@ type SendBodyProps = {
 
 const SendBody: React.FC<SendBodyProps> = ({ boulder, userSendsData }) => {
   const navigation = useNavigation();
+  const dispatch = useAppDispatch();
 
   const user = useAppSelector((state) => selectUser(state));
 
@@ -46,6 +48,9 @@ const SendBody: React.FC<SendBodyProps> = ({ boulder, userSendsData }) => {
   }, [selectedAttempts, selectedDifficulty, qualityCount]);
 
   const handleSubmit = async () => {
+    // Post request to add a Send model instance (row)
+    // Returns a response of the updated Boulder instance
+    // Dispatch that updated boulder to reflect immediate changes to the boulder
     const data = {
       attempts: selectedAttempts,
       suggestedGrade: selectedDifficulty,
@@ -56,10 +61,7 @@ const SendBody: React.FC<SendBodyProps> = ({ boulder, userSendsData }) => {
     };
     const pathParams = { boulderId: boulder.id };
     const response = await addSendToBoulder(pathParams, data);
-    if (response.status !== 201) {
-      console.error(response.status);
-      return;
-    }
+    dispatch(updateBoulder(boulder.id, response.data));
     handleVibrate();
     navigation.goBack();
   };

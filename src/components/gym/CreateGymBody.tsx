@@ -2,7 +2,6 @@ import { View, Text } from "react-native";
 import React from "react";
 import SelectGymType from "./SelectGymType";
 import AddressTextInput from "../googlePlacesAutoComplete/AddressTextInput";
-import CustomTextInput from "../custom/inputs/CustomInput";
 import CommonTextInput from "../common/CommonTextInput";
 
 type CreateGymBodyProps = {

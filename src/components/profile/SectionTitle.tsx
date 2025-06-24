@@ -1,5 +1,6 @@
 import { View, Text } from "react-native";
 import React from "react";
+import { padding } from "../../utils/styles";
 
 type SectionTitleProps = {
   title: string;
@@ -9,7 +10,7 @@ const SectionTitle: React.FC<SectionTitleProps> = ({ title }) => {
   return (
     <View
       style={{
-        paddingHorizontal: 30,
+        paddingHorizontal: padding.general,
         marginTop: 10,
         flexDirection: "row",
         height: 30,

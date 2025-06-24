@@ -1,9 +1,6 @@
 import React, { useState } from "react";
 import { SafeAreaView, StyleSheet, Text, View } from "react-native";
-import { EnvelopeIcon } from "react-native-heroicons/outline";
-import { colors } from "../../utils/styles";
 import SVGImg from "../../assets/ClimbersEyeLogoShapes.svg";
-import CustomInput from "../../components/custom/inputs/CustomInput";
 
 const ForgotPasswordScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -41,7 +38,7 @@ const ForgotPasswordScreen = ({ navigation }) => {
           gap: 25,
         }}
       >
-        <CustomInput
+        {/* <CustomInput
           value={email}
           setValue={(value) => setEmail(value)}
           placeholder="Email"
@@ -49,7 +46,7 @@ const ForgotPasswordScreen = ({ navigation }) => {
           width="90%"
           autoCapitalize="none"
           icon={<EnvelopeIcon size={20} color={colors.textInputDark} />}
-        />
+        /> */}
         <View
           style={{
             width: "100%",

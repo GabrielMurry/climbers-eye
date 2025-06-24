@@ -6,7 +6,7 @@ import PreviewInputData from "../../components/boulder/preview/PreviewInputData"
 import PreviewImage from "../../components/boulder/preview/PreviewImage";
 import PreviewPublishButtons from "../../components/boulder/preview/PreviewPublishButtons";
 import { selectSpraywall } from "../../redux/features/spraywall/spraywallSelectors";
-import { useAppSelector } from "../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { selectUser } from "../../redux/features/user/userSelectors";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { BoulderStackParamList } from "../../navigation/BoulderStack";
@@ -15,6 +15,7 @@ import PreviewHeader from "../../components/boulder/preview/PreviewHeader";
 import { deleteLocalFile } from "../../utils/localFile";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { padding } from "../../utils/styles";
+import { addNewBoulder } from "../../redux/features/boulder/boulderSlice";
 
 type PreviewEditScreenProps = NativeStackScreenProps<
   BoulderStackParamList,
@@ -23,6 +24,7 @@ type PreviewEditScreenProps = NativeStackScreenProps<
 
 const PreviewEditScreen: React.FC<PreviewEditScreenProps> = ({ route }) => {
   const navigation = useNavigation();
+  const dispatch = useAppDispatch();
 
   const insets = useSafeAreaInsets();
 
@@ -78,13 +80,11 @@ const PreviewEditScreen: React.FC<PreviewEditScreenProps> = ({ route }) => {
     if (response) {
       handleVibrate();
       navigation.dispatch(() => {
-        StackActions.popToTop();
-        return StackActions.replace("TabsStack", {
-          screen: "HomeStack",
-          params: {
-            screen: "Boulder",
-            params: { boulder: response.data },
-          },
+        // Before dispatching the navigation, we must add the new boulder to redux state then replace the current navigation stack
+        dispatch(addNewBoulder(response.data));
+        return StackActions.replace("BoulderStack", {
+          screen: "Boulder",
+          params: { boulder: response.data },
         });
       });
       await deleteLocalFile(boulderImage.uri);

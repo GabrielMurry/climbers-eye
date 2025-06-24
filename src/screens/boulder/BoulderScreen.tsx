@@ -39,6 +39,7 @@ import {
 } from "../../services/boulder/boulder";
 import { useOptions } from "../../hooks/useOptions";
 import { useModalOptions } from "../../contexts/ModalOptionsContext";
+import { selectBoulder } from "../../redux/features/boulder/boulderSelectors";
 
 export type ChartData = {
   label: string;
@@ -59,13 +60,18 @@ const ANIM_DURATION = 750;
 
 const BoulderScreen: React.FC<BoulderScreenProps> = ({ route }) => {
   const navigation = useNavigation();
-  const routedBoulder = route.params.boulder;
+  const routedBoulderId = route.params.boulder.id;
   const insets = useSafeAreaInsets();
 
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => selectUser(state));
 
-  const boulder = routedBoulder;
+  const boulder = useAppSelector((state) =>
+    selectBoulder(state, routedBoulderId)
+  );
+  if (!boulder) {
+    return;
+  }
   const spraywall = useAppSelector((state) => selectSpraywall(state));
   if (!spraywall) {
     return;

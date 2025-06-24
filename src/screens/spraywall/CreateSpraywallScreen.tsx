@@ -1,4 +1,4 @@
-import { View, SafeAreaView } from "react-native";
+import { View, SafeAreaView, Pressable, Image } from "react-native";
 import React, { useState } from "react";
 import { createSpraywall } from "../../services/spraywall";
 import { appendSpraywall } from "../../redux/features/spraywall/spraywallSlice";
@@ -13,6 +13,8 @@ import CustomImageInput from "../../components/common/CustomImageInput";
 import * as FileSystem from "expo-file-system";
 import CommonSubmitButton from "../../components/common/CommonSubmitButton";
 import CommonTextInput from "../../components/common/CommonTextInput";
+import { getImageFromLibrary } from "../../utils/imageLibrary";
+import { ImageObjUrl } from "../../utils/types/image";
 
 type CreateSpraywallScreenProps = NativeStackScreenProps<
   SpraywallStackParamList,
@@ -22,7 +24,8 @@ type CreateSpraywallScreenProps = NativeStackScreenProps<
 const CreateSpraywallScreen: React.FC<CreateSpraywallScreenProps> = () => {
   const navigation = useNavigation();
 
-  const { image, openCamera } = useCameraContext();
+  // const { image, openCamera } = useCameraContext();
+  const [image, setImage] = useState<ImageObjUrl | null>(null);
 
   const dispatch = useAppDispatch();
 
@@ -60,14 +63,18 @@ const CreateSpraywallScreen: React.FC<CreateSpraywallScreenProps> = () => {
     if (response.status === 201) {
       dispatch(appendSpraywall(response.data));
       setIsLoading(false);
-      navigation.navigate("TabsStack", {
-        screen: "HomeStack",
-        params: { screen: "HomeList" },
-      });
+      navigation.goBack();
     } else {
       console.log(response.status);
     }
     setIsLoading(false);
+  };
+
+  const handleUploadImagePressed = async () => {
+    let result = await getImageFromLibrary();
+    if (result.canceled) return;
+    const image = result.assets[0];
+    setImage({ url: image.uri, width: image.width, height: image.height });
   };
 
   return (
@@ -85,11 +92,23 @@ const CreateSpraywallScreen: React.FC<CreateSpraywallScreenProps> = () => {
           value={spraywallName}
           title="Spray Wall Name"
         />
-        <CustomImageInput
+        {/* <CustomImageInput
           image={image}
           openCamera={openCamera}
           title="Spray Wall Image"
-        />
+        /> */}
+        <Pressable
+          style={{ backgroundColor: "blue", width: 100, height: 100 }}
+          onPress={handleUploadImagePressed}
+        >
+          {image && (
+            <Image
+              source={{ uri: image.url }}
+              style={{ width: 200, height: 200 }}
+              resizeMode="contain"
+            />
+          )}
+        </Pressable>
         <View
           style={{
             flex: 1,

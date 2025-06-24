@@ -1,4 +1,4 @@
-import { GOOGLE_MAPS_GEOCODER_API_KEY } from "@env";
+import { GOOGLE_MAPS_API_KEY } from "@env";
 import axios from "axios";
 
 export const getAddressSuggestions = async (text: string) => {
@@ -9,10 +9,11 @@ export const getAddressSuggestions = async (text: string) => {
     const response = await axios.get(url, {
       params: {
         input: text,
-        key: GOOGLE_MAPS_GEOCODER_API_KEY,
+        key: GOOGLE_MAPS_API_KEY,
         language: "en", // Optional: Set language for results
       },
     });
+    console.log(response);
     if (response.data.status === "OK") {
       return response.data.predictions; // Return the autocomplete results
     } else {

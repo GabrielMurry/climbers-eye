@@ -5,6 +5,7 @@ import { useAppSelector } from "../../redux/hooks";
 import { selectGym } from "../../redux/features/gym/gymSelectors";
 import { selectSpraywalls } from "../../redux/features/spraywall/spraywallSelectors";
 import { Spraywall } from "../../utils/types/spraywall";
+import { padding } from "../../utils/styles";
 
 const width = Dimensions.get("window").width;
 
@@ -21,11 +22,11 @@ const GymSection = () => {
       style={{
         backgroundColor: "white",
         borderRadius: 20,
+        paddingHorizontal: padding.general,
       }}
     >
       <View
         style={{
-          paddingHorizontal: 30,
           marginTop: 10,
           flexDirection: "row",
           height: 30,
@@ -45,7 +46,6 @@ const GymSection = () => {
           gap: 10,
           height: 150,
           paddingVertical: 10,
-          paddingHorizontal: 30,
         }}
       />
     </View>

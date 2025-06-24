@@ -12,6 +12,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useAppSelector } from "../../redux/hooks";
 import { useNavigationContext } from "../../contexts/NavigationContext";
 import { selectUser } from "../../redux/features/user/userSelectors";
+import { padding } from "../../utils/styles";
 
 const BouldersSection = () => {
   const navigation = useNavigation();
@@ -28,7 +29,7 @@ const BouldersSection = () => {
       }}
     >
       <SectionTitle title={"Boulders"} />
-      <View style={{ paddingLeft: 30 }}>
+      <View style={{ paddingLeft: padding.general }}>
         <SectionCard
           icon={<CheckIcon color={"black"} size={20} />}
           title={"Logbook"}
