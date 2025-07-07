@@ -1,6 +1,6 @@
 export type Filter = {
   search: string;
-  sortBy: string;
+  ordering: string;
   minGradeIndex: number;
   maxGradeIndex: number;
   activity: string | null;

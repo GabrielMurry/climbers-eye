@@ -7,6 +7,8 @@ import {
 } from "../redux/features/spraywall/spraywallSelectors";
 import {
   getBoulderList,
+  getLikedBoulders,
+  getLogbookBoulders,
   getNextPageBoulderList,
 } from "../services/boulder/boulder";
 import {
@@ -17,8 +19,13 @@ import { getCircuitList } from "../services/circuit";
 import { setCircuits } from "../redux/features/circuit/circuitSlice";
 import { selectBoulders } from "../redux/features/boulder/boulderSelectors";
 import { Image as ExpoImage } from "expo-image";
+import { appendLikedBoulders } from "../redux/features/like/likeSlice";
+import { getLogbookList } from "../services/profile";
+import { appendLogbookBoulders } from "../redux/features/logbook/logbookSlice";
+import { Boulder } from "../utils/types/boulder";
 
 const INITIAL_PAGE: number = 1;
+const INITIAL_CURSOR = "";
 
 export const useBoulderData = () => {
   const dispatch = useAppDispatch();
@@ -30,7 +37,7 @@ export const useBoulderData = () => {
   const [isInitialPageLoading, setIsInitialPageLoading] = useState(false);
   const [isNextPageLoading, setIsNextPageLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [nextPage, setNextPage] = useState<string | null>(null);
+  const [cursor, setCursor] = useState<string>();
 
   const fetchInitialPageBoulders = async () => {
     setIsInitialPageLoading(true);
@@ -43,10 +50,11 @@ export const useBoulderData = () => {
     try {
       const response = await getBoulderList(
         getPath(),
-        getQueries(INITIAL_PAGE)
+        getQueries(INITIAL_CURSOR)
       );
+      console.log("next:", response.data.next);
       dispatch(appendBoulders(response.data.results));
-      setNextPage(response.data.next);
+      setCursor(response.data.next);
     } catch (err) {
       setError("Failed to fetch boulders.");
       console.error(err);
@@ -57,9 +65,42 @@ export const useBoulderData = () => {
 
   const fetchCircuits = async () => {
     const circuitResponse = await getCircuitList(getPath());
-    console.log(circuitResponse.data);
     dispatch(setCircuits(circuitResponse.data));
   };
+
+  const fetchLikedBoulders = async () => {
+    console.log("fetching liked boulders");
+    const response = await getLikedBoulders(getPath());
+    dispatch(
+      appendLikedBoulders({
+        boulders: response.data.results,
+        cursor: response.data.next,
+      })
+    );
+  };
+
+  const fetchLogbookBoulders = async () => {
+    console.log("fetching logbook boulders");
+    const response = await getLogbookBoulders(getPath());
+    console.log("-----------");
+    const resultArr: Boulder[] = response.data.results;
+    resultArr.forEach((boulder) => console.log(boulder.name));
+    console.log("++++++++++++");
+    dispatch(
+      appendLogbookBoulders({
+        boulders: response.data.results,
+        cursor: response.data.next,
+      })
+    );
+  };
+
+  // useEffect(() => {
+  //   if (spraywalls.length === 0) {
+  //     return;
+  //   }
+  //   console.log("++++++");
+  //   // fetchInitialPageBoulders();
+  // }, [filters]);
 
   useEffect(() => {
     if (spraywalls.length === 0) {
@@ -67,11 +108,13 @@ export const useBoulderData = () => {
     }
     fetchInitialPageBoulders();
     fetchCircuits();
-  }, [filters, spraywalls, spraywall]);
+    fetchLikedBoulders();
+    fetchLogbookBoulders();
+  }, [spraywall, spraywalls]);
 
   const fetchNextPageBoulders = async () => {
     if (
-      !nextPage ||
+      !cursor ||
       isInitialPageLoading ||
       isNextPageLoading ||
       spraywalls.length === 0
@@ -79,9 +122,9 @@ export const useBoulderData = () => {
       return;
     setIsNextPageLoading(true);
     try {
-      const response = await getNextPageBoulderList(nextPage);
+      const response = await getNextPageBoulderList(cursor);
       dispatch(appendBoulders(response.data.results));
-      setNextPage(response.data.next);
+      setCursor(response.data.next);
     } catch (err) {
       setError("Failed to fetch next page boulders.");
       console.error(err);
@@ -94,16 +137,16 @@ export const useBoulderData = () => {
     return { spraywallId: spraywall?.id };
   };
 
-  const getQueries = (page: number) => {
+  const getQueries = (cursor: string) => {
     return {
       searchQuery: filters.search,
       minGradeIndex: filters.minGradeIndex,
       maxGradeIndex: filters.maxGradeIndex,
-      sortBy: filters.sortBy,
+      ordering: filters.ordering,
       activity: filters.activity,
       status: filters.climbStatus,
       circuit: filters.circuit,
-      page: page,
+      cursor: cursor,
     };
   };
 

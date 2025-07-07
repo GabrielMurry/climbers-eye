@@ -2,7 +2,7 @@ import { View, Text } from "react-native";
 import React from "react";
 import FilterButton from "./FilterButton";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { setSortBy } from "../../redux/features/filter/filterSlice";
+import { setOrdering } from "../../redux/features/filter/filterSlice";
 import { selectFilters } from "../../redux/features/filter/filterSelectors";
 
 const SortBy = () => {
@@ -39,21 +39,21 @@ const SortBy = () => {
       </View>
       <FilterButton
         title={"Grade"}
-        filterType={filters.sortBy}
+        filterType={filters.ordering}
         filter={"grade"}
-        onPress={() => dispatch(setSortBy("grade"))}
+        onPress={() => dispatch(setOrdering("grade"))}
       />
       <FilterButton
         title={"Popular"}
-        filterType={filters.sortBy}
+        filterType={filters.ordering}
         filter={"popular"}
-        onPress={() => dispatch(setSortBy("popular"))}
+        onPress={() => dispatch(setOrdering("popular"))}
       />
       <FilterButton
         title={"Newest"}
-        filterType={filters.sortBy}
+        filterType={filters.ordering}
         filter={"newest"}
-        onPress={() => dispatch(setSortBy("newest"))}
+        onPress={() => dispatch(setOrdering("newest"))}
       />
     </View>
   );

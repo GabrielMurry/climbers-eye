@@ -15,6 +15,10 @@ import {
 } from "../../../services/bookmark";
 import { selectBoulder } from "../../../redux/features/boulder/boulderSelectors";
 import SaveButtonIcons from "./SaveButtonIcons";
+import {
+  addNewLikedBoulder,
+  deleteLikedBoulder,
+} from "../../../redux/features/like/likeSlice";
 
 const Categories = ["like", "bookmark"] as const;
 
@@ -49,8 +53,10 @@ const SaveButton: React.FC<SaveButtonProps> = ({
     const data = { boulder: boulder.id, person: userId };
     if (debouncedLike) {
       await addLikeToBoulder(pathParams, data);
+      dispatch(addNewLikedBoulder(boulder));
     } else {
       await deleteLikeFromBoulder(pathParams, data);
+      dispatch(deleteLikedBoulder(boulder));
     }
   };
 

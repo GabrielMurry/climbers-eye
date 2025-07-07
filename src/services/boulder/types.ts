@@ -4,12 +4,11 @@ export type Queries = {
   searchQuery?: string;
   minGradeIndex?: number;
   maxGradeIndex?: number;
-  sortBy?: string;
+  ordering?: string;
   activity?: string | null;
   status?: string;
   circuit?: number | null;
   excludeIds?: number[];
-  page?: number;
 };
 
 export type Path = {

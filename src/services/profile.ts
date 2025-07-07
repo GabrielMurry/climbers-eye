@@ -7,10 +7,10 @@ type ProfilePic = {
   profilePicHeight: number | null;
 };
 
-export const getLogbookList = async (path: Path, page: number) => {
+export const getLogbookList = async (path: Path) => {
   return await request(
     "get",
-    `profile/logbook_list/${path.spraywallId}?page=${page}`
+    `profile/logbook_list/${path.spraywallId}?cursor=`
   );
 };
 

@@ -35,9 +35,9 @@ export const boulderSlice = createSlice({
         return { payload: { id, updates } }; // Automatically format the payload
       },
     },
-    deleteBoulder: (state, action) => {
+    deleteBoulder: (state, action: PayloadAction<Boulder>) => {
       state.objects = state.objects.filter(
-        (boulder) => boulder.id !== action.payload
+        (boulder) => boulder.id !== action.payload.id
       );
     },
   },

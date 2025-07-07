@@ -2,19 +2,38 @@ import { request } from "../common/apiRequest";
 import { Data, Path, Queries } from "./types";
 import { BASE_URL } from "@env";
 
-console.log(BASE_URL);
-console.log("--");
+function trimAddress(address: string): string {
+  return address.replace(BASE_URL + "/", "");
+}
 
 export const getBoulderList = async (path: Path, queries: Queries) => {
   return await request(
     "get",
-    `boulder/list/${path.spraywallId}?search=${queries.searchQuery}&grade_min=${queries.minGradeIndex}&grade_max=${queries.maxGradeIndex}&sort=${queries.sortBy}&activity=${queries.activity}&status=${queries.status}&circuit=${queries.circuit}&page=${queries.page}`
+    `boulder/list/${path.spraywallId}?search=${queries.searchQuery}&grade_min=${queries.minGradeIndex}&grade_max=${queries.maxGradeIndex}&ordering=${queries.ordering}&activity=${queries.activity}&status=${queries.status}&circuit=${queries.circuit}`
   );
 };
 
-export const getNextPageBoulderList = async (nextPage: string) => {
-  const trimmedEndpoint = nextPage.replace(BASE_URL + "/", "");
-  return await request("get", trimmedEndpoint);
+export const getNextPageBoulderList = async (next: string) => {
+  const endpoint = trimAddress(next);
+  return await request("get", endpoint);
+};
+
+export const getLikedBoulders = async (path: Path) => {
+  return await request("get", `like/list/${path.spraywallId}`);
+};
+
+export const getNextPageLikedBoulders = async (next: string) => {
+  const endpoint = trimAddress(next);
+  return await request("get", endpoint);
+};
+
+export const getLogbookBoulders = async (path: Path) => {
+  return await request("get", `send/logbook_list/${path.spraywallId}`);
+};
+
+export const getNextPageLogbookBoulders = async (next: string) => {
+  const endpoint = trimAddress(next);
+  return await request("get", endpoint);
 };
 
 export const getBoulderDetail = async (path: Path) => {

@@ -5,60 +5,41 @@ import BoulderCard from "../../components/common/boulderCard/BoulderCard";
 import EmptyCard from "../../components/common/flatList/EmptyCard";
 import ErrorCard from "../../components/common/ErrorCard";
 import { useNavigation } from "@react-navigation/native";
-import { useAppSelector } from "../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { selectSpraywall } from "../../redux/features/spraywall/spraywallSelectors";
 import { Boulder } from "../../utils/types/boulder";
 import LikesHeader from "../../components/profile/LikesHeader";
 import { padding } from "../../utils/styles";
-
-const INITIAL_PAGE = 1;
+import {
+  selectLikedBoulder,
+  selectLikedBoulders,
+  selectLikedBouldersCursor,
+} from "../../redux/features/like/likeSelectors";
+import { getNextPageLikedBoulders } from "../../services/boulder/boulder";
+import { appendLikedBoulders } from "../../redux/features/like/likeSlice";
 
 const LikesScreen = () => {
   const navigation = useNavigation();
+  const dispatch = useAppDispatch();
 
   const spraywall = useAppSelector((state) => selectSpraywall(state));
+  const likedBoulders = useAppSelector((state) => selectLikedBoulders(state));
+  const cursor = useAppSelector((state) => selectLikedBouldersCursor(state));
 
   if (!spraywall) {
     console.error("Spraywall not found.");
     return <Text>Selected spray wall not found.</Text>;
   }
 
-  const [data, setData] = useState<Boulder[]>([]);
-  const [page, setPage] = useState(INITIAL_PAGE);
-  const [refreshing, setRefreshing] = useState(false);
-  const [hasNexPage, setHasNextPage] = useState(false);
-  const [isLoadingList, setIsLoadingList] = useState(false);
-
-  useEffect(() => {
-    performInitialFetch();
-  }, []);
-
-  const performInitialFetch = async () => {
-    const pathParams = { spraywallId: spraywall.id };
-    const response = await getLikeList(pathParams, INITIAL_PAGE);
-    setData(response.data.results);
-    setRefreshing(false);
-    setPage(response.data.next ? page + 1 : page);
-    setHasNextPage(response.data.next ? true : false);
-  };
-
-  const performNextPageFetch = async () => {
-    const pathParams = { spraywallId: spraywall.id };
-    const response = await getLikeList(pathParams, page);
-    setData((prev) => [...prev, ...response.data.results]);
-    setPage(response.data.next ? page + 1 : page);
-    setHasNextPage(response.data.next ? true : false);
-  };
-
-  const onRefresh = useCallback(() => {
-    setRefreshing(true);
-    setPage(INITIAL_PAGE);
-    performInitialFetch();
-  }, []);
-
-  const onEndReached = () => {
-    if (hasNexPage && !isLoadingList) {
-      performNextPageFetch();
+  const onEndReached = async () => {
+    if (cursor) {
+      const response = await getNextPageLikedBoulders(cursor);
+      dispatch(
+        appendLikedBoulders({
+          boulders: response.data.results,
+          cursor: response.data.next,
+        })
+      );
     }
   };
 
@@ -79,17 +60,13 @@ const LikesScreen = () => {
     >
       <LikesHeader />
       <FlatList
-        data={data}
+        data={likedBoulders}
         renderItem={renderBoulderCard}
         keyExtractor={(item) => item.id.toString()}
         onEndReached={onEndReached}
         // onEndReachedThreshold={0.2} // represents the number of screen lengths you should be from the bottom before it fires the event
-        ListEmptyComponent={() =>
-          !isLoadingList && <EmptyCard message={"No boulders found."} />
-        }
-        ListFooterComponent={() => isLoadingList && <ActivityIndicator />}
-        onRefresh={onRefresh}
-        refreshing={refreshing}
+        // ListFooterComponent={() => isLoadingList && <ActivityIndicator />}
+        // refreshing={refreshing}
         style={{
           backgroundColor: "white",
           paddingHorizontal: padding.general,

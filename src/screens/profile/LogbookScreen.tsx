@@ -35,38 +35,38 @@ const LogbookScreen = () => {
   const [hasNexPage, setHasNextPage] = useState(false);
   const [isLoadingList, setIsLoadingList] = useState(false);
 
-  useEffect(() => {
-    performInitialFetch();
-  }, []);
+  // useEffect(() => {
+  //   performInitialFetch();
+  // }, []);
 
-  const performInitialFetch = async () => {
-    const pathParams = { spraywallId: spraywall.id };
-    const response = await getLogbookList(pathParams, INITIAL_PAGE);
-    setChartData(response.data.grade_chart);
-    setData(response.data.results);
-    setRefreshing(false);
-    setPage(response.data.next ? page + 1 : page);
-    setHasNextPage(response.data.next ? true : false);
-  };
+  // const performInitialFetch = async () => {
+  //   const pathParams = { spraywallId: spraywall.id };
+  //   const response = await getLogbookList(pathParams, INITIAL_PAGE);
+  //   setChartData(response.data.grade_chart);
+  //   setData(response.data.results);
+  //   setRefreshing(false);
+  //   setPage(response.data.next ? page + 1 : page);
+  //   setHasNextPage(response.data.next ? true : false);
+  // };
 
-  const performNextPageFetch = async () => {
-    const pathParams = { spraywallId: spraywall.id };
-    const response = await getLogbookList(pathParams, page);
-    setData((prev: object[]) => [...prev, ...response.data.results]);
-    setPage(response.data.next ? page + 1 : page);
-    setHasNextPage(response.data.next ? true : false);
-  };
+  // const performNextPageFetch = async () => {
+  //   const pathParams = { spraywallId: spraywall.id };
+  //   const response = await getLogbookList(pathParams, page);
+  //   setData((prev: object[]) => [...prev, ...response.data.results]);
+  //   setPage(response.data.next ? page + 1 : page);
+  //   setHasNextPage(response.data.next ? true : false);
+  // };
 
-  const onRefresh = useCallback(() => {
-    setRefreshing(true);
-    setPage(INITIAL_PAGE);
-    performInitialFetch();
-  }, []);
+  // const onRefresh = useCallback(() => {
+  //   setRefreshing(true);
+  //   setPage(INITIAL_PAGE);
+  //   performInitialFetch();
+  // }, []);
 
   const onEndReached = () => {
-    if (hasNexPage && !isLoadingList) {
-      performNextPageFetch();
-    }
+    // if (hasNexPage && !isLoadingList) {
+    //   performNextPageFetch();
+    // }
   };
 
   const SendDateCard = ({ sendDate }: { sendDate: string }) => {
@@ -124,7 +124,7 @@ const LogbookScreen = () => {
           paddingHorizontal: PADDING,
         }}
         contentContainerStyle={{ gap: PADDING }}
-        onRefresh={onRefresh}
+        // onRefresh={onRefresh}
         refreshing={refreshing}
       />
     </View>

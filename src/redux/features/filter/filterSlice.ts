@@ -2,9 +2,9 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { boulderGrades } from "../../../utils/constants/boulderConstants";
 import { Filter } from "../../../utils/types/filter";
 
-const defaultFilters: Filter = {
+export const defaultFilters: Filter = {
   search: "",
-  sortBy: "grade",
+  ordering: "grade",
   minGradeIndex: 0,
   maxGradeIndex: boulderGrades.length - 1,
   activity: null,
@@ -24,8 +24,8 @@ export const filterSlice = createSlice({
     setSearch: (state, action: PayloadAction<string>) => {
       state.object.search = action.payload;
     },
-    setSortBy: (state, action: PayloadAction<string>) => {
-      state.object.sortBy = action.payload;
+    setOrdering: (state, action: PayloadAction<string>) => {
+      state.object.ordering = action.payload;
     },
     setMinGradeIndex: (state, action: PayloadAction<number>) => {
       state.object.minGradeIndex = action.payload;
@@ -51,7 +51,7 @@ export const filterSlice = createSlice({
     resetFilters: (state) => {
       // Mutating each field back to its initial value
       state.object.search = initialState.object.search;
-      state.object.sortBy = initialState.object.sortBy;
+      state.object.ordering = initialState.object.ordering;
       state.object.minGradeIndex = initialState.object.minGradeIndex;
       state.object.maxGradeIndex = initialState.object.maxGradeIndex;
       state.object.activity = initialState.object.activity;
@@ -64,7 +64,7 @@ export const filterSlice = createSlice({
 
 export const {
   setSearch,
-  setSortBy,
+  setOrdering,
   setMinGradeIndex,
   setMaxGradeIndex,
   setActivity,

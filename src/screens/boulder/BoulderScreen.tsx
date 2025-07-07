@@ -9,11 +9,6 @@ import { HomeStackParamsList } from "../../navigation/HomeStack";
 import BoulderImage from "../../components/boulder/BoulderImage";
 import { selectSpraywall } from "../../redux/features/spraywall/spraywallSelectors";
 import DraftNotif from "../../components/boulder/DraftNotif";
-import InfoRow1 from "../../components/boulder/detail/InfoRow1";
-import InfoRow2 from "../../components/boulder/detail/InfoRow2";
-import InfoRow3 from "../../components/boulder/detail/InfoRow3";
-import InfoRow4 from "../../components/boulder/detail/InfoRow4";
-import InfoRow6 from "../../components/boulder/detail/InfoRow6";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import ReactNativeZoomableView from "@openspacelabs/react-native-zoomable-view/src/ReactNativeZoomableView";
 import Animated, { useSharedValue, withTiming } from "react-native-reanimated";
@@ -40,6 +35,9 @@ import {
 import { useOptions } from "../../hooks/useOptions";
 import { useModalOptions } from "../../contexts/ModalOptionsContext";
 import { selectBoulder } from "../../redux/features/boulder/boulderSelectors";
+import InfoRow3 from "../../components/boulder/detail/InfoRow3";
+import InfoRow4 from "../../components/boulder/detail/InfoRow4";
+import InfoRow6 from "../../components/boulder/detail/InfoRow6";
 
 export type ChartData = {
   label: string;
@@ -79,6 +77,7 @@ const BoulderScreen: React.FC<BoulderScreenProps> = ({ route }) => {
 
   const [chartData, setChartData] = useState<ChartData[]>([]);
   const [userSendsData, setUserSendsData] = useState<UserSendsData[]>([]);
+  const [sliderVal, setSliderVal] = useState(0.5);
 
   // const fetchBoulderDetail = async () => {
   //   const path = { boulderId: boulder.id };
@@ -108,6 +107,7 @@ const BoulderScreen: React.FC<BoulderScreenProps> = ({ route }) => {
     sliderColorWidthSV.value = withTiming(0.5, {
       duration: ANIM_DURATION,
     });
+    setSliderVal(0.5);
   }, []);
 
   // ref
@@ -121,6 +121,7 @@ const BoulderScreen: React.FC<BoulderScreenProps> = ({ route }) => {
 
   const handleChange = (value: number) => {
     sliderColorWidthSV.value = value;
+    setSliderVal(value);
   };
 
   const handleDeleteBoulder = () => {
@@ -135,8 +136,9 @@ const BoulderScreen: React.FC<BoulderScreenProps> = ({ route }) => {
             const pathParams = { boulderId: boulder.id };
             const response = await deleteBoulderAPI(pathParams);
             if (response.status === 204) {
+              closeModal();
               navigation.goBack();
-              dispatch(deleteBoulder(boulder.id));
+              dispatch(deleteBoulder(boulder));
             }
           },
           style: "destructive",
@@ -201,7 +203,7 @@ const BoulderScreen: React.FC<BoulderScreenProps> = ({ route }) => {
 
   const { options } = useOptions(getOptions());
 
-  const { openModal } = useModalOptions();
+  const { openModal, closeModal } = useModalOptions();
 
   return (
     <View
@@ -251,17 +253,6 @@ const BoulderScreen: React.FC<BoulderScreenProps> = ({ route }) => {
           boulderOpacity={sliderColorWidthSV}
         />
       </ReactNativeZoomableView>
-      {/* </View> */}
-      {/* <DraftNotif boulder={boulder} />
-      <InfoRow1 boulder={boulder} userID={user.id} />
-      <InfoRow2
-        boulder={boulder}
-        chartData={chartData}
-        userSendsData={userSendsData}
-      />
-      <InfoRow3 boulder={boulder} />
-      <InfoRow4 boulder={boulder} />
-      <InfoRow6 boulder={boulder} /> */}
       <BottomSheet
         ref={bottomSheetRef}
         onChange={handleSheetChanges}
@@ -282,7 +273,7 @@ const BoulderScreen: React.FC<BoulderScreenProps> = ({ route }) => {
             <Slider
               minimumValue={0}
               maximumValue={1}
-              value={0.5}
+              value={sliderVal}
               onValueChange={handleChange}
               style={{ width: "100%" }}
               minimumTrackTintColor="green"
